@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Ryuse Ga Gotoku": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\orhan\\Downloads\\t01_010_01.par.unpack\\cmn.par.unpack\\cmn.bin\" y6demo yk2"
+    }
+  }
+}

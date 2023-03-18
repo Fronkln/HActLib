@@ -1,0 +1,136 @@
+﻿        private static void ConvertPages(OECMN oeCMN, CMN converted)
+        {
+            if (converted.Version != GameVersion.Yakuza6)
+            {
+                NodeElement[] branches;
+                NodeElement[] qtes;
+                NodeElement[] hactEnds;
+
+                branches = oeCMN.AllElements.Where(x => x.ElementKind == 38).OrderBy(x => x.Start).ToArray();
+                qtes = oeCMN.AllElements.Where(x => x.ElementKind == 34 || x.ElementKind == 44).OrderBy(x => x.Start).ToArray();
+                hactEnds = oeCMN.AllElements.Where(x => x.ElementKind == 37).OrderBy(x => x.Start).ToArray();
+
+
+                List<AuthPage> pages = new List<AuthPage>();
+
+                if (branches == null)
+                    return;
+
+                int curPage = 0;
+                int curBranch = 1; //only used for name identification
+
+                //Generate start page before the nearest branch appears
+                AuthPage startPage = GenPage(oeCMN.CMNHeader.Start, branches[0].Start - 1);
+                startPage.PageTitleText = "start";
+
+                pages.Add(startPage);
+
+                //HAct branch start = Success
+                //HAct branch end = Fail
+                
+
+                for(int i = 0; i < branches.Length; i++)
+                {
+                    OEBranchNode branch = branches[i] as OEBranchNode;
+
+                    NodeElement closestSuccessBranch = branches.Closest(x => x.Start, branch.Start);
+                    NodeElement closestSuccessEnd = hactEnds.Closest(x => x.Start, branch.Start);
+
+                    NodeElement closestFailBranch = branches.Closest(x => x.Start, branch.End);
+                    NodeElement closestFailEnd = hactEnds.Closest(x => x.Start, branch.End);
+
+                    bool isLastBranch = branch == branches[branches.Length - 1];
+                    bool nextIsLastBranch = i + 1 == branches.Length - 1;
+
+                    float successEnd = 0;
+                    float failEnd = 0;
+
+                    if (isLastBranch)
+                    {
+                        successEnd = closestSuccessEnd.Start > branch.Start ? closestSuccessEnd.Start : oeCMN.CMNHeader.End;
+                        failEnd = closestSuccessEnd.End > branch.End ? closestSuccessEnd.End : oeCMN.CMNHeader.End;
+                    }
+                    else
+                    {
+                        successEnd = branches[i + 1].Start - 1;
+
+                        if (!nextIsLastBranch)
+                            failEnd = branches[i + 1].End - 1;
+                        else
+                        {
+                            //Heuteristic as HELL but i dont have any better ideas
+                            if (branch.Unk1 == 1)
+                                failEnd = oeCMN.CMNHeader.End;
+                            else
+                                failEnd = branches[i + 1].Start;
+                        }
+                    }
+
+                    AuthPage successPage = GenPage(branch.Start, successEnd);
+                    AuthPage failPage = GenPage(branch.End, failEnd);
+
+                    successPage.PageTitleText = "success_" + curBranch;
+                    failPage.PageTitleText = "fail_" + curBranch;
+
+                    pages.Add(successPage);
+                    pages.Add(failPage);
+
+                    curBranch++;
+                }
+
+
+                AuthPage GenPage(float start, float end)
+                {
+                    AuthPage page = new AuthPage();
+                    page.IsOldDE = converted.Version == GameVersion.DE2;
+                    page.PageIndex = curPage;
+                    page.Start.Frame = start;
+                    page.End.Frame = end;
+
+                    //temp
+                    page.Transitions.Add(new Transition() { DestinationPageIndex = -1});
+                    page.Transitions[0].Conditions.Add(new ConditionPageEnd());
+
+                    curPage++;
+
+                    return page;
+                };
+
+                for(int i = 0; i < pages.Count; i++)
+                {
+                    NodeElement inRangeQte = qtes.Where(x => x.Start < pages[i].End).Closest(x => x.Start, pages[i].Start);
+                    AuthPage page = pages[i];
+
+                    if (inRangeQte != null)
+                    {
+                        page.Transitions.Clear();
+
+                        Transition successTransition = new Transition();
+                        successTransition.DestinationPageIndex = i + 1;
+                        successTransition.Conditions.Add(new ConditionPageEnd());
+                        successTransition.Conditions.Add(new ConditionHActFlag() { ConditionFlagOn = 1});
+
+                        Transition failTransition = new Transition();
+                        failTransition.DestinationPageIndex = i + 2;
+                        failTransition.Conditions.Add(new ConditionPageEnd());
+                        failTransition.Conditions.Add(new ConditionHActFlag() { ConditionFlagOff = 1});
+
+                        pages[i].Transitions.Add(successTransition);
+                        pages[i].Transitions.Add(failTransition);
+                    }
+                    else
+                    {
+                        if (i != 0)
+                        {
+                            bool isSuccess = (i % 2 == 1);
+
+                            if (isSuccess)
+                                if (i + 2 < pages.Count) //next success
+                                    page.Transitions[0].DestinationPageIndex = (i + 2);
+                        }
+                    }
+                }
+
+                converted.AuthPages = pages.ToArray();
+            }
+        }

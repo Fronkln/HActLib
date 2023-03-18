@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HActBridge": {
+      "commandName": "Project",
+      "commandLineArgs": "\"H:\\steamapps2\\steamapps\\common\\Yakuza 4\\data\\hact\\hact_all\\1260.par.unpack\\tmp\\hact_tev.bin\""
+    }
+  }
+}

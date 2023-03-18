@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HActScout": {
+      "commandName": "Project",
+      "commandLineArgs": "\"H:\\steamapps2\\steamapps\\common\\Yakuza Kiwami\\media\\data\\hact.par.unpack\" 11 y5"
+    }
+  }
+}

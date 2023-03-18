@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Projects\**" />
+    <EmbeddedResource Remove="Projects\**" />
+    <None Remove="Projects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Yarhl" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ParLibrary">
+      <HintPath>..\ParManager\ParLibrary\bin\Release\net5.0\ParLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

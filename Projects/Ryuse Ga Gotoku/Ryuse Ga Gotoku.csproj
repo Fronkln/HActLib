@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>RyuseGaGotoku</RootNamespace>
+    <PublishSingleFile>true</PublishSingleFile>
+    <Platforms>AnyCPU;x64</Platforms>
+    <Configurations>Debug;Release;Debug2</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\HActLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="defaultsettings.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
