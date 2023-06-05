@@ -2,7 +2,7 @@
   "profiles": {
     "Ryuse Ga Gotoku": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\orhan\\Downloads\\t01_010_01.par.unpack\\cmn.par.unpack\\cmn.bin\" y6demo yk2"
+      "commandLineArgs": "\"D:\\Program Files (x86)\\Steam\\steamapps\\common\\Lost Judgment\\runtime\\media\\data\\hact_coyote\\jh27980_kai_tate_weapony.par.unpack\\cmn.par.unpack\\cmn.bin\" lj y6"
     }
   }
 }

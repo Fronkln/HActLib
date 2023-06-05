@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using HActLib;
+using PIBLib;
 
 namespace HActBridge
 {
@@ -106,18 +107,49 @@ namespace HActBridge
             }
 
             GameVersion outputGameVer = CMN.GetVersionForGame(OutputGame);
-            bool isDE = outputGameVer == GameVersion.DE1 || outputGameVer == GameVersion.DE2;
+            bool isDE = CMN.IsDE(outputGameVer);
 
             bool success = false;
 
             string outputDir = args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant();
+
 
             if (isDE)
                 success = HActFactory.ConvertOOEToDE(new FileInfo(inf.MainPath).Directory.FullName, outputDir, OutputGame, HActCsvPath);
             else
             {
                 if (outputGameVer == GameVersion.Y0_K1)
-                    success = HActFactory.ConvertOOEToOE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), OECMN.GetCMNVersionForGame(OutputGame), HActCsvPath);
+                {
+                    success = HActFactory.ConvertOOEToOE(args[0], outputDir, OECMN.GetCMNVersionForGame(OutputGame), HActCsvPath);
+
+                    HActDir hactDir = new HActDir();
+                    hactDir.Open(args[0]);
+                    HActDir ptcDir = hactDir.GetParticle();
+
+                    HActFile[] pibs = ptcDir.FindFilesOfType(".pib");
+                    HActFile[] tex = ptcDir.FindFilesOfType(".dds");
+
+                    if(pibs.Length > 0)
+                    {
+                        string inputPibDir = new FileInfo(pibs[0].Path).FullName;
+                        string pibDir = Path.Combine(outputDir, "ptc");
+
+                        if (!Directory.Exists(pibDir))
+                            Directory.CreateDirectory(pibDir);
+
+
+                        foreach (var file in pibs)
+                        {
+                            BasePib pib = PIB.Read(file.Path);
+                            PIB.Write(PIB.Convert(pib, OutputGame == Game.Y5 ? PibVersion.Y5 : PibVersion.Y0), Path.Combine(pibDir, Path.GetFileName(file.Path)));
+                        }
+
+                        foreach (var file in tex)
+                        {
+                            File.Copy(file.Path, Path.Combine(pibDir, Path.GetFileName(file.Path)), true);
+                        }
+                    }
+                }
             }
 
             return success;

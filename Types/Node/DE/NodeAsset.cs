@@ -79,6 +79,7 @@ namespace HActLib
             base.WriteNodeData(writer, version, hactVer);
             bool isNewDE = version == GameVersion.DE2 || version == GameVersion.DE1;
 
+            
             if (CMN.IsDE(version))
             {
                 writer.Write(AssetID);
@@ -91,6 +92,7 @@ namespace HActLib
                 {
                     writer.Write(IsKeepPose);
                     writer.Write(ReplaceID);
+
                     writer.Write(IsUseTrans);
                     writer.Write(IsUnUseTrans);
                     writer.Write(DisableShadow);
@@ -129,6 +131,7 @@ namespace HActLib
             {
 
             }
+            
         }
 
         internal override int GetSize(GameVersion version, uint hactVer)

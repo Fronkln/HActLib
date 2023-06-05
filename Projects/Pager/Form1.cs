@@ -73,7 +73,7 @@ namespace Pager
                             pagesList.Add((CopiedNode as TreeViewItemPage).Page.Copy());
                             pagesList[pagesList.Count - 1].PageIndex = pagesList.Count - 1;
                             ClearVarTable();
-                            DEHact.AuthPages = pagesList.ToArray();
+                            DEHact.AuthPages = pagesList.ToList();
                            
                             ProcessHierarchy();
 
@@ -87,7 +87,7 @@ namespace Pager
                                 List<Transition> transitions = (treeView1.SelectedNode as TreeViewItemPage).Page.Transitions.ToList();
                                 transitions.Add(newTrans);
 
-                                (treeView1.SelectedNode as TreeViewItemPage).Page.Transitions = transitions.ToArray();
+                                (treeView1.SelectedNode as TreeViewItemPage).Page.Transitions = transitions.ToList();
                                 int idx = treeView1.Nodes.IndexOf(treeView1.SelectedNode);
 
                                 ProcessHierarchy();
@@ -103,7 +103,7 @@ namespace Pager
                                 List<Condition> conditions = (treeView1.SelectedNode as TreeViewItemTransition).Transition.Conditions.ToList();
                                 conditions.Add(newCond);
 
-                                (treeView1.SelectedNode as TreeViewItemTransition).Transition.Conditions = conditions.ToArray();
+                                (treeView1.SelectedNode as TreeViewItemTransition).Transition.Conditions = conditions.ToList();
                                 ProcessHierarchy();
                             }
                             break;
@@ -121,7 +121,7 @@ namespace Pager
 
                     ClearVarTable();
 
-                    DEHact.AuthPages = pagesList.ToArray();
+                    DEHact.AuthPages = pagesList.ToList();
 
                     ProcessHierarchy();
                 }
@@ -134,7 +134,7 @@ namespace Pager
 
                     ClearVarTable();
 
-                    transNode.Page.Transitions = transitionList.ToArray();
+                    transNode.Page.Transitions = transitionList.ToList();
 
                     ProcessHierarchy();
                 }
@@ -147,7 +147,7 @@ namespace Pager
 
                     ClearVarTable();
 
-                    condNode.Transition.Conditions = conditionList.ToArray();
+                    condNode.Transition.Conditions = conditionList.ToList();
 
                     ProcessHierarchy();
                 }
@@ -158,17 +158,17 @@ namespace Pager
         {
             TreeViewItemPage page = (treeView1.SelectedNode as TreeViewItemPage);
 
-            if (DEHact.AuthPages.Length <= 1)
+            if (DEHact.AuthPages.Count <= 1)
                 return;
 
             if (page == null)
                 return;
 
-            int idx = Array.IndexOf(DEHact.AuthPages, page.Page);
+            int idx = DEHact.AuthPages.IndexOf(page.Page);
             int newIdx = -1;
 
             if (idx == 0)
-                newIdx = SwapPages(page.Page, DEHact.AuthPages[DEHact.AuthPages.Length - 1]);
+                newIdx = SwapPages(page.Page, DEHact.AuthPages[DEHact.AuthPages.Count - 1]);
             else
                 newIdx = SwapPages(page.Page, DEHact.AuthPages[idx - 1]);
 
@@ -183,16 +183,16 @@ namespace Pager
         {
             TreeViewItemPage page = (treeView1.SelectedNode as TreeViewItemPage);
 
-            if (DEHact.AuthPages.Length <= 1)
+            if (DEHact.AuthPages.Count <= 1)
                 return;
 
             if (page == null)
                 return;
 
-            int idx = Array.IndexOf(DEHact.AuthPages, page.Page);
+            int idx = DEHact.AuthPages.IndexOf(page.Page);
             int newIdx = -1;
 
-            if (idx == DEHact.AuthPages.Length - 1)
+            if (idx == DEHact.AuthPages.Count - 1)
                 newIdx = SwapPages(page.Page, DEHact.AuthPages[0]);
             else
                 newIdx = SwapPages(page.Page, DEHact.AuthPages[idx + 1]);
@@ -206,8 +206,8 @@ namespace Pager
 
         private int SwapPages(AuthPage replacer, AuthPage replacing)
         {
-            int replacerIdx = Array.IndexOf(DEHact.AuthPages, replacer);
-            int replacingIdx = Array.IndexOf(DEHact.AuthPages, replacing);
+            int replacerIdx = DEHact.AuthPages.IndexOf(replacer);
+            int replacingIdx = DEHact.AuthPages.IndexOf(replacing);
 
 
             DEHact.AuthPages[replacingIdx] = replacer;

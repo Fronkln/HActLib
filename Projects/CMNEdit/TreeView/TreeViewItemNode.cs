@@ -18,7 +18,7 @@ namespace CMNEdit
         public override object Clone()
         {
             TreeViewItemNode cloned =  (TreeViewItemNode)base.Clone();
-            cloned.HActNode = HActNode.Clone();
+            cloned.HActNode = HActNode.Copy();
             cloned.HActNode.Guid = Guid.NewGuid();
 
             return cloned;
@@ -48,7 +48,7 @@ namespace CMNEdit
                     case AuthNodeCategory.CharacterMotion:
                         Text = "Character Animation";
                         break;
-                    case AuthNodeCategory.Motion_model:
+                    case AuthNodeCategory.ModelMotion:
                         Text = "Model Animation";
                         break;
                     case AuthNodeCategory.FolderCondition:
@@ -115,7 +115,7 @@ namespace CMNEdit
                     SelectedImageIndex = 5;
                     break;
 
-                case AuthNodeCategory.Motion_model:
+                case AuthNodeCategory.ModelMotion:
                     ImageIndex = 5;
                     SelectedImageIndex = 5;
                     break;
@@ -190,7 +190,7 @@ namespace CMNEdit
 
                 switch (HActNode.Category)
                 {
-                    case AuthNodeCategory.Motion_model:
+                    case AuthNodeCategory.ModelMotion:
                         ImageIndex = 5;
                         SelectedImageIndex = 5;
                         break;

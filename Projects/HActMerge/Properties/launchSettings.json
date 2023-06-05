@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HActMerge": {
+      "commandName": "Project",
+      "commandLineArgs": "ylad \"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\y7brawler_revelation_template\\cmn\\cmn.bin\" 0 \"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\y7brawler_haiheki_kick\\cmn\\cmn.bin\" 207 nofilter"
+    }
+  }
+}

@@ -1,13 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PublishSingleFile>true</PublishSingleFile>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="packages\**" />
     <Compile Remove="Projects\**" />
+    <EmbeddedResource Remove="packages\**" />
     <EmbeddedResource Remove="Projects\**" />
+    <None Remove="packages\**" />
     <None Remove="Projects\**" />
   </ItemGroup>
 

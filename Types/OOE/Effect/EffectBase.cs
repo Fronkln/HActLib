@@ -16,8 +16,6 @@ namespace HActLib.OOE
         public uint Unk3;
 
         public byte[] Data;
-        public byte[] OptionalUnk = null; //32 bytes, doesnt always exist
-
         public override string ToString()
         {
             return GetName();
@@ -44,7 +42,7 @@ namespace HActLib.OOE
             return dataSize;
         }
 
-        internal virtual void ReadEffectData(DataReader reader)
+        internal virtual void ReadEffectData(DataReader reader, bool alt)
         {
 
         }
@@ -65,7 +63,7 @@ namespace HActLib.OOE
         }
 
 
-        internal static EffectBase ReadFromMemory(DataReader reader)
+        internal static (EffectBase, bool) ReadFromMemory(DataReader reader, bool alt)
         {
             EffectID id = EffectID.Dummy;
             reader.Stream.RunInPosition(() => id = (EffectID)reader.ReadInt32(), 16, SeekMode.Current);
@@ -75,25 +73,31 @@ namespace HActLib.OOE
             uint effectSize = set3.ReadBaseData(reader);
             long endAddress = reader.Stream.Position + effectSize;
 
-            set3.ReadEffectData(reader);
+            set3.ReadEffectData(reader, alt);
 
             int unreadBytes = (int)(endAddress - reader.Stream.Position);
 
             set3.Data = reader.ReadBytes((int)(endAddress - reader.Stream.Position));
 
-            bool hasOptionalUnk = false;
+            bool isLastElement = true;
 
             reader.Stream.RunInPosition(delegate
             {
-                if (reader.ReadInt32() == -1)
-                    hasOptionalUnk = true;
-
+                for (int i = 0; i < 4; i++)
+                {
+                    if (reader.ReadInt32() != -1)
+                    {
+                        isLastElement = false;
+                        break;
+                    }
+                }
             }, 0, SeekMode.Current);
 
-            if (hasOptionalUnk)
-                set3.OptionalUnk = reader.ReadBytes(32);
 
-            return set3;
+            if (isLastElement)
+                reader.Stream.Position += 32;
+
+            return (set3, isLastElement);
         }
 
         internal void WriteToStream(DataWriter writer)
@@ -112,9 +116,6 @@ namespace HActLib.OOE
 
             long size = writer.Stream.Position - dataStart;
             writer.Stream.RunInPosition(() => writer.Write((uint)size), startAddr + 20, SeekMode.Start);
-
-            if (OptionalUnk != null)
-                writer.Write(OptionalUnk);
         }
 
         internal static EffectBase CreateEffectObject(EffectID id)

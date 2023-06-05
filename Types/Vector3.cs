@@ -13,13 +13,6 @@ namespace HActLib
         public float y;
         public float z;
 
-        public Vector3()
-        {
-            x = 0;
-            y = 0;
-            z = 0;
-        }
-
         public Vector3(float x, float y, float z)
         {
             this.x = x;

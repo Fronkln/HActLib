@@ -60,6 +60,7 @@ namespace HActLib
 
             OECMN cmn = new OECMN();
             cmn.CMNHeader = (Header)ConvertFormat.With<OEHeaderConverter>(new BinaryFormat(cmnReader.Stream));
+            cmn.CMNHeader.Flags = 1;
 
             CMN.LastGameVersion = GameVersion.Y0_K1;
 

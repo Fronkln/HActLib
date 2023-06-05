@@ -17,17 +17,21 @@ namespace HActLib.OOE
 
         public EffectID EffectID2;
 
-        internal override void ReadEffectData(DataReader reader)
+        internal override void ReadEffectData(DataReader reader, bool alt)
         {
-            base.ReadEffectData(reader);
+            base.ReadEffectData(reader, alt);
 
-            Start = reader.ReadSingle();
-            End = reader.ReadSingle();
 
-            ElementFlags = reader.ReadInt32();
-            ElementUnk2 = reader.ReadInt32();
+            if (!alt)
+            {
+                Start = reader.ReadSingle();
+                End = reader.ReadSingle();
 
-            EffectID2 = (EffectID)reader.ReadUInt32();
+                ElementFlags = reader.ReadInt32();
+                ElementUnk2 = reader.ReadInt32();
+
+                EffectID2 = (EffectID)reader.ReadUInt32();
+            }
         }
 
         internal override void WriteEffectData(DataWriter writer)

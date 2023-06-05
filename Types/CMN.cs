@@ -229,7 +229,7 @@ namespace HActLib
         //messy but it is what it is
         internal static AuthFile LastFile;
         internal static GameVersion LastGameVersion;
-        internal static Game LastHActDEGame;
+        public static Game LastHActDEGame;
 
 
         public static CMN Read(string path, Game game)
@@ -264,7 +264,7 @@ namespace HActLib
             LastFile = AuthFile.CMN;
 
             BinaryFormat output = (BinaryFormat)ConvertFormat.With<CMNConverter>(cmn);
-            output.Stream.WriteTo(path);
+            File.WriteAllBytes(path, output.Stream.ToArray());
         }
 
 

@@ -25,6 +25,8 @@ namespace HActLib
         e_auth_element_mouth_brightness_correction = 21,
         e_auth_element_face_expression = 22,
         e_auth_element_draw_off = 23,
+        e_auth_element_trail = 26,
+        e_auth_element_ghost_afterimage = 27,
         e_auth_element_body_flash = 28,
         e_auth_element_blood = 31,
         e_auth_element_damage = 32,

@@ -83,12 +83,13 @@ namespace HActLib
 
             CSVHAct csvData = csv.TryGetEntry(ooeHactId);
 
-            HActInfo hactInf = new HActInfo(tevDir);
-            string tevPath = hactInf.MainPath;
-            string tevDirFull = new FileInfo(tevPath).Directory.FullName;
+            HActDir hactInf = new HActDir();
+            hactInf.Open(tevDir);
+            byte[] tevBuf = hactInf.FindFile("hact_tev.bin").Read();
 
-            if (string.IsNullOrEmpty(tevPath) || !hactInf.IsTEV)
-                throw new Exception("TEV not found\nPath: " + tevPath);
+
+            if (tevBuf == null)
+                throw new Exception("TEV not found\nPath: " + tevDir);
 
             bool gmtExporterExists = File.Exists(AppDomain.CurrentDomain.BaseDirectory + "GMT_Converter.exe");
 
@@ -98,7 +99,7 @@ namespace HActLib
                 System.Threading.Thread.Sleep(1500);
             }
 
-            TEV tev = TEV.Read(tevPath);
+            TEV tev = TEV.Read(tevBuf);
             RES res = new RES();
             OECMN convertedTEV = TEV.ToOE(tev, csvData, outputOEVer);
 
@@ -110,6 +111,8 @@ namespace HActLib
                 Directory.CreateDirectory(outputCMNDir);
             if (!Directory.Exists(outputRESDir))
                 Directory.CreateDirectory(outputRESDir);
+
+            HActDir ptc = hactInf.GetParticle();
 
             foreach (OENodeCharacter chara in convertedTEV.AllCharacters)
             {
@@ -141,7 +144,7 @@ namespace HActLib
 
                     res.Resources.Add(motionRes);
 
-                    string inputGmtDir = Path.Combine(tevDirFull, motion.Name);
+                    string inputGmtDir = Path.Combine(tevDir, motion.Name);
                     string outputGmtDir = Path.Combine(outputRESDir, motion.Name);
 
                     //Y5, just copy anim
@@ -171,7 +174,7 @@ namespace HActLib
                     camRes.Unk2 = 1;
 
                     res.Resources.Add(camRes);
-                    File.Copy(Path.Combine(tevDirFull, motion.Name), Path.Combine(outputRESDir, motion.Name), true);
+                    File.Copy(Path.Combine(tevDir, motion.Name), Path.Combine(outputRESDir, motion.Name), true);
                 }
             }
 
@@ -438,17 +441,15 @@ namespace HActLib
                 if (!Directory.Exists(outputRESDir))
                     Directory.CreateDirectory(outputRESDir);
 
-                RES filteredRes = new RES() { Resources = res.Resources.Where(x => x.Type != ResourceType.Asset).ToList() };
+                RES filteredRes = new RES() { Resources = res.Resources };
 
 
                 foreach (Resource resInf in filteredRes.Resources)
                 {
-
                     if (resInf.Type == ResourceType.CharacterMotion || resInf.Type == ResourceType.CameraMotion)
                         resInf.Unk1 = 0;
                     else if(resInf.Type == ResourceType.Character)
                         resInf.Unk1 = 1;
-
 
                     if (gmtExporterExists && resInf.Type == ResourceType.CharacterMotion)
                     {

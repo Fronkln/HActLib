@@ -3,6 +3,7 @@
     public enum AuthFile
     {
         CMN,
-        BEP 
+        BEP,
+        MEP
     }
 }

@@ -11,8 +11,14 @@ namespace HActLib
     public class NodeModel : Node
     {
         public PXDHash BoneName = new PXDHash();
-        public int UnkOE;
+        public int BoneID;
         public byte[] UnkDE = new byte[8];
+
+
+        public NodeModel()
+        {
+            Category = AuthNodeCategory.Model_node;
+        }
 
         internal override void ReadNodeData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
@@ -26,12 +32,14 @@ namespace HActLib
                    UnkDE = reader.ReadBytes(8);
                 else
                 {
-                    UnkOE = reader.ReadInt32();
+                    BoneID = reader.ReadInt32();
                     reader.ReadBytes(12);
                 }
             }
             else
             {
+                BoneID = reader.ReadInt32();
+                reader.ReadBytes(12);
                 BoneName.Set(Name);
             }
         }
@@ -46,11 +54,12 @@ namespace HActLib
 
                 if (hactVer >= 18)
                     writer.Write(UnkDE);
-                else
-                {
-                    writer.WriteOfType(UnkOE);
-                    writer.WriteTimes(0, 12);
-                }
+            }
+
+            if(hactVer < 18)
+            {
+                writer.WriteOfType(BoneID);
+                writer.WriteTimes(0, 12);
             }
         }
 

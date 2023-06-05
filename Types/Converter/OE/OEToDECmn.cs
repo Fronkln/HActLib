@@ -60,7 +60,7 @@ namespace HActLib
 
         }
 
-        private static Node Convert(Node oeNode, uint version, Game game, Game oeGame)
+        public static Node Convert(Node oeNode, uint version, Game game, Game oeGame)
         {
             //Come, my child. Let's venture to Dragon Engine!
             List<Node> convertedChild = new List<Node>();
@@ -86,8 +86,15 @@ namespace HActLib
 
                     //try to find the height in the scale list
                     string scaleLookup = "height_" + oeCharacter.Height.ToString();
-                    DECharacterScaleID scale = (DECharacterScaleID)Enum.Parse(typeof(DECharacterScaleID),  Enum.GetNames<DECharacterScaleID>().FirstOrDefault(x => x == scaleLookup));
-
+                    DECharacterScaleID scale;
+                    try
+                    {
+                        scale = (DECharacterScaleID)Enum.Parse(typeof(DECharacterScaleID), Enum.GetNames<DECharacterScaleID>().FirstOrDefault(x => x == scaleLookup));
+                    }
+                    catch
+                    {
+                        scale = DECharacterScaleID.invalid;
+                    }
                     deCharacter.CharacterID = 1; //dummy if not replaced
                     deCharacter.ScaleID = (uint)scale;
                     deCharacter.ReplaceID = GetReplaceIDFromName(oeNode.Name);
@@ -117,10 +124,22 @@ namespace HActLib
 
                     break;
 
+                case AuthNodeCategory.ModelMotion:
+                    deNode = oeNode;
+                    break;
+
                 case AuthNodeCategory.Element:
                     deNode = TryConvertElement(oeNode as NodeElement, version, game, oeGame);
-
                     break;
+                case AuthNodeCategory.Asset:
+                    NodeAsset deAsset = new NodeAsset();
+                    oeNode.Category = AuthNodeCategory.Asset;
+                    deAsset.AssetID = 1;
+                    deNode = deAsset;
+                    break;
+
+                case AuthNodeCategory.ModelCustom:
+                    goto case AuthNodeCategory.Asset;
             }
 
             if (deNode != null)
@@ -303,9 +322,29 @@ namespace HActLib
 
                 case "e_auth_element_picture":
                     return ConvertScreenPicture(node as OENodePicture, game);
+
+                case "e_auth_element_particle":
+                    return ConvertParticle(node as OEParticle, game);
             }
 
             return null;
+        }
+
+
+        private static Node ConvertParticle(OEParticle ptc, Game game)
+        {
+            DEElementParticle dePtc = new DEElementParticle();
+            dePtc.ElementKind = Reflection.GetElementIDByName("e_auth_element_particle", game);
+
+            dePtc.Animation = ptc.Animation;
+            dePtc.Color = ptc.Color;
+            dePtc.Matrix = ptc.Matrix;
+            dePtc.Scale = ptc.Scale;
+            dePtc.ParticleID = ptc.ParticleID;
+            dePtc.Name = "PTC " + dePtc.ParticleID;
+            dePtc.ParticleName = "AAa0000";
+
+            return dePtc;
         }
 
         //ELEMENTS
@@ -366,6 +405,14 @@ namespace HActLib
             DEElementUITexture dePic = new DEElementUITexture();
             dePic.ElementKind = Reflection.GetElementIDByName("e_auth_element_ui_texture", game);
             dePic.TextureName = pic.PictureName;
+            dePic.BeforeCenter.X = pic.BeforeCenterX;
+            dePic.BeforeCenter.Y = pic.BeforeCenterY;
+            dePic.AfterCenter.X = pic.AfterCenterX;
+            dePic.AfterCenter.Y = pic.AfterCenterY;
+           // dePic.BeforeScale.X = pic.BeforeSizeX;
+           // dePic.BeforeScale.Y = pic.BeforeSizeY;
+           // dePic.AfterScale.X = pic.AfterSizeX;
+           // dePic.AfterScale.Y = pic.AfterSizeY;
 
             for (int i = 0; i < 32; i++)
                 dePic.Animation[i] = pic.Animation[i] / 255f;
@@ -436,7 +483,10 @@ namespace HActLib
                 se.CueSheet = (ushort)(CMN.GetVersionForGame(game) >= GameVersion.DE2 ? 49 : 36);
             }
             else
+            {
                 se.CueSheet = 0;
+                se.SoundIndex += 1;
+            }
 
             Console.WriteLine("converted se");
            

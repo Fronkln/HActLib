@@ -20,7 +20,7 @@ namespace HActLib
 
         public static implicit operator System.Drawing.Color(RGBA32 col)
         {
-            return System.Drawing.Color.FromArgb((byte)col.R, (byte)col.G, (byte)col.B, (byte)col.A);
+            return System.Drawing.Color.FromArgb((byte)col.A, (byte)col.R, (byte)col.G, (byte)col.B);
         }
 
         public static implicit operator RGBA32(System.Drawing.Color col)

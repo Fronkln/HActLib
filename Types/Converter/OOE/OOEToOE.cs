@@ -22,10 +22,12 @@ namespace HActLib
     {
         private bool m_cameraSpecialNodesProcessed = false;
 
+        public OOEToOEConversionInfo inf;
         CSVHAct csvData;
 
         public OECMN Convert(OOEToOEConversionInfo inf)
         {
+            this.inf = inf;
             csvData = inf.CsvData;
 
             if (inf.TargetVer == 16)
@@ -43,17 +45,20 @@ namespace HActLib
             cmn.CMNHeader.ChainCameraIn = -1;
             cmn.CMNHeader.ChainCameraOut = -1;
             cmn.CMNHeader.NodeDrawNum = 2;
+            cmn.CMNHeader.Flags = 1;
 
             cmn.CutInfo = new float[] { cmn.CMNHeader.End }; 
             cmn.ResourceCutInfo = new float[] { cmn.CMNHeader.End };
 
             TEV tev = inf.Tev;
 
-            for (int i = 1; i < tev.Objects.Length; i++)
-                if (tev.Objects[i].Parent == null && tev.Objects[i].Category != 2)
-                    tev.Objects[0].Children.Add(tev.Objects[i]);
+            ObjectBase[] objects = tev.AllObjects;
 
-            cmn.Root = Convert(tev, tev.Objects[0], cmn.CMNHeader.End)[0];
+            for (int i = 1; i < objects.Length; i++)
+                if (objects[i].Parent == null && objects[i].Category != 2)
+                    tev.Root.Children.Add(objects[i]);
+
+            cmn.Root = Convert(tev, tev.Root, cmn.CMNHeader.End)[0];
 
 
             //Branch nodes are in the camera in OE
@@ -73,7 +78,7 @@ namespace HActLib
 
         public float DetermineHactLength(TEV tev)
         {
-            ObjectCamera cam = (ObjectCamera)tev.Objects.FirstOrDefault(x => x is ObjectCamera);
+            ObjectCamera cam = (ObjectCamera)tev.AllObjects.FirstOrDefault(x => x is ObjectCamera);
 
             IEnumerable<Set2Element1019> endNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_END_"));
             IEnumerable<Set2Element1019> branchNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BRANCH_"));
@@ -81,13 +86,13 @@ namespace HActLib
             if(branchNodes.Count() <= 0)
             {
                 if (endNodes.Count() <= 0)
-                    return tev.Set2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
+                    return tev.AllSet2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
                 else
                     return endNodes.ElementAt(0).Start;
             }
             else
             {
-                return tev.Set2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
+                return tev.AllSet2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
             }
         }
 
@@ -172,7 +177,7 @@ namespace HActLib
 
         void GenerateFrameProgression(TEV tev, OECMN hact)
         {
-            ObjectCamera cam = tev.Objects[0].GetChildOfType<ObjectCamera>();
+            ObjectCamera cam = tev.Root.GetChildOfType<ObjectCamera>();
             List<Set2> slowMoAreas = cam.Children.Where(x => x is Set2).Cast<Set2>().Where(x => x.Type == Set2NodeCategory.Slowmo).ToList();
             List<OEHActInput> inputs = hact.AllElements.Where(x => x.ElementKind == 34).Cast<OEHActInput>().ToList();
 
@@ -217,37 +222,26 @@ namespace HActLib
         {
             NodeModel model = new NodeModel();
             model.Category = AuthNodeCategory.Model_node;
-            model.Guid = new Guid();
+            model.Guid = Guid.NewGuid();
 
-            string boneName;
+            string boneName = "";
 
-            switch(bone.BoneName)
+            if (inf.TargetVer >= 15)
             {
-                default:
-                    boneName = bone.BoneName;
-                    break;
-                case "center_n":
-                    boneName = "center_c_n";
-                    break;
-                case "mune_n":
-                    boneName = "mune_c_n";
-                    break;
-                case "kubi_n":
-                    boneName = "kubi_c_n";
-                    break;
-                case "ketu_n":
-                    boneName = "ketu_c_n";
-                    break;
-                case "face":
-                    boneName = "face_c_n";
-                    break;
-                case "kosi_n":
-                    boneName = "kosi_c_n";
-                    break;
-                case "_lip_top":
-                    boneName = "_lip_top1_c_n";
-                    break;
+                boneName = OEEffect.ConvertY5BoneNameToY0Name(bone.BoneName);
 
+                if (boneName == null)
+                    boneName = bone.BoneName;
+
+                if (MEPDict.OEBoneID.ContainsKey(boneName))
+                    model.BoneID = MEPDict.OEBoneID[boneName];
+            }
+            else
+            {
+                boneName = bone.BoneName;
+
+                if(MEPDict.OOEBoneID.ContainsKey(boneName))
+                    model.BoneID = MEPDict.OOEBoneID[boneName];
             }
 
             model.Name = boneName;
@@ -441,7 +435,28 @@ namespace HActLib
             NodeElement createdNode = null;
 
             switch (effect.ElementKind)
-            {           
+            {
+                case EffectID.Particle:
+                    OEParticle oeParticle = new OEParticle();
+                    EffectParticle ooeParticle = effect as EffectParticle;
+
+                    oeParticle.Category = AuthNodeCategory.Element;
+                    oeParticle.ElementKind = 2;
+                    oeParticle.Start = ooeParticle.Start;
+                    oeParticle.End = ooeParticle.End;
+                    oeParticle.ParticleID = ooeParticle.ParticleID;
+                    oeParticle.Unknown = ooeParticle.Unknown1;
+                    oeParticle.Matrix = ooeParticle.Matrix;
+                    oeParticle.Name = "PTC: " + oeParticle.ParticleID;
+                    oeParticle.UpdateTimingMode = 0;
+
+                    if (oeParticle.Unknown > 20)
+                        oeParticle.Unknown = 15;
+
+                    createdNode = oeParticle;
+
+                    break;
+
                 case EffectID.Sound:
                     EffectSound ooeSound = effect as EffectSound;
 
@@ -482,7 +497,6 @@ namespace HActLib
             if (createdNode != null)
             {
                 createdNode.Guid = Guid.NewGuid();
-                createdNode.UpdateTimingMode = 2;
                 createdNode.PlayType = ElementPlayType.Normal;
 
                 if (effect is EffectElement)

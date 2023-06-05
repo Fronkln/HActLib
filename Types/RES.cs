@@ -47,7 +47,7 @@ namespace HActLib
         Unknown3 = 0x3,
         CameraMotion = 0x4,
         PathMotion = 0x5,
-        Asset = 0x6,
+        AssetMotion = 0x6,
         CharacterMotion = 0x7,
         Unknown5 = 0x8,
         Unknown6 = 0x9,

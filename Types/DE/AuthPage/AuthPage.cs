@@ -38,7 +38,7 @@ namespace HActLib
 
             if (!page.IsOldDE)
              //   page.PageTitleText = reader.ReadString(32);
-                  page.PageTitleText = reader.ReadString(32).Split(new[] { '\0' }, 2)[0]; 
+                  page.PageTitleText = reader.ReadString(32, System.Text.Encoding.GetEncoding(932)).Split(new[] { '\0' }, 2)[0]; 
 
             //Read transitions
             // long transitionStart = startPos + 80 + (page.SkipLinkIndexNum * 4);

@@ -38,7 +38,88 @@ namespace HActLib.OOE
 
         public virtual string GetName() => $"Unknown Set {Type}";
 
-        internal virtual void ProcessNodeData(Yarhl.IO.DataReader reader)
+        internal static Set2 ReadFromMemory(DataReader reader)
+        {
+            uint type = 0;
+            uint elementID = 0; //applicable if type == 9
+            reader.Stream.RunInPosition
+                (
+                    delegate
+                    {
+                        type = reader.ReadUInt32();
+                        reader.ReadBytes(4);
+                        elementID = reader.ReadUInt32();
+                    }, 8, SeekMode.Current
+                );
+
+
+            Set2 set = GetSet2Type(type, elementID);
+            set._InternalInfo.Addr = (uint)reader.Stream.Position;
+
+            set.ReadBasicSet2Info(reader);
+
+            return set;
+        }
+
+        private void ReadBasicSet2Info(DataReader reader)
+        {
+            long startPos = reader.Stream.Position;
+            long expectedPos = startPos + 336;
+
+            uint index = reader.ReadUInt32();
+
+            _InternalInfo.resourcePtr = reader.ReadInt32();
+
+            Type = (Set2NodeCategory)reader.ReadInt32();
+            Unk1 = reader.ReadInt32();
+            _InternalInfo.elementType = reader.ReadInt32();
+            EffectID = (EffectID)_InternalInfo.elementType;
+
+            ReadArgs(reader);
+            Start = reader.ReadSingle();
+            End = reader.ReadSingle();
+            Fps = reader.ReadSingle();
+            Unk3 = reader.ReadInt32();
+
+            for (int i = 0; i < 8; i++)
+                UnkSpeed[i] = reader.ReadSingle();
+
+            long curReadPos = reader.Stream.Position;
+
+            ProcessNodeData(reader);
+            reader.Stream.Seek(curReadPos);
+
+            Unk4 = reader.ReadBytes(16);
+
+            if (reader.Stream.Position != expectedPos)
+                throw new Exception($"TEV Read Error: Set2 size mismatch. Expected to read 336 bytes, got: {reader.Stream.Position - startPos}");
+        }
+
+        private static Set2 GetSet2Type(uint type, uint elementType)
+        {
+            switch (type)
+            {
+                default:
+                    return new Set2();
+
+                case 1:
+                    return new Set2ElementMotion();
+                case 2:
+                    return new Set2ElementMotion();
+                case 3:
+                    return new Set2ElementMotion();
+                case 9:
+                    switch (elementType)
+                    {
+                        default:
+                            return new Set2Element();
+                        case 1019:
+                            return new Set2Element1019();
+                    }
+            }
+        }
+
+        internal virtual void ProcessNodeData(DataReader reader)
         {
             if (_InternalInfo.resourcePtr > -1)
             {

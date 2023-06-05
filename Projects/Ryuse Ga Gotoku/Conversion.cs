@@ -212,7 +212,7 @@ namespace RyuseGaGotoku
             //Limitation:
             //Auth page format has not been reversed yet for Y6
             if (CMN.VersionEqualsLess(inputVersion, GameVersion.Yakuza6) || CMN.VersionEqualsLess(outputVersion, GameVersion.Yakuza6))
-                HAct.AuthPages = new AuthPage[0];
+                HAct.AuthPages = new List<AuthPage>();
 
 
             //Limitation:
@@ -286,26 +286,21 @@ namespace RyuseGaGotoku
 
                 if(cond.Length > 0)
                 {
-                    Console.WriteLine("VERY IMPORTANT WARNING: Yakuza 6 can crash with condition folders from other games. They will be invalidated and will need to be manually removed/cleared with AuthEdit");
+                    //Console.WriteLine("VERY IMPORTANT WARNING: Yakuza 6 can crash with condition folders from other games. They will be invalidated and will need to be manually removed/cleared with AuthEdit");
 
                     foreach(Node node in cond)
                     {
-                        DENodeConditionFolder condFol = node as DENodeConditionFolder;
-                        condFol.Name = "INV COND " + condFol.Condition.ToString();
+                       // node.Category = AuthNodeCategory.DummyNode;
                     }
                 }
             }
-
-            //Bug: DE 2.0 page to 1.0 conversion causes crashes in k2
-            if (outputVersion == GameVersion.DE1 && inputVersion == GameVersion.DE2)
-                HAct.AuthPages = new AuthPage[0];
 
             //DE 1.0 -> DE 2.0 CMN
             if (CMN.VersionEqualsGreater(outputVersion,GameVersion.DE2))
             {
                 if (inputVersion == GameVersion.DE1 || CMN.VersionEqualsLess(inputVersion, GameVersion.Yakuza6))
                 {
-                    for (int i = 0; i < HAct.AuthPages.Length; i++)
+                    for (int i = 0; i < HAct.AuthPages.Count; i++)
                     {
                         AuthPage page = HAct.AuthPages[i];
 
@@ -321,21 +316,17 @@ namespace RyuseGaGotoku
 
                         //Improvement 1:
                         //Add transition for pages that dont have any to finish
-                        if (page.Transitions.Length == 0)
-                            page.Transitions = new Transition[]
+                        if (page.Transitions.Count == 0)
+                            page.Transitions = new List<Transition>(new Transition[]
                             {
                                 new Transition()
                                 {
                                     DestinationPageIndex = -1,
                                     ConditionSize = 0,
-                                    Conditions = new Condition[]{new Condition()
-                                    {
-                                        ConditionID = (uint)ConditionType.page_end,
-                                        CondBytes = new byte[0]
-                                    }
-                                    }
+                                    Conditions =  new List<Condition> (new Condition[]{new ConditionPageEnd()})
+    
                                 }
-                            };
+                            });
                     }
 
                     //Fix 2:

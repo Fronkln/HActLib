@@ -38,6 +38,9 @@ namespace HActLib
             else if (Directory.Exists(alt1))
                 cmnPath = alt1;
 
+            if (Directory.Exists(Path.Combine(cmnPath, "cmn")))
+                cmnPath = Path.Combine(cmnPath, "cmn");
+
             if (cmnPath != null)
                 return Path.Combine(cmnPath, "cmn.bin");
 
@@ -50,8 +53,11 @@ namespace HActLib
 
             if (new DirectoryInfo(path).Name == "tmp")
                 def = path;
-            else
-                Path.Combine(path, "tmp");
+            if(new DirectoryInfo(path).GetDirectories().FirstOrDefault(x => x.Name == "tmp") != null)
+            {
+                def = Path.Combine(path, "tmp");
+            }
+
 
             if (Directory.Exists(def))
                 return Path.Combine(def, "hact_tev.bin");
@@ -76,6 +82,10 @@ namespace HActLib
 
             else if (Directory.Exists(alt1))
                 resPath = alt1;
+
+            if(!string.IsNullOrEmpty(resPath))
+                if(Directory.Exists(Path.Combine(resPath, res)))
+                    resPath = Path.Combine(resPath, res);
 
             if (resPath != null)
                 return Path.Combine(resPath, "res.bin");
@@ -174,9 +184,11 @@ namespace HActLib
                 ResourcesPaths = new string[0];
                 return;
             }
-            else if (folder.EndsWith("cmn.bin"))
+            else if (folder.EndsWith(".bin"))
             {
                 MainPath = folder;
+                ResourcesPaths = new string[0];
+                return;
             }
             else if (folder.EndsWith(".par"))
             {

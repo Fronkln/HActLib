@@ -12,7 +12,7 @@ namespace CMNEdit
             form.CreateSpace(25);
             form.CreateHeader("Element Info");
 
-            form.CreateInput("ID", inf.ElementKind.ToString(), null, readOnly: true);
+            form.CreateInput("ID", inf.ElementKind.ToString(), delegate (string val) { inf.ElementKind = uint.Parse(val); }, NumberBox.NumberMode.UInt);
             form.CreateInput("Version", inf.Version.ToString(), delegate(string val) { inf.Version = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Element Flag", inf.ElementFlag.ToString(), delegate(string val){ inf.ElementFlag = uint.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateComboBox("Play Type", (int)inf.PlayType, System.Enum.GetNames(typeof(ElementPlayType)), delegate (int val) { inf.PlayType = (ElementPlayType)val; });

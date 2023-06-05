@@ -22,10 +22,14 @@ namespace HActLib
             //HEUTERISTIC BASED ON MY OWN OBSERVATION
             if (category == AuthNodeCategory.Model_node)
                 category = AuthNodeCategory.Element;
-            else if (category == AuthNodeCategory.Motion_model)
+            else if (category == AuthNodeCategory.ModelMotion)
                 category = AuthNodeCategory.Model_node;
             else if (category == AuthNodeCategory.InstanceMotionData)
                 category = AuthNodeCategory.FolderCondition;
+            else if (category == AuthNodeCategory.CharacterBehavior)
+                category = AuthNodeCategory.Asset;
+            else if (category == AuthNodeCategory.Asset)
+                category = AuthNodeCategory.ModelMotion;
          
             uint elementKind = 0;
 
@@ -76,6 +80,9 @@ namespace HActLib
                         node = (NodeElement)Activator.CreateInstance(Reflection.ElementNodes[CMN.LastHActDEGame][elementKind]);
                     else
                         node = new NodeElement();// new NodeElement();
+                    break;
+                case AuthNodeCategory.ModelMotion:
+                    node = new NodeMotionBase();
                     break;
             }
 

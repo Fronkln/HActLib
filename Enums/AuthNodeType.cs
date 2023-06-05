@@ -14,7 +14,7 @@ namespace HActLib
         CharacterBehavior = 0x7,
         ModelCustom = 0x8,
         Asset = 0x9,
-        Motion_model = 0xA,
+        ModelMotion = 0xA,
         Model_node = 0xB,
         Element = 0xC,
         Stage = 0xD,

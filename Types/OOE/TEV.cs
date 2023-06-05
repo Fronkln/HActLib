@@ -68,17 +68,72 @@ namespace HActLib
         /// </summary>
         public uint CuesheetID;
 
-        public ObjectBase[] Objects;
-        public Set2[] Set2;
-        public EffectBase[] Effects;
+        public ObjectBase Root;
 
-        internal Dictionary<int, ObjectBase> PointerSet1 = new Dictionary<int, ObjectBase>();
-        internal Dictionary<int, Set2> PointerSet2 = new Dictionary<int, Set2>();
-        internal Dictionary<int, EffectBase> PointerSet3 = new Dictionary<int, EffectBase>();
+
+        public ObjectBase[] AllObjects
+        {
+            get
+            {
+                List<ObjectBase> objects = new List<ObjectBase>();
+
+                void Process(ObjectBase node)
+                {
+                        objects.Add(node);
+
+                    foreach (ITEVObject child in node.Children)
+                        if(child is ObjectBase)
+                            Process(child as ObjectBase);
+                }
+
+                Process(Root);
+
+                return objects.ToArray();
+            }
+        }
+
+        public Set2[] AllSet2
+        {
+            get
+            {
+                List<Set2> set2 = new List<Set2>();
+
+                foreach (ObjectBase obj in AllObjects)
+                {
+                    foreach (ITEVObject childObj in obj.Children)
+                        if (childObj is Set2)
+                            set2.Add(childObj as Set2);
+                }
+
+
+                return set2.ToArray();
+            }
+        }
+
+
+
+        public EffectBase[] AllEffects
+        {
+            get
+            {
+                List<EffectBase> effects = new List<EffectBase>();
+
+                foreach(ObjectBase obj in AllObjects)
+                {
+                    foreach (ITEVObject childObj in obj.Children)
+                        if (childObj is EffectBase)
+                            effects.Add(childObj as EffectBase);
+                }
+
+
+                return effects.ToArray();
+            }
+        }
+
 
         public Set2Element1019 GetHActEventByName(string name)
         {
-            return Set2.Where(x => x.EffectID == EffectID.Special).Cast<Set2Element1019>().FirstOrDefault(x => x.Type1019 == name);
+            return AllSet2.Where(x => x.EffectID == EffectID.Special).Cast<Set2Element1019>().FirstOrDefault(x => x.Type1019 == name);
         }
 
         public static TEV Read(string path)

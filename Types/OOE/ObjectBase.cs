@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,11 +52,18 @@ namespace HActLib.OOE
         public ObjectBase NextMainNode = null;
 
         //Don't ever use this for writing the object
+        //Actually, please do
         public List<ITEVObject> Children = new List<ITEVObject>();
 
         public _Set1Internal _InternalInfo = new _Set1Internal();
 
         public virtual string GetName() => "Unknown Set 1";
+
+
+        public EffectBase[] GetChildEffects()
+        {
+            return Children.Where(x => x is EffectBase).Cast<EffectBase>().ToArray();
+        }
 
         public T GetChildOfType<T>() where T : ITEVObject
         {
@@ -70,6 +78,127 @@ namespace HActLib.OOE
         public Set2[] GetSet2ChildsOfCategory(Set2NodeCategory category)
         {
             return Children.Where(x => x is Set2).Cast<Set2>().Where(x => x.Type == category).ToArray();
+        }
+
+
+        internal static ObjectBase ReadFromMemory(DataReader reader)
+        {
+            uint type = 0;
+            uint category = 0;
+            reader.Stream.RunInPosition
+                (
+                    delegate
+                    {
+                        type = reader.ReadUInt32();
+                        category = reader.ReadUInt32();
+                    }, 20, SeekMode.Current
+                );
+
+            ObjectBase set = GetObjectType(type, category);
+            set.ReadBasicSet1Info(reader);
+ 
+            return set;
+        }
+
+        private static ObjectBase GetObjectType(uint type, uint category)
+        {
+            switch (type)
+            {
+                default:
+                    return new ObjectBase();
+
+                case 1:
+                    return new ObjectCamera();
+                case 2:
+                    return new ObjectPath();
+                case 3:
+                    if (category >= 0 && category <= 1)
+                        return new ObjectHuman();
+                    else if (category == 2)
+                        return new ObjectWeapon();
+                    goto default;
+                case 4:
+                    return new ObjectModel();
+
+                case 5:
+                    return new ObjectBone();
+                case 6:
+                    return new ObjectItem();
+            }
+
+        }
+
+        private void ReadBasicSet1Info(DataReader reader)
+        {
+            string[] ReadStringTable(int[] table)
+            {
+                long curPos = reader.Stream.Position;
+
+                List<string> stringTbl = new List<string>();
+
+                foreach (int i in table)
+                {
+                    if (i != -1)
+                    {
+                        reader.Stream.Seek(i);
+                        stringTbl.Add(reader.ReadString());
+                    }
+                    else
+                        stringTbl.Add(null);
+                }
+
+                reader.Stream.Seek(curPos, SeekMode.Start);
+
+                return stringTbl.ToArray();
+            }
+
+            _InternalInfo.Addr = (uint)reader.Stream.Position;
+            uint index = reader.ReadUInt32();
+
+            int[] stringTable = new int[]
+            {
+                reader.ReadInt32(),
+                reader.ReadInt32(),
+                reader.ReadInt32(),
+                reader.ReadInt32()
+            };
+
+            _InternalInfo.StringTables = stringTable;
+
+            StringTable = ReadStringTable(stringTable);
+            Type = (ObjectNodeCategory)reader.ReadUInt32();
+            Category = reader.ReadUInt32();
+            Unk1 = reader.ReadBytes(296);
+            UnkFloatArray = new float[]
+            {
+               reader.ReadSingle(),
+               reader.ReadSingle(),
+               reader.ReadSingle(),
+               reader.ReadSingle(),
+            };
+
+            _InternalInfo.Parent = reader.ReadInt32();
+            _InternalInfo.PreviousNode = reader.ReadInt32();
+            _InternalInfo.NextNode = reader.ReadInt32();
+            _InternalInfo.NextMainNode = reader.ReadInt32();
+
+
+            _InternalInfo.Set2Ptr = reader.ReadInt32();
+            _InternalInfo.UnkNum1 = reader.ReadUInt32();
+
+            _InternalInfo.Set3Ptr = reader.ReadInt32();
+            _InternalInfo.DataPtr1 = reader.ReadInt32();
+            _InternalInfo.DataPtr2 = reader.ReadInt32();
+
+            reader.ReadBytes(8);
+
+            long curReadPos = reader.Stream.Position;
+            ProcessNodeData(reader);
+
+            ReadSet2(reader, _InternalInfo.Set2Ptr, _InternalInfo.UnkNum1);
+            ReadEffect(reader, _InternalInfo.Set3Ptr);
+
+            reader.Stream.Seek(curReadPos);
         }
 
         private float[] ReadDataSection(DataReader reader, int position)
@@ -102,7 +231,42 @@ namespace HActLib.OOE
             if (_InternalInfo.DataPtr1 > 1)
                 UnkFloatDats[1] = ReadDataSection(reader, _InternalInfo.DataPtr2);
 
+        }
 
+        private void ReadSet2(DataReader reader, int pos, uint count)
+        {
+            if (pos <= 0)
+                return;
+
+            reader.Stream.Seek(pos);
+
+            for(int i = 0; i < count; i++)
+            {
+                Set2 set = Set2.ReadFromMemory(reader);
+
+                //We can just generate this from Effect elements
+                //Idk what the point of set 2 elements are.
+                //if(set.Type != Set2NodeCategory.Element || set.EffectID == EffectID.Special)
+                    Children.Add(set);
+            }
+        }
+
+        private void ReadEffect(DataReader reader, int pos)
+        {
+            if (pos <= 0)
+                return;
+
+            reader.Stream.Seek(pos);
+
+            bool over = false;
+
+            while (!over)
+            {
+                (EffectBase, bool) result = EffectBase.ReadFromMemory(reader, false);
+                over = result.Item2;
+
+                Children.Add(result.Item1);
+            }
         }
 
         internal virtual void WriteSetData(DataWriter writer)
@@ -135,6 +299,7 @@ namespace HActLib.OOE
         //A important moment to find any elements/parents we have.
         internal virtual void OnLoadComplete(TEV tev)
         {
+            /*
             if (_InternalInfo.Parent > -1)
             {
                 Parent = tev.PointerSet1[_InternalInfo.Parent];
@@ -157,6 +322,9 @@ namespace HActLib.OOE
                 Set3Object = tev.PointerSet3[_InternalInfo.Set3Ptr];
 
 
+            List<Set2> set2Child = new List<Set2>();
+            List<EffectBase> effectChild = new List<EffectBase>();
+
             if (Set2Object != null)
             {
                 int startIndex = Array.IndexOf(tev.Set2, Set2Object);
@@ -164,7 +332,7 @@ namespace HActLib.OOE
 
                 for (int i = startIndex; i < goal; i++)
                 {
-                    Children.Add(tev.Set2[i]);
+                    set2Child.Add(tev.Set2[i]);
                 }
             }
 
@@ -180,7 +348,7 @@ namespace HActLib.OOE
                     if (curIndex == -1 || curIndex >= tev.Effects.Length)
                         break;
 
-                    Children.Add(tev.Effects[curIndex]);
+                    effectChild.Add(tev.Effects[curIndex]);
 
                     curIndex++;
 
@@ -188,7 +356,7 @@ namespace HActLib.OOE
                     {
                         curEffect = tev.Effects[curIndex];
 
-                        if (curEffect.OptionalUnk != null)
+                        if (tev.LastChildSet3.Contains(curEffect))
                         {
                             finish = true;
                             continue;
@@ -199,6 +367,13 @@ namespace HActLib.OOE
                         break;
                 }
             }
+
+            foreach (ITEVObject obj in set2Child)
+                Children.Add(obj);
+
+            foreach (ITEVObject obj in effectChild)
+                Children.Add(obj);
+            */
         }
 
         internal virtual int WriteData(DataWriter writer, float[] dat)

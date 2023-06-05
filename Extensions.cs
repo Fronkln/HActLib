@@ -39,9 +39,25 @@ namespace HActLib
             return new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
 
+        public static Vector4 ReadVector4(this DataReader reader)
+        {
+            return new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+        }
+
         public static RGBA32 ReadRGBA32(this DataReader reader)
         {
             return new RGBA32(reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
+        }
+
+        public static Matrix4x4 ReadMatrix4x4(this DataReader reader)
+        {
+            Matrix4x4 mtx = new Matrix4x4();
+            mtx.VM0 = reader.ReadVector4();
+            mtx.VM1 = reader.ReadVector4();
+            mtx.VM2 = reader.ReadVector4();
+            mtx.VM3 = reader.ReadVector4();
+
+            return mtx;
         }
 
         public static void Write(this DataWriter writer, Vector3 vec)
@@ -50,6 +66,14 @@ namespace HActLib
             writer.Write(vec.y);
             writer.Write(vec.z);
         }
+        public static void Write(this DataWriter writer, Vector4 vec)
+        {
+            writer.Write(vec.x);
+            writer.Write(vec.y);
+            writer.Write(vec.z);
+            writer.Write(vec.w);
+        }
+
 
         public static void Write(this DataWriter writer, RGBA32 col)
         {
@@ -57,6 +81,27 @@ namespace HActLib
             writer.Write(col.G);
             writer.Write(col.B);
             writer.Write(col.A);
+        }
+
+        public static void Write(this DataWriter writer, RGBA col)
+        {
+            writer.Write(col.r);
+            writer.Write(col.g);
+            writer.Write(col.b);
+            writer.Write(col.a);
+        }
+
+        public static byte[] ToArray(this DataStream stream)
+        {
+            long pos = stream.Position;
+            stream.Position = 0;
+
+            byte[] buf = new byte[stream.Length];
+            stream.Read(buf, 0, buf.Length);
+
+            stream.Position = pos;
+
+            return buf;
         }
     }
 }

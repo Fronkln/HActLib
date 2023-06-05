@@ -15,6 +15,11 @@ namespace CMNEdit
 
             form.CreateHeader("Bone");
             form.CreateInput("Bone Name", mdl.BoneName.Text, delegate (string val) { mdl.BoneName.Set(val); });
+         
+            if(Form1.curVer == GameVersion.Y0_K1)
+            {
+                form.CreateInput("Bone ID", mdl.BoneID.ToString(), delegate (string val) { mdl.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
+            }
         }
     }
 }

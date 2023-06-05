@@ -8,11 +8,8 @@ using Yarhl.FileFormat;
 
 namespace HActLib
 {
-    public class DENodeCharacterMotion : Node
+    public class DENodeCharacterMotion : NodeMotionBase
     {
-        public uint Flags;
-        public GameTick Start = new GameTick();
-        public GameTick End = new GameTick();
         public GameTick MotionTick = new GameTick();
         public Matrix4x4 PreviousMotionMatrix = Matrix4x4.Default;
 
@@ -33,7 +30,7 @@ namespace HActLib
 
         internal override void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
         {
-            base.WriteNodeData(writer, version, hactVer);
+            WriteCoreData(writer, version, hactVer);
 
             writer.Write(Flags);
             writer.Write(Start.Tick);

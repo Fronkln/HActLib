@@ -37,10 +37,13 @@ namespace HActLib
             Data.Flag = reader.ReadUInt16();     
             Data.Parts = reader.ReadUInt32();
           
-            Data.Attributes = version == GameVersion.DE2 ? reader.ReadBytes(8) : reader.ReadBytes(4);
+            Data.Attributes = version == GameVersion.DE2 ? reader.ReadBytes(6) : reader.ReadBytes(4);
 
-            if(isNewDE)
+            if (isNewDE)
+            {
+                reader.ReadBytes(2);
                 Data.AttackID = reader.ReadInt32();
+            }
         }
 
         internal override void WriteElementData(DataWriter writer, GameVersion version)

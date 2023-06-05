@@ -48,17 +48,21 @@ namespace HActLib
 
             cmn.ResourceCutInfo = new float[] { cmn.Header.End };
 
-            if (tev.Objects[0].Type != ObjectNodeCategory.Path)
+            if (tev.Root.Type != ObjectNodeCategory.Path)
                 throw new Exception("Rewrite this part of conversion where you assume 0 is root path");
 
-            for (int i = 1; i < tev.Objects.Length; i++)
-                if (tev.Objects[i].Parent == null && tev.Objects[i].Category != 2)
-                    tev.Objects[0].Children.Add(tev.Objects[i]);
 
-            cmn.Root = Convert(tev, tev.Objects[0], cmn.Header.End);
+            ObjectBase[] objects = tev.AllObjects;
 
 
-            IEnumerable<Set2Element1019> buttons = tev.Set2.Where(x => x.Type == Set2NodeCategory.Element && x._InternalInfo.elementType == 1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BUTTON")).Where(x => x.Type1019.Split('_').Length == 3);
+            for (int i = 1; i < objects.Length; i++)
+                if (objects[i].Parent == null && objects[i].Category != 2)
+                    tev.Root.Children.Add(objects[i]);
+
+            cmn.Root = Convert(tev, tev.Root, cmn.Header.End);
+
+
+            IEnumerable<Set2Element1019> buttons = tev.AllSet2.Where(x => x.Type == Set2NodeCategory.Element && x._InternalInfo.elementType == 1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BUTTON")).Where(x => x.Type1019.Split('_').Length == 3);
 
             int buttonCount = buttons.Count();
 
@@ -99,7 +103,7 @@ namespace HActLib
 
         public float DetermineHactLength(TEV tev)
         {
-            ObjectCamera cam = (ObjectCamera)tev.Objects.FirstOrDefault(x => x is ObjectCamera);
+            ObjectCamera cam = (ObjectCamera)tev.AllObjects.FirstOrDefault(x => x is ObjectCamera);
 
             IEnumerable<Set2Element1019> endNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_END_"));
             IEnumerable<Set2Element1019> branchNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BRANCH_"));
@@ -107,94 +111,101 @@ namespace HActLib
             if(branchNodes.Count() <= 0)
             {
                 if (endNodes.Count() <= 0)
-                    return tev.Set2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
+                    return tev.AllSet2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
                 else
                     return endNodes.ElementAt(0).Start;
             }
             else
             {
-                return tev.Set2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
+                return tev.AllSet2.Where(x => x.Type == Set2NodeCategory.CameraMotion).Max(x => x.End);
             }
         }
         public List<AuthPage> GeneratePages(TEV tev, float hactLen)
         {
-            ObjectCamera cam = (ObjectCamera)tev.Objects.FirstOrDefault(x => x is ObjectCamera);
-
-            //We are gonna treat every button sequence as the start of a new page.
-            IEnumerable<Set2Element1019> buttonNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BUTTON_")).Where(x => x.Type1019.Split('_').Length == 3).OrderBy(x => x.Start);
-            IEnumerable<Set2Element1019> endNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_END_")).OrderBy(x => x.Start);
-            IEnumerable<Set2Element1019> branchNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BRANCH_")).OrderBy(x => x.Start);
-
-            if (branchNodes.Count() <= 0)
-                return new List<AuthPage>();
-
-            List<AuthPage> pages = new List<AuthPage>();
-            AuthPage startPage = new AuthPage("START", 0, buttonNodes.ElementAt(0).Start - 1);
-
-            pages.Add(startPage);
-
-            int pageIdx = 2;
-
-            Set2Element1019 GetNearestEndNodeInRange(float start)
+            try
             {
-                Set2Element1019 endNode = endNodes.FirstOrDefault(x => x.Start >= start);
-                return endNode;
-            }
-            
-            for(int i = 0; i < branchNodes.Count(); i++)
-            {
-                Set2Element1019 branch = branchNodes.ElementAt(i);
+                ObjectCamera cam = (ObjectCamera)tev.AllObjects.FirstOrDefault(x => x is ObjectCamera);
 
-                AuthPage successPage = new AuthPage("SUCCESS " + i);
-                AuthPage failPage = new AuthPage("FAIL " + i);
+                //We are gonna treat every button sequence as the start of a new page.
+                IEnumerable<Set2Element1019> buttonNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BUTTON_")).Where(x => x.Type1019.Split('_').Length == 3).OrderBy(x => x.Start);
+                IEnumerable<Set2Element1019> endNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_END_")).OrderBy(x => x.Start);
+                IEnumerable<Set2Element1019> branchNodes = cam.Children.Where(x => x is Set2Element1019).Cast<Set2Element1019>().Where(x => x.Type1019.StartsWith("HE_BRANCH_")).OrderBy(x => x.Start);
 
-                successPage.Start.Frame = branch.Start;
-                successPage.PageIndex = pageIdx;
+                if (branchNodes.Count() <= 0)
+                    return new List<AuthPage>();
 
-                failPage.Start.Frame = branch.End;
-                failPage.PageIndex = pageIdx + 1;
+                List<AuthPage> pages = new List<AuthPage>();
+                AuthPage startPage = new AuthPage("START", 0, buttonNodes.ElementAt(0).Start - 1);
 
-                Set2Element1019 failEnd = GetNearestEndNodeInRange(branch.End);
+                pages.Add(startPage);
 
-                if (i == branchNodes.Count() - 1)
+                int pageIdx = 2;
+
+                Set2Element1019 GetNearestEndNodeInRange(float start)
                 {
-                    successPage.End.Frame = GetNearestEndNodeInRange(successPage.Start).Start;
-                }
-                else
-                {
-                    successPage.End.Frame = branchNodes.ElementAt(i + 1).Start - 1;
-                    successPage.Transitions.Add(new Transition(pageIdx + 2, new ConditionHActFlag(1, 0), new ConditionPageEnd()));
-                    successPage.Transitions.Add(new Transition(pageIdx + 3, new ConditionHActFlag(0, 1), new ConditionPageEnd()));
+                    Set2Element1019 endNode = endNodes.FirstOrDefault(x => x.Start >= start);
+                    return endNode;
                 }
 
-                if (failEnd != null)
-                    failPage.End.Frame = failEnd.Start;
-                else
+                for (int i = 0; i < branchNodes.Count(); i++)
                 {
+                    Set2Element1019 branch = branchNodes.ElementAt(i);
+
+                    AuthPage successPage = new AuthPage("SUCCESS " + i);
+                    AuthPage failPage = new AuthPage("FAIL " + i);
+
+                    successPage.Start.Frame = branch.Start;
+                    successPage.PageIndex = pageIdx;
+
+                    failPage.Start.Frame = branch.End;
+                    failPage.PageIndex = pageIdx + 1;
+
+                    Set2Element1019 failEnd = GetNearestEndNodeInRange(branch.End);
+
                     if (i == branchNodes.Count() - 1)
-                        failPage.End.Frame = hactLen;
+                    {
+                        successPage.End.Frame = GetNearestEndNodeInRange(successPage.Start).Start;
+                    }
                     else
-                        failPage.End.Frame = branchNodes.ElementAt(i + 1).Start - 1;
-                       // throw new Exception("Don't know how to calculate page end");
+                    {
+                        successPage.End.Frame = branchNodes.ElementAt(i + 1).Start - 1;
+                        successPage.Transitions.Add(new Transition(pageIdx + 2, new ConditionHActFlag(1, 0), new ConditionPageEnd()));
+                        successPage.Transitions.Add(new Transition(pageIdx + 3, new ConditionHActFlag(0, 1), new ConditionPageEnd()));
+                    }
+
+                    if (failEnd != null)
+                        failPage.End.Frame = failEnd.Start;
+                    else
+                    {
+                        if (i == branchNodes.Count() - 1)
+                            failPage.End.Frame = hactLen;
+                        else
+                            failPage.End.Frame = branchNodes.ElementAt(i + 1).Start - 1;
+                        // throw new Exception("Don't know how to calculate page end");
+                    }
+
+                    pages.Add(successPage);
+                    pages.Add(failPage);
+
+                    pageIdx += 2;
                 }
 
-                pages.Add(successPage);
-                pages.Add(failPage);
 
-                pageIdx += 2;
+                startPage.Transitions.Add(new Transition(1, new ConditionPageEnd()));
+
+                AuthPage promptPage = new AuthPage("PROMPT START", buttonNodes.ElementAt(0).Start, branchNodes.ElementAt(0).Start - 1);
+                promptPage.PageIndex = 1;
+                promptPage.Transitions.Add(new Transition(2, new ConditionHActFlag(1, 0), new ConditionPageEnd()));
+                promptPage.Transitions.Add(new Transition(3, new ConditionHActFlag(0, 1), new ConditionPageEnd()));
+
+                pages.Insert(1, promptPage);
+
+                return pages;
             }
-
-
-            startPage.Transitions.Add(new Transition(1, new ConditionPageEnd()));
-
-            AuthPage promptPage = new AuthPage("PROMPT START", buttonNodes.ElementAt(0).Start, branchNodes.ElementAt(0).Start - 1);
-            promptPage.PageIndex = 1;
-            promptPage.Transitions.Add(new Transition(2, new ConditionHActFlag(1, 0), new ConditionPageEnd()));
-            promptPage.Transitions.Add(new Transition(3, new ConditionHActFlag(0, 1), new ConditionPageEnd()));
-
-            pages.Insert(1, promptPage);
-
-            return pages;
+            catch
+            {
+                return new List<AuthPage>();
+            }
         }
 
         void FixConflicts(CMN cmn)
@@ -256,7 +267,7 @@ namespace HActLib
             motion.Guid = Guid.NewGuid();
             motion.End.Tick = new GameTick(length).Tick;
 
-            foreach (Set2 set in tev.Set2)
+            foreach (Set2 set in tev.AllSet2)
             {
                 if (set.Type == Set2NodeCategory.ModelMotion && !m_processedSets.Contains(set))
                 {
@@ -287,7 +298,7 @@ namespace HActLib
             motion.Start.Tick = 0;
             motion.End.Tick = (uint)length;
 
-            foreach (Set2 set in tev.Set2)
+            foreach (Set2 set in tev.AllSet2)
             {
                 if (set.Type == Set2NodeCategory.CameraMotion && !m_processedSets.Contains(set))
                 {
@@ -406,7 +417,7 @@ namespace HActLib
 
         void GenerateFrameProgression(TEV tev, CMN hact)
         {
-            ObjectCamera cam = tev.Objects[0].GetChildOfType<ObjectCamera>();
+            ObjectCamera cam = tev.Root.GetChildOfType<ObjectCamera>();
             List<Set2> slowMoAreas = cam.Children.Where(x => x is Set2).Cast<Set2>().Where(x => x.Type == Set2NodeCategory.Slowmo).ToList();
             List<DEHActInput> inputs = hact.AllElements.Where(x => x.ElementKind == Reflection.GetElementIDByName("e_auth_element_hact_input", CMN.LastHActDEGame)).Cast<DEHActInput>().ToList();
 

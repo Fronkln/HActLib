@@ -17,7 +17,7 @@ namespace CMNEdit
                 return;
 
             form.CreateHeader("Resource");
-            form.CreateInput("Name", res.Name, delegate (string val) { res.Text = val; res.Resource.Name = val; });
+            form.CreateInput("Name", res.Resource.Name, delegate (string val) { res.Text = val; res.Resource.Name = val; });
         }
     }
 }

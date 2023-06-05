@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Yarhl.IO;
 
@@ -7,6 +8,7 @@ namespace HActLib
 {
 
     [Serializable]
+    [DebuggerDisplay("{Name}")]
     public class Node 
     {
         /// <summary> Data exclusive to BEP files. </summary>
@@ -45,7 +47,10 @@ namespace HActLib
             dest.Category = src.Category;
             dest.Flag = src.Flag;
             dest.Priority = src.Priority;
-            dest.Name = src.Name;
+            
+            if(!string.IsNullOrEmpty(src.Name))
+                dest.Name = src.Name;
+            
             dest.Parent = src.Parent;
             dest.Children = src.Children;
             dest.unkBytes = src.unkBytes;
@@ -155,7 +160,7 @@ namespace HActLib
             }
         }
 
-        internal virtual void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
+        protected void WriteCoreData(DataWriter writer, GameVersion version, uint hactVer)
         {
             writer.Write(Guid.ToByteArray());
 
@@ -168,7 +173,7 @@ namespace HActLib
                 if (Category == AuthNodeCategory.Element)
                     writer.Write((ushort)((this as NodeElement).ElementKind));
                 else
-                    writer.Write(0);
+                    writer.Write((ushort)0);
             }
             else
             {
@@ -180,9 +185,11 @@ namespace HActLib
                     if (Category == AuthNodeCategory.Element)
                         writer.Write((uint)AuthNodeCategory.Model_node);
                     else if (Category == AuthNodeCategory.Model_node)
-                        writer.Write((uint)AuthNodeCategory.Motion_model);
+                        writer.Write((uint)AuthNodeCategory.ModelMotion);
                     else if (Category == AuthNodeCategory.FolderCondition)
                         writer.Write((uint)AuthNodeCategory.InstanceMotionData);
+                    else if (Category == AuthNodeCategory.Asset)
+                        writer.Write((uint)AuthNodeCategory.CharacterBehavior);
                     else
                         writer.Write((uint)Category);
                 }
@@ -210,8 +217,11 @@ namespace HActLib
 
                 writer.Write(Name.ToLength(32), false, System.Text.Encoding.GetEncoding(932), nameSize);
             }
-            else if (CMN.LastFile == AuthFile.BEP && Category != AuthNodeCategory.Element)
-                writer.Write(BEPDat.DataUnk);          
+        }
+
+        internal virtual void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
+        {
+            WriteCoreData(writer, version, hactVer);
         }
 
         internal virtual int GetSize(GameVersion version, uint hactVer)

@@ -15,9 +15,9 @@ namespace HActLib.OOE
         public ushort CuesheetID;
         public ushort SoundID;
 
-        internal override void ReadEffectData(DataReader reader)
+        internal override void ReadEffectData(DataReader reader, bool alt)
         {
-            base.ReadEffectData(reader);
+            base.ReadEffectData(reader, alt);
 
             Start = reader.ReadInt32();
             End = reader.ReadInt32();

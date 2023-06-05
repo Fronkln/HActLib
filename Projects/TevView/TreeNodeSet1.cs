@@ -22,6 +22,7 @@ namespace TevView
 
             if (set.Set3Object != null)
             {
+                                /*
                 int curIndex = Array.IndexOf(Form1.TevFile.Effects, set.Set3Object);
                 EffectBase curEffect = set.Set3Object;
                 bool finish = false;

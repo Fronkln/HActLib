@@ -95,6 +95,10 @@ namespace HActLib
                     break;
 
 
+                case AuthNodeCategory.ModelMotion:
+                    node = new NodeMotionBase();
+                    break;
+
             }
 
             node.ReadBaseInfo(reader, inf);

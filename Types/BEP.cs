@@ -95,7 +95,7 @@ namespace HActLib
         public static void Write(BEP bep, string path, GameVersion ver)
         {
             DataStream stream = WriteToStream(bep, ver);
-            stream.WriteTo(path);
+            File.WriteAllBytes(path, stream.ToArray());
         }
 
         public static DataStream WriteToStream(BEP bep, GameVersion ver)

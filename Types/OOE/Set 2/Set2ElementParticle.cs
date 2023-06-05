@@ -10,12 +10,16 @@ namespace HActLib.OOE
     public class Set2ElementParticle : Set2Element
     {
         public uint ParticleID;
+        public int Unknown1;
+        public int Unknown2;
+        public Matrix4x4 Matrix;
 
         public override string GetName()
         {
             return "Particle " + ParticleID;
         }
 
+        /*
         internal override void ReadArgs(DataReader reader)
         {
             ParticleID = reader.ReadUInt32();
@@ -29,6 +33,7 @@ namespace HActLib.OOE
 
             base.WriteArgs(writer);
         }
+        */
 
         public override int GetElementID()
         {

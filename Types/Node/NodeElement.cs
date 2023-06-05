@@ -59,6 +59,12 @@ namespace HActLib
 
         internal virtual void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
+            if(inf.file == AuthFile.MEP)
+            {
+                unkBytes = reader.ReadBytes(NodeSize);
+                return;
+            }
+
             if (inf.version > 10)
             {
                 if (inf.version < 18)
@@ -119,6 +125,17 @@ namespace HActLib
             }
             else
                 return (unkBytes.Length + 16) / 4;
+        }
+
+
+        public virtual void OE_ConvertToY0()
+        {
+
+        }
+
+        public virtual void OE_ConvertToY5()
+        {
+
         }
     }
 }

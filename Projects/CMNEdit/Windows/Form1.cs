@@ -15,7 +15,8 @@ using CMNEdit.Windows.Common.DE;
 using CMNEdit.Windows;
 using ParLibrary;
 using ParLibrary.Converter;
-using System.Xml;
+using PIBLib;
+using System.Drawing.Text;
 
 namespace CMNEdit
 {
@@ -25,13 +26,16 @@ namespace CMNEdit
         public static string FilePath;
 
         public static bool IsBep;
+        public static bool IsMep;
         public static bool IsHact;
         public static bool IsOE;
+
+        private static MEP Mep;
 
         public static GameVersion curVer;
         public static Game curGame = Game.YLAD; //only used for DE
 
-        public static TreeViewItemNode CopiedNode = null;
+        public static TreeNode CopiedNode = null;
         public static TreeViewItemResource CopiedResource = null;
 
         public static TreeViewItemNode EditingNode = null;
@@ -64,7 +68,7 @@ namespace CMNEdit
         int rowCount = 1;
 
         private static string folderDir = "";
-        private static HActInfo hactInf;
+        private static HActDir hactInf;
 
         public static bool TranslateNames = false;
 
@@ -115,16 +119,11 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
-            hactInf.Par?.Dispose();
+            HActDir inf = new HActDir();
+            inf.Open(dialog.SelectedPath);
 
-
-            HActInfo inf = new HActInfo(dialog.SelectedPath);
-
-            if (inf.IsTEV)
+            if (inf.FindFile("hact_tev.bin").Valid())
                 throw new NotImplementedException("TEV unimplemented");
-
-            if (!File.Exists(inf.MainPath))
-                return;
 
             hactInf = inf;
             folderDir = dialog.SelectedPath;
@@ -142,9 +141,8 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
-            hactInf.Par?.Dispose();
-
-            HActInfo inf = new HActInfo(dialog.FileName);
+            HActDir inf = new HActDir();
+            inf.Open(dialog.FileName);
 
             hactInf = inf;
             folderDir = Path.GetDirectoryName(dialog.FileName);
@@ -152,12 +150,8 @@ namespace CMNEdit
             ProcessHAct(inf);
         }
 
-        private void ProcessHAct(HActInfo hactInf)
+        private void ProcessHAct(HActDir hactInf)
         {
-
-            if (string.IsNullOrEmpty(hactInf.MainPath))
-                return;
-
             ClearEverything();
 
             // byte[] buf = File.ReadAllBytes(hactInf.MainPath);
@@ -165,9 +159,6 @@ namespace CMNEdit
 
             if (buf == null)
                 return;
-
-            if (hactInf.Par != null)
-                hactInf.Par.Dispose();
 
             //OOE HAct TEV
             if (BitConverter.ToString(buf, 0, 4) == "TCAH")
@@ -186,6 +177,8 @@ namespace CMNEdit
 
                 hactStartBox.Visible = true;
                 hactEndBox.Visible = true;
+                IsBep = false;
+                IsMep = false;
                 IsHact = true;
 
                 //OE/DE HAct
@@ -194,8 +187,11 @@ namespace CMNEdit
 
                 RES Res = null;
 
-                if (hactInf.ResourcesPaths.Length > 0)
-                    Res = RES.Read(hactInf.ResourcesPaths[0], isDE);
+                HActDir[] res = hactInf.GetResources();
+
+                if (res.Length > 0)
+                    Res = RES.Read(res[0].FindFile("res.bin").Read());
+
 
                 if (Res != null)
                 {
@@ -255,10 +251,6 @@ namespace CMNEdit
                     foreach (Resource resource in Res.Resources)
                         resTree.Nodes.Add(new TreeViewItemResource(resource));
             }
-
-            if (hactInf.Par != null)
-                if (!hactInf.Par.Disposed)
-                    hactInf.Par.Dispose();
 
             DrawCutInfo();
         }
@@ -475,9 +467,11 @@ namespace CMNEdit
             targetGameCombo.Enabled = toggle;
         }
 
-        public void ProcessSelectedNode(TreeViewItemNode treeNode)
+        public void ProcessSelectedNode(TreeNode treeNode)
         {
             varPanel.SuspendLayout();
+
+            ClearNodeMenu();
 
             if (treeNode == null)
             {
@@ -485,16 +479,23 @@ namespace CMNEdit
                 return;
             }
 
-            ClearNodeMenu();
+            EditingNode = treeNode as TreeViewItemNode;
 
-            EditingNode = treeNode;
 
-            if (EditingNode == null)
+            if (EditingNode == null && treeNode as TreeViewItemMepNode == null)
                 return;
 
-            Node node = EditingNode.HActNode;
+            if (treeNode as TreeViewItemNode != null)
+                EditingNode = treeNode as TreeViewItemNode;
 
-            NodeWindow.Draw(this, EditingNode.HActNode);
+            Node node;
+
+            if (!IsMep)
+                node = EditingNode.HActNode;
+            else
+               node = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).Effect;
+
+            NodeWindow.Draw(this, node);
 
             switch (node.Category)
             {
@@ -509,6 +510,10 @@ namespace CMNEdit
                     break;
 
                 case AuthNodeCategory.CameraMotion:
+                    NodeMotionBaseWindow.Draw(this, node);
+                    break;
+
+                case AuthNodeCategory.ModelMotion:
                     NodeMotionBaseWindow.Draw(this, node);
                     break;
 
@@ -540,6 +545,11 @@ namespace CMNEdit
 
                 case AuthNodeCategory.Model_node:
                     DENodeModelWindow.Draw(this, node);
+                    break;
+
+                case AuthNodeCategory.Path:
+                    CreateHeader("Path");
+                    MatrixWindow.Draw(this, (node as NodePathBase).Matrix);
                     break;
 
             }
@@ -588,8 +598,6 @@ namespace CMNEdit
             if (nodesTree.SelectedNode == null)
                 return;
 
-            ClearNodeMenu();
-
             switch (nodesTree.SelectedNode.GetType().Name)
             {
                 case "TreeViewItemExpressionTargetData":
@@ -620,7 +628,7 @@ namespace CMNEdit
         private void nodesTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (e.Action == TreeViewAction.ByKeyboard || e.Action == TreeViewAction.ByMouse)
-                ProcessSelectedNode((e.Node as TreeViewItemNode));
+                ProcessSelectedNode((e.Node));
         }
 
 
@@ -634,7 +642,7 @@ namespace CMNEdit
                     if (currentTab == 0 && nodesTree.SelectedNode != null)
                     {
                         if (e.KeyCode == Keys.C)
-                            CopiedNode = nodesTree.SelectedNode as TreeViewItemNode;
+                            CopiedNode = nodesTree.SelectedNode;
                         else
                             PasteNode(CopiedNode);
                     }
@@ -651,7 +659,7 @@ namespace CMNEdit
 
                     if (currentTab == 0 && nodesTree.SelectedNode != null)
                     {
-                        TreeViewItemNode node = nodesTree.SelectedNode as TreeViewItemNode;
+                        TreeNode node = nodesTree.SelectedNode as TreeNode;
                         DeleteNode(node);
                     }
                 }
@@ -659,37 +667,63 @@ namespace CMNEdit
         }
 
 
-        private void DeleteNode(TreeViewItemNode node)
+        private void DeleteNode(TreeNode node)
         {
             node.Remove();
         }
 
-        private void PasteNode(TreeViewItemNode pastingNode)
+        private void PasteNode(TreeNode pastingNode)
         {
             if (pastingNode == null)
                 return;
 
-            TreeViewItemNode parentNode = null;
-            TreeViewItemNode hactNode = nodesTree.SelectedNode as TreeViewItemNode;
-
-            if (!IsBep)
+            if (!IsMep)
             {
-                if (hactNode != null && parentNode != hactNode)
-                    parentNode = hactNode;
+                TreeViewItemNode parentNode = null;
+                TreeViewItemNode hactNode = nodesTree.SelectedNode as TreeViewItemNode;
+
+                if (!IsBep)
+                {
+                    if (hactNode != null && parentNode != hactNode)
+                        parentNode = hactNode;
+                    else
+                        parentNode = null;
+                }
+
+                TreeViewItemNode newNode = (TreeViewItemNode)pastingNode.Clone();
+
+                if (parentNode != null)
+                {
+                    parentNode.Nodes.Add(newNode);
+                    parentNode.Expand();
+                }
                 else
-                    parentNode = null;
-            }
-
-            TreeViewItemNode newNode = (TreeViewItemNode)pastingNode.Clone();
-            TreeNode node = newNode;
-
-            if (parentNode != null)
-            {
-                parentNode.Nodes.Add(node);
-                parentNode.Expand();
+                    nodesTree.Nodes.Add(newNode);
             }
             else
-                nodesTree.Nodes.Add(node);
+            {
+                //Mep to mep paste
+                if (pastingNode is TreeViewItemMepNode)
+                {
+                    TreeViewItemMepNode orig = pastingNode as TreeViewItemMepNode;
+                    MepEffect cloned = orig.Node.Copy();
+                    TreeViewItemMepNode newNode = new TreeViewItemMepNode(cloned);
+
+                    nodesTree.Nodes.Add(newNode);
+                } //Mep to hact paste
+                else
+                {
+                    Node hactNode = (pastingNode as TreeViewItemNode).HActNode;
+
+                    if (hactNode.Category != AuthNodeCategory.Element)
+                        return;
+
+                    MepEffectOE effectMep = new MepEffectOE();
+                    effectMep.Effect = (NodeElement)hactNode.Copy();
+
+                    nodesTree.Nodes.Add(new TreeViewItemMepNode(effectMep));
+                }
+            }
         }
         private void nodesTree_KeyUp(object sender, KeyEventArgs e)
         {
@@ -705,6 +739,7 @@ namespace CMNEdit
             dialog.Filter = "HAct cmn files (*.bin)|*.bin|All files (*.*)|*.*";
 
             DialogResult res = dialog.ShowDialog();
+
 
             if (res == DialogResult.OK)
                 CMN.Write(GenerateHAct(), dialog.FileName);
@@ -798,34 +833,89 @@ namespace CMNEdit
         {
             Yarhl.IO.DataStream stream = null;
 
+            if(IsBep || IsMep)
+                if(string.IsNullOrEmpty(FilePath))
+                {
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.DefaultExt = (IsBep ? ".bep" : ".mep");
+                    dialog.ShowDialog();
+                    FilePath = dialog.FileName;
+                }
+
+
 
             //Write hact
-            if (hactInf.Par == null)
+            if (IsHact)
             {
-                if (IsHact)
+                if (!hactInf.IsPar)
                 {
+                    CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
+
                     BaseCMN cmn = (IsOE ? GenerateOEHAct() : GenerateHAct());
                     GenerateBaseInfo(cmn);
                     if (IsOE)
                         OECMN.Write(cmn as OECMN, Path.Combine(folderDir, $"cmn.bin"));
                     else
-                        CMN.Write(cmn as CMN, hactInf.MainPath);
+                        CMN.Write(cmn as CMN, hactInf.FindFile("cmn.bin").Path);
 
-                    if (hactInf.ResourcesPaths.Length > 0)
+                    
+                    if (hactInf.GetResources().Length > 0)
                     {
                         RES newRes = new RES();
 
                         foreach (TreeViewItemResource res in resTree.Nodes)
                             newRes.Resources.Add(res.Resource);
 
-                        RES.Write(newRes, hactInf.ResourcesPaths[0], CMN.IsDE(curVer));
+                        RES.Write(newRes, hactInf.GetResources()[0].FindFile("res.bin").Path, CMN.IsDE(curVer));
                     }
                 }
-                else
-                    BEP.Write(GenerateBep(), FilePath, curVer);
             }
+            else if(IsBep)
+                BEP.Write(GenerateBep(), FilePath, curVer);
+            else if(IsMep)
+            {
+                curGame = (Game)targetGameCombo.SelectedIndex;
+
+                if (Mep.Version == MEPVersion.Y3)
+                    return;
+
+                ConvertCurrentMep();
+                MEP.Write(Mep, FilePath);
+            }
+
         }
 
+
+        private void ConvertCurrentMep()
+        {
+            curGame = (Game)targetGameCombo.SelectedIndex;
+            MepEffectOE[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffectOE>().ToArray();
+
+            if (Mep.Version == MEPVersion.Y5)
+            {
+                if (curGame >= Game.Y0)
+                {
+                    foreach (MepEffectOE oe in mepNodes)
+                    {
+                        oe.OE_ConvertToY0();
+                        oe.Effect.OE_ConvertToY0();
+                    }
+
+                }
+            }
+            else
+            {
+                if (curGame == Game.Y5)
+                    foreach (MepEffectOE oe in mepNodes)
+                    {
+                        oe.OE_ConvertToY5();
+                        oe.Effect.OE_ConvertToY5();
+                    }
+            }
+
+            Mep.Effects = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).ToList();
+            Mep.Version = (curGame == Game.Y5 ? MEPVersion.Y5 : MEPVersion.Y0);
+        }
 
 
         //ELEMENT WINDOW DRAWING
@@ -887,7 +977,7 @@ namespace CMNEdit
                         break;
                     case "e_auth_element_hact_stop_end":
                         OEHActStopEndWindow.Draw(this, element);
-                        break;
+                        break;;
                 }
             }
             else if (CMN.IsDE(curVer))
@@ -992,33 +1082,56 @@ namespace CMNEdit
                     case "e_auth_element_character_change":
                         DEElementCharacterChangeWindow.Draw(this, element);
                         break;
+                    case "e_auth_element_asset_break_uid":
+                        DEElementAssetBreakUIDWindow.Draw(this, element);
+                        break;
+                    case "e_auth_element_connect_camera":
+                        DEElementCameraLinkWindow.Draw(this, element);
+                        break;
+                    case "e_auth_element_path_offset":
+                        CreateHeader("Path Offset");
+                        MatrixWindow.Draw(this, (element as DEElementPathOffset).Matrix);
+                        break;
+                    case "e_auth_element_scenario_timeline":
+                        DEElementScenarioTimelineWindow.Draw(this, element);
+                        break;
                 }
             }
         }
 
         public NodeElement[] GetCurrentAuthAllElements()
         {
-            return GetAllNodes().Where(x => x.Category == AuthNodeCategory.Element).Cast<NodeElement>().ToArray();
+            Node[] allNodes = GetAllNodes();
+            return allNodes.Where(x => x.Category == AuthNodeCategory.Element).Cast<NodeElement>().ToArray();
         }
 
         private Node[] GetAllNodes()
         {
-            List<TreeNode> nodes = new List<TreeNode>();
 
-            void Process(TreeNode node)
+            if (!IsBep && !IsMep)
             {
-                nodes.Add(node);
+                List<TreeNode> nodes = new List<TreeNode>();
 
-                foreach (TreeNode child in node.Nodes)
-                    Process(child);
+                void Process(TreeNode node)
+                {
+                    nodes.Add(node);
+
+                    foreach (TreeNode child in node.Nodes)
+                        Process(child);
+                }
+
+                Process(nodesTree.Nodes[0]);
+
+                return nodes.Where(x => x is TreeViewItemNode)
+                   .Cast<TreeViewItemNode>()
+                   .Select(x => x.HActNode)
+                   .ToArray();
             }
-
-            Process(nodesTree.Nodes[0]);
-
-            return nodes.Where(x => x is TreeViewItemNode)
-               .Cast<TreeViewItemNode>()
-               .Select(x => x.HActNode)
-               .ToArray();
+            else
+                return nodesTree.Nodes
+                   .Cast<TreeViewItemNode>()
+                   .Select(x => x.HActNode)
+                   .ToArray();
         }
 
         private TreeViewItemNode[] GetAllNodesTreeView()
@@ -1042,8 +1155,8 @@ namespace CMNEdit
                 default:
                     return new Node[0];
 
-                case ResourceType.Asset:
-                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.Motion_model).ToArray();
+                case ResourceType.AssetMotion:
+                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.ModelMotion).ToArray();
 
                 case ResourceType.Character:
                     return nodesToFind.Where(x => x.Category == AuthNodeCategory.Character).ToArray();
@@ -1115,13 +1228,25 @@ namespace CMNEdit
             //TODO: GENERATE HACT
             if (IsHact)
             {
-                if (IsOE) ;
-                //OECMN.Write(OEHAct, dialog.FileName);
-                else;
-                //CMN.Write(HAct, dialog.FileName);
+                CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
+
+                BaseCMN cmn = (IsOE ? GenerateOEHAct() : GenerateHAct());
+                GenerateBaseInfo(cmn);
+                if (IsOE)
+                    OECMN.Write(cmn as OECMN, Path.Combine(folderDir, $"cmn.bin"));
+                else
+                    CMN.Write(cmn as CMN, hactInf.FindFile("cmn.bin").Path);
             }
-            else;
-            //BEP.Write(Bep, dialog.FileName, curVer);
+            else
+            {
+                if (IsBep)
+                    BEP.Write(GenerateBep(), dialog.FileName, curVer);
+                else if(IsMep)
+                {
+                    ConvertCurrentMep();
+                    MEP.Write(Mep, dialog.FileName);
+                }
+            }
         }
 
         private void openBEPToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1140,15 +1265,64 @@ namespace CMNEdit
             EditingResource = null;
             m_rightClickedNode = null;
 
-            IsHact = false;
-            IsOE = false;
-            IsBep = true;
-
             curGame = (Game)targetGameCombo.SelectedIndex;
             curVer = CMN.GetVersionForGame(curGame);
 
             BEP Bep = BEP.Read(dialog.FileName, curGame);
             FilePath = dialog.FileName;
+
+            SetBEPMode();
+
+            foreach (Node node in Bep.Nodes)
+                nodesTree.Nodes.Add(new TreeViewItemNode(node));
+        }
+
+        private void openMEPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.CheckFileExists = true;
+
+            DialogResult res = dialog.ShowDialog();
+
+            if (res != DialogResult.OK)
+                return;
+
+            ClearEverything();
+
+            EditingNode = null;
+            EditingResource = null;
+            m_rightClickedNode = null;
+
+            IsHact = false;
+            IsOE = false;
+            IsMep = true;
+            IsBep = false;
+
+            curGame = (Game)targetGameCombo.SelectedIndex;
+            curVer = CMN.GetVersionForGame(curGame);
+
+            Mep = MEP.Read(dialog.FileName);
+            FilePath = dialog.FileName;
+
+            hactTabs.TabPages[0].Text = "MEP";
+            hactTabs.TabPages.Remove(resPage);
+            hactTabs.TabPages.Remove(cutPage);
+
+            hactDurationPanel.Visible = false;
+
+            resTree.Nodes.Clear();
+
+            foreach (MepEffect node in Mep.Effects)
+                nodesTree.Nodes.Add(new TreeViewItemMepNode(node));
+        }
+
+
+        private void SetBEPMode()
+        {
+            IsHact = false;
+            IsOE = false;
+            IsMep = false;
+            IsBep = true;
 
             hactTabs.TabPages[0].Text = "BEP";
             hactTabs.TabPages.Remove(resPage);
@@ -1157,11 +1331,7 @@ namespace CMNEdit
             hactDurationPanel.Visible = false;
 
             resTree.Nodes.Clear();
-
-            foreach (Node node in Bep.Nodes)
-                nodesTree.Nodes.Add(new TreeViewItemNode(node));
         }
-
 
         private NodeElement AddElementOfType(Type t, string name, string kind)
         {
@@ -1322,7 +1492,7 @@ namespace CMNEdit
             PasteNode(CopiedNode);
         }
 
-        private TreeViewItemNode m_rightClickedNode = null;
+        private TreeNode m_rightClickedNode = null;
         private void nodesTree_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -1421,6 +1591,259 @@ namespace CMNEdit
             CutInfos.Add(0);
             DrawCutInfo();
         }
+        private void convertMEPWithPibsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsMep)
+                return;
+
+            MessageBox.Show("(SLOW) Convert the current open mep file to the selected OE game including pibs. Input the paths carefully.");
+
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Directory where the mep's pibs are",
+           "MEP Pib Path",
+           "",
+           0,
+           0);
+
+            if (string.IsNullOrEmpty(input))
+                return;
+
+            string output = Microsoft.VisualBasic.Interaction.InputBox("Directory to output to",
+           "MEP Export Path",
+           "",
+           0,
+           0);
+
+           ConvertCurrentMep();
+
+            OEParticle[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffectOE>().Where(x => x.Effect.ElementKind == 2).Select(x => x.Effect).Cast<OEParticle>().ToArray();
+
+            uint[] pibIds = mepNodes.Select(x => x.ParticleID).ToArray();
+            string[] pibFiles = Directory.GetFiles(input, "*.pib", SearchOption.AllDirectories);
+
+
+            List<string> foundPibPaths = new List<string>();
+            List<BasePib> mepPibs = new List<BasePib>();
+
+            foreach(string str in pibFiles)
+            {
+                if (pibIds.Length == pibFiles.Length)
+                    break;
+
+                try
+                {
+                    BasePib pib = PIB.Read(str);
+
+                    if (pibIds.Contains(pib.ParticleID))
+                    {
+                        foundPibPaths.Add(str);
+                        mepPibs.Add(pib);
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+
+            PibVersion targetVer = PibVersion.Y5;
+
+            switch(curGame)
+            {
+                case Game.Ishin:
+                    targetVer = PibVersion.Ishin;
+                    break;
+                case Game.Y5:
+                    targetVer = PibVersion.Y5;
+                    break;
+                case Game.Y0:
+                    targetVer = PibVersion.Y0;
+                    break;
+                case Game.YK1:
+                    targetVer = PibVersion.Y0;
+                    break;
+            }
+
+            for(int i = 0; i < mepPibs.Count; i++)
+            {
+                BasePib converted = PIB.Convert(mepPibs[i], targetVer);
+
+                foreach (BasePibEmitter emitter in converted.Emitters)
+                {
+                    string dir = new FileInfo(foundPibPaths[i]).Directory.FullName;
+
+                    foreach (string tex in emitter.Textures)
+                    {
+                        string texPath = Path.Combine(dir, tex);
+
+                        if (File.Exists(texPath))
+                            File.Copy(texPath, Path.Combine(output, tex), true);
+                    }
+                }
+
+                PIB.Write(converted, Path.Combine(output, converted.Name + ".pib"));
+            }
+
+
+            MEP.Write(Mep, Path.Combine(output, Path.GetFileName(FilePath)));
+        }
+
+        private void convertMEPToBEPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PibVersion GetVersionForGame(Game game)
+            {
+                switch(game)
+                {
+                    default:
+                        return PibVersion.Y0;
+                    case Game.Y5:
+                        return PibVersion.Y5;
+                    case Game.Ishin:
+                        return PibVersion.Ishin;
+                    case Game.Y6:
+                        return PibVersion.Y6;
+                    case Game.YK2:
+                        return PibVersion.YK2;
+                    case Game.JE:
+                        return PibVersion.JE;
+                    case Game.YLAD:
+                        return PibVersion.YLAD;
+                    case Game.LJ:
+                        return PibVersion.LJ;
+                }
+            }
+
+
+            Game selectedDEGame = curGame = (Game)targetGameCombo.SelectedIndex;
+
+            if (!CMN.IsDEGame(selectedDEGame))
+            {
+                MessageBox.Show("Select a DE game first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            MEPVersion mepVer;
+            Game game;
+            Dictionary<string, Node> m_createdBones = new Dictionary<string, Node>();
+
+            Node ConvertMepNodeToBep(MepEffectOE mepNode)
+            {
+                Node node = null;
+                node = OE2DECmn.Convert(mepNode.Effect, OECMN.GetCMNVersionForGame(game), selectedDEGame, game);
+
+                return node;
+            }
+
+            OpenFileDialog dialog = new OpenFileDialog();
+           // dialog.Filter = ".mep|.MEP file";
+            dialog.CheckFileExists = true;
+
+            DialogResult res = dialog.ShowDialog();
+
+            if (res != DialogResult.OK)
+                return;
+
+            FilePath = null;
+
+            MEP mep = MEP.Read(dialog.FileName);
+            mepVer = mep.Version;
+            game = mepVer == MEPVersion.Y5 ? Game.Y5 : Game.Y0;
+
+            ClearEverything();
+            SetBEPMode();
+
+            foreach(MepEffectOE mepOe in mep.Effects.Cast<MepEffectOE>())
+            {
+                Node result = ConvertMepNodeToBep(mepOe);
+                TreeViewItemNode resultNode = null;
+
+                if (result != null)
+                {
+                    result.BEPDat.Bone = mepOe.BoneName;
+                    resultNode = new TreeViewItemNode(result);
+                    nodesTree.Nodes.Add(resultNode);
+                }
+            }
+
+            if(MessageBox.Show("Convert particle files?", "Conversion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                FolderBrowserDialog pibDir = new FolderBrowserDialog();
+
+                if (pibDir.ShowDialog() != DialogResult.OK)
+                    return;
+
+                string pibSearchDir = pibDir.SelectedPath;
+
+                FolderBrowserDialog pibOutputDir = new FolderBrowserDialog();
+
+                if (pibOutputDir.ShowDialog() != DialogResult.OK)
+                    return;
+
+                string pibOutputPath = pibOutputDir.SelectedPath;
+
+
+                OEParticle[] mepNodes = mep.Effects.Cast<MepEffectOE>().Where(x => x.Effect.ElementKind == 2).Select(x => x.Effect).Cast<OEParticle>().ToArray();
+
+                uint puidStartID = uint.Parse(Microsoft.VisualBasic.Interaction.InputBox("Enter the starting ID the converted pibs will have",
+                "Adjust PUID ID",
+                "",
+                0,
+                0));
+
+                uint[] pibIds = mepNodes.Select(x => x.ParticleID).GroupBy(x => x).Select(y => y.First()).ToArray();
+                string[] pibFiles = Directory.GetFiles(pibSearchDir, "*.pib", SearchOption.AllDirectories);
+
+                Dictionary<uint, uint> newPibIDs = new Dictionary<uint, uint>();
+
+                List<string> foundPibPaths = new List<string>();
+                List<BasePib> mepPibs = new List<BasePib>();
+
+                foreach (string str in pibFiles)
+                {
+                    if (pibIds.Length == pibFiles.Length)
+                        break;
+
+                    try
+                    {
+                        BasePib pib = PIB.Read(str);
+
+                        if (pibIds.Contains(pib.ParticleID))
+                        {
+                            foundPibPaths.Add(str);
+                            mepPibs.Add(pib);
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                foreach(BasePib pib in mepPibs)
+                {
+                    BasePib converted = PIB.Convert(pib, GetVersionForGame(selectedDEGame));
+
+                    if (converted == null)
+                        continue;
+
+                    uint oldID = converted.ParticleID;
+                    uint newID = puidStartID;
+                    puidStartID++;
+
+                    converted.ParticleID = newID;
+                    newPibIDs[oldID] = newID;
+
+                    PIB.Write(converted, Path.Combine(pibOutputPath, converted.Name + ".pib"));
+                }
+
+                foreach(DEElementParticle ptc in GetAllNodesTreeView().Where(x => x.HActNode is DEElementParticle).Select(x => x.HActNode).Cast<DEElementParticle>())
+                {
+                    if (newPibIDs.ContainsKey(ptc.ParticleID))
+                        ptc.ParticleID = newPibIDs[ptc.ParticleID];
+                }
+            }
+           
+        }
+
 
         private void adjustTimingToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1511,6 +1934,16 @@ namespace CMNEdit
         private void characterChangeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NodeElement speed = AddElementOfType(typeof(DEElementCharacterChange), "Character Change", "e_auth_element_character_change");
+        }
+
+        private void assetBreakUIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NodeElement breakUID = AddElementOfType(typeof(DEElementAssetBreakUID), "Asset Break UID", "e_auth_element_asset_break_uid");
+        }
+
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+
         }
     }
 }

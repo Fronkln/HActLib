@@ -74,16 +74,8 @@ namespace TevView
         {
             treeView1.Nodes.Clear();
 
-
-            foreach (ObjectBase set in TevFile.Objects)
-            {
-                if (set.Parent == null)
-                {
-                    TreeNodeSet1 root = DrawSet1(set);
-
-                    treeView1.Nodes.Add(root);
-                }
-            }
+            TreeNodeSet1 root = DrawSet1(TevFile.Root);
+            treeView1.Nodes.Add(root);
         }
 
 
@@ -97,7 +89,7 @@ namespace TevView
 
             treeView1.Nodes.Clear();
 
-            foreach (Set2 set in TevFile.Set2)
+            foreach (Set2 set in TevFile.AllSet2)
             {
                 treeView1.Nodes.Add(Set2ToNode(set));
             }
@@ -108,7 +100,7 @@ namespace TevView
 
             treeView1.Nodes.Clear();
 
-            foreach (EffectBase set in TevFile.Effects)
+            foreach (EffectBase set in TevFile.AllEffects)
             {
                 treeView1.Nodes.Add(new TreeNodeEffect(set));
             }
@@ -157,38 +149,50 @@ namespace TevView
                 {
                     Set2Element elem = set2Node.Set as Set2Element;
 
+
+                    if(elem.Effect != null)
+                        DrawEffectWindow(elem.Effect);
+
+                    /*
                     switch(elem.EffectID)
                     {
+                         
+
                         case EffectID.Particle:
                             Set2WindowParticle.Draw(this, elem as Set2ElementParticle);
                             break;
                     }
+                    */
 
                 }
             }
             else if (node is TreeNodeEffect)
             {
-                TreeNodeEffect effectNode = (node as TreeNodeEffect);
-                provider = new Be.Windows.Forms.DynamicByteProvider(effectNode.Effect.Data);
-
-                EffectWindowBase.Draw(this, effectNode.Effect);
-
-                if ((effectNode.Effect as EffectElement) != null)
-                    EffectElementWindow.Draw(this, effectNode.Effect as EffectElement);
-
-                switch (effectNode.Effect.ElementKind)
-                {
-                    case EffectID.Sound:
-                        EffectWindowSound.Draw(this, effectNode.Effect as EffectSound);
-                        break;
-                    case EffectID.Particle:
-                        EffectWindowParticle.Draw(this, effectNode.Effect as EffectParticle);
-                        break;
-                }
+                DrawEffectWindow((node as TreeNodeEffect).Effect);
             }
 
 
             unkDat.ByteProvider = provider;
+        }
+
+
+        private void DrawEffectWindow(EffectBase effect)
+        {
+            EffectWindowBase.Draw(this, effect);
+            Be.Windows.Forms.DynamicByteProvider provider = new Be.Windows.Forms.DynamicByteProvider(effect.Data == null ? new byte[0] : effect.Data);
+
+            if ((effect as EffectElement) != null)
+                EffectElementWindow.Draw(this, effect as EffectElement);
+
+            switch (effect.ElementKind)
+            {
+                case EffectID.Sound:
+                    EffectWindowSound.Draw(this, effect as EffectSound);
+                    break;
+                case EffectID.Particle:
+                    EffectWindowParticle.Draw(this, effect as EffectParticle);
+                    break;
+            }
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -232,7 +236,10 @@ namespace TevView
 
         }
 
-
+        private void GenerateTEV()
+        {
+            TEV tev = new TEV();
+        }
 
 
         public void CreateHeader(string label, float spacing = 0)
@@ -416,8 +423,17 @@ namespace TevView
             set2Btn.Visible = false;
             set3Btn.Visible = false;
 
-            foreach (EffectBase effect in Mep.Effects)
-                treeView1.Nodes.Add(new TreeNodeEffect(effect));
+            foreach (MepEffectY3 effect in Mep.Effects)
+                treeView1.Nodes.Add(new TreeNodeEffect(effect.Effect));
+        }
+
+        private void treeView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Delete)
+            {
+                if (treeView1.SelectedNode is TreeNodeSet2)
+                    throw new Exception("kill");
+            }
         }
     }
 }

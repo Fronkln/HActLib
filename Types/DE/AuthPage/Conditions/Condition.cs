@@ -77,7 +77,8 @@ namespace HActLib
 
         internal virtual void Write(DataWriter writer)
         {
-            writer.Write(CondBytes);
+            if(CondBytes != null)
+                writer.Write(CondBytes);
         }
 
         internal virtual int Size()

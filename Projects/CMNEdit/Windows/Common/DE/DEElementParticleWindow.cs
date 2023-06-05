@@ -22,6 +22,13 @@ namespace CMNEdit
             form.CreateInput("Scale Z", particle.Scale.z.ToString(), delegate (string val) { particle.Scale.z = float.Parse(val); }, NumberBox.NumberMode.Float);
 
 
+
+            form.CreateInput("Position X", particle.Matrix.VM3.x.ToString(), delegate (string val) { particle.Matrix.VM3.x = float.Parse(val); }, NumberBox.NumberMode.Float);
+            form.CreateInput("Position Y", particle.Matrix.VM3.y.ToString(), delegate (string val) { particle.Matrix.VM3.y = float.Parse(val); }, NumberBox.NumberMode.Float);
+            form.CreateInput("Position Z", particle.Matrix.VM3.z.ToString(), delegate (string val) { particle.Matrix.VM3.z = float.Parse(val); }, NumberBox.NumberMode.Float);
+
+
+
             Panel particleColPanel = null;
             particleColPanel = form.CreatePanel("Particle Color", particle.Color,
                 delegate (Color col)

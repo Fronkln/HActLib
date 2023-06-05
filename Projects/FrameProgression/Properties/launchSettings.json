@@ -2,7 +2,7 @@
   "profiles": {
     "FrameProgression": {
       "commandName": "Project",
-      "commandLineArgs": "\"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\yb1270_saw_weaponb\\cmn\\cmn.bin\" fuck"
+      "commandLineArgs": "\"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\test_hact\\cmn\\cmn_vo.bin\" add 60"
     }
   }
 }

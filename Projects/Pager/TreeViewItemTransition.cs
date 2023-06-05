@@ -14,7 +14,7 @@ namespace Pager
             Transition = transition;
 
 
-            if (transition.DestinationPageIndex >= Form1.DEHact.AuthPages.Length)
+            if (transition.DestinationPageIndex >= Form1.DEHact.AuthPages.Count)
                 transition.DestinationPageIndex = -1;
 
             try

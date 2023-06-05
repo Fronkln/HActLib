@@ -61,6 +61,7 @@
             this.treeView1.Size = new System.Drawing.Size(279, 402);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.treeView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeView1_KeyDown);
             this.treeView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseUp);
             // 
             // icons
@@ -184,6 +185,7 @@
             // 
             // varPanel
             // 
+            this.varPanel.AutoScroll = true;
             this.varPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.varPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.varPanel.ColumnCount = 2;

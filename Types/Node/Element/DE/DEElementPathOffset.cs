@@ -28,6 +28,8 @@ namespace HActLib
 
             IsPreview = reader.ReadInt32() == 1;
             IsOverwrite = reader.ReadInt32() == 1;
+
+            reader.ReadBytes(8);
         }
 
         internal override void WriteElementData(DataWriter writer, GameVersion version)
@@ -36,6 +38,8 @@ namespace HActLib
 
             writer.Write(Convert.ToInt32(IsPreview));
             writer.Write(Convert.ToInt32(IsOverwrite));
+
+            writer.WriteTimes(0, 8);
         }
     }
 }

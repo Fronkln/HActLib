@@ -10,6 +10,7 @@ namespace HActLib
     {
         e_auth_element_particle = 2,
         e_auth_element_particle_opacity = 4,
+        e_auth_element_ground_particle = 5,
         e_auth_element_fade = 6,
         e_auth_element_color_correction = 7,
         e_auth_element_blur = 8,
@@ -24,6 +25,8 @@ namespace HActLib
         e_auth_element_wrinkle_blend_ratio = 20,
         e_auth_element_mouth_brightness_correction = 21,
         e_auth_element_draw_off = 23,
+        e_auth_element_trail = 26,
+        e_auth_element_ghost_afterimage = 27,
         e_auth_element_blood = 31,
         e_auth_element_damage = 32,
         e_auth_element_sound = 33,
@@ -41,6 +44,7 @@ namespace HActLib
         //somewhere between 49-69, they killed off two nodes
         e_auth_element_character_point_light_disable = 53,
         e_auth_element_path_adjustment = 62,
+        e_auth_element_movie_texture = 66,
         e_auth_element_rim_light_scale = 67,
         e_auth_element_fresnel_coefficient = 69,
         e_auth_element_hact_hide = 70,
@@ -53,6 +57,7 @@ namespace HActLib
         e_auth_element_body_flash = 100,
         e_auth_element_depth_of_field = 109,
         e_auth_element_slow_sound_production = 116,
+        e_auth_element_stream_playback = 135,
         e_auth_element_extended_single_picture = 150,
     }
 }

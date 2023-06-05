@@ -25,6 +25,7 @@ namespace HActLib.OOE
         internal override void WriteArgs(DataWriter writer)
         {
             writer.Write(Type1019.ToLength(16), false, maxSize: 16);
+            writer.Write(Unk2);
 
             base.WriteArgs(writer);
         }

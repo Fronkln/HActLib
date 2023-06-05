@@ -39,6 +39,7 @@
             this.openCtrlOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openHActCMNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openMEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nodeTooltip = new System.Windows.Forms.ToolStripSplitButton();
@@ -54,11 +55,15 @@
             this.stageWarpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pathOffsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.characterSpeedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.assetBreakUIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.systemSpeedEXAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.adjustTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.convertMEPWithPibsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertMEPToBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nodesTree = new System.Windows.Forms.TreeView();
             this.nodeIcons = new System.Windows.Forms.ImageList(this.components);
             this.nodeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -164,7 +169,8 @@
             this.appTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.nodeTooltip,
-            this.toolStripSplitButton1});
+            this.toolStripSplitButton1,
+            this.advancedButton});
             this.appTools.Location = new System.Drawing.Point(0, 0);
             this.appTools.Name = "appTools";
             this.appTools.Size = new System.Drawing.Size(882, 25);
@@ -178,6 +184,7 @@
             this.openCtrlOToolStripMenuItem,
             this.openHActCMNToolStripMenuItem,
             this.openBEPToolStripMenuItem,
+            this.openMEPToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
@@ -206,6 +213,13 @@
             this.openBEPToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.openBEPToolStripMenuItem.Text = "Open BEP";
             this.openBEPToolStripMenuItem.Click += new System.EventHandler(this.openBEPToolStripMenuItem_Click);
+            // 
+            // openMEPToolStripMenuItem
+            // 
+            this.openMEPToolStripMenuItem.Name = "openMEPToolStripMenuItem";
+            this.openMEPToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.openMEPToolStripMenuItem.Text = "Open MEP";
+            this.openMEPToolStripMenuItem.Click += new System.EventHandler(this.openMEPToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
@@ -253,6 +267,7 @@
             this.stageWarpToolStripMenuItem,
             this.pathOffsetToolStripMenuItem,
             this.characterSpeedToolStripMenuItem,
+            this.assetBreakUIDToolStripMenuItem,
             this.customToolStripMenuItem});
             this.elementToolStripMenuItem.Name = "elementToolStripMenuItem";
             this.elementToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
@@ -328,6 +343,13 @@
             this.characterSpeedToolStripMenuItem.Text = "Character Speed";
             this.characterSpeedToolStripMenuItem.Click += new System.EventHandler(this.characterSpeedToolStripMenuItem_Click);
             // 
+            // assetBreakUIDToolStripMenuItem
+            // 
+            this.assetBreakUIDToolStripMenuItem.Name = "assetBreakUIDToolStripMenuItem";
+            this.assetBreakUIDToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.assetBreakUIDToolStripMenuItem.Text = "Asset Break UID";
+            this.assetBreakUIDToolStripMenuItem.Click += new System.EventHandler(this.assetBreakUIDToolStripMenuItem_Click);
+            // 
             // customToolStripMenuItem
             // 
             this.customToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -354,6 +376,7 @@
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
             this.toolStripSplitButton1.Size = new System.Drawing.Size(48, 22);
             this.toolStripSplitButton1.Text = "Misc";
+            this.toolStripSplitButton1.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
             // 
             // adjustTimingToolStripMenuItem
             // 
@@ -368,6 +391,32 @@
             this.moveTimingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.moveTimingToolStripMenuItem.Text = "Move Timing";
             this.moveTimingToolStripMenuItem.Click += new System.EventHandler(this.moveTimingToolStripMenuItem_Click);
+            // 
+            // advancedButton
+            // 
+            this.advancedButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.convertMEPWithPibsToolStripMenuItem,
+            this.convertMEPToBEPToolStripMenuItem});
+            this.advancedButton.Image = ((System.Drawing.Image)(resources.GetObject("advancedButton.Image")));
+            this.advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.advancedButton.Name = "advancedButton";
+            this.advancedButton.Size = new System.Drawing.Size(73, 22);
+            this.advancedButton.Text = "Advanced";
+            // 
+            // convertMEPWithPibsToolStripMenuItem
+            // 
+            this.convertMEPWithPibsToolStripMenuItem.Name = "convertMEPWithPibsToolStripMenuItem";
+            this.convertMEPWithPibsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.convertMEPWithPibsToolStripMenuItem.Text = "Convert MEP (With Pibs)";
+            this.convertMEPWithPibsToolStripMenuItem.Click += new System.EventHandler(this.convertMEPWithPibsToolStripMenuItem_Click);
+            // 
+            // convertMEPToBEPToolStripMenuItem
+            // 
+            this.convertMEPToBEPToolStripMenuItem.Name = "convertMEPToBEPToolStripMenuItem";
+            this.convertMEPToBEPToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.convertMEPToBEPToolStripMenuItem.Text = "Convert MEP To BEP";
+            this.convertMEPToBEPToolStripMenuItem.Click += new System.EventHandler(this.convertMEPToBEPToolStripMenuItem_Click);
             // 
             // nodesTree
             // 
@@ -908,5 +957,10 @@
         private System.Windows.Forms.ToolStripMenuItem systemSpeedEXAuthToolStripMenuItem;
         public System.Windows.Forms.TreeView resTree;
         private System.Windows.Forms.ToolStripMenuItem moveTimingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assetBreakUIDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openMEPToolStripMenuItem;
+        private System.Windows.Forms.ToolStripDropDownButton advancedButton;
+        private System.Windows.Forms.ToolStripMenuItem convertMEPWithPibsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertMEPToBEPToolStripMenuItem;
     }
 }
