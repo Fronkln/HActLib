@@ -4,11 +4,14 @@ using Yarhl.IO;
 using Yarhl.FileFormat;
 using HActLib.OOE;
 using System.Data;
+using System.Linq;
 
 namespace HActLib
 {
     public class TEVWriter : IConverter<TEV, BinaryFormat>
     {
+        public bool Optimize = true;
+
         public BinaryFormat Convert(TEV tev)
         {
             Dictionary<ObjectBase, long> h_set1Addresses = new Dictionary<ObjectBase, long>();
@@ -46,6 +49,23 @@ namespace HActLib
                 ObjectBase set = objects[i];
                 h_set1Addresses[set] = writer.Stream.Position;
 
+
+                if (Optimize)
+                {
+                    Set2[] set2s = set.GetChildSet2();
+
+                    foreach (Set2 set2Child in set2s)
+                    {
+                        if (set2Child is Set2Element)
+                        {
+                            Set2Element set2Elem = set2Child as Set2Element;
+
+                            if(set2Elem.Effect != null && (set2Elem.EffectID != EffectID.Dummy && set2Elem.EffectID == set2Elem.Effect.ElementKind))
+                                set.Children.Remove(set2Child);
+                        }
+                    }
+                }
+
                 writer.Write(i);
                 set.WriteSetData(writer);
             }
@@ -58,10 +78,11 @@ namespace HActLib
             for (int i = 0; i < set2.Length; i++)
             {
                 Set2 set = set2[i];
+
                 h_set2Addresses[set] = writer.Stream.Position;
 
                 writer.Write(i);
-                set.WriteSetData(writer);
+                set.WriteSetData(writer, true);
             }
 
             long set3Start = writer.Stream.Position;
@@ -69,6 +90,31 @@ namespace HActLib
             EffectBase[] effects = tev.AllEffects;
 
             //Write set 3 data.
+
+
+            for(int i = 0; i < objects.Length; i++)
+            {
+                ObjectBase tevObj = objects[i];
+                EffectBase[] objEffects = tevObj.GetChildEffects();
+
+                for(int j = 0; j < objEffects.Length; j++)
+                {
+                    EffectBase effect = objEffects[j];
+                    h_set3Addresses[effect] = writer.Stream.Position;
+
+                    effect.WriteToStream(writer, false);
+
+                    int idx = Array.IndexOf(effects, effect);
+
+                    if (j == objEffects.Length - 1 || idx >= effects.Length - 1)
+                    {
+                        writer.WriteTimes(255, 16);
+                        writer.WriteTimes(0, 16);
+                    }
+                }
+            }
+
+            /*
             for (int i = 0; i < effects.Length; i++)
             {
                 EffectBase set = effects[i];
@@ -76,12 +122,15 @@ namespace HActLib
 
                 set.WriteToStream(writer);
 
+             
+
                 if(i == effects.Length - 1)
                 {
                     writer.WriteTimes(255, 16);
                     writer.WriteTimes(0, 16);
                 }    
             }
+            */
 
             int unkPtr1 = (int)writer.Stream.Position;
             //writer.Align(512);
@@ -105,25 +154,146 @@ namespace HActLib
             writer.Endianness = EndiannessMode.LittleEndian;
             writer.Write(tev.CuesheetID);
             writer.Endianness = EndiannessMode.BigEndian;
-                
-            int unkPtr2 = (int)writer.Stream.Position;
 
-            int stringTableStart = (int)writer.Stream.Position;
-
-            foreach (ObjectBase set in objects)
+            //Adjust pointers after everything was written
+            for(int i = 0; i < objects.Length; i++)
             {
+                ObjectBase set = objects[i];
+
                 int nodeIdx = Array.IndexOf(objects, set);
+                bool isFirstNode = nodeIdx == 0;
+                bool isLastNode = nodeIdx >= objects.Length - 1;
+                bool isMainNode = nodeIdx == 0 || objects[0].Children.Contains(set);
+                bool isFirstChild = !isMainNode && set.Parent != null && set.Parent.Children.IndexOf(set) >= set.Parent.Children.Count - 1;
+                bool isLastChild = !isMainNode && set.Parent != null && set.Parent.Children.IndexOf(set) >= set.Parent.Children.Count - 1;
+
+                /*
+                    Previous Node: Previous node in hierarchy. -1 for main nodes.
+                    Example:          
+                        Path (None)
+                            Human (None)
+                                Bone 1 (None)
+                                Bone (Bone 1)                  
+                */
+                /*
+                    Next Node: Next node in hierarchy. -1 if no next node in the sub node.
+                    Example:          
+                        Path (Human)
+                            Human (Bone 1)
+                                Bone 1 (Bone 2)
+                                Bone 2 (None) (end of sub hierarchy)                  
+                */
+                /*
+                    Next Main Node: Next main node in hierarchy. -1 if no more main nodes are left.
+                    Example:          
+                        Path (None)
+                            Human (Human 2)
+                                Bone 1 (None)
+                                Bone 2 (None)
+                            Human 2 (None)
+                                Bone 1 (None)
+                                Bone 2 (None)               
+                */
+
+                ObjectBase[] objChildren = set.GetChildObjects();
 
                 set._InternalInfo.Parent = (int)(set.Parent == null ? -1 : h_set1Addresses[set.Parent]);
-                set._InternalInfo.PreviousNode = (int)(set.PreviousNode == null ? -1 : h_set1Addresses[set.PreviousNode]);
-                set._InternalInfo.NextNode = (int)(set.NextNode == null ? -1 : h_set1Addresses[set.NextNode]);
-                set._InternalInfo.NextMainNode = (int)(set.NextMainNode == null ? -1 : h_set1Addresses[set.NextMainNode]);
+
+                #region Next Node
+
+                if (isFirstNode)
+                    set._InternalInfo.NextNode = (int)(objects.Length <= 1 ? -1 : h_set1Addresses[objects[i + 1]]);
+                else
+                {
+                    if(isMainNode)
+                        set._InternalInfo.NextNode = (int)(objChildren.Length == 0 ? -1 : h_set1Addresses[objChildren[0]]);
+                    else
+                    {
+                        set._InternalInfo.NextNode = -1;
+
+                        /*
+                        //Subnode, example: Bone 1
+                        ObjectBase[] parentChildren = set.Parent.GetChildObjects();
+                        int parentIdx = Array.IndexOf(parentChildren, set);
+
+                        set._InternalInfo.NextNode = (int)(parentIdx >= parentChildren.Length - 1 ? -1 : h_set1Addresses[parentChildren[parentIdx + 1]]);
+                        */
+                    }
+                }
+
+                #endregion
+
+                #region Previous Node
+
+                if (isFirstNode || isMainNode)
+                {
+                    if(isFirstNode)
+                        set._InternalInfo.PreviousNode = -1;
+                    else
+                    {
+                        ObjectBase[] parentChildren = set.Parent.GetChildObjects();
+                        int parentIdx = Array.IndexOf(parentChildren, set);
+
+                        set._InternalInfo.PreviousNode = (int)((parentIdx == 0 || parentChildren.Length == 1) ? -1 : h_set1Addresses[parentChildren[parentIdx - 1]]);
+                    }
+                }
+                else
+                {
+                    ObjectBase[] parentChildren = set.Parent.GetChildObjects();
+                    int parentIdx = Array.IndexOf(parentChildren, set);
+
+                    set._InternalInfo.PreviousNode = (int)((parentIdx == 0 || parentChildren.Length == 1) ? -1 : h_set1Addresses[parentChildren[parentIdx - 1]]);
+                }
+
+                #endregion
+
+                #region Next Main Node
+
+                if (isMainNode || isFirstNode)
+                {
+                    if(isFirstNode)
+                        set._InternalInfo.NextMainNode = -1;
+                    else
+                    {
+                        ObjectBase[] parentChildren = set.Parent.GetChildObjects();
+                        int parentIdx = Array.IndexOf(parentChildren, set);
+
+                        set._InternalInfo.NextMainNode = (int)(parentIdx >= parentChildren.Length - 1 ? -1 : h_set1Addresses[parentChildren[parentIdx + 1]]);
+                    }
+                }
+                else
+                {
+                    if (!isLastChild)
+                    {
+                        ObjectBase[] parentChildren = set.Parent.GetChildObjects();
+                        int parentIdx = Array.IndexOf(parentChildren, set);
+
+                        set._InternalInfo.NextMainNode = (int)(parentIdx >= parentChildren.Length - 1 ? -1 : h_set1Addresses[parentChildren[parentIdx + 1]]);
+                    }
+                    else
+                        set._InternalInfo.NextMainNode = -1;
+
+                }
+
+                #endregion
 
                 set._InternalInfo.StringTables = set.WriteStringTable(writer, h_strTableAddresses);
-                set._InternalInfo.Set3Ptr = (set.Set3Object != null ?  (int)h_set3Addresses[set.Set3Object] : -1);
-                     
-                if (set.Set2Object != null)
-                    set.Set2Object._InternalInfo.resourcePtr = set.Set2Object.WriteResource(writer);
+
+
+                EffectBase[] effectChildren = set.GetChildEffects();
+                Set2[] set2Children = set.GetChildSet2();
+
+                set._InternalInfo.Set2Ptr = (set2Children.Length <= 0 ? -1 : (int)h_set2Addresses[set2Children[0]]);
+                set._InternalInfo.UnkNum1 = (uint)set2Children.Length;
+                set._InternalInfo.Set3Ptr = (effectChildren.Length <= 0 ? - 1 :  (int)h_set3Addresses[effectChildren[0]]);
+
+
+                foreach(Set2 set2Obj in set.GetChildSet2())
+                {
+                   set2Obj._InternalInfo.resourcePtr = set2Obj.WriteResource(writer);
+                }
+                //if (set.Set2Object != null)
+                    //set.Set2Object._InternalInfo.resourcePtr = set.Set2Object.WriteResource(writer);
             }
 
             writer.Stream.Seek(set1Start, SeekMode.Start);
@@ -143,7 +313,7 @@ namespace HActLib
                 h_set2Addresses[set] = writer.Stream.Position;
 
                 writer.Write(i);
-                set.WriteSetData(writer);
+                set.WriteSetData(writer, true);
             }
 
             //finish header

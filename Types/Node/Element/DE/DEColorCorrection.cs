@@ -12,7 +12,7 @@ namespace HActLib
   //  [ElementID(Game.JE, 0x17)]
   //  [ElementID(Game.YLAD, 0x16)]
   //  [ElementID(Game.LJ, 0x16)]
-  //  [ElementID(Game.Y8, 0x16)]
+  //  [ElementID(Game.LADIW, 0x16)]
     public class DEElementColorCorrection : NodeElement
     {
         public float Interpolation;

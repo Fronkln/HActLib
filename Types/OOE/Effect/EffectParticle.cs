@@ -25,9 +25,9 @@ namespace HActLib.OOE
             Matrix = reader.ReadMatrix4x4();
         }
 
-        internal override void WriteEffectData(DataWriter writer)
+        internal override void WriteEffectData(DataWriter writer, bool alt)
         {
-            base.WriteEffectData(writer);
+            base.WriteEffectData(writer, alt);
 
             writer.Write(ParticleID);
             writer.Write(Unknown1);

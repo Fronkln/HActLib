@@ -40,11 +40,13 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openCSVTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.unkDat = new Be.Windows.Forms.HexBox();
             this.Node = new System.Windows.Forms.TabPage();
             this.varPanel = new System.Windows.Forms.TableLayoutPanel();
             this.nodeTabs = new System.Windows.Forms.TabControl();
+            this.saveCSVTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.Node.SuspendLayout();
@@ -124,7 +126,9 @@
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.openMEPToolStripMenuItem,
-            this.saveTestToolStripMenuItem});
+            this.saveTestToolStripMenuItem,
+            this.openCSVTestToolStripMenuItem,
+            this.saveCSVTestToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -151,6 +155,13 @@
             this.saveTestToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.saveTestToolStripMenuItem.Text = "Save (EXPERIMENTAL)";
             this.saveTestToolStripMenuItem.Click += new System.EventHandler(this.saveTestToolStripMenuItem_Click);
+            // 
+            // openCSVTestToolStripMenuItem
+            // 
+            this.openCSVTestToolStripMenuItem.Name = "openCSVTestToolStripMenuItem";
+            this.openCSVTestToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.openCSVTestToolStripMenuItem.Text = "Open CSV Test";
+            this.openCSVTestToolStripMenuItem.Click += new System.EventHandler(this.openCSVTestToolStripMenuItem_Click);
             // 
             // tabPage2
             // 
@@ -210,6 +221,13 @@
             this.nodeTabs.Size = new System.Drawing.Size(443, 431);
             this.nodeTabs.TabIndex = 7;
             // 
+            // saveCSVTestToolStripMenuItem
+            // 
+            this.saveCSVTestToolStripMenuItem.Name = "saveCSVTestToolStripMenuItem";
+            this.saveCSVTestToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.saveCSVTestToolStripMenuItem.Text = "Save CSV Test";
+            this.saveCSVTestToolStripMenuItem.Click += new System.EventHandler(this.saveCSVTestToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -252,5 +270,7 @@
         private System.Windows.Forms.TabControl nodeTabs;
         private System.Windows.Forms.ImageList icons;
         private System.Windows.Forms.ToolStripMenuItem openMEPToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openCSVTestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveCSVTestToolStripMenuItem;
     }
 }

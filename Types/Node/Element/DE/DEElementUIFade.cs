@@ -13,8 +13,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x33)]
     [ElementID(Game.YLAD, 0x31)]
     [ElementID(Game.LJ, 0x31)]
-    [ElementID(Game.Gaiden, 0x31)]
-    [ElementID(Game.Y8, 0x31)]
+    [ElementID(Game.LAD7Gaiden, 0x31)]
+    [ElementID(Game.LADIW, 0x31)]
     public class DEElementUIFade : NodeElement
     {
         public uint Flags = 1;

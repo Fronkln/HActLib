@@ -57,7 +57,7 @@ namespace HActLib.OOE
             writer.Write(Unk3);
         }
 
-        internal virtual void WriteEffectData(DataWriter writer)
+        internal virtual void WriteEffectData(DataWriter writer, bool alt)
         {
 
         }
@@ -100,7 +100,7 @@ namespace HActLib.OOE
             return (set3, isLastElement);
         }
 
-        internal void WriteToStream(DataWriter writer)
+        internal void WriteToStream(DataWriter writer, bool alt)
         {
             //EffectBase set = tev.Effects[i];
             //h_set3Addresses[set] = writer.Stream.Position;
@@ -109,7 +109,7 @@ namespace HActLib.OOE
 
             WriteBaseData(writer);
             long dataStart = writer.Stream.Position;
-            WriteEffectData(writer);
+            WriteEffectData(writer, alt);
 
             //Write unprocessed data
             writer.Write(Data);

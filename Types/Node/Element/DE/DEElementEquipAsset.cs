@@ -8,8 +8,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x74)]
     [ElementID(Game.YLAD, 0x71)]
     [ElementID(Game.LJ, 0x71)]
-    [ElementID(Game.Gaiden, 0x71)]
-    [ElementID(Game.Y8, 0x71)]
+    [ElementID(Game.LAD7Gaiden, 0x71)]
+    [ElementID(Game.LADIW, 0x71)]
     public class DEElementEquipAsset : NodeElement
     {
         public uint AssetID;

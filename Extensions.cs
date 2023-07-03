@@ -44,6 +44,11 @@ namespace HActLib
             return new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
 
+        public static RGB32 ReadRGB32(this DataReader reader)
+        {
+            return new RGB32(reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
+        }
+
         public static RGBA32 ReadRGBA32(this DataReader reader)
         {
             return new RGBA32(reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
@@ -60,6 +65,19 @@ namespace HActLib
             return mtx;
         }
 
+        public static string ReadStringPointer(this DataReader reader, int addr)
+        {
+            if (addr <= 0)
+                return null;
+            else
+            {
+                string str = null;
+                reader.Stream.RunInPosition(delegate { str = reader.ReadString(); }, addr, SeekMode.Start);
+
+                return str;
+            }
+        }
+
         public static void Write(this DataWriter writer, Vector3 vec)
         {
             writer.Write(vec.x);
@@ -72,6 +90,13 @@ namespace HActLib
             writer.Write(vec.y);
             writer.Write(vec.z);
             writer.Write(vec.w);
+        }
+
+        public static void Write(this DataWriter writer, RGB32 col)
+        {
+            writer.Write(col.R);
+            writer.Write(col.G);
+            writer.Write(col.B);
         }
 
 

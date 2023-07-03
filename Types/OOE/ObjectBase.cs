@@ -60,9 +60,25 @@ namespace HActLib.OOE
         public virtual string GetName() => "Unknown Set 1";
 
 
+        public ObjectBase[] GetChildObjects()
+        {
+            return Children.Where(x => x is ObjectBase).Cast<ObjectBase>().ToArray();
+        }
+
         public EffectBase[] GetChildEffects()
         {
             return Children.Where(x => x is EffectBase).Cast<EffectBase>().ToArray();
+        }
+
+        public Set2[] GetChildSet2()
+        {
+            List<Set2> children = new List<Set2>();
+
+            foreach (ITEVObject child in Children)
+                if (child as Set2 != null)
+                    children.Add(child as Set2);
+
+            return children.ToArray();
         }
 
         public T GetChildOfType<T>() where T : ITEVObject
@@ -178,8 +194,8 @@ namespace HActLib.OOE
             };
 
             _InternalInfo.Parent = reader.ReadInt32();
-            _InternalInfo.PreviousNode = reader.ReadInt32();
             _InternalInfo.NextNode = reader.ReadInt32();
+            _InternalInfo.PreviousNode = reader.ReadInt32();
             _InternalInfo.NextMainNode = reader.ReadInt32();
 
 
@@ -247,7 +263,17 @@ namespace HActLib.OOE
                 //We can just generate this from Effect elements
                 //Idk what the point of set 2 elements are.
                 //if(set.Type != Set2NodeCategory.Element || set.EffectID == EffectID.Special)
-                    Children.Add(set);
+
+                //TEV Optimization theory
+                if(set.Type == Set2NodeCategory.Element)
+                {
+                    Set2Element set2Element = set as Set2Element;
+
+                    if (set2Element.Effect != null && ((set2Element.EffectID == EffectID.Dummy && set2Element.Type == Set2NodeCategory.Element) || set2Element.EffectID == set2Element.Effect.ElementKind))
+                        continue;
+                }
+                
+                Children.Add(set);
             }
         }
 
@@ -282,8 +308,8 @@ namespace HActLib.OOE
                 writer.Write(f);
 
             writer.Write(_InternalInfo.Parent);
-            writer.Write(_InternalInfo.PreviousNode);
             writer.Write(_InternalInfo.NextNode);
+            writer.Write(_InternalInfo.PreviousNode);
             writer.Write(_InternalInfo.NextMainNode);
             writer.Write(_InternalInfo.Set2Ptr);
             writer.Write(_InternalInfo.UnkNum1);

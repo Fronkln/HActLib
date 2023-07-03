@@ -6,12 +6,35 @@ namespace Pager
 {
     internal static class ConditionWindow
     {
-        public static void Draw(Form1 form, TreeViewItemCondition cond)
+        public static void Draw(Pager form, TreeViewItemCondition cond)
         {
             form.CreateHeader("Condition Information");
 
             switch((ConditionType)cond.Condition.ConditionID)
             {
+                case ConditionType.enemy_num:
+                    ConditionEnemyNum enemyCountCond = cond.Condition as ConditionEnemyNum;
+
+
+                    form.CreateInput("Count: ", enemyCountCond.Count.ToString(), delegate (string val)
+                    {
+                        enemyCountCond.Count = int.Parse(val);
+
+                    }, NumberBox.NumberMode.Int);
+                    break;
+
+                case ConditionType.page_play_count:
+                    ConditionPagePlayCount playCountCond = cond.Condition as  ConditionPagePlayCount;
+
+
+                    form.CreateInput("Count: ", playCountCond.PlayCount.ToString(), delegate (string val)
+                    {
+                        playCountCond.PlayCount = uint.Parse(val);
+
+                    }, NumberBox.NumberMode.UInt);
+                    break;
+
+
                 case ConditionType.hact_condition_flag:
 
                     ConditionHActFlag condHAct = cond.Condition as ConditionHActFlag;

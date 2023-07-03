@@ -22,8 +22,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x4D)]
     [ElementID(Game.YLAD, 0x4A)]
     [ElementID(Game.LJ, 0x4A)]
-    [ElementID(Game.Gaiden, 0x4A)]
-    [ElementID(Game.Y8, 0x4A)]
+    [ElementID(Game.LAD7Gaiden, 0x4A)]
+    [ElementID(Game.LADIW, 0x4A)]
     public class DETimingInfoAttack : NodeElement
     {
         public TimingInfoAttack Data = new TimingInfoAttack();
@@ -56,8 +56,11 @@ namespace HActLib
             foreach (byte b in Data.Attributes)
                 writer.Write(b);
 
-            if(version == GameVersion.DE2)
+            if (version == GameVersion.DE2)
+            {
+                writer.WriteTimes(0, 2);
                 writer.Write(Data.AttackID);
+            }
         }
     }
 

@@ -11,8 +11,8 @@ namespace HActLib
     [ElementID(Game.YK2, 0x10C)]
     [ElementID(Game.JE, 0x10C)]
     [ElementID(Game.YLAD, 0x107)]
-    [ElementID(Game.Gaiden, 0x107)]
-    [ElementID(Game.Y8, 0x107)]
+    [ElementID(Game.LAD7Gaiden, 0x107)]
+    [ElementID(Game.LADIW, 0x107)]
     public class DEElementAssetBreakUID : NodeElement
     {
         public uint Ver;

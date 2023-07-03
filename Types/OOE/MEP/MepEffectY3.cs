@@ -14,7 +14,7 @@ namespace HActLib
 
         internal override void Write(DataWriter writer, MEPVersion version)
         {
-            Effect.WriteEffectData(writer);
+            Effect.WriteEffectData(writer, false);
         }
     }
 }

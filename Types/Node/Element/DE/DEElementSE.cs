@@ -20,8 +20,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x1A)]
     [ElementID(Game.YLAD, 0x19)]
     [ElementID(Game.LJ, 0x19)]
-    [ElementID(Game.Gaiden, 0x19)]
-    [ElementID(Game.Y8, 0x19)]
+    [ElementID(Game.LAD7Gaiden, 0x19)]
+    [ElementID(Game.LADIW, 0x19)]
     public class DEElementSE : NodeElement
     {
         public enum Versions

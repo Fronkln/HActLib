@@ -20,7 +20,12 @@ namespace CMNEdit
             }
             else
             {
-                Text = Reflection.GetElementNameByID((node as MepEffectOE).Effect.ElementKind, Form1.curGame).Replace("e_auth_element_", "").Replace("_", " ").ToTitleCase();
+                MepEffectOE oeMep = (node as MepEffectOE);
+                Text = TreeViewItemNode.TranslateName(oeMep.Effect);
+                int icon = TreeViewItemNode.SetIcon(oeMep.Effect.Category, oeMep.Effect.Category == AuthNodeCategory.Element ? (oeMep.Effect as NodeElement).ElementKind : 0);
+
+                ImageIndex = icon;
+                SelectedImageIndex = icon;
             }
         }
     }

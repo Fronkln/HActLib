@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 0xBC)]
     [ElementID(Game.YLAD, 0xB8)]
     [ElementID(Game.LJ, 0xB8)]
-    [ElementID(Game.Gaiden, 0xB8)]
-    [ElementID(Game.Y8, 0xB8)]
+    [ElementID(Game.LAD7Gaiden, 0xB8)]
+    [ElementID(Game.LADIW, 0xB8)]
     public class DEHActInputBarrage : NodeElement
     {
         public uint InputID;

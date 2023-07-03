@@ -103,7 +103,10 @@ namespace HActLib
                 if (i == 0)
                     tev.Root = tevObject;
                 else if (tevObject._InternalInfo.Parent > -1)
+                {
                     m_objectPtrs[tevObject._InternalInfo.Parent].Children.Add(tevObject);
+                    tevObject.Parent = m_objectPtrs[tevObject._InternalInfo.Parent];
+                }
                 
             }
         }

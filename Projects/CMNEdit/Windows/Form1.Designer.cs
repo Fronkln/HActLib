@@ -63,8 +63,9 @@
             this.moveTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.convertMEPWithPibsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.convertMEPToBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nodesTree = new System.Windows.Forms.TreeView();
+            this.frameProgressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.authPagesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nodesTree = new MWControlSuite.MWTreeView();
             this.nodeIcons = new System.Windows.Forms.ImageList(this.components);
             this.nodeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyNodeCTRLCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -397,7 +398,8 @@
             this.advancedButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.convertMEPWithPibsToolStripMenuItem,
-            this.convertMEPToBEPToolStripMenuItem});
+            this.frameProgressionToolStripMenuItem,
+            this.authPagesDEToolStripMenuItem});
             this.advancedButton.Image = ((System.Drawing.Image)(resources.GetObject("advancedButton.Image")));
             this.advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.advancedButton.Name = "advancedButton";
@@ -411,24 +413,36 @@
             this.convertMEPWithPibsToolStripMenuItem.Text = "Convert MEP (With Pibs)";
             this.convertMEPWithPibsToolStripMenuItem.Click += new System.EventHandler(this.convertMEPWithPibsToolStripMenuItem_Click);
             // 
-            // convertMEPToBEPToolStripMenuItem
+            // frameProgressionToolStripMenuItem
             // 
-            this.convertMEPToBEPToolStripMenuItem.Name = "convertMEPToBEPToolStripMenuItem";
-            this.convertMEPToBEPToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.convertMEPToBEPToolStripMenuItem.Text = "Convert MEP To BEP";
-            this.convertMEPToBEPToolStripMenuItem.Click += new System.EventHandler(this.convertMEPToBEPToolStripMenuItem_Click);
+            this.frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
+            this.frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.frameProgressionToolStripMenuItem.Text = "Frame Progression";
+            this.frameProgressionToolStripMenuItem.Click += new System.EventHandler(this.frameProgressionToolStripMenuItem_Click);
+            // 
+            // authPagesDEToolStripMenuItem
+            // 
+            this.authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
+            this.authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
+            this.authPagesDEToolStripMenuItem.Click += new System.EventHandler(this.authPagesDEToolStripMenuItem_Click);
             // 
             // nodesTree
             // 
             this.nodesTree.AllowDrop = true;
+            this.nodesTree.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("nodesTree.CheckedNodes")));
             this.nodesTree.ImageIndex = 0;
             this.nodesTree.ImageList = this.nodeIcons;
             this.nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
             this.nodesTree.Location = new System.Drawing.Point(-4, 0);
             this.nodesTree.Name = "nodesTree";
+            this.nodesTree.RubberbandGradientBlend = new MWControlSuite.MWRubberbandGradientBlend[0];
+            this.nodesTree.RubberbandGradientColorBlend = new MWControlSuite.MWRubberbandGradientColorBlend[0];
             this.nodesTree.SelectedImageIndex = 0;
+            this.nodesTree.SelNodes = ((System.Collections.Hashtable)(resources.GetObject("nodesTree.SelNodes")));
             this.nodesTree.Size = new System.Drawing.Size(254, 341);
             this.nodesTree.TabIndex = 1;
+            this.nodesTree.AfterSelNodeChanged += new MWControlSuite.MWPropertyEventHandler(this.nodesTree_AfterSelNodeChanged);
             this.nodesTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.nodesTree_AfterSelect);
             this.nodesTree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nodesTree_KeyDown);
             this.nodesTree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.nodesTree_KeyPress);
@@ -893,7 +907,6 @@
         private System.Windows.Forms.ToolStrip appTools;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem openCtrlOToolStripMenuItem;
-        private System.Windows.Forms.TreeView nodesTree;
         public System.Windows.Forms.ContextMenuStrip nodeContext;
         private System.Windows.Forms.ComboBox targetGameCombo;
         private System.Windows.Forms.TextBox textBox1;
@@ -961,6 +974,8 @@
         private System.Windows.Forms.ToolStripMenuItem openMEPToolStripMenuItem;
         private System.Windows.Forms.ToolStripDropDownButton advancedButton;
         private System.Windows.Forms.ToolStripMenuItem convertMEPWithPibsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem convertMEPToBEPToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem frameProgressionToolStripMenuItem;
+        private MWControlSuite.MWTreeView nodesTree;
+        private System.Windows.Forms.ToolStripMenuItem authPagesDEToolStripMenuItem;
     }
 }

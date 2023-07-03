@@ -63,7 +63,6 @@ namespace HActLib
             writer.WriteOfType(cmn.Header);
 
             //First write: cut info
-            //FAulty as of now
             uint cutInfoPointer = (uint)writer.Stream.Position;
 
             #region Cut Info
@@ -82,71 +81,79 @@ namespace HActLib
 
             #region Page Info
 
-            writer.Write(cmn.AuthPages.Count);
-            writer.Write(cmn.GetPageSizes());
-            writer.WriteTimes(0, 8);
-
-
-            foreach (AuthPage page in cmn.AuthPages)
+            if (cmn.GameVersion > GameVersion.Yakuza6)
             {
-                writer.Write(page.Version);
-                writer.Write(page.Flag);
-                writer.Write(page.Start.Tick);
-                writer.Write(page.End.Tick);
-                writer.Write(page.Transitions.Count);
-                writer.Write(page.GetTransitionSize());
-                writer.Write(page.SkipTick.Tick);
-                writer.Write(page.PageIndex);
-                writer.Write(page.SkipLinkIndexNum);
-                writer.WriteTimes(0, 12);
 
-                if (cmn.GameVersion == GameVersion.DE2)
-                    writer.Write(page.PageTitleText.ToLength(32), fixedSize: 32, nullTerminator: false, encoding: writer.DefaultEncoding);
+                writer.Write(cmn.AuthPages.Count);
+                writer.Write(cmn.GetPageSizes());
+                writer.WriteTimes(0, 8);
 
-                foreach (int i in page.SkipLink)
-                    writer.Write(i);
 
-                foreach (Transition trans in page.Transitions)
+                foreach (AuthPage page in cmn.AuthPages)
                 {
-                    writer.Write(trans.DestinationPageIndex);
-                    writer.Write(trans.Conditions.Count);
-                    writer.Write(trans.GetConditionSize());
-                    writer.WriteTimes(0, 4);
+                    writer.Write(page.Version);
+                    writer.Write(page.Flag);
+                    writer.Write(page.Start.Tick);
+                    writer.Write(page.End.Tick);
+                    writer.Write(page.Transitions.Count);
+                    writer.Write(page.GetTransitionSize());
+                    writer.Write(page.SkipTick.Tick);
+                    writer.Write(page.PageIndex);
+                    writer.Write(page.SkipLinkIndexNum);
+                    writer.WriteTimes(0, 12);
 
-                    foreach (Condition cond in trans.Conditions)
+                    if (cmn.GameVersion == GameVersion.DE2)
+                        writer.Write(page.PageTitleText.ToLength(32), fixedSize: 32, nullTerminator: false, encoding: writer.DefaultEncoding);
+
+                    foreach (int i in page.SkipLink)
+                        writer.Write(i);
+
+                    foreach (Transition trans in page.Transitions)
                     {
-
-                        writer.Write(cond.ConditionID);
-                        writer.Write(cond.Size());
-
-                        writer.WriteTimes(0, 8);
-
-                        cond.Write(writer);
-                    }
-                }
-
-                if (page.IsTalkPage())
-                {
-                    if (page.TalkInfo != null && page.TalkInfo.Length > 0)
-                    {
-                        writer.Write(page.TalkInfo.Length);
-                        writer.Write(page.TalkInfo.Length * 16);
-                        writer.Write(page.TalkInfoHeader.Flags);
+                        writer.Write(trans.DestinationPageIndex);
+                        writer.Write(trans.Conditions.Count);
+                        writer.Write(trans.GetConditionSize());
                         writer.WriteTimes(0, 4);
 
-                        foreach (TalkInfo inf in page.TalkInfo)
+                        foreach (Condition cond in trans.Conditions)
                         {
-                            writer.Write(inf.StartTick);
-                            writer.Write(inf.EndTick);
-                            writer.Write(inf.Flag);
-                            writer.WriteTimes(0, 4);
-                        }
 
+                            writer.Write(cond.ConditionID);
+                            writer.Write(cond.Size());
+
+                            writer.WriteTimes(0, 8);
+
+                            cond.Write(writer);
+                        }
+                    }
+
+                    if (page.IsTalkPage())
+                    {
+                        if (page.TalkInfo != null && page.TalkInfo.Length > 0)
+                        {
+                            writer.Write(page.TalkInfo.Length);
+                            writer.Write(page.TalkInfo.Length * 16);
+                            writer.Write(page.TalkInfoHeader.Flags);
+                            writer.WriteTimes(0, 4);
+
+                            foreach (TalkInfo inf in page.TalkInfo)
+                            {
+                                writer.Write(inf.StartTick);
+                                writer.Write(inf.EndTick);
+                                writer.Write(inf.Flag);
+                                writer.WriteTimes(0, 4);
+                            }
+
+                        }
                     }
                 }
-            }
 
-            #endregion
+                #endregion
+            }
+            else
+            {
+                writer.Write(cmn.AuthPageUnk);
+            }
 
             //Third write: disable frame info
             uint disableFramePointer = (uint)writer.Stream.Position;
@@ -223,6 +230,7 @@ namespace HActLib
         public CMNPageHeader AuthPageHeader = new CMNPageHeader();
 
         public List<AuthPage> AuthPages = new List<AuthPage>();
+        public byte[] AuthPageUnk = new byte[0]; //Yakuza 6 only
 
         public float[] SoundInfo = new float[0];
 
@@ -326,8 +334,8 @@ namespace HActLib
                 game == Game.JE ||
                 game == Game.YLAD || 
                 game == Game.LJ || 
-                game == Game.Y8 || 
-                game == Game.Gaiden)
+                game == Game.LADIW || 
+                game == Game.LAD7Gaiden)
                 return true;
             else
                 return false;
@@ -386,10 +394,10 @@ namespace HActLib
                     return Game.LJ;
 
                 case "gaiden":
-                    return Game.Gaiden;
+                    return Game.LAD7Gaiden;
 
                 case "y8":
-                    return Game.Y8;
+                    return Game.LADIW;
             }
 
 
@@ -422,9 +430,9 @@ namespace HActLib
                     return GameVersion.DE2;
                 case Game.LJ:
                     return GameVersion.DE2;
-                case Game.Gaiden:
+                case Game.LAD7Gaiden:
                     return GameVersion.DE2;
-                case Game.Y8:
+                case Game.LADIW:
                     return GameVersion.DE2;
             }
         }
@@ -515,6 +523,11 @@ namespace HActLib
             //Read auth pages
             if (VersionGreater(version, GameVersion.Yakuza6))
                 cmn.ReadAuthPages(cmnReader);
+            else
+            {
+                cmnReader.Stream.Seek(cmn.Header.AuthPagePointer, SeekMode.Start);
+                cmn.AuthPageUnk = cmnReader.ReadBytes((int)(cmn.Header.DisableFrameInfoPointer - cmnReader.Stream.Position));
+            }
 
             return cmn;
         }

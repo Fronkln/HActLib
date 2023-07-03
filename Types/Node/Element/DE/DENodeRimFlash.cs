@@ -14,7 +14,7 @@ namespace HActLib
     [ElementID(Game.JE, 0x1F)]
     [ElementID(Game.YLAD, 0x1D)]
     [ElementID(Game.LJ, 0x1D)]
-    [ElementID(Game.Y8, 0x1D)]    
+    [ElementID(Game.LADIW, 0x1D)]    
     public class DEElementRimflash : NodeElement
     {
         public uint RimflashVersion;

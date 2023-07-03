@@ -6,14 +6,14 @@ namespace Pager
 {
     internal static class TransitionWindow
     {
-        public static void Draw(Form1 form, TreeViewItemTransition transition)
+        public static void Draw(Pager form, TreeViewItemTransition transition)
         {
             form.CreateHeader("Transition Information");
 
             List<string> options = new List<string>();
             options.Add("HAct end");
 
-            foreach(string str in Form1.DEHact.AuthPages.Select(x => x.PageTitleText))
+            foreach(string str in Pager.DEHact.AuthPages.Select(x => x.PageTitleText))
                 options.Add(str);
 
             form.CreateComboBox("Transition to: ", transition.Transition.DestinationPageIndex + 1, options.ToArray(), delegate(int val) 

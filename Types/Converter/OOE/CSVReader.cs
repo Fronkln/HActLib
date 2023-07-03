@@ -76,12 +76,7 @@ namespace HActLib
                 for (int j = 0; j < hactCharacterDataCount; j++)
                 {
                     CSVCharacter character = new CSVCharacter();
-                    character.Name = ReadStringPointer(reader.ReadInt32());
-                    character.ModelOverride = ReadStringPointer(reader.ReadInt32());
-                    character.Unk1 = reader.ReadBytes(64);
-
-                    int unkDatPointer = reader.ReadInt32();
-                    int unkDatCount = reader.ReadInt32();
+                    character.Read(reader);
 
                     hactEntry.Characters.Add(character);
                 }
@@ -141,6 +136,17 @@ namespace HActLib
                     }
                     
                     hactEntry.SpecialNodes.Add(hactEvent);
+                }
+
+                //Read HAct unknown data
+                reader.Stream.Seek(hactSection4DataPointer, SeekMode.Start);
+
+                for(int j = 0; j < hactSection4DataCount; j++)
+                {
+                    CSVSection4 sec = new CSVSection4();
+                    sec.Read(reader);
+
+                    hactEntry.Section4.Add(sec);
                 }
 
                 reader.Stream.Seek(entryEnd);

@@ -16,6 +16,7 @@ namespace TevView
     public partial class Form1 : Form
     {
         public static TEV TevFile;
+        public static CSV CSV;
         public static MEP Mep;
         private static string m_filePath;
 
@@ -434,6 +435,23 @@ namespace TevView
                 if (treeView1.SelectedNode is TreeNodeSet2)
                     throw new Exception("kill");
             }
+        }
+
+        private void openCSVTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.ShowDialog();
+
+            if (string.IsNullOrEmpty(ofd.FileName))
+                return;
+
+
+            CSV = CSV.Read(ofd.FileName);
+        }
+
+        private void saveCSVTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSV.Write(CSV, "test_csv.bin");
         }
     }
 }

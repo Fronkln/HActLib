@@ -11,7 +11,6 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, Node node)
         {
-            return;
             DENodeConditionFolder folder = node as DENodeConditionFolder;
 
             form.CreateHeader("Condition Folder");

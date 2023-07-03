@@ -162,7 +162,7 @@ namespace HActLib
             CMN.LastGameVersion = GameVersion.OOE;
 
             BinaryFormat output = (BinaryFormat)ConvertFormat.With<TEVWriter>(tev);
-            output.Stream.WriteTo(path);
+            File.WriteAllBytes(path, output.Stream.ToArray());
         }
 
         public static OECMN ToOE(TEV tev, CSVHAct csvData, uint targetOEVer)

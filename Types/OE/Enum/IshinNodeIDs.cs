@@ -14,6 +14,7 @@ namespace HActLib
         e_auth_element_color_correction = 7,
         e_auth_element_blur = 8,
         e_auth_element_gradation = 9,
+        e_auth_element_depth_of_field = 10,
         e_auth_element_picture = 11,
         e_auth_element_shadow_display_control = 15,
         e_auth_element_shadow_drawing_area_correction = 16,
@@ -46,6 +47,7 @@ namespace HActLib
         e_auth_element_hact_hide = 70,
         e_auth_element_hact_stop_end = 73,
         e_auth_element_character_parallel_light_animation = 74,
+        e_auth_element_cross_fade = 76,
         e_auth_element_hact_general_purpose_timer = 78,
         e_auth_element_controller_vibration = 82,
         e_auth_element_person_caption = 83,
@@ -54,7 +56,7 @@ namespace HActLib
         e_auth_element_body_flash = 100,
         e_auth_element_fade_2d = 101,
         e_auth_element_character_light_source = 110,
-        e_auth_element_depth_of_field = 111,
+        e_auth_element_depth_of_field2 = 111,
         e_auth_element_color_correction_offset = 120
     }
 }

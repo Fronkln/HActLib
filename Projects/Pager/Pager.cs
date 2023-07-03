@@ -2,7 +2,7 @@ using HActLib;
 
 namespace Pager
 {
-    public partial class Form1 : Form
+    public partial class Pager : Form
     {
         public static CMN DEHact;
         public static string DEHActPath;
@@ -11,7 +11,7 @@ namespace Pager
 
         int rowCount = 1;
 
-        public Form1()
+        public Pager()
         {
             InitializeComponent();
 

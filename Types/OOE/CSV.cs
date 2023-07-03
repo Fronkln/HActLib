@@ -34,6 +34,15 @@ namespace HActLib
             return Read(File.ReadAllBytes(path));
         }
 
+        public static void Write(CSV csv, string path)
+        {
+            if (csv == null)
+                return;
+
+            BinaryFormat output = (BinaryFormat)ConvertFormat.With<CSVWriter>(csv);
+            File.WriteAllBytes(path, output.Stream.ToArray());
+        }
+
         public static CSV Read(byte[] buffer)
         {
             DataStream readStream = DataStreamFactory.FromArray(buffer, 0, buffer.Length);

@@ -19,6 +19,8 @@ namespace HActLib
                     return new ConditionPlayCount();
                 case ConditionType.hact_condition_flag:
                     return new ConditionHActFlag();
+                case ConditionType.enemy_num:
+                    return new ConditionEnemyNum();
             }
         }
 

@@ -41,7 +41,7 @@ namespace HActScout
             }
 
             string dir = args[0];
-            uint id = uint.Parse(args[1]);
+            int id = int.Parse(args[1]);
             string game = args[2];
             Game gameEnum = CMN.GetGameFromString(game);
 
@@ -62,15 +62,18 @@ namespace HActScout
 
             Console.OutputEncoding = Encoding.Unicode;
 
-            Console.WriteLine("Amonut of pars the specified node ID was found: " + m_foundPars.Count);
+            Console.WriteLine("Amount of pars the specified node ID was found: " + m_foundPars.Count);
 
             foreach (string str in m_foundPars)
                 Console.WriteLine(str);
         }
 
-        private static void Process(string[] files, Game game, uint id, bool bepMode)
+        private static void Process(string[] files, Game game, int id, bool bepMode)
         {
             bool isDE = CMN.IsDEGame(game);
+            bool findUnknownMode = id == -1;
+
+            uint[] values = Enum.GetValues(HActLib.Internal.Reflection.GetElementEnumFromGame(game)).Cast<uint>().ToArray();
 
             foreach(string file in files)
             {
@@ -117,15 +120,21 @@ namespace HActScout
                     nodes = (isDE ? CMN.Read(buf, game).AllElements : OECMN.Read(buf).AllElements);
                 else
                    nodes = (BEP.Read(buf, game).AllElements);
-               // }
-               // catch
+                // }
+                // catch
                 //{
-                   // Console.WriteLine("Cmn reading failed! " + fileName);
-                   // curInf.Par?.Dispose();
-                   // Console.WriteLine();
-                  //  continue;
+                // Console.WriteLine("Cmn reading failed! " + fileName);
+                // curInf.Par?.Dispose();
+                // Console.WriteLine();
+                //  continue;
                 //}
-                IEnumerable<NodeElement> filtered = nodes.Where(x => x.ElementKind == id);
+
+                IEnumerable<NodeElement> filtered = null;
+
+                if(!findUnknownMode)
+                    filtered = nodes.Where(x => x.ElementKind == id);
+                else
+                    filtered = nodes.Where(x => !values.Contains(x.ElementKind));
 
                 if (filtered.Count() > 0)
                 {
@@ -133,7 +142,7 @@ namespace HActScout
                     m_foundPars.Add(fileName);
 
                     foreach (NodeElement element in filtered)
-                        Console.WriteLine(element.Name + " " + element.Guid.ToString());
+                        Console.WriteLine(element.Name + $" ({element.ElementKind})"  + " " + element.Guid.ToString());
 
                     Console.WriteLine();
                 }

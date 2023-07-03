@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x4)]
     [ElementID(Game.YLAD, 0x4)]
     [ElementID(Game.LJ, 0x4)]
-    [ElementID(Game.Gaiden, 0x4)]
-    [ElementID(Game.Y8, 0x4)]
+    [ElementID(Game.LAD7Gaiden, 0x4)]
+    [ElementID(Game.LADIW, 0x4)]
     public class DEElementDrawOff : NodeElement
     {
         public int Unk1 = 0;

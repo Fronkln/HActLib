@@ -24,5 +24,18 @@ namespace HActLib
         {
 
         }
+
+        internal virtual void WriteData(DataWriter writer)
+        {
+            writer.Write(0xDEADC0DE);
+            writer.Write(Unknown1);
+            writer.Write(UnknownData1);
+
+            //Resource pointers will be written later.
+            for (int i = 0; i < Resources.Length; i++)
+                writer.Write(0xDEADC0DE);
+
+            writer.Write(0xDEADC0DE);
+        }
     }
 }

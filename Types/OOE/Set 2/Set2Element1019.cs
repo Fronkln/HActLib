@@ -22,12 +22,11 @@ namespace HActLib.OOE
             Unk2 = reader.ReadBytes(236);
         }
 
-        internal override void WriteArgs(DataWriter writer)
+        internal override void WriteArgs(DataWriter writer, bool alt)
         {
             writer.Write(Type1019.ToLength(16), false, maxSize: 16);
             writer.Write(Unk2);
-
-            base.WriteArgs(writer);
+            //base.WriteArgs(writer, alt);
         }
     }
 }

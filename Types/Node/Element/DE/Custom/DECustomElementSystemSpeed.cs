@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 1337)]
     [ElementID(Game.YLAD, 1337)]
     [ElementID(Game.LJ, 1337)]
-    [ElementID(Game.Gaiden, 1337)]
-    [ElementID(Game.Y8, 1337)]
+    [ElementID(Game.LAD7Gaiden, 1337)]
+    [ElementID(Game.LADIW, 1337)]
     public class DECustomElementSystemSpeed : CustomDENodeAuthExtendedElement
     {
         public uint Type;

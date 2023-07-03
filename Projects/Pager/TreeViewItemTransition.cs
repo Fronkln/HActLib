@@ -14,12 +14,12 @@ namespace Pager
             Transition = transition;
 
 
-            if (transition.DestinationPageIndex >= Form1.DEHact.AuthPages.Count)
+            if (transition.DestinationPageIndex >= Pager.DEHact.AuthPages.Count)
                 transition.DestinationPageIndex = -1;
 
             try
             {
-                Text = "Transition to: " + (Transition.DestinationPageIndex == -1 ? "HAct end" : Form1.DEHact.AuthPages[Transition.DestinationPageIndex].PageTitleText);
+                Text = "Transition to: " + (Transition.DestinationPageIndex == -1 ? "HAct end" : Pager.DEHact.AuthPages[Transition.DestinationPageIndex].PageTitleText);
             }
             catch (IndexOutOfRangeException ex)
             {

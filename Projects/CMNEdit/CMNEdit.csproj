@@ -8,6 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AnalysisLevel>none</AnalysisLevel>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Icons\ico.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -42,6 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Icons\ico.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Be.Windows.Forms.HexBox" Version="1.6.1" />
   </ItemGroup>
 
@@ -50,6 +55,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="MWTreeView">
+      <HintPath>..\..\..\..\..\Downloads\mwtreeview\bin\Debug\MWTreeView.dll</HintPath>
+    </Reference>
     <Reference Include="ParLibrary">
       <HintPath>..\..\..\ParManager\ParLibrary\bin\Release\net5.0\ParLibrary.dll</HintPath>
     </Reference>
@@ -63,6 +71,9 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Windows\FrameProgressionWindow.cs">
+      <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
 

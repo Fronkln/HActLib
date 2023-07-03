@@ -34,15 +34,18 @@ namespace HActLib.OOE
             }
         }
 
-        internal override void WriteEffectData(DataWriter writer)
+        internal override void WriteEffectData(DataWriter writer, bool alt)
         {
-            writer.Write(Start);
-            writer.Write(End);
+            if (!alt)
+            {
+                writer.Write(Start);
+                writer.Write(End);
 
-            writer.Write(ElementFlags);
-            writer.Write(ElementUnk2);
+                writer.Write(ElementFlags);
+                writer.Write(ElementUnk2);
 
-            writer.Write((uint)EffectID2);
+                writer.Write((uint)EffectID2);
+            }
         }
     }
 }

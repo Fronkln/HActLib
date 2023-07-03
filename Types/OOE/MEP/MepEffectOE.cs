@@ -14,7 +14,7 @@ namespace HActLib
     public class MepEffectOE : MepEffect
     {
         public PXDHash BoneName = new PXDHash();
-        public int BoneID;
+        public int BoneID = -1;
         public int Unknown1;
 
         public NodeElement Effect;
@@ -69,6 +69,8 @@ namespace HActLib
 
             if (current > target) //Overread
                 reader.Stream.Position = target;
+            else if (current < target)
+                Effect.unkBytes = reader.ReadBytes((int)(target -  current));
 
         }
 

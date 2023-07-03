@@ -13,8 +13,8 @@ namespace HActLib
    // [ElementID(Game.JE, 0x35)]
     [ElementID(Game.YLAD, 0x33)]
     [ElementID(Game.LJ, 0x33)]
-    [ElementID(Game.Gaiden, 0x33)]
-    [ElementID(Game.Y8, 0x33)]
+    [ElementID(Game.LAD7Gaiden, 0x33)]
+    [ElementID(Game.LADIW, 0x33)]
     public class DEElementUITexture : NodeElement
     {
         public uint UITexFlags = 0x1;

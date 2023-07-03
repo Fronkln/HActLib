@@ -26,9 +26,9 @@ namespace HActLib.OOE
             SoundID = reader.ReadUInt16();
         }
 
-        internal override void WriteEffectData(DataWriter writer)
+        internal override void WriteEffectData(DataWriter writer, bool alt)
         {
-            base.WriteEffectData(writer);
+            base.WriteEffectData(writer, alt);
 
             writer.Write(Start);
             writer.Write(End);

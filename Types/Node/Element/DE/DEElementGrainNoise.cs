@@ -11,8 +11,8 @@ namespace HActLib
 {
     [ElementID(Game.YLAD, 0x121)]
     [ElementID(Game.LJ, 0x121)]
-    [ElementID(Game.Gaiden, 0x121)]
-    [ElementID(Game.Y8, 0x121)]
+    [ElementID(Game.LAD7Gaiden, 0x121)]
+    [ElementID(Game.LADIW, 0x121)]
     public class DEElementGrainNoise : NodeElement
     {
         public float Power = 1;

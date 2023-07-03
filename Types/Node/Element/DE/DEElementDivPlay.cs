@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x64)]
     [ElementID(Game.YLAD, 0x61)]
     [ElementID(Game.LJ, 0x61)]
-    [ElementID(Game.Gaiden, 0x61)]
-    [ElementID(Game.Y8, 0x61)]
+    [ElementID(Game.LAD7Gaiden, 0x61)]
+    [ElementID(Game.LADIW, 0x61)]
     public  class DEElementDivPlay : NodeElement
     {
         public string FileName;

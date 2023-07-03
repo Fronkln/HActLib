@@ -190,6 +190,8 @@ namespace HActLib
                         writer.Write((uint)AuthNodeCategory.InstanceMotionData);
                     else if (Category == AuthNodeCategory.Asset)
                         writer.Write((uint)AuthNodeCategory.CharacterBehavior);
+                    else if (Category == AuthNodeCategory.ModelMotion)
+                        writer.Write((uint)AuthNodeCategory.Asset);
                     else
                         writer.Write((uint)Category);
                 }

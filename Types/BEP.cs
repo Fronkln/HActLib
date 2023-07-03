@@ -11,6 +11,11 @@ namespace HActLib
     {
         public List<Node> Nodes = new List<Node>();
 
+        public Node FindByGUID(Guid guid)
+        {
+            return Nodes.Where(x => x.BEPDat.Guid2 == guid).FirstOrDefault();
+        }
+
         public NodeElement[] AllElements
         {
             get

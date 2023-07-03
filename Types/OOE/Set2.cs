@@ -30,7 +30,7 @@ namespace HActLib.OOE
         public EffectID EffectID;
 
         public float[] UnkSpeed = new float[8];
-        public byte[] Unk2 = new byte[240];
+        public byte[] Unk2 = new byte[252];
 
         public byte[] Unk4 = new byte[16];
 
@@ -113,8 +113,26 @@ namespace HActLib.OOE
                     {
                         default:
                             return new Set2Element();
+                        case 1001:
+                            return new Set2ElementBaseScreenEffect();
+                        case 1005:
+                            return new Set2ElementBaseScreenEffect();
+                        case 1006:
+                            return new Set2ElementBaseScreenEffect();
+                        case 1008:
+                            return new Set2ElementBaseScreenEffect();
+                        case 1009:
+                            return new Set2ElementBaseScreenEffect();
+                        case 1011:
+                            return new Set2ElementBaseScreenEffect();
                         case 1019:
                             return new Set2Element1019();
+                        case 1020:
+                            return new Set2ElementBaseScreenEffect();
+                        case 1023:
+                            return new Set2ElementBaseScreenEffect();
+                        case 1024:
+                            return new Set2ElementBaseScreenEffect();
                     }
             }
         }
@@ -135,14 +153,14 @@ namespace HActLib.OOE
             Unk2 = reader.ReadBytes(252);
         }
 
-        internal virtual void WriteSetData(DataWriter writer)
+        internal virtual void WriteSetData(DataWriter writer, bool alt)
         {
             writer.Write(_InternalInfo.resourcePtr);
             writer.Write((uint)Type);
             writer.Write(Unk1);
             writer.Write(GetElementID());
 
-            WriteArgs(writer);
+            WriteArgs(writer, alt);
 
             writer.Write(Start);
             writer.Write(End);
@@ -155,7 +173,7 @@ namespace HActLib.OOE
             writer.Write(Unk4);
         }
 
-        internal virtual void WriteArgs(DataWriter writer)
+        internal virtual void WriteArgs(DataWriter writer, bool alt)
         {
             writer.Write(Unk2);
         }

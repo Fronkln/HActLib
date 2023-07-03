@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 0xC1)]
     [ElementID(Game.YLAD, 0xBD)]
     [ElementID(Game.LJ, 0xBD)]
-    [ElementID(Game.Gaiden, 0xBD)]
-    [ElementID(Game.Y8, 0xBD)]
+    [ElementID(Game.LAD7Gaiden, 0xBD)]
+    [ElementID(Game.LADIW, 0xBD)]
     public class DEElementStageWarp : NodeElement
     {
         public uint WarpId;

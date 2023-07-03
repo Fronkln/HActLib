@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x61)]
     [ElementID(Game.YLAD, 0x5E)]
     [ElementID(Game.LJ, 0x5E)]
-    [ElementID(Game.Gaiden, 0x5E)]
-    [ElementID(Game.Y8, 0x5E)]
+    [ElementID(Game.LAD7Gaiden, 0x5E)]
+    [ElementID(Game.LADIW, 0x5E)]
     public class NodeBattleDamage : NodeElement
     {
 

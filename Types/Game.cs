@@ -8,6 +8,9 @@ namespace HActLib
 {
     public enum Game
     {
+        Kenzan,
+        Y3,
+        Y4,
         Y5,
         Ishin,
         Y0,
@@ -18,7 +21,7 @@ namespace HActLib
         JE,
         YLAD,
         LJ,
-        Gaiden,
-        Y8
+        LAD7Gaiden,
+        LADIW
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Pager
 {
-    partial class Form1
+    partial class Pager
     {
         /// <summary>
         ///  Required designer variable.

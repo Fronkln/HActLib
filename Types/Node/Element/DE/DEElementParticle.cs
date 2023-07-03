@@ -13,8 +13,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x13)]
     [ElementID(Game.YLAD, 0x12)]
     [ElementID(Game.LJ, 0x12)]
-    [ElementID(Game.Gaiden, 0x12)]
-    [ElementID(Game.Y8, 0x12)]
+    [ElementID(Game.LAD7Gaiden, 0x12)]
+    [ElementID(Game.LADIW, 0x12)]
     public class DEElementParticle : NodeElement
     {
         public uint ParticleID = 1;

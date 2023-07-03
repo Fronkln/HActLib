@@ -70,7 +70,7 @@ namespace HActBridge
             {
                 Console.WriteLine("Converted HAct for " + outputGameVer + " " + OutputGame);
 
-                if(outputGameVer == GameVersion.Y0_K1 && CMN.IsDEGame(InputGame))
+                if (outputGameVer == GameVersion.Y0_K1 && CMN.IsDEGame(InputGame))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("GMT CONVERTER BREAKS DE ANIMATIONS CONVERTING TO OE, YOU MUST RETARGET MANUALLY ON BLENDER!");
@@ -129,7 +129,7 @@ namespace HActBridge
                     HActFile[] pibs = ptcDir.FindFilesOfType(".pib");
                     HActFile[] tex = ptcDir.FindFilesOfType(".dds");
 
-                    if(pibs.Length > 0)
+                    if (pibs.Length > 0)
                     {
                         string inputPibDir = new FileInfo(pibs[0].Path).FullName;
                         string pibDir = Path.Combine(outputDir, "ptc");
@@ -141,7 +141,7 @@ namespace HActBridge
                         foreach (var file in pibs)
                         {
                             BasePib pib = PIB.Read(file.Path);
-                            PIB.Write(PIB.Convert(pib, OutputGame == Game.Y5 ? PibVersion.Y5 : PibVersion.Y0), Path.Combine(pibDir, Path.GetFileName(file.Path)));
+                            PIB.Write(PIB.Convert(pib, GetVersionForGame(OutputGame)), Path.Combine(pibDir, Path.GetFileName(file.Path)));
                         }
 
                         foreach (var file in tex)
@@ -153,6 +153,38 @@ namespace HActBridge
             }
 
             return success;
+        }
+
+
+        static PibVersion GetVersionForGame(Game game)
+        {
+            switch (game)
+            {
+                default:
+                    return PibVersion.LJ;
+                case Game.Kenzan:
+                    return PibVersion.Kenzan;
+                case Game.Y3:
+                    return PibVersion.Y3;
+                case Game.Y4:
+                    return PibVersion.Y3;
+                case Game.Y5:
+                    return PibVersion.Y5;
+                case Game.Ishin:
+                    return PibVersion.Ishin;
+                case Game.Y0:
+                    return PibVersion.Y0;
+                case Game.Y6:
+                    return PibVersion.Y6;
+                case Game.YK2:
+                    return PibVersion.YK2;
+                case Game.JE:
+                    return PibVersion.JE;
+                case Game.YLAD:
+                    return PibVersion.YLAD;
+                case Game.LJ:
+                    return PibVersion.LJ;
+            }
         }
     }
 }

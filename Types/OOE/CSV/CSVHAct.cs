@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Yarhl.IO;
 
 namespace HActLib
 {
@@ -17,6 +18,7 @@ namespace HActLib
 
         public List<CSVCharacter> Characters = new List<CSVCharacter>();
         public List<CSVHActEvent> SpecialNodes = new List<CSVHActEvent>();
+        public List<CSVSection4> Section4 = new List<CSVSection4>(); //Unknown;
 
         public override string ToString()
         {

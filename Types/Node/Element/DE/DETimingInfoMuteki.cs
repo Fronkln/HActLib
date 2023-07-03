@@ -20,8 +20,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x80)]
     [ElementID(Game.YLAD, 0x7D)]
     [ElementID(Game.LJ, 0x7D)]
-    [ElementID(Game.Gaiden, 0x7D)]
-    [ElementID(Game.Y8, 0x7D)]
+    [ElementID(Game.LAD7Gaiden, 0x7D)]
+    [ElementID(Game.LADIW, 0x7D)]
     public class DETimingInfoMuteki : DETimingInfo
     {
     }

@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x57)]
     [ElementID(Game.YLAD, 0x54)]
     [ElementID(Game.LJ, 0x54)]
-    [ElementID(Game.Gaiden, 0x54)]
-    [ElementID(Game.Y8, 0x54)]
+    [ElementID(Game.LAD7Gaiden, 0x54)]
+    [ElementID(Game.LADIW, 0x54)]
     public class DEElementFaceAnim : NodeElement
     {
         public uint PatternID;

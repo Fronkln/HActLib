@@ -17,5 +17,12 @@ namespace HActLib
         {
             Damage = reader.ReadInt32();
         }
+
+        internal override void WriteData(DataWriter writer)
+        {
+            base.WriteData(writer);
+
+            writer.Write(Damage);
+        }
     }
 }

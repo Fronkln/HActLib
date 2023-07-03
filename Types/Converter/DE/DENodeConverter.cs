@@ -78,9 +78,9 @@ namespace HActLib
                     node = new NodeAsset();
                     break;
 
-                //case AuthNodeCategory.FolderCondition:
-                 //   node = new DENodeConditionFolder();
-                 //   break;
+                case AuthNodeCategory.FolderCondition:
+                    node = new DENodeConditionFolder();
+                    break;
 
                 case AuthNodeCategory.CharacterBehavior:
                     node = new DENodeCharacterBehavior();

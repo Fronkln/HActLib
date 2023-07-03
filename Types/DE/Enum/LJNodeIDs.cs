@@ -453,6 +453,9 @@ namespace HActLib
         e_auth_element_lens_flare = 0x1BE,
         e_auth_element_color_correction_mask_v2 = 0x1C9,
         e_auth_element_color_scheme = 0x1CB,
+        e_auth_element_asset_posture_maintenance_scene = 0x1E1,
+        e_auth_element_qte_command = 0x1E9,
+        e_auth_element_skateboard_trick_processing = 0x1ED,
         e_auth_element_kind_num = 0x1F0 , //Atleast this amount, could be more
     };
 

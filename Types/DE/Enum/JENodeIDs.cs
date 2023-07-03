@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace HActLib.Types.DE.Enum
+namespace HActLib
 {
-    //Yakuza Kiwami 2 HAct elements
+    //Judgment HAct elements
     public enum JENodeIDs : uint
     {
         e_auth_element_kind_dmy = 0x0,
@@ -317,7 +317,10 @@ namespace HActLib.Types.DE.Enum
         e_auth_element_footstep_dont_play_chara = 0x13E,
         e_auth_element_uid_after_replace = 0x13F,
         e_auth_element_connect_camera_special = 0x140,
-        e_auth_element_saturation_control = 0x166
+        e_auth_element_window_rain = 0x167,
+        e_auth_element_post_effect_dof2 = 0x172,
+        e_auth_element_skin_correction = 0x175,
+        e_auth_element_color_scheme = 0x176,
     };
 
 }

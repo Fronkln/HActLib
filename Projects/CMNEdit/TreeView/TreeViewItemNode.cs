@@ -32,35 +32,9 @@ namespace CMNEdit
         {
             HActNode = node;
 
-            if(Form1.TranslateNames && !Form1.IsBep)
+            if(Form1.TranslateNames || Form1.IsBep)
             {
-                switch(node.Category)
-                {
-                    default:
-                        Text = node.Name;
-                        break;
-                    case AuthNodeCategory.Path:
-                        Text = "Path";
-                        break;
-                    case AuthNodeCategory.CameraMotion:
-                        Text = "Camera Animation";
-                        break;
-                    case AuthNodeCategory.CharacterMotion:
-                        Text = "Character Animation";
-                        break;
-                    case AuthNodeCategory.ModelMotion:
-                        Text = "Model Animation";
-                        break;
-                    case AuthNodeCategory.FolderCondition:
-                        Text = "Condition Folder";
-                        break;
-                    case AuthNodeCategory.ModelCustom:
-                        Text = "Model";
-                        break;
-                    case AuthNodeCategory.Element:
-                        Text = Reflection.GetElementNameByID((node as NodeElement).ElementKind, Form1.curGame).Replace("e_auth_element_", "").Replace("_", " ").ToTitleCase();
-                        break;
-                }
+                Text = TranslateName(node);
             }
             else
                 Text = node.Name;
@@ -82,102 +56,72 @@ namespace CMNEdit
                 SpecialDraw();
         }
 
+
         public void SetIcon()
+        {
+            int icon = SetIcon(HActNode.Category,  (HActNode.Category != AuthNodeCategory.Element ? 0 : (HActNode as NodeElement).ElementKind));
+            
+            ImageIndex = icon;
+            SelectedImageIndex = icon;
+        }
+
+        public static int SetIcon(AuthNodeCategory cat, uint elementID)
         {
             bool isOE = Form1.IsOE;
 
-            ImageIndex = 1;
-            SelectedImageIndex = 1;
-
-            switch (HActNode.Category)
+            switch (cat)
             {
                 case AuthNodeCategory.Asset:
-                    ImageIndex = 8;
-                    SelectedImageIndex = 8;
-                    break;
-
+                    return 8;
                 case AuthNodeCategory.Character:
-                    ImageIndex = 6;
-                    SelectedImageIndex = 6;
-                    break;
+                    return 6;
 
                 case AuthNodeCategory.CharacterMotion:
-                    ImageIndex = 5;
-                    SelectedImageIndex = 5;
-                    break;
+                    return 5;
 
                 case AuthNodeCategory.Camera:
-                    ImageIndex = 4;
-                    SelectedImageIndex = 4;
-                    break;
+                    return 4;
                 case AuthNodeCategory.CameraMotion:
-                    ImageIndex = 5;
-                    SelectedImageIndex = 5;
-                    break;
-
+                    return 5;
                 case AuthNodeCategory.ModelMotion:
-                    ImageIndex = 5;
-                    SelectedImageIndex = 5;
-                    break;
-
+                    return 5;
                 case AuthNodeCategory.Model_node:
-                    ImageIndex = 10;
-                    SelectedImageIndex = 10;
-                    break;
+                    return 10;
                 case AuthNodeCategory.FolderCondition:
-                    ImageIndex = 13;
-                    SelectedImageIndex = 13;
-                    break;
+                    return 13;
             }
 
 
             if (isOE)
             {
-                switch (HActNode.Category)
+                switch (cat)
                 {
                     case AuthNodeCategory.Element:
-                        switch (HActLib.Internal.Reflection.GetElementNameByID((HActNode as NodeElement).ElementKind, Form1.curGame))
+                        switch (HActLib.Internal.Reflection.GetElementNameByID(elementID, Form1.curGame))
                         {
-
                             case "e_auth_element_particle":
-                                ImageIndex = 7;
-                                SelectedImageIndex = 7;
-                                break;
+                                return 7;
 
                             case "e_auth_element_face_expression":
-                                ImageIndex = 17;
-                                SelectedImageIndex = 17;
-                                break;
+                                return 17;
 
                             case "e_auth_element_draw_off":
-                                ImageIndex = 20;
-                                SelectedImageIndex = 20;
-                                break;
+                                return 20;
 
                             case "e_auth_element_damage":
-                                ImageIndex = 3;
-                                SelectedImageIndex = 3;
-                                break;
+                                return 3;
 
                             case "e_auth_element_sound":
-                                ImageIndex = 2;
-                                SelectedImageIndex = 2;
-                                break;
+                                return 2;
 
                             case "e_auth_element_hact_branching":
-                                ImageIndex = 12;
-                                SelectedImageIndex = 12;
-                                break;
+                                return 12;
 
                             case "e_auth_element_heat_change":
-                                ImageIndex = 16;
-                                SelectedImageIndex = 16;
-                                break;
+                                return 16;
 
                             case "e_auth_element_controller_vibration":
-                                ImageIndex = 15;
-                                SelectedImageIndex = 15;
-                                break;
+                                return 15;
                         }
                         break;
                 }
@@ -185,110 +129,140 @@ namespace CMNEdit
             else
             {
 
-                if (HActNode.Category == AuthNodeCategory.Element)
-                    System.Diagnostics.Debug.Print(HActLib.Internal.Reflection.GetElementNameByID((HActNode as NodeElement).ElementKind, Form1.curGame) + "  " + (HActNode as NodeElement).ElementKind);
+                if (cat == AuthNodeCategory.Element)
+                    System.Diagnostics.Debug.Print(HActLib.Internal.Reflection.GetElementNameByID(elementID, Form1.curGame) + "  " + elementID);
 
-                switch (HActNode.Category)
+                switch (cat)
                 {
                     case AuthNodeCategory.ModelMotion:
-                        ImageIndex = 5;
-                        SelectedImageIndex = 5;
-                        break;
+                        return 5;
 
                     case AuthNodeCategory.ModelCustom:
-                        ImageIndex = 8;
-                        SelectedImageIndex = 8;
-                        break;
+                        return 8;
 
 
                     //TODO save chosen hact game instead of accessing
                     //combobox raw
                     case AuthNodeCategory.Element:
-                        switch (HActLib.Internal.Reflection.GetElementNameByID((HActNode as NodeElement).ElementKind, Form1.curGame))
+                        switch (HActLib.Internal.Reflection.GetElementNameByID(elementID, Form1.curGame))
                         {
                             case "e_auth_element_battle_damage":
-                                ImageIndex = 3;
-                                SelectedImageIndex = 3;
-                                break;
-
+                                return 3;
                             case "e_auth_element_battle_attack":
-                                ImageIndex = 3;
-                                SelectedImageIndex = 3;
-                                break;
-
+                                return 3;
                             case "e_auth_element_battle_control_window":
-                                ImageIndex = 14;
-                                SelectedImageIndex = 14;
-                                break;
-
+                                return 14;
                             case "e_auth_element_battle_followup_window":
-                                ImageIndex = 14;
-                                SelectedImageIndex = 14;
-                                break;
-
+                                return 14;
                             case "e_auth_element_particle":
-                                ImageIndex = 7;
-                                SelectedImageIndex = 7;
-                                break;
-
+                                return 7;
                             case "e_auth_element_se":
-                                ImageIndex = 2;
-                                SelectedImageIndex = 2;
-                                break;
+                                return 2;
                             case "e_auth_element_connect_camera":
-                                ImageIndex = 9;
-                                SelectedImageIndex = 9;
-                                break;
+                                return 9;
                             case "e_auth_element_spot_light":
-                                ImageIndex = 11;
-                                SelectedImageIndex = 11;
-                                break;
+                                return 11;
 
                             case "e_auth_element_battle_shift":
-                                ImageIndex = 14;
-                                SelectedImageIndex = 14;
-                                break;
-
+                                return 14;
                             case "e_auth_element_controller_rumble":
-                                ImageIndex = 15;
-                                SelectedImageIndex = 15;
-                                break;
-
+                                return 15;
                             case "e_auth_element_battle_heat":
-                                ImageIndex = 16;
-                                SelectedImageIndex = 16;
-                                break;
-
+                                return 16;
                             case "e_auth_element_face_anim":
-                                ImageIndex = 17;
-                                SelectedImageIndex = 17;
-                                break;
-
+                                return 17;
                             case "e_auth_element_expression_target":
-                                ImageIndex = 17;
-                                SelectedImageIndex = 17;
-                                break;
-
+                                return 17;
                             case "e_auth_element_connect_chara_out":
-                                ImageIndex = 18;
-                                SelectedImageIndex = 18;
-                                break;
+                                return 18;
 
                             case "e_auth_element_asset_break_range":
-                                ImageIndex = 19;
-                                SelectedImageIndex = 19;
-                                break;
+                                return 19;
                             case "e_auth_element_play_draw_off":
-                                ImageIndex = 20;
-                                SelectedImageIndex = 20;
-                                break;
+                                return 20;
                             case "e_auth_element_battle_muteki":
-                                ImageIndex = 21;
-                                SelectedImageIndex = 21;
-                                break;
+                                return 21;
                         }
                         break;
                 }
+            }
+
+            return 1;
+        }
+
+
+        public static string TranslateName(Node node)
+        {
+            string TranslateElement()
+            {
+                bool isOE = Form1.IsOE;
+                string nodeName = Reflection.GetElementNameByID((node as NodeElement).ElementKind, Form1.curGame);
+
+
+                if (!isOE)
+                {
+                    switch(nodeName)
+                    {
+                        case "e_auth_element_particle":
+                            DEElementParticle particleElem = node as DEElementParticle;
+                            return "PIB " + particleElem.ParticleID;
+                        case "e_auth_element_se":
+                            DEElementSE seElem = node as DEElementSE;
+                            return $"Sound Cue {seElem.CueSheet} ID {seElem.SoundIndex}";
+                        case "e_auth_element_battle_damage":
+                            NodeBattleDamage damageElem = node as NodeBattleDamage;
+                            return $"{damageElem.Damage} Damage {(damageElem.NoDead ? "(Non-Lethal)" : "(Lethal)")}";
+                        case "e_auth_element_battle_heat":
+                            DEElementBattleHeat heatElem = node as DEElementBattleHeat;
+                            return $"{heatElem.HeatChange} Heat Change";
+                        case "e_auth_element_rim_flash":
+                            DEElementRimflash rimflashElem = node as DEElementRimflash;
+                            return "Rimflash Ver." + rimflashElem.RimflashVersion + $"{(rimflashElem.ParamID > 0 ? " (DB Ref)" : "")}";
+                        case "e_auth_element_battle_command_special":
+                            DEElementBattleCommandSpecial battleSpecialElem = node as DEElementBattleCommandSpecial;
+                            return $"Battle Special ({battleSpecialElem.Type})";
+                    }
+                }
+                else
+                {
+                    switch (nodeName)
+                    {
+                        case "e_auth_element_particle":
+                            OEParticle particleElem = node as OEParticle;
+                            return "PIB " + particleElem.ParticleID;
+                        case "e_auth_element_damage":
+                            OEDamage damageElem = node as OEDamage;
+                            return $"{damageElem.Damage} Damage {(damageElem.NoDead ? "(Non-Lethal)" : "(Lethal)")}";
+                        case "e_auth_element_heat_change":
+                            OEHeat heatElem = node as OEHeat;
+                            return $"{heatElem.HeatChange} Heat Change";
+                        case "e_auth_element_sound":
+                            OEElementSE seElem = node as OEElementSE;
+                            return $"Sound Cue {seElem.Cuesheet} ID {seElem.Sound}";
+                    }
+                }
+
+                return nodeName.Replace("e_auth_element_", "").Replace("_", " ").ToTitleCase();
+            }
+
+            switch (node.Category)
+            {
+                default:
+                    return node.Name;
+                case AuthNodeCategory.Path:
+                    return "Path";
+                case AuthNodeCategory.CameraMotion:
+                    return "Camera Animation";
+                case AuthNodeCategory.CharacterMotion:
+                    return "Character Animation";
+                case AuthNodeCategory.ModelMotion:
+                    return "Model Animation";
+                case AuthNodeCategory.FolderCondition:
+                    return $"Condition ({(node as DENodeConditionFolder).Condition})";
+                case AuthNodeCategory.ModelCustom:
+                    return  "Model";
+                case AuthNodeCategory.Element:
+                    return TranslateElement();
             }
         }
 

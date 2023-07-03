@@ -12,8 +12,8 @@ namespace HActLib
     [ElementID(Game.JE, 0x106)]
     [ElementID(Game.YLAD, 0x101)]
     [ElementID(Game.LJ, 0x101)]
-    [ElementID(Game.Gaiden, 0x101)]
-    [ElementID(Game.Y8, 0x101)]
+    [ElementID(Game.LAD7Gaiden, 0x101)]
+    [ElementID(Game.LADIW, 0x101)]
     public class DEElementColorCorrectionMask : NodeElement
     {
         public float Hue;

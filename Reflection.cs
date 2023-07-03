@@ -20,18 +20,18 @@ namespace HActLib.Internal
                 default:
                     return typeof(LJNodeIDs);
 
-                case Game.Y8:
+                case Game.LADIW:
                     return typeof(LJNodeIDs);
-                case Game.Gaiden:
+                case Game.LAD7Gaiden:
                     return typeof(LJNodeIDs);
                 case Game.LJ:
                     return typeof(LJNodeIDs);
                 case Game.YLAD:
                     return typeof(YLADNodeIDs);
-                case Game.JE:
-                    return typeof(YK2NodeIDs);
                 case Game.YK2:
                     return typeof(YK2NodeIDs);
+                case Game.JE:
+                    return typeof(JENodeIDs);
                 case Game.Y6:
                     return typeof(Y6NodeIDs);
                 case Game.Y6Demo:

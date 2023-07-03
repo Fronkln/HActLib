@@ -38,6 +38,8 @@ namespace CMNEdit
                     particle.Color = col;
                     colorPanel.BackColor = col;
                 });
+
+            form.CreateInput("Transparency", particle.Color.a.ToString(), delegate (string val) { particle.Color.a = byte.Parse(val); }, NumberBox.NumberMode.Byte);
         }
     }
 }
