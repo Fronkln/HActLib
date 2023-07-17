@@ -292,9 +292,11 @@ namespace HActLib
             camera.FrameProgressionSpeed = new float[length];
             camera.ProgressionEnd = length + 1;
 
+            Set2ElementMotion set2Mot = cam.GetChildOfType<Set2ElementMotion>();
+
             NodeCameraMotion motion = new NodeCameraMotion();
             motion.Guid = Guid.NewGuid();
-            motion.Name = cam.Set2Object.Resource;
+            motion.Name = set2Mot.Resource;
             motion.Start.Tick = 0;
             motion.End.Tick = (uint)length;
 
@@ -365,7 +367,7 @@ namespace HActLib
             switch (set.Type)
             {
                 case ObjectNodeCategory.Camera:
-                    deNode = GenerateCamera(tev, set as ObjectCamera, (int)set.Set2Object.End);
+                    deNode = GenerateCamera(tev, set as ObjectCamera, (int)set.GetChildOfType<Set2ElementMotion>().End);
                     break;
 
                 case ObjectNodeCategory.Path:

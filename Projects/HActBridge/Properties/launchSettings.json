@@ -2,7 +2,7 @@
   "profiles": {
     "HActBridge": {
       "commandName": "Project",
-      "commandLineArgs": "\"D:\\Program Files (x86)\\Steam\\steamapps\\common\\Yakuza 3\\data\\hact\\hact_all.par.unpack\\8142.par.unpack\\tmp\\hact_tev.bin\" y3 ylad"
+      "commandLineArgs": "\"D:\\Program Files (x86)\\Steam\\steamapps\\common\\Yakuza 3\\data\\hact\\hact_all.par.unpack\\5450.par.unpack\\tmp\\hact_tev.bin\" y3 ylad"
     }
   }
 }

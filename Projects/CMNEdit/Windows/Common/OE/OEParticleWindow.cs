@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CMNEdit.Windows;
 using HActLib;
 
 namespace CMNEdit
@@ -19,7 +20,7 @@ namespace CMNEdit
 
             form.CreateHeader("Particle");
             form.CreateInput("Particle ID", particle.ParticleID.ToString(), delegate (string val) { particle.ParticleID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Unknown", particle.Unknown.ToString(), delegate (string val) { particle.Unknown = int.Parse(val); }, NumberBox.NumberMode.Int);
+            form.CreateInput("Flags", particle.Flags.ToString(), delegate (string val) { particle.Flags = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Unknown", particle.Unknown2.ToString(), delegate (string val) { particle.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Unknown", particle.Unknown3.ToString(), delegate (string val) { particle.Unknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Unknown", particle.Unknown4.ToString(), delegate (string val) { particle.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
@@ -40,6 +41,10 @@ namespace CMNEdit
                 });
 
             form.CreateInput("Transparency", particle.Color.a.ToString(), delegate (string val) { particle.Color.a = byte.Parse(val); }, NumberBox.NumberMode.Byte);
+
+            form.CreateSpace(25);
+
+            MatrixWindow.Draw(form, particle.Matrix);
         }
     }
 }

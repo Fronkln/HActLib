@@ -1381,7 +1381,7 @@ namespace CMNEdit
             m_rightClickedNode = null;
 
             IsHact = false;
-            IsOE = false;
+            IsOE = true;
             IsMep = true;
             IsBep = false;
 

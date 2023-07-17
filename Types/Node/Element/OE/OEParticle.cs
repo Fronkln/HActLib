@@ -15,7 +15,7 @@ namespace HActLib
     public class OEParticle : NodeElement
     {
         public uint ParticleID = 0;
-        public int Unknown;
+        public int Flags;
         public int Unknown2 = 0;
         public int Unknown3 = 0;
 
@@ -44,7 +44,7 @@ namespace HActLib
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             ParticleID = reader.ReadUInt32();
-            Unknown = reader.ReadInt32();
+            Flags = reader.ReadInt32();
             Unknown2 = reader.ReadInt32();
             Unknown3 = reader.ReadInt32();
 
@@ -69,7 +69,7 @@ namespace HActLib
         internal override void WriteElementData(DataWriter writer, GameVersion version)
         {
             writer.Write(ParticleID);
-            writer.Write(Unknown);
+            writer.Write(Flags);
             writer.Write(Unknown2);
             writer.Write(Unknown3);
 

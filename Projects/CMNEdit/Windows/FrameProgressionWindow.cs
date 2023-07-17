@@ -230,7 +230,7 @@ namespace Frame_Progression_GUI
         private void button4_Click(object sender, EventArgs e)
         {
             m_copiedProgression.Clear();
-            m_copiedProgression.AddRange(frameProgression.SelectedItems.Cast<string>());
+            m_copiedProgression.AddRange(frameProgression.SelectedItems.Cast<ListViewItem>().Select(x => x.Text));
         }
 
         private void button5_Click(object sender, EventArgs e)

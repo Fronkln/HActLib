@@ -445,13 +445,13 @@ namespace HActLib
                     oeParticle.Start = ooeParticle.Start;
                     oeParticle.End = ooeParticle.End;
                     oeParticle.ParticleID = ooeParticle.ParticleID;
-                    oeParticle.Unknown = ooeParticle.Unknown1;
+                    oeParticle.Flags = ooeParticle.Unknown1;
                     oeParticle.Matrix = ooeParticle.Matrix;
                     oeParticle.Name = "PTC: " + oeParticle.ParticleID;
                     oeParticle.UpdateTimingMode = 0;
 
-                    if (oeParticle.Unknown > 20)
-                        oeParticle.Unknown = 15;
+                    if (oeParticle.Flags > 20)
+                        oeParticle.Flags = 15;
 
                     createdNode = oeParticle;
 
