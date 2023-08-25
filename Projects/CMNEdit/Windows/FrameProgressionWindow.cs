@@ -64,7 +64,7 @@ namespace Frame_Progression_GUI
 
             NodeCamera camera = m_cameras[idx];
 
-            for(int i = 0; i < camera.FrameProgression.Length; i++)
+            for (int i = 0; i < camera.FrameProgression.Length; i++)
             {
                 float f = camera.FrameProgression[i];
 
@@ -73,8 +73,8 @@ namespace Frame_Progression_GUI
 
                 frameProgression.Items.Add(item);
             }
-         //   listView1.Items.AddRange((camera.FrameProgression.Select(x => x.ToString(CultureInfo.InvariantCulture)).Select(x => new ListViewItem(x)).ToArray()));
-           // listView1.Items.subAddRange((camera.FrameProgression.Select(x => x.ToString(CultureInfo.InvariantCulture)).Select(x => new ListViewItem(x)).ToArray()));
+            //   listView1.Items.AddRange((camera.FrameProgression.Select(x => x.ToString(CultureInfo.InvariantCulture)).Select(x => new ListViewItem(x)).ToArray()));
+            // listView1.Items.subAddRange((camera.FrameProgression.Select(x => x.ToString(CultureInfo.InvariantCulture)).Select(x => new ListViewItem(x)).ToArray()));
             cameraList.SelectedIndex = idx;
         }
 
@@ -108,7 +108,7 @@ namespace Frame_Progression_GUI
 
         private void ApplyFrameProgression()
         {
-           SelectedCamera.FrameProgression = frameProgression.Items.Cast<ListViewItem>().Select(x => float.Parse(x.Text, CultureInfo.InvariantCulture)).ToArray();
+            SelectedCamera.FrameProgression = frameProgression.Items.Cast<ListViewItem>().Select(x => float.Parse(x.Text, CultureInfo.InvariantCulture)).ToArray();
 
 
             float[] frameProgressionSpeed = new float[SelectedCamera.FrameProgression.Length];
@@ -117,12 +117,12 @@ namespace Frame_Progression_GUI
             if (frameProgressionSpeed.Length <= 0)
                 return;
 
-            for(int i = 0; i < frameProgression.Items.Count - 1; i++)
-                frameProgressionSpeed[i] = SelectedCamera.FrameProgression[i + 1] - SelectedCamera.FrameProgression[i]; 
+            for (int i = 0; i < frameProgression.Items.Count - 1; i++)
+                frameProgressionSpeed[i] = SelectedCamera.FrameProgression[i + 1] - SelectedCamera.FrameProgression[i];
 
-            if(frameProgressionSpeed.Length > 1)
+            if (frameProgressionSpeed.Length > 1)
                 frameProgressionSpeed[frameProgressionSpeed.Length - 1] = frameProgressionSpeed[frameProgressionSpeed.Length - 2];
-            
+
             SelectedCamera.FrameProgressionSpeed = frameProgressionSpeed;
         }
 
@@ -235,12 +235,38 @@ namespace Frame_Progression_GUI
 
         private void button5_Click(object sender, EventArgs e)
         {
-            foreach(string item in m_copiedProgression)
+            foreach (string item in m_copiedProgression)
             {
                 frameProgression.Items.Add(item);
             }
 
             ApplyFrameProgression();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string adjustVal = Microsoft.VisualBasic.Interaction.InputBox("Amount to adjust frames by",
+            "Adjust Selected Value",
+            "0",
+            0,
+            0);
+
+            float val = CMNEdit.Utils.InvariantParse(adjustVal);
+
+            int min = frameProgression.SelectedIndices.Cast<int>().Min();
+            int max = frameProgression.SelectedIndices.Cast<int>().Max();
+
+            int frameCount = (max - min) + 1;
+
+            if (frameCount <= 0)
+                return;
+
+            int curIdx = min;
+
+            for (int i = 0; i < frameCount; i++)
+            {
+                frameProgression.Items[curIdx].Text = (CMNEdit.Utils.InvariantParse(frameProgression.Items[curIdx].Text) + val).ToString(CultureInfo.InvariantCulture);
+            }
         }
     }
 }

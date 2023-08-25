@@ -249,5 +249,13 @@ namespace HActLib
         {
             return Children.Where(x => x is T).Cast<T>().ToArray();
         }
+
+        /// <summary>
+        /// Conversions that concern same engine different game
+        /// </summary>
+        public virtual bool TryConvert(Game input, Game output)
+        {
+            return true;
+        }
     }
 }

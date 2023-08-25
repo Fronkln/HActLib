@@ -44,6 +44,11 @@ namespace HActLib
             return new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
 
+        public static RGB ReadRGB(this DataReader reader)
+        {
+            return new RGB(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+        }
+
         public static RGB32 ReadRGB32(this DataReader reader)
         {
             return new RGB32(reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
@@ -91,6 +96,13 @@ namespace HActLib
             writer.Write(vec.z);
             writer.Write(vec.w);
         }
+        public static void Write(this DataWriter writer, RGB col)
+        {
+            writer.Write(col.R);
+            writer.Write(col.G);
+            writer.Write(col.B);
+        }
+
 
         public static void Write(this DataWriter writer, RGB32 col)
         {

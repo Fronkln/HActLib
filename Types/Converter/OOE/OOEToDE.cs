@@ -546,7 +546,7 @@ namespace HActLib
                     soundNode.Start = ooeSound.Start;
                     soundNode.End = ooeSound.End;
                     soundNode.CueSheet = ooeSound.CuesheetID;
-                    soundNode.SoundIndex = (byte)ooeSound.SoundID;
+                    soundNode.SoundIndex = (byte)(ooeSound.SoundID + 1);
 
                     //gv fighter sound
                     if (ooeSound.CuesheetID == 0)

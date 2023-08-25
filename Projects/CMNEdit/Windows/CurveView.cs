@@ -66,6 +66,8 @@ namespace CMNEdit.Windows
             m_textBoxes = new TextBox[curve.Length];
             m_labels = new Label[curve.Length];
 
+            SuspendLayout();
+
             for(int i = 0; i < curve.Length; i++)
             {
                 byte bit = curve[i];

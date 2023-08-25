@@ -13,9 +13,14 @@ namespace CMNEdit
         {
             DECustomElementSystemSpeed speed = node as DECustomElementSystemSpeed;
 
+            if (speed.Type > 5)
+                speed.Type = 5;
+
             form.CreateHeader("System Speed (Custom)");
 
-            form.CreateComboBox("Speed Type", (int)speed.Type, Enum.GetNames<SpeedType>(), delegate (int index) { speed.Type = (uint)index; });
+            string[] speedTypes = Enum.GetNames<SpeedType>();
+
+            form.CreateComboBox("Speed Type", (int)speed.Type, speedTypes, delegate (int index) { speed.Type = (uint)index; });
             form.CreateInput("Speed", speed.Speed.ToString(), delegate (string val) { speed.Speed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }

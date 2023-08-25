@@ -58,13 +58,16 @@
             this.assetBreakUIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.systemSpeedEXAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transitStunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.adjustTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.convertMEPWithPibsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.frameProgressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disableFrameInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authPagesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertBetweenGamesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nodesTree = new MWControlSuite.MWTreeView();
             this.nodeIcons = new System.Windows.Forms.ImageList(this.components);
             this.nodeContext = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -269,7 +272,8 @@
             this.pathOffsetToolStripMenuItem,
             this.characterSpeedToolStripMenuItem,
             this.assetBreakUIDToolStripMenuItem,
-            this.customToolStripMenuItem});
+            this.customToolStripMenuItem,
+            this.transitStunToolStripMenuItem});
             this.elementToolStripMenuItem.Name = "elementToolStripMenuItem";
             this.elementToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.elementToolStripMenuItem.Text = "Element";
@@ -366,6 +370,13 @@
             this.systemSpeedEXAuthToolStripMenuItem.Text = "System Speed (EX Auth)";
             this.systemSpeedEXAuthToolStripMenuItem.Click += new System.EventHandler(this.systemSpeedEXAuthToolStripMenuItem_Click);
             // 
+            // transitStunToolStripMenuItem
+            // 
+            this.transitStunToolStripMenuItem.Name = "transitStunToolStripMenuItem";
+            this.transitStunToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.transitStunToolStripMenuItem.Text = "Transit Stun";
+            this.transitStunToolStripMenuItem.Click += new System.EventHandler(this.transitStunToolStripMenuItem_Click);
+            // 
             // toolStripSplitButton1
             // 
             this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -399,7 +410,9 @@
             this.advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.convertMEPWithPibsToolStripMenuItem,
             this.frameProgressionToolStripMenuItem,
-            this.authPagesDEToolStripMenuItem});
+            this.disableFrameInfoToolStripMenuItem,
+            this.authPagesDEToolStripMenuItem,
+            this.convertBetweenGamesDEToolStripMenuItem});
             this.advancedButton.Image = ((System.Drawing.Image)(resources.GetObject("advancedButton.Image")));
             this.advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.advancedButton.Name = "advancedButton";
@@ -409,23 +422,37 @@
             // convertMEPWithPibsToolStripMenuItem
             // 
             this.convertMEPWithPibsToolStripMenuItem.Name = "convertMEPWithPibsToolStripMenuItem";
-            this.convertMEPWithPibsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.convertMEPWithPibsToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.convertMEPWithPibsToolStripMenuItem.Text = "Convert MEP (With Pibs)";
             this.convertMEPWithPibsToolStripMenuItem.Click += new System.EventHandler(this.convertMEPWithPibsToolStripMenuItem_Click);
             // 
             // frameProgressionToolStripMenuItem
             // 
             this.frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
-            this.frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.frameProgressionToolStripMenuItem.Text = "Frame Progression";
             this.frameProgressionToolStripMenuItem.Click += new System.EventHandler(this.frameProgressionToolStripMenuItem_Click);
+            // 
+            // disableFrameInfoToolStripMenuItem
+            // 
+            this.disableFrameInfoToolStripMenuItem.Name = "disableFrameInfoToolStripMenuItem";
+            this.disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.disableFrameInfoToolStripMenuItem.Text = "Disable Frame Info";
+            this.disableFrameInfoToolStripMenuItem.Click += new System.EventHandler(this.disableFrameInfoToolStripMenuItem_Click);
             // 
             // authPagesDEToolStripMenuItem
             // 
             this.authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
-            this.authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
             this.authPagesDEToolStripMenuItem.Click += new System.EventHandler(this.authPagesDEToolStripMenuItem_Click);
+            // 
+            // convertBetweenGamesDEToolStripMenuItem
+            // 
+            this.convertBetweenGamesDEToolStripMenuItem.Name = "convertBetweenGamesDEToolStripMenuItem";
+            this.convertBetweenGamesDEToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.convertBetweenGamesDEToolStripMenuItem.Text = "Convert Between Games (DE)";
+            this.convertBetweenGamesDEToolStripMenuItem.Click += new System.EventHandler(this.convertBetweenGamesDEToolStripMenuItem_Click);
             // 
             // nodesTree
             // 
@@ -977,5 +1004,8 @@
         private System.Windows.Forms.ToolStripMenuItem frameProgressionToolStripMenuItem;
         private MWControlSuite.MWTreeView nodesTree;
         private System.Windows.Forms.ToolStripMenuItem authPagesDEToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transitStunToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem disableFrameInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertBetweenGamesDEToolStripMenuItem;
     }
 }

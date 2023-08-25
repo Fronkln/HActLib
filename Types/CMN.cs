@@ -342,6 +342,28 @@ namespace HActLib
 
         }
 
+        public  static Game[] GetOEGames()
+        {
+            List<Game> games = new List<Game>();
+
+            for (int i = 0; i < Enum.GetValues<Game>().Length; i++)
+                if (!IsDEGame((Game)i))
+                    games.Add((Game)i);
+
+            return games.ToArray();
+        }
+
+        public static Game[] GetDEGames()
+        {
+            List<Game> games = new List<Game>();
+
+            for (int i = 0; i < Enum.GetValues<Game>().Length; i++)
+                if (IsDEGame((Game)i))
+                    games.Add((Game)i);
+
+            return games.ToArray();
+        }
+
         public static Game GetGameFromString(string str)
         {
             switch(str.ToLowerInvariant())

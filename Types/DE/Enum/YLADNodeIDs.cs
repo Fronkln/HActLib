@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HActLib.Types.DE.Enum
+namespace HActLib
 {
+    [GamePrefix(Game.YLAD, "ylad", "y7", "likeadragon", "bestgame")]
     public enum YLADNodeIDs : uint
     {
         e_auth_element_kind_dmy = 0x0,

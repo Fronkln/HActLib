@@ -2,7 +2,7 @@
   "profiles": {
     "HActMerge": {
       "commandName": "Project",
-      "commandLineArgs": "ylad \"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\y7bb1420_tnd_combo\\cmn_vo.bin\" 0 \"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\y7bb1420_tnd_combo_2\\cmn\\cmn.bin\" 1065"
+      "commandLineArgs": "ylad \"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\y7bb1640_aok2\\cmn\\cmn_vo.bin\" 170 \"H:\\steamapps2\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\hact\\h24750_yuta3_auth.par.unpack\\cmn\\cmn_converted.bin\" 178"
     }
   }
 }

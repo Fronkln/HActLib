@@ -97,6 +97,8 @@ namespace CMNEdit
 
         private void ClearEverything()
         {
+            SuspendLayout();
+
             EditingNode = null;
             EditingResource = null;
 
@@ -107,6 +109,9 @@ namespace CMNEdit
             varPanel.Controls.Clear();
             varPanel.RowCount = 0;
             varPanel.RowStyles.Clear();
+
+            ResumeLayout(true);
+
             IsHact = false;
             IsOE = false;
             IsBep = false;
@@ -268,6 +273,40 @@ namespace CMNEdit
 
             foreach (float f in CutInfos)
                 cutInfoTree.Nodes.Add(new TreeViewItemCutInfo(f));
+        }
+
+        public void ReDraw()
+        {
+            SuspendLayout();
+
+            if (nodesTree.Nodes.Count == 0)
+                return;
+
+            if (!IsBep)
+            {
+                Node root = (nodesTree.Nodes[0] as TreeViewItemNode).HActNode;
+
+                nodesTree.Nodes.Clear();
+                nodesTree.Nodes.Add(new TreeViewItemNode(root));
+            }
+            else
+            {
+                Node[] nodes = GetAllNodes();
+
+                nodesTree.Nodes.Clear();
+
+                foreach (Node node in nodes)
+                    nodesTree.Nodes.Add(new TreeViewItemNode(node));
+            }
+
+            ResumeLayout(true);
+        }
+
+        public void ClearNodes()
+        {
+            SuspendLayout();
+            nodesTree.Nodes.Clear();
+            ResumeLayout(true);
         }
 
         public TreeNode[] GetExpanded()
@@ -480,9 +519,13 @@ namespace CMNEdit
 
             ClearNodeMenu();
 
-            if (treeNode == null)
+            if (treeNode as TreeViewItemNode == null)
             {
                 ProcessSpecialSelectedNode();
+
+                varPanel.VerticalScroll.Value = 0;
+                varPanel.ResumeLayout();
+
                 return;
             }
 
@@ -500,16 +543,16 @@ namespace CMNEdit
             if (!IsMep)
                 node = EditingNode.HActNode;
             else
-               node = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).Effect;
+                node = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).Effect;
 
             NodeWindow.Draw(this, node);
 
 
-            if(IsMep)
+            if (IsMep)
             {
                 CreateHeader("Mep");
                 CreateInput("Bone", ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneName.Text, delegate (string val) { ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneName.Set(val); });
-                CreateInput("Bone ID", ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneID.ToString(), delegate (string val) { ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneID =int.Parse(val); }, NumberBox.NumberMode.Int);
+                CreateInput("Bone ID", ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneID.ToString(), delegate (string val) { ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
             }
 
             switch (node.Category)
@@ -554,7 +597,7 @@ namespace CMNEdit
                     break;
 
                 case AuthNodeCategory.CharacterBehavior:
-                    if(CMN.IsDE(curVer))
+                    if (CMN.IsDE(curVer))
                         DENodeCharacterBehaviorWindow.Draw(this, node);
                     break;
 
@@ -648,7 +691,7 @@ namespace CMNEdit
 
         private void nodesTree_AfterSelNodeChanged(object sender, MWControlSuite.MWPropertyEventArgs e)
         {
-            if(nodesTree.SelNodes.Count == 1)
+            if (nodesTree.SelNodes.Count == 1)
                 ProcessSelectedNode(nodesTree.SelNode);
         }
 
@@ -735,7 +778,7 @@ namespace CMNEdit
                     }
                 }
 
-                foreach(var node in pastingNode.Where(x=> x as TreeViewItemNode != null))
+                foreach (var node in pastingNode.Where(x => x as TreeViewItemNode != null))
                 {
                     PasteNode((node as TreeViewItemNode));
                 }
@@ -865,24 +908,7 @@ namespace CMNEdit
         private BEP GenerateBep()
         {
             BEP bep = new BEP();
-
-            List<Node> nodes = new List<Node>();
-
-            void ChildLoop(TreeViewItemNode node)
-            {
-
-                foreach (TreeViewItemNode treeChild in node.Nodes.Cast<TreeNode>().Where(x => x is TreeViewItemNode))
-                {
-                    bep.Nodes.Add(treeChild.HActNode);
-                    ChildLoop(treeChild);
-                }
-            }
-
-            foreach (TreeViewItemNode node in GetAllNodesTreeView())
-            {
-                bep.Nodes.Add(node.HActNode);
-                ChildLoop(node);
-            }
+            bep.Nodes.AddRange(GetAllNodes());
 
 
             return bep;
@@ -892,8 +918,8 @@ namespace CMNEdit
         {
             Yarhl.IO.DataStream stream = null;
 
-            if(IsBep || IsMep)
-                if(string.IsNullOrEmpty(FilePath))
+            if (IsBep || IsMep)
+                if (string.IsNullOrEmpty(FilePath))
                 {
                     SaveFileDialog dialog = new SaveFileDialog();
                     dialog.DefaultExt = (IsBep ? ".bep" : ".mep");
@@ -917,7 +943,7 @@ namespace CMNEdit
                     else
                         CMN.Write(cmn as CMN, hactInf.FindFile("cmn.bin").Path);
 
-                    
+
                     if (hactInf.GetResources().Length > 0)
                     {
                         RES newRes = new RES();
@@ -929,9 +955,9 @@ namespace CMNEdit
                     }
                 }
             }
-            else if(IsBep)
+            else if (IsBep)
                 BEP.Write(GenerateBep(), FilePath, curVer);
-            else if(IsMep)
+            else if (IsMep)
             {
                 curGame = (Game)targetGameCombo.SelectedIndex;
 
@@ -1050,10 +1076,18 @@ namespace CMNEdit
                     case 1337:
                         DECustomElementSystemSpeedWindow.Draw(this, element);
                         break;
+                    //Like a Brawler: Transit HAct
+                    case 60010:
+                        DECustomElementY7BTransitEXFollowupWindow.Draw(this, element);
+                        break;
                 }
 
                 switch (elemName)
                 {
+                    case "e_auth_element_camera_param":
+                        DEElementCameraParamWindow.Draw(this, element);
+                        break;
+
                     case "e_auth_element_se":
                         DENodeElementSEWindow.Draw(this, element);
                         break;
@@ -1084,9 +1118,9 @@ namespace CMNEdit
                     case "e_auth_element_equip_asset_hide":
                         DEElementHideAssetWindow.Draw(this, element);
                         break;
-                    // case "e_auth_element_color_correction":
-                    //  DEElementColorCorrectionWindow.Draw(this, element);
-                    //  break;
+                    case "e_auth_element_color_correction":
+                        DEElementColorCorrectionWindow.Draw(this, element);
+                        break;
                     case "e_auth_element_rim_flash":
                         DEElementRimflashWindow.Draw(this, element);
                         break;
@@ -1167,6 +1201,10 @@ namespace CMNEdit
                     case "e_auth_element_battle_command_special":
                         DEElementBattleCommandSpecialWindow.Draw(this, element);
                         break;
+
+                    case "e_auth_element_battle_transit_stun":
+                        DEElementTimingInfoStunWindow.Draw(this, element);
+                        break;
                 }
             }
         }
@@ -1180,7 +1218,7 @@ namespace CMNEdit
         public Node[] GetAllNodes()
         {
 
-            if (!IsBep && !IsMep)
+            if (!IsMep)
             {
                 List<TreeNode> nodes = new List<TreeNode>();
 
@@ -1192,7 +1230,13 @@ namespace CMNEdit
                         Process(child);
                 }
 
-                Process(nodesTree.Nodes[0]);
+                if(!IsBep)
+                    Process(nodesTree.Nodes[0]);
+                else
+                {
+                    foreach (TreeNode node in nodesTree.Nodes)
+                        Process(node);
+                }
 
                 return nodes.Where(x => x is TreeViewItemNode)
                    .Cast<TreeViewItemNode>()
@@ -1200,10 +1244,31 @@ namespace CMNEdit
                    .ToArray();
             }
             else
+            {
+                List<Node> children = new List<Node>();
+
+                void ChildLoop(TreeNode parent)
+                {
+                    foreach (TreeNode node in parent.Nodes)
+                    {
+                        TreeViewItemNode hactNode = node as TreeViewItemNode;
+
+                        if (hactNode != null)
+                        {
+                            hactNode.Nodes.Add(hactNode);
+                            ChildLoop(hactNode);
+                        }
+                    }
+                }
+
+                TreeViewItemNode[] rootNodes = GetAllNodesTreeView();
+
+
                 return nodesTree.Nodes
                    .Cast<TreeViewItemNode>()
                    .Select(x => x.HActNode)
                    .ToArray();
+            }
         }
 
         private TreeViewItemNode[] GetAllNodesTreeView()
@@ -1313,7 +1378,7 @@ namespace CMNEdit
             {
                 if (IsBep)
                     BEP.Write(GenerateBep(), dialog.FileName, curVer);
-                else if(IsMep)
+                else if (IsMep)
                 {
                     ConvertCurrentMep();
                     MEP.Write(Mep, dialog.FileName);
@@ -1350,13 +1415,18 @@ namespace CMNEdit
                 nodesTree.Nodes.Add(new TreeViewItemNode(node));
             }
 
+            ProcessBEPHierarchy();
+        }
+
+        private void ProcessBEPHierarchy()
+        {
             TreeViewItemNode[] nodes = GetAllNodesTreeView();
 
             foreach (TreeViewItemNode node in nodes)
             {
                 TreeViewItemNode parentNode = nodes.Where(x => x.HActNode.BEPDat.Guid2 == node.HActNode.Guid).FirstOrDefault();
 
-                if (parentNode != null)
+                if (parentNode != null && parentNode != node)
                 {
                     nodesTree.RemoveNode(node);
                     parentNode.Nodes.Add(node);
@@ -1524,6 +1594,12 @@ namespace CMNEdit
         private void stageWarpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NodeElement warp = AddElementOfType(typeof(DEElementStageWarp), "Stage Warp", "e_auth_element_stage_warp");
+        }
+
+
+        private void transitStunToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NodeElement stun = AddElementOfType(typeof(DEElementTimingInfoStun), "Stun Transit", "e_auth_element_battle_transit_stun");
         }
 
         private void resTree_KeyDown(object sender, KeyEventArgs e)
@@ -1702,7 +1778,7 @@ namespace CMNEdit
            0,
            0);
 
-           ConvertCurrentMep();
+            ConvertCurrentMep();
 
             OEParticle[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffectOE>().Where(x => x.Effect.ElementKind == 2).Select(x => x.Effect).Cast<OEParticle>().ToArray();
 
@@ -1713,7 +1789,7 @@ namespace CMNEdit
             List<string> foundPibPaths = new List<string>();
             List<BasePib> mepPibs = new List<BasePib>();
 
-            foreach(string str in pibFiles)
+            foreach (string str in pibFiles)
             {
                 if (pibIds.Length == pibFiles.Length)
                     break;
@@ -1736,7 +1812,7 @@ namespace CMNEdit
 
             PibVersion targetVer = PibVersion.Y5;
 
-            switch(curGame)
+            switch (curGame)
             {
                 case Game.Ishin:
                     targetVer = PibVersion.Ishin;
@@ -1752,7 +1828,7 @@ namespace CMNEdit
                     break;
             }
 
-            for(int i = 0; i < mepPibs.Count; i++)
+            for (int i = 0; i < mepPibs.Count; i++)
             {
                 BasePib converted = PIB.Convert(mepPibs[i], targetVer);
 
@@ -1780,7 +1856,7 @@ namespace CMNEdit
         {
             PibVersion GetVersionForGame(Game game)
             {
-                switch(game)
+                switch (game)
                 {
                     default:
                         return PibVersion.Y0;
@@ -1823,7 +1899,7 @@ namespace CMNEdit
             }
 
             OpenFileDialog dialog = new OpenFileDialog();
-           // dialog.Filter = ".mep|.MEP file";
+            // dialog.Filter = ".mep|.MEP file";
             dialog.CheckFileExists = true;
 
             DialogResult res = dialog.ShowDialog();
@@ -1840,7 +1916,7 @@ namespace CMNEdit
             ClearEverything();
             SetBEPMode();
 
-            foreach(MepEffectOE mepOe in mep.Effects.Cast<MepEffectOE>())
+            foreach (MepEffectOE mepOe in mep.Effects.Cast<MepEffectOE>())
             {
                 Node result = ConvertMepNodeToBep(mepOe);
                 TreeViewItemNode resultNode = null;
@@ -1853,7 +1929,7 @@ namespace CMNEdit
                 }
             }
 
-            if(MessageBox.Show("Convert particle files?", "Conversion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Convert particle files?", "Conversion", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 FolderBrowserDialog pibDir = new FolderBrowserDialog();
 
@@ -1907,7 +1983,7 @@ namespace CMNEdit
                     }
                 }
 
-                foreach(BasePib pib in mepPibs)
+                foreach (BasePib pib in mepPibs)
                 {
                     BasePib converted = PIB.Convert(pib, GetVersionForGame(selectedDEGame));
 
@@ -1924,13 +2000,13 @@ namespace CMNEdit
                     PIB.Write(converted, Path.Combine(pibOutputPath, converted.Name + ".pib"));
                 }
 
-                foreach(DEElementParticle ptc in GetAllNodesTreeView().Where(x => x.HActNode is DEElementParticle).Select(x => x.HActNode).Cast<DEElementParticle>())
+                foreach (DEElementParticle ptc in GetAllNodesTreeView().Where(x => x.HActNode is DEElementParticle).Select(x => x.HActNode).Cast<DEElementParticle>())
                 {
                     if (newPibIDs.ContainsKey(ptc.ParticleID))
                         ptc.ParticleID = newPibIDs[ptc.ParticleID];
                 }
             }
-           
+
         }
 
 
@@ -2040,7 +2116,7 @@ namespace CMNEdit
             if (!IsHact)
                 return;
 
-            FrameProgressionWindow curveForm = new  FrameProgressionWindow();
+            FrameProgressionWindow curveForm = new FrameProgressionWindow();
             curveForm.Visible = true;
         }
 
@@ -2048,6 +2124,77 @@ namespace CMNEdit
         {
             Pager pager = new Pager();
             pager.Visible = true;
+        }
+
+        private void disableFrameInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DisableFrameWindow pager = new DisableFrameWindow();
+            pager.Visible = true;
+            pager.Init(DisableFrameInfos);
+        }
+
+        //Ryuse Ga Gotoku
+        private void convertBetweenGamesDEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (curVer <= GameVersion.Y0_K1)
+                return;
+
+            Game[] deGames = CMN.GetDEGames();
+
+            List<string> options = new List<string>();
+
+            foreach (Game game in deGames)
+                options.Add(HActLib.Internal.Reflection.GetGamePrefixes(game)[0]);
+
+            string messageString = "Please enter the name of game you want to convert to. \nAvailable:\n";
+
+            foreach (string str in options)
+                messageString += str + "\n";
+
+            string input = Microsoft.VisualBasic.Interaction.InputBox(messageString,
+                            "Convert",
+                            "",
+                            0,
+                            0);
+
+            Game prefixGame = CMN.GetGameFromString(input);
+
+            if ((uint)prefixGame >= 9999)
+                return;
+
+            Node[] nodes = null;
+
+            if (IsBep)
+                nodes = GetAllNodes();
+            else
+            {
+                CMN genHact = GenerateHAct();
+                GenerateBaseInfo(genHact);
+
+                nodes = genHact.AllNodes;
+
+            }
+
+            RyuseModule.ConversionInformation inf = RyuseModule.ConvertNodes(nodes, Form1.curGame, prefixGame);
+
+            curGame = prefixGame;
+            curVer = CMN.GetVersionForGame(curGame);
+
+            targetGameCombo.SelectedIndex = (int)curGame;
+
+            ClearNodes();
+
+            if (!IsBep)
+                nodesTree.Nodes.Add(new TreeViewItemNode(inf.OutputNodes[0]));
+            else
+            {
+                foreach (Node node in inf.OutputNodes)
+                    nodesTree.Nodes.Add(new TreeViewItemNode(node));
+
+                ProcessBEPHierarchy();
+            }
+
         }
     }
 }

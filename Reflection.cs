@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HActLib.Types.DE.Enum;
 
 namespace HActLib.Internal
 {
@@ -12,18 +11,19 @@ namespace HActLib.Internal
     {
         public static bool Done = false;
         public static Dictionary<Game, Dictionary<uint, Type>> ElementNodes = new Dictionary<Game, Dictionary<uint, Type>>();
+        public static Dictionary<Game, List<string>> GamePrefixes = new Dictionary<Game, List<string>>();
 
         public static Type GetElementEnumFromGame(Game game)
         {
             switch(game)
             {
                 default:
-                    return typeof(LJNodeIDs);
+                    return typeof(LADIWNodeIDs);
 
                 case Game.LADIW:
-                    return typeof(LJNodeIDs);
+                    return typeof(LADIWNodeIDs);
                 case Game.LAD7Gaiden:
-                    return typeof(LJNodeIDs);
+                    return typeof(GaidenNodeIDs);
                 case Game.LJ:
                     return typeof(LJNodeIDs);
                 case Game.YLAD:
@@ -47,8 +47,19 @@ namespace HActLib.Internal
             }
         }
 
+        public static string[] GetGamePrefixes(Game game)
+        {
+            if (!Done)
+                Process();
+
+            return GamePrefixes[game].ToArray();
+        }
+
         public static uint GetElementIDByName(string name, Game game)
         {
+            if (!Done)
+                Process();
+
             Type elementEnum = GetElementEnumFromGame(game);
 
             string[] names = Enum.GetNames(elementEnum);
@@ -72,6 +83,8 @@ namespace HActLib.Internal
                         return "UNKNOWN_EX_AUTH_NODE_" + id;
                     case 1337:
                         return "System Speed (EX Auth)";
+                    case 60010:
+                        return "Transit HAct (Like a Brawler)";
                 }
             }
 
@@ -92,21 +105,48 @@ namespace HActLib.Internal
             }
         }
 
+        public static Game GetGameFromString(string str)
+        {
+            if (!Done)
+                Process();
+
+            str = str.ToLowerInvariant();
+
+            foreach (var kv in GamePrefixes)
+                foreach (string prefix in kv.Value)
+                    if (prefix == str)
+                        return kv.Key;
+
+            return (Game)9999;
+        }
+
         public static void Process()
         {
             ElementNodes.Clear();
 
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
             Type baseType = typeof(NodeElement);
-            
-            for(int i = 0; i < Enum.GetValues(typeof(Game)).Length; i++)
+
+            for (int i = 0; i < Enum.GetValues(typeof(Game)).Length; i++)
+            {
                 ElementNodes.Add((Game)i, new Dictionary<uint, Type>());
+                GamePrefixes.Add((Game)i, new List<string>());
+            }
 
             foreach(Type type in types)
             {
-                //Class must derive from NodeElement
                 if (!type.IsSubclassOf(baseType))
+                {
+                    if(type.IsEnum)
+                    {
+                        GamePrefixAttribute[] prefixes = type.GetCustomAttributes<GamePrefixAttribute>().ToArray();
+
+                        foreach (GamePrefixAttribute attrib in prefixes)
+                            GamePrefixes[attrib.Game].AddRange(attrib.Prefixes);
+                    }
+
                     continue;
+                }
 
                 ElementIDAttribute[] elementIDs = type.GetCustomAttributes<ElementIDAttribute>().ToArray();
 

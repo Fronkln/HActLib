@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,7 @@ namespace HActLib
             }
         }
 
+
         internal override void WriteElementData(DataWriter writer, GameVersion version)
         {
             writer.Write(Data.Damage);
@@ -62,6 +64,30 @@ namespace HActLib
                 writer.Write(Data.AttackID);
             }
         }
+
+        public override bool TryConvert(Game input, Game output)
+        {
+            GameVersion inputGameVer = CMN.GetVersionForGame(input);
+            GameVersion outputGameVer = CMN.GetVersionForGame(output);
+
+            if(inputGameVer <= GameVersion.DE1 && outputGameVer == GameVersion.DE2)
+            {
+                byte[] newAttribs = new byte[6];
+
+                Array.Copy(Data.Attributes, newAttribs, 4);
+                Data.Attributes = newAttribs;
+            }
+            else if(inputGameVer == GameVersion.DE2 && outputGameVer <= GameVersion.DE1)
+            {
+                byte[] newAttribs = new byte[4];
+
+                Array.Copy(Data.Attributes, newAttribs, 4);
+                Data.Attributes = newAttribs;
+            }
+
+            return true;
+        }
+
     }
 
 }

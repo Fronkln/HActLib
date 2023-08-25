@@ -20,5 +20,17 @@ namespace HActLib
         {
             return new RGB() { R = col.R / 255f, G = col.G / 255f, B = col.B / 255f };
         }
+
+        public RGB()
+        {
+
+        }
+
+        public RGB(float r, float g, float b)
+        {
+            R = r;
+            G = g;
+            B = b;
+        }
     }
 }

@@ -37,6 +37,7 @@
             this.frameProgression = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.button6 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cameraList
@@ -119,11 +120,22 @@
             this.columnHeader2.Text = "Speed Change";
             this.columnHeader2.Width = 100;
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(242, 141);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(138, 23);
+            this.button6.TabIndex = 11;
+            this.button6.Text = "Adjust Selected";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // FrameProgressionWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(392, 431);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.frameProgression);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -149,5 +161,6 @@
         private System.Windows.Forms.ListView frameProgression;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button button6;
     }
 }

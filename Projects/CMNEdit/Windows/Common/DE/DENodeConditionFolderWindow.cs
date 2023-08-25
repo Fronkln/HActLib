@@ -13,9 +13,42 @@ namespace CMNEdit
         {
             DENodeConditionFolder folder = node as DENodeConditionFolder;
 
-            form.CreateHeader("Condition Folder");
+            if (!IsCustomCondition(folder))
+            {
+                form.CreateHeader("Condition Folder");
 
-            form.CreateComboBox("Condition", (int)folder.Condition, Enum.GetNames(typeof(ConditionTable)), delegate(int index) { folder.Condition = (ConditionTable)index; });
+                form.CreateComboBox("Condition", (int)folder.Condition, Enum.GetNames(typeof(ConditionTable)), delegate (int index) { folder.Condition = (ConditionTable)index; });
+                form.CreateInput("Tag Value", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
+            }
+            else
+            {
+                if(Form1.curGame == Game.YLAD)
+                {
+                    switch ((uint)folder.Condition)
+                    {
+                        case 133700001:
+                            form.CreateHeader("Condition Folder (Custom)");
+                            form.CreateInput("Job ID", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
+                            break;
+                    }
+                }
+            }
+        }
+
+
+
+        private static bool IsCustomCondition(DENodeConditionFolder cond)
+        {
+            if(Form1.curGame == Game.YLAD)
+            {
+                switch ((uint)cond.Condition)
+                {
+                    case 133700001:
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }

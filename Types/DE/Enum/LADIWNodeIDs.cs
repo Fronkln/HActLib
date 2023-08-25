@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace HActLib
+﻿namespace HActLib
 {
-    [GamePrefix(Game.LJ, "lj", "coyote", "lostjudgment")]
-    public enum LJNodeIDs : uint
+    [GamePrefix(Game.LADIW, "ladiw", "y8", "iw", "infinitewealth")]
+    public enum LADIWNodeIDs
     {
         e_auth_element_kind_dmy = 0x0,
         e_auth_element_camera_param = 0x1,
@@ -457,7 +454,6 @@ namespace HActLib
         e_auth_element_asset_posture_maintenance_scene = 0x1E1,
         e_auth_element_qte_command = 0x1E9,
         e_auth_element_skateboard_trick_processing = 0x1ED,
-        e_auth_element_kind_num = 0x1F0 , //Atleast this amount, could be more
-    };
-
+        e_auth_element_kind_num = 0x1F0, //Atleast this amount, could be more
+    }
 }

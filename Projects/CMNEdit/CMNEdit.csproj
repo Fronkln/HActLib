@@ -9,6 +9,7 @@
     <AnalysisLevel>none</AnalysisLevel>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>Icons\ico.ico</ApplicationIcon>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

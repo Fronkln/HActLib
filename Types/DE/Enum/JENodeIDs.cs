@@ -3,6 +3,7 @@
 namespace HActLib
 {
     //Judgment HAct elements
+    [GamePrefix(Game.JE, "je", "judge", "judgement", "judgment")]
     public enum JENodeIDs : uint
     {
         e_auth_element_kind_dmy = 0x0,
@@ -63,7 +64,7 @@ namespace HActLib
         e_auth_element_caption = 0x3D,
         e_auth_element_fog = 0x3E,
         e_auth_element_fixed_hair = 0x3F,
-        e_auth_element_camera_fnumber = 0x40,
+        e_auth_element_camera_f_number = 0x40,
         e_auth_element_camera_setting = 0x41,
         e_auth_element_post_effect_crossfade = 0x42,
         e_auth_element_character_lod = 0x43,
@@ -114,7 +115,7 @@ namespace HActLib
         e_auth_element_connect_chara_out = 0x6B,
         e_auth_element_fixed_exposure = 0x6C,
         e_auth_element_node_rotation = 0x6D,
-        e_auth_element_ik_look_weight = 0x6E,
+        e_auth_element_ik_look_at_weight = 0x6E,
         e_auth_element_volume_preset = 0x6F,
         e_auth_element_msg_window = 0x70,
         e_auth_element_asset_push = 0x71,
