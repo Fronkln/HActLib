@@ -9,7 +9,7 @@ namespace HActLib
         private string _Text = "";
 
         [BinaryString(FixedSize = 30, MaxSize = 30)]
-        public string Text { get { return _Text; } set { Set(value); } }
+        public string Text { get { return _Text.Split(new[] { '\0' }, 2)[0]; } set { Set(value); } }
 
         public void Set(string text)
         {

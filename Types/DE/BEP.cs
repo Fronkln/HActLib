@@ -82,7 +82,7 @@ namespace HActLib
                             stop = false;
                 }, 0, SeekMode.Current);
 
-                if(stop)               
+                if (stop)
                     break;
 
                 bep.Nodes.Add((Node)ConvertFormat.With<DENodeConverter>(new NodeConvInf()
@@ -95,6 +95,12 @@ namespace HActLib
             }
 
             return bep;
+        }
+
+        public static void Write(BEP bep, string path, Game game)
+        {
+            CMN.LastHActDEGame = game;
+            Write(bep, path, CMN.GetVersionForGame(game));
         }
 
         public static void Write(BEP bep, string path, GameVersion ver)

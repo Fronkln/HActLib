@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
     <Configurations>Debug;Release;Debug2</Configurations>
   </PropertyGroup>
@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Reference Include="PIBLib">
-      <HintPath>..\..\..\PIBLib\bin\Debug\net5.0\PIBLib.dll</HintPath>
+      <HintPath>..\..\..\PIBLib\bin\x64\Debug\net6.0\PIBLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

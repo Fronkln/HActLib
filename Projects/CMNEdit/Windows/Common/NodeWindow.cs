@@ -17,7 +17,7 @@ namespace CMNEdit
 
             if (bep)
             {
-                form.CreateInput("Parent/Identifier", node.Guid.ToString(), delegate (string val) { node.Guid = new Guid(val); });
+                form.CreateInput("Parent/Identifier", node.Guid.ToString(), delegate (string val) { node.Guid = new Guid(val); Form1.Instance.ProcessBEPHierarchy(); });
                 form.CreateInput("GUID", node.BEPDat.Guid2.ToString(), delegate(string val) { node.BEPDat.Guid2 = new Guid(val); });
                 form.CreateInput("Bone", node.BEPDat.Bone.Text, delegate(string val) { node.BEPDat.Bone.Set(val); });
             }

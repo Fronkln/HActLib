@@ -19,9 +19,9 @@ namespace CMNEdit.Windows.Common.DE
             form.CreateSpace(25);
             form.CreateHeader("Damage");
 
-            form.CreateInput("Damage", inf.Damage.ToString(), delegate (string val) { inf.Damage = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Force Dead", inf.ForceDead.ToString(), delegate (string val) { inf.ForceDead = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("No Dead", inf.NoDead.ToString(), delegate (string val) { inf.NoDead = byte.Parse(val) > 0; }, NumberBox.NumberMode.Byte);
+            form.CreateInput("Damage", inf.Damage.ToString(), delegate (string val) { inf.Damage = uint.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.UInt);
+            form.CreateInput("Force Dead", inf.ForceDead.ToString(), delegate (string val) { inf.ForceDead = int.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Int);
+            form.CreateInput("No Dead", Convert.ToInt32(inf.NoDead).ToString(), delegate (string val) { inf.NoDead = byte.Parse(val) > 0; Form1.EditingNode.Update(); }, NumberBox.NumberMode.Byte);
             form.CreateInput("Vanish", inf.Vanish.ToString(), delegate (string val) { inf.Vanish = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Fatal", inf.Fatal.ToString(), delegate (string val) { inf.Fatal = int.Parse(val); }, NumberBox.NumberMode.Int);
 

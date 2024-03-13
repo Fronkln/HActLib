@@ -7,6 +7,7 @@ using CMNEdit;
 using CMNEdit.Windows.Common.DE;
 using HActLib;
 
+
 namespace CMNEdit.Windows.Common.DE
 {
     internal class DENodeCharacterWindow

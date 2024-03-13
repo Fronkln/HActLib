@@ -13,6 +13,12 @@ namespace TevView
     {
         public ObjectBase Set;
 
+
+        public TreeNodeSet1()
+        {
+
+        }
+
         public TreeNodeSet1(ObjectBase set)
         {
             Set = set;
@@ -50,6 +56,14 @@ namespace TevView
             }
 
             SetIcon();
+        }
+
+        public override object Clone()
+        {
+            TreeNodeSet1 cloned = (TreeNodeSet1)base.Clone();
+            cloned.Set = Set.Copy();
+
+            return cloned;
         }
 
         void SetIcon()

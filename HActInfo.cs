@@ -38,6 +38,7 @@ namespace HActLib
             else if (Directory.Exists(alt1))
                 cmnPath = alt1;
 
+            if(!string.IsNullOrEmpty(cmnPath))
             if (Directory.Exists(Path.Combine(cmnPath, "cmn")))
                 cmnPath = Path.Combine(cmnPath, "cmn");
 

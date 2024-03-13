@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using Yarhl.FileFormat;
+
+
 
 namespace HActLib
 {
@@ -58,13 +61,14 @@ namespace HActLib
 
         public static bool ConvertOOEToOE(string tevDir, string outputDir, uint outputOEVer, string csvPath)
         {
-            if (!Directory.Exists(tevDir))
+            if (!Directory.Exists(tevDir) && !File.Exists(tevDir))
                 return false;
+
+            if (File.Exists(tevDir))
+                tevDir = new DirectoryInfo(tevDir).Parent.FullName;
 
             if (!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
-
-
 
             string hactIDFolder = null;
             DirectoryInfo tevDir2 = new DirectoryInfo(tevDir);
@@ -189,8 +193,11 @@ namespace HActLib
 
         public static bool ConvertOOEToDE(string ooePath, string outputDir, Game game, string csvPath)
         {
-            if (!Directory.Exists(ooePath))
+            if (!Directory.Exists(ooePath) && !File.Exists(ooePath))
                 return false;
+
+            if (File.Exists(ooePath))
+                ooePath = new DirectoryInfo(ooePath).Parent.FullName;
 
             if (!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
@@ -404,7 +411,7 @@ namespace HActLib
 
             CMN deCmn = CMN.Read(hactInf.MainPath, inputGame);
             string outputCMNDir = Path.Combine(outputDir, "cmn");
-   
+
             if (!Directory.Exists(outputCMNDir))
                 Directory.CreateDirectory(outputCMNDir);
 
@@ -415,6 +422,201 @@ namespace HActLib
 
             RES.Write(new RES(), Path.Combine(outputCMNDir, "res.bin"), false);
             TEX.Write(new TEX(), Path.Combine(outputCMNDir, "tex.bin"), false);
+
+            return true;
+        }
+
+        public static bool ConvertOEToOE(string oePath, string outputDir, bool to_y5)
+        {
+            if (!Directory.Exists(oePath))
+                return false;
+
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            HActInfo hactInf = new HActInfo(oePath);
+            string cmnDir = hactInf.MainPath;
+
+            if (string.IsNullOrEmpty(cmnDir))
+                throw new Exception("CMN not found\nPath: " + cmnDir);
+
+            if (hactInf.ResourcesPaths.Length <= 0)
+                throw new Exception("RES not found\nPath: " + oePath);
+
+            Game inputGame;
+            Game outputGame;
+
+            string inputGmt;
+            string outputGmt;
+
+            if(to_y5)
+            {
+                inputGame = Game.Y0;
+                outputGame = Game.Y5;
+
+                inputGmt = "y0";
+                outputGmt = "y5";
+            }
+            else
+            {
+                inputGame = Game.Y5;
+                outputGame = Game.Y0;
+
+                inputGmt = "y5";
+                outputGmt = "y0";
+            }
+
+            OECMN cmn = OECMN.Read(cmnDir);
+            cmn.AllNodes = RyuseOEModule.ConvertNodes(cmn.AllNodes, inputGame, outputGame).OutputNodes;
+
+            uint version = inputGame == Game.Y5 ? (uint)16 : (uint)10;
+
+            cmn.Version = version;
+            cmn.CMNHeader.Version = version;
+
+            RES resFile = RES.Read(hactInf.ResourcesPaths[0], false);
+
+
+            string outputRESDir = Path.Combine(new DirectoryInfo(outputDir).FullName, "000");
+            string outputCMNDir = Path.Combine(new DirectoryInfo(outputDir).FullName, "cmn");
+
+            if (!Directory.Exists(outputRESDir))
+                Directory.CreateDirectory(outputRESDir);
+
+            if (!Directory.Exists(outputCMNDir))
+                Directory.CreateDirectory(outputCMNDir);
+
+            File.Copy(new FileInfo(cmnDir).Directory.FullName + "/tex.bin", Path.Combine(outputCMNDir, "tex.bin"), true);
+            File.Copy(new FileInfo(cmnDir).Directory.FullName + "/res.bin", Path.Combine(outputCMNDir, "res.bin"), true);
+
+            foreach (Resource res in resFile.Resources)
+            {
+                string inputDir = new DirectoryInfo(hactInf.ResourcesPaths[0]).Parent.FullName;
+
+                if (res.Type == ResourceType.CharacterMotion)
+                {
+                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".gmt");
+                    string dir = Path.Combine(outputRESDir, res.Name.Replace("\0", "") + ".gmt");
+
+                    var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig {inputGmt} -og {outputGmt} -i {'\u0022'}{inp}{'\u0022'} -o {'\u0022'}{dir}{'\u0022'}");
+                }
+                else if (res.Type == ResourceType.CameraMotion)
+                {
+                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".cmt");
+                    string dir = Path.Combine(outputRESDir, res.Name.Replace("\0", "") + ".cmt");
+
+                    File.Copy(inp, dir, true);
+                }
+
+            }
+
+            RES.Write(resFile, Path.Combine(outputDir, "000", "res.bin"), false);
+            OECMN.Write(cmn, Path.Combine(outputCMNDir, "cmn.bin"));
+
+
+            HActDir hactDir = new HActDir();
+            hactDir.Open(oePath);
+
+            HActDir ptc = hactDir.GetParticle();
+
+            return true;
+        }
+
+        public static bool ConvertOEToOOE(string oePath, string outputDir, string csvPath)
+        {
+            if (!Directory.Exists(oePath))
+                return false;
+
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            HActInfo hactInf = new HActInfo(oePath);
+            string cmnDir = hactInf.MainPath;
+
+            if (string.IsNullOrEmpty(cmnDir))
+                throw new Exception("CMN not found\nPath: " + cmnDir);
+
+            if (hactInf.ResourcesPaths.Length <= 0)
+                throw new Exception("RES not found\nPath: " + oePath);
+
+            OECMN cmn = OECMN.Read(cmnDir);
+
+            TEV tev = (TEV)ConvertFormat.With<OEToOOE>(new OEToOOEConversionInfo { Cmn = cmn, CMNPath = cmnDir });
+            RES resFile = RES.Read(hactInf.ResourcesPaths[0], false);
+
+            foreach(Resource res in resFile.Resources)
+            {
+                string inputDir = new DirectoryInfo(hactInf.ResourcesPaths[0]).Parent.FullName;
+                string outputRESDir = Path.Combine(new DirectoryInfo(outputDir).Parent.FullName);
+
+                if (res.Type == ResourceType.CharacterMotion)
+                {
+                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".gmt");
+                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".gmt");
+
+                   var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig y0 -og y3 -i {'\u0022'}{inp}{'\u0022'} -o {'\u0022'}{dir}{'\u0022'}");
+                }
+                else if(res.Type == ResourceType.CameraMotion)
+                {
+                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".cmt");
+                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".cmt");
+
+                    File.Copy(inp, dir, true);
+                }
+
+            }
+            
+
+            TEV.Write(tev, Path.Combine(outputDir, "hact_tev.bin"));
+
+            return true;
+        }
+
+        public static bool ConvertDEToOOE(string oePath, string outputDir, string csvPath, Game game)
+        {
+            if (!Directory.Exists(oePath))
+                return false;
+
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            HActInfo hactInf = new HActInfo(oePath);
+            string cmnDir = hactInf.MainPath;
+
+            if (string.IsNullOrEmpty(cmnDir))
+                throw new Exception("CMN not found\nPath: " + cmnDir);
+
+            if (hactInf.ResourcesPaths.Length <= 0)
+                throw new Exception("RES not found\nPath: " + oePath);
+
+            CMN cmn = CMN.Read(cmnDir, game);
+
+            TEV tev = (TEV)ConvertFormat.With<DEToOOE>(new DEToOOEConversionInfo { Cmn = cmn, CMNPath = cmnDir, Game = game });
+            RES resFile = RES.Read(hactInf.ResourcesPaths[0], true);
+
+            foreach (Resource res in resFile.Resources)
+            {
+                string inputDir = new DirectoryInfo(hactInf.ResourcesPaths[0]).Parent.FullName;
+                string outputRESDir = Path.Combine(new DirectoryInfo(outputDir).Parent.FullName);
+
+                if (res.Type == ResourceType.CharacterMotion)
+                {
+                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".gmt");
+                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".gmt");
+
+                    var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig yk2 -og y3 -i {'\u0022'}{inp}{'\u0022'} -o {'\u0022'}{dir}{'\u0022'}");
+                }
+                else if (res.Type == ResourceType.CameraMotion)
+                {
+                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".cmt");
+                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".cmt");
+
+                    File.Copy(inp, dir, true);
+                }
+
+            }
+
+            TEV.Write(tev, Path.Combine(outputDir, "hact_tev.bin"));
 
             return true;
         }

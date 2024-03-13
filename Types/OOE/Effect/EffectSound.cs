@@ -15,6 +15,11 @@ namespace HActLib.OOE
         public ushort CuesheetID;
         public ushort SoundID;
 
+        public EffectSound() : base()
+        {
+            ElementKind = EffectID.Sound;   
+        }
+
         internal override void ReadEffectData(DataReader reader, bool alt)
         {
             base.ReadEffectData(reader, alt);

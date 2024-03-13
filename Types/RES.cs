@@ -58,6 +58,12 @@ namespace HActLib
     {
         public List<Resource> Resources = new List<Resource>();
 
+
+        public Resource FindByGUID(Guid guid)
+        {
+            return Resources.FirstOrDefault(x => x.NodeGUID == guid);
+        }
+
         public static RES Read(string path, bool isDE)
         {
             if (!File.Exists(path))

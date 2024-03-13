@@ -6,6 +6,8 @@ using System.IO;
 using HActLib;
 using System.Text;
 
+
+
 namespace HActScout
 {
     internal class Program
@@ -43,6 +45,12 @@ namespace HActScout
             string dir = args[0];
             int id = int.Parse(args[1]);
             string game = args[2];
+
+            bool recursive = false;
+
+            if (args.Length > 3)
+                recursive = args[3] == "recursive";
+
             Game gameEnum = CMN.GetGameFromString(game);
 
             bool bepMode = args.Length > 3 && args[3] == "bep";
@@ -56,9 +64,9 @@ namespace HActScout
             Console.OutputEncoding = Encoding.GetEncoding("Shift-JIS");
 
             if(!bepMode)
-                Process(Directory.GetFiles(dir, "*.par"), gameEnum, id, bepMode);
+                Process(Directory.GetFiles(dir, "*.par", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly), gameEnum, id, bepMode);
             else
-                Process(Directory.GetFiles(dir, "*.bep"), gameEnum, id, bepMode);
+                Process(Directory.GetFiles(dir, "*.bep", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly), gameEnum, id, bepMode);
 
             Console.OutputEncoding = Encoding.Unicode;
 
@@ -98,9 +106,9 @@ namespace HActScout
                         curInf.Par = null;
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
-                    WriteLineColor("Par reading failed! " + fileName, ConsoleColor.Red);
+                    WriteLineColor("Par reading failed! " + fileName + " Error: " + ex.Message + " " + ex.InnerException, ConsoleColor.Red);
                     Console.WriteLine();
                     continue;
                 }

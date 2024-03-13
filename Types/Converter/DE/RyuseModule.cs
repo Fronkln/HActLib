@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HActLib
 {
@@ -95,7 +94,7 @@ namespace HActLib
                     case ConversionResult.NoChange:
                         NodeElement unchangedElement = node as NodeElement;
 
-                        if(unchangedElement != null)
+                        if (unchangedElement != null)
                             inf.ConvertedTypes.Add(GetNodeName(unchangedElement.ElementKind, outputGame));
                         break;
 
@@ -120,7 +119,7 @@ namespace HActLib
             Type inputDEGame = Reflection.GetElementEnumFromGame(inputGame);
             Type outputDEGame = Reflection.GetElementEnumFromGame(outputGame);
 
-            string elementName = Enum.GetName(inputDEGame, element.ElementKind);
+            string elementName = Reflection.GetElementNameByID(element.ElementKind, inputGame);
 
             bool sameVer = CMN.GetVersionForGame(inputGame) == CMN.GetVersionForGame(outputGame);
 
@@ -146,10 +145,13 @@ namespace HActLib
                 uint outputID = (uint)Enum.Parse(outputDEGame, elementName);
 
                 if (originalID == outputID)
+                {
+                    ProcessSpecialNode(element, inputGame, outputGame);
                     return ConversionResult.NoChange;
+                }
                 else
                 {
-                    if(!element.TryConvert(inputGame, outputGame))
+                    if (!element.TryConvert(inputGame, outputGame))
                     {
                         element.ElementKind = 0;
                         element.Name += " (invalid)";
@@ -159,6 +161,9 @@ namespace HActLib
 
                     element.ElementKind = outputID;
                     element.BEPDat.PropertyType = (ushort)outputID;
+
+                    ProcessSpecialNode(element, inputGame, outputGame);
+
                     return ConversionResult.Success;
                 }
             }
@@ -169,6 +174,61 @@ namespace HActLib
 
                 return ConversionResult.Fail;
             }
+        }
+
+
+        private static void ProcessSpecialNode(NodeElement element, Game input, Game output)
+        {
+            switch(Reflection.GetElementNameByID(element.ElementKind, output))
+            {
+                case "e_auth_element_se":
+                    DEElementSE seElem = element as DEElementSE;
+
+                    if (seElem.CueSheet == GetGVFighterIDForGame(input))
+                        seElem.CueSheet = GetGVFighterIDForGame(output);
+
+                    break;
+                case "e_auth_element_post_effect_dof2":
+                    DEElementDOF2 dof2Elem = element as DEElementDOF2;
+
+                    if (input <= Game.LJ && output >= Game.LAD7Gaiden)
+                        dof2Elem.Unknown2 = 2;
+
+                    if (input <= Game.LAD7Gaiden && output >= Game.LADIW)
+                    {
+                        dof2Elem.SpecularBrightness = 0;
+                        dof2Elem.SpecularThresold = 0;
+                        dof2Elem.FNumber -= 1f;
+                    }
+                        break;
+                       
+            }
+        }
+
+        public static ushort GetGVFighterIDForGame(Game game)
+        {
+            switch (game)
+            {
+                default:
+                    return 54;
+                case Game.Y6Demo:
+                    return 36;
+                case Game.Y6:
+                    return 36;
+                case Game.YK2:
+                    return 36;
+                case Game.JE:
+                    return 36;
+                case Game.YLAD:
+                    return 49;
+                case Game.LJ:
+                    return 49;
+                case Game.LAD7Gaiden:
+                    return 55;
+                case Game.LADIW:
+                    return 54;
+            }
+
         }
     }
 }

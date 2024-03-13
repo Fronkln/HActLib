@@ -59,12 +59,36 @@ namespace HActLib
             DataReader cmnReader = new DataReader(readStream) { Endianness = EndiannessMode.BigEndian, DefaultEncoding = Encoding.GetEncoding(932) };
 
             OECMN cmn = new OECMN();
-            cmn.CMNHeader = (Header)ConvertFormat.With<OEHeaderConverter>(new BinaryFormat(cmnReader.Stream));
-            cmn.CMNHeader.Flags = 1;
+            cmn.CMNHeader = new Header();
+
+
+            cmn.CMNHeader.Version = cmnReader.ReadUInt32();
+            cmn.CMNHeader.Flags = cmnReader.ReadUInt32();
+            cmn.CMNHeader.Start = cmnReader.ReadSingle();
+            cmn.CMNHeader.End = cmnReader.ReadSingle();
+            cmn.CMNHeader.NodeDrawNum = cmnReader.ReadInt32();
+
+            int cutInfoPtr = 0;
+            int disableFrameInfoPtr = 0;
+            int resourceCutInfoPtr = 0;
+            int soundInfoPtr = 0;
+            int nodeInfoPtr = 0;
+
+            cutInfoPtr = cmnReader.ReadInt32();
+            disableFrameInfoPtr = cmnReader.ReadInt32();
+
+            if(cmn.CMNHeader.Version > 10)
+                resourceCutInfoPtr = cmnReader.ReadInt32();
+
+            soundInfoPtr = cmnReader.ReadInt32();
+            nodeInfoPtr = cmnReader.ReadInt32();
+
+            cmn.CMNHeader.ChainCameraIn = cmnReader.ReadSingle();
+            cmn.CMNHeader.ChainCameraOut = cmnReader.ReadSingle();
 
             CMN.LastGameVersion = GameVersion.Y0_K1;
 
-            switch(cmn.CMNHeader.Version)
+            switch (cmn.CMNHeader.Version)
             {
                 default:
                     throw new Exception("Unknown version: " + cmn.CMNHeader.Version);
@@ -80,7 +104,7 @@ namespace HActLib
             }
 
 
-            if (cmn.CMNHeader.Version > 10)
+            if (soundInfoPtr > 0)
             {
                 //Read sound
                 cmnReader.Stream.RunInPosition(delegate
@@ -93,47 +117,63 @@ namespace HActLib
                     for (int i = 0; i < count; i++)
                         cmn.SoundInfo[i] = cmnReader.ReadUInt32();
 
-                }, cmn.CMNHeader.SoundInfoPointer, SeekMode.Start);
+                }, soundInfoPtr, SeekMode.Start);
             }
 
             //Read cut info
-            cmnReader.Stream.RunInPosition(delegate
+            if (cutInfoPtr > 0)
             {
-                int count = cmnReader.ReadInt32();
-                cmnReader.ReadBytes(12);
+                cmnReader.Stream.RunInPosition(delegate
+                {
+                    int count = cmnReader.ReadInt32();
+                    cmnReader.ReadBytes(12);
 
-                cmn.CutInfo = new float[count];
+                    cmn.CutInfo = new float[count];
 
-                for (int i = 0; i < count; i++)
-                    cmn.CutInfo[i] = cmnReader.ReadSingle();
+                    for (int i = 0; i < count; i++)
+                        cmn.CutInfo[i] = cmnReader.ReadSingle();
 
-            }, cmn.CMNHeader.CutInfoPointer, SeekMode.Start);
+                }, cutInfoPtr, SeekMode.Start);
+            }
 
-            cmnReader.Stream.RunInPosition(delegate
+            if (resourceCutInfoPtr > 0)
             {
-                int count = cmnReader.ReadInt32();
-                cmnReader.ReadBytes(12);
+                cmnReader.Stream.RunInPosition(delegate
+                {
+                    int count = cmnReader.ReadInt32();
+                    cmnReader.ReadBytes(12);
 
-                cmn.ResourceCutInfo = new float[count];
+                    cmn.ResourceCutInfo = new float[count];
 
-                for (int i = 0; i < count; i++)
-                    cmn.ResourceCutInfo[i] = cmnReader.ReadSingle();
+                    for (int i = 0; i < count; i++)
+                        cmn.ResourceCutInfo[i] = cmnReader.ReadSingle();
 
-            }, cmn.CMNHeader.ResourceCutInfoPointer, SeekMode.Start);
+                }, resourceCutInfoPtr, SeekMode.Start);
+            }
 
-            cmnReader.Stream.RunInPosition(delegate
+            if (disableFrameInfoPtr > 0)
             {
-                int count = cmnReader.ReadInt32();
-                cmnReader.ReadBytes(12);
+                cmnReader.Stream.RunInPosition(delegate
+                {
+                    int count = cmnReader.ReadInt32();
+                    cmnReader.ReadBytes(12);
 
-                cmn.DisableFrameInfo = new DisableFrameInfo[count];
+                    cmn.DisableFrameInfo = new DisableFrameInfo[count];
 
-                for (int i = 0; i < count; i++)
-                    cmn.DisableFrameInfo[i] = cmnReader.Read<DisableFrameInfo>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (cmn.CMNHeader.Version > 10)
+                            cmn.DisableFrameInfo[i] = cmnReader.Read<DisableFrameInfo>();
+                        else
+                            cmn.DisableFrameInfo[i] = new DisableFrameInfo() { Start = cmnReader.ReadSingle() };
+                    }
 
-            }, cmn.CMNHeader.DisableFrameInfoPointer, SeekMode.Start);
+                }, disableFrameInfoPtr, SeekMode.Start);
+            }
 
+            cmnReader.Stream.Seek(nodeInfoPtr, SeekMode.Start);
             cmn.ReadNodes(cmnReader);
+
             return cmn;
         }
 
@@ -153,13 +193,12 @@ namespace HActLib
             if (cmn == null)
                 return;
 
-            WriteToStream(cmn).WriteTo(path);
+            File.WriteAllBytes(path, WriteToStream(cmn).ToArray());
         }
 
 
         internal void ReadNodes(DataReader reader)
         {
-            reader.Stream.Seek(CMNHeader.NodeInfoPointer, SeekMode.Start);
 
             Root = (Node)ConvertFormat.With<OENodeConverter>(new NodeConvInf()
             {
@@ -181,7 +220,7 @@ namespace HActLib
 
         public static uint GetCMNVersionForGame(Game game)
         {
-            switch(game)
+            switch (game)
             {
                 default:
                     return 18;
@@ -286,7 +325,7 @@ namespace HActLib
             }
         }
 
-        
+
         public override uint Version { get { return CMNHeader.Version; } set { CMNHeader.Version = value; } }
         public override float HActStart { get { return CMNHeader.Start; } set { CMNHeader.Start = value; } }
         public override float HActEnd { get { return CMNHeader.End; } set { CMNHeader.End = value; } }

@@ -8,7 +8,7 @@ namespace HActLib
 {
     public class BEPData
     {
-        public Guid Guid2;
+        public Guid Guid2 = Guid.Empty;
         public PXDHash Bone = new PXDHash();
         public ushort PropertyType; //Only used for elemeents
         public int Unk;

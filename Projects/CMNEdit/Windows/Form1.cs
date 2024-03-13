@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
 using HActLib;
@@ -20,7 +18,12 @@ using System.Drawing.Text;
 using Frame_Progression_GUI;
 using System.Collections;
 using MWControlSuite;
-using System.Text.RegularExpressions;
+using MotionLibrary;
+using MotionLib;
+using HActLib.Internal;
+using HActLib.OOE;
+using System.Media;
+using HActLib.YAct;
 
 namespace CMNEdit
 {
@@ -32,9 +35,16 @@ namespace CMNEdit
         public static bool IsBep;
         public static bool IsMep;
         public static bool IsHact;
+        public static bool IsTev;
         public static bool IsOE;
+        public static bool IsYAct;
 
         private static MEP Mep;
+
+        private static TEV Tev;
+        public static CSV Csv;
+        public uint TevHActID;
+        public static CSVHAct TevCsvEntry;
 
         public static GameVersion curVer;
         public static Game curGame = Game.YLAD; //only used for DE
@@ -67,6 +77,10 @@ namespace CMNEdit
         //toggled depending on file
         private TabPage resPage;
         private TabPage cutPage;
+        private TabPage csvPage;
+
+        private ToolStripDropDownItem addNodeTab;
+        private ToolStripItem nodeAddTabDE;
 
         //0 = nodes, 1 res blablabla
         private int currentTab = 0;
@@ -91,8 +105,57 @@ namespace CMNEdit
 
             cutPage = hactTabs.TabPages[1];
             resPage = hactTabs.TabPages[2];
+            csvPage = hactTabs.TabPages[3];
+            csvPage.Enter += delegate { DrawCSV(); };
+
+            addNodeTab = (ToolStripDropDownItem)appTools.Items[1];
+            nodeAddTabDE = addNodeTab.DropDownItems[0];
+
+            //addNodeTab.DropDownItems.Remove(nodeAddTabDE);
+
+            hactTabs.TabPages.Remove(csvTab);
+
+            Random rnd = new Random();
+
+            if (rnd.Next(0, 16) == 0)
+                HammerTime();
 
             Instance = this;
+
+            if (!File.Exists("config.ini"))
+                SaveINIFile();
+            else
+                ReadINIFile();
+        }
+
+        private void HammerTime()
+        {
+            try
+            {
+                SoundPlayer simpleSound = new SoundPlayer("Misc/hammertime.wav");
+                simpleSound.Play();
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void ReadINIFile()
+        {
+            Ini ini = new Ini("config.ini");
+            ini.Load();
+
+            INISettings.Y3CsvPath = ini.GetValue("Y3_CSV_PATH", "OOE");
+            INISettings.Y4CsvPath = ini.GetValue("Y4_CSV_PATH", "OOE");
+        }
+
+        private void SaveINIFile()
+        {
+            Ini ini = new Ini("config.ini");
+            ini.WriteValue("Y3_CSV_PATH", "OOE", INISettings.Y3CsvPath.Replace(@"\\", ""));
+            ini.WriteValue("Y4_CSV_PATH", "OOE", INISettings.Y4CsvPath);
+            ini.Save();
         }
 
         private void ClearEverything()
@@ -140,6 +203,7 @@ namespace CMNEdit
             folderDir = dialog.SelectedPath;
 
             ProcessHAct(inf);
+
         }
 
         private void openHActCMNToolStripMenuItem_Click(object sender, EventArgs e)
@@ -151,6 +215,11 @@ namespace CMNEdit
 
             if (res != DialogResult.OK)
                 return;
+
+            if(hactInf != null)
+            if (hactInf.IsPar)
+                if(hactInf.Par != null)
+                    hactInf.Par.Dispose();
 
             HActDir inf = new HActDir();
             inf.Open(dialog.FileName);
@@ -165,22 +234,100 @@ namespace CMNEdit
         {
             ClearEverything();
 
+            curGame = (Game)targetGameCombo.SelectedIndex;
+
             // byte[] buf = File.ReadAllBytes(hactInf.MainPath);
             byte[] buf = hactInf.GetCmnBuffer();
 
             if (buf == null)
                 return;
 
+            IsBep = false;
+            IsMep = false;
+            IsHact = false;
+            IsTev = false;
+            IsOE = false;
+            IsYAct = false;
+
+            hactTabs.TabPages.Remove(csvTab);
+            addNodeTab.DropDownItems.Remove(nodeAddTabDE);
+
+            byte[] magicBuf = new byte[4];
+            Array.Copy(buf, magicBuf, 4);
+            string magic = Encoding.UTF8.GetString(magicBuf);
+
+            FilePath = hactInf.FindFile("hact_tev.bin").Path;
+
+
             //OOE HAct TEV
-            if (BitConverter.ToString(buf, 0, 4) == "TCAH")
+            if (magic == "TCAH")
             {
+                string csvPath = "";
+
+
+                if (curGame == Game.Y3)
+                    csvPath = INISettings.Y3CsvPath;
+                else if (curGame == Game.Y4)
+                    csvPath = INISettings.Y4CsvPath;
+
+                if (string.IsNullOrEmpty(csvPath))
+                {
+                    HammerTime();
+
+                    if (MessageBox.Show("Looks like you are opening a TEV file for the first time!\nTo proceed, you will need to select the hact_csv.bin location where some information will be saved.", "CSV Needed", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                        return;
+
+                    OpenFileDialog dialog = new OpenFileDialog();
+
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                        return;
+
+                    try
+                    {
+                        CSV testCsv = CSV.Read(dialog.FileName);
+
+                        if (curGame == Game.Y3)
+                            INISettings.Y3CsvPath = dialog.FileName;
+                        else if (curGame == Game.Y4)
+                            INISettings.Y4CsvPath = dialog.FileName;
+
+                        csvPath = dialog.FileName;
+
+                        SaveINIFile();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Invalid CSV file or failed to read.");
+                        return;
+                    }
+                }
+
                 hactTabs.TabPages[0].Text = "TEV";
                 hactTabs.TabPages.Remove(resPage);
                 hactTabs.TabPages.Remove(cutPage);
+                hactTabs.TabPages.Add(csvPage);
 
-                TEV Tev = TEV.Read(buf);
 
+                hactStartBox.Visible = false;
+                hactEndBox.Visible = false;
                 hactDurationPanel.Visible = false;
+
+                IsTev = true;
+
+                Tev = TEV.Read(buf);
+                Csv = CSV.Read(csvPath);
+
+                FileInfo inf = new FileInfo(FilePath);
+
+                if (inf.Directory.Name == "tmp")
+                    TevHActID = uint.Parse(inf.Directory.Parent.Name.Substring(0, 4));
+                else
+                    TevHActID = uint.Parse(inf.Directory.Name.Substring(0, 4));
+
+                TevCsvEntry = Csv.TryGetEntry(TevHActID);
+
+                TreeNodeSet1 root = DrawTEVSet1(Tev.Root);
+                nodesTree.Nodes.Add(root);
             }
             else
             {
@@ -188,8 +335,6 @@ namespace CMNEdit
 
                 hactStartBox.Visible = true;
                 hactEndBox.Visible = true;
-                IsBep = false;
-                IsMep = false;
                 IsHact = true;
 
                 //OE/DE HAct
@@ -245,6 +390,9 @@ namespace CMNEdit
                     SoundInfoDE = hactDE.SoundInfo;
                     AuthPagesDE = hactDE.AuthPages.ToArray();
                     AuthPagesDEUnk = hactDE.AuthPageUnk;
+
+
+                    addNodeTab.DropDownItems.Add(nodeAddTabDE);
                 }
                 else
                     SoundInfoOE = (HAct as OECMN).SoundInfo;
@@ -264,8 +412,73 @@ namespace CMNEdit
                         resTree.Nodes.Add(new TreeViewItemResource(resource));
             }
 
+            saveToolStripMenuItem.Enabled = !hactInf.IsPar;
+
             DrawCutInfo();
         }
+
+        private void openYActToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.CheckFileExists = true;
+
+            DialogResult res = dialog.ShowDialog();
+
+            if (res != DialogResult.OK)
+                return;
+
+            HActDir inf = new HActDir();
+            inf.Open(dialog.FileName);
+
+            hactInf = inf;
+            folderDir = Path.GetDirectoryName(dialog.FileName);
+
+            BaseYAct yact = BaseYAct.Read(dialog.FileName);
+
+            ProcessYAct(yact);
+        }
+
+        private void ProcessYAct(BaseYAct yact)
+        {
+            ClearEverything();
+
+            curGame = (Game)targetGameCombo.SelectedIndex;
+
+            IsBep = false;
+            IsMep = false;
+            IsHact = false;
+            IsTev = false;
+            IsOE = false;
+            IsYAct = true;
+
+            hactTabs.TabPages.Remove(csvTab);
+            hactTabs.TabPages.Remove(resPage);
+            hactTabs.TabPages.Remove(cutPage);
+
+            hactTabs.TabPages[0].Text = "YAct";
+
+            for (int i = 0; i < yact.Characters.Count; i++)
+            {
+                TreeNodeYActCharacter chara = new TreeNodeYActCharacter(yact.Characters[i]);
+                chara.Nodes.Add(new TreeNodeYActCharacterMotion(yact.CharacterAnimations[i]));
+                nodesTree.Nodes.Add(chara);
+            }
+
+            for (int i = 0; i < yact.Cameras.Count; i++)
+            {
+                TreeNodeYActCamera cam = new TreeNodeYActCamera(yact.Cameras[i]);
+                cam.Nodes.Add(new TreeNodeYActCameraMotion(new YActFile() { Buffer = cam.Camera.MTBWFile }));
+                nodesTree.Nodes.Add(cam);
+            }
+
+            for (int i = 0; i < yact.Effects.Count; i++)
+            {
+                nodesTree.Nodes.Add(new TreeNodeYActEffect(yact.Effects[i]));
+            }
+
+            hactDurationPanel.Visible = false;
+        }
+
 
         public void DrawCutInfo()
         {
@@ -320,10 +533,15 @@ namespace CMNEdit
             return expanded.ToArray();
         }
 
-
-
-        public void CreateHeader(string label, float spacing = 0)
+        public void CreateHeader(string label, float spacing = 0, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             Label label2 = new Label();
             label2.Anchor = AnchorStyles.Right;
             label2.AutoSize = true;
@@ -339,20 +557,27 @@ namespace CMNEdit
                 rowCount++;
                 varPanel.RowCount = rowCount;
 
-                varPanel.Controls.Add(CreateText(""), 0, varPanel.RowCount - 2);
-                varPanel.Controls.Add(CreateText(""), 1, varPanel.RowCount - 2);
+                varPanel.Controls.Add(CreateText("", isCsvTree), 0, varPanel.RowCount - 2);
+                varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 2);
             }
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
             rowCount++;
             varPanel.RowCount = rowCount;
 
             varPanel.Controls.Add(label2, 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(CreateText(""), 1, varPanel.RowCount - 2);
+            varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 2);
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
         }
 
-        public Control CreateText(string label, bool left = false)
+        public Control CreateText(string label, bool left = false, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             Label text = new Label();
 
             if (!left)
@@ -368,24 +593,45 @@ namespace CMNEdit
             return text;
         }
 
-        public void CreateSpace(float space)
+        public void CreateSpace(float space, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, space));
             rowCount++;
             varPanel.RowCount = rowCount;
 
-            varPanel.Controls.Add(CreateText(""), 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(CreateText(""), 1, varPanel.RowCount - 2);
+            varPanel.Controls.Add(CreateText("", isCsvTree), 0, varPanel.RowCount - 2);
+            varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 2);
         }
 
-        public void CreateSpace(bool big)
+        public void CreateSpace(bool big, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             if (big)
-                CreateHeader("");
+                CreateHeader("", 0, isCsvTree);
         }
 
-        public TextBox CreateInput(string label, string defaultValue, Action<string> editedCallback, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false)
+        public TextBox CreateInput(string label, string defaultValue, Action<string> editedCallback, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
             rowCount++;
             varPanel.RowCount = rowCount;
@@ -395,15 +641,22 @@ namespace CMNEdit
             input.Size = new Size(200, 15);
             input.ReadOnly = readOnly;
 
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 2);
+            varPanel.Controls.Add(CreateText(label, false, isCsvTree), 0, varPanel.RowCount - 2);
             varPanel.Controls.Add(input, 1, varPanel.RowCount - 2);
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
 
             return input;
         }
 
-        public Button CreateButton(string text, Action clicked)
+        public Button CreateButton(string text, Action clicked, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
             rowCount++;
             varPanel.RowCount = rowCount;
@@ -420,8 +673,15 @@ namespace CMNEdit
             return input;
         }
 
-        public Panel CreatePanel(string label, Color color, Action<Color> finished)
+        public Panel CreatePanel(string label, Color color, Action<Color> finished, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
             rowCount++;
             varPanel.RowCount = rowCount;
@@ -444,8 +704,15 @@ namespace CMNEdit
             return input;
         }
 
-        public void CreateComboBox(string label, int defaultIndex, string[] items, Action<int> editedCallback)
+        public void CreateComboBox(string label, int defaultIndex, string[] items, Action<int> editedCallback, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
             if (defaultIndex < 0 || defaultIndex >= items.Length)
             {
 #if DEBUG
@@ -458,7 +725,17 @@ namespace CMNEdit
                     List<string> itemsList = items.ToList();
 
                     while (itemsList.Count - 1 != defaultIndex)
+                    {
+                        //BIG PROBLEM!
+
+                        if (itemsList.Count > 128)
+                        {
+                            defaultIndex = itemsList.Count - 1;
+                            break;
+                        }
+
                         itemsList.Add("Unknown");
+                    }
 
                     items = itemsList.ToArray();
                 }
@@ -480,8 +757,14 @@ namespace CMNEdit
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
         }
 
-        public void CreateHexBox(byte[] buf)
+        public void CreateHexBox(byte[] buf, bool isCsvTree = false)
         {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
 
             System.ComponentModel.Design.ByteViewer hexBox2 = new System.ComponentModel.Design.ByteViewer();
 
@@ -519,7 +802,19 @@ namespace CMNEdit
 
             ClearNodeMenu();
 
-            if (treeNode as TreeViewItemNode == null)
+            if (IsYAct)
+            {
+                ProcessSelectedNodeYAct();
+                return;
+            }
+
+            if (IsTev)
+            {
+                ProcessSelectedNodeTEV();
+                return;
+            }
+
+            if (treeNode as TreeViewItemNode == null && treeNode as TreeViewItemMepNode == null)
             {
                 ProcessSpecialSelectedNode();
 
@@ -528,6 +823,7 @@ namespace CMNEdit
 
                 return;
             }
+
 
             EditingNode = treeNode as TreeViewItemNode;
 
@@ -543,7 +839,18 @@ namespace CMNEdit
             if (!IsMep)
                 node = EditingNode.HActNode;
             else
-                node = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).Effect;
+            {
+                if(curGame > Game.Y4)
+                    node = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).Effect;
+                else
+                {
+                    DrawTEVEffectWindow(((treeNode as TreeViewItemMepNode).Node as MepEffectY3).Effect);
+                    varPanel.VerticalScroll.Value = 0;
+                    varPanel.ResumeLayout();
+
+                    return;
+                }
+            }
 
             NodeWindow.Draw(this, node);
 
@@ -650,6 +957,114 @@ namespace CMNEdit
             varPanel.ResumeLayout();
         }
 
+
+        public void ProcessSelectedNodeTEV()
+        {
+            TreeNode node = nodesTree.SelectedNode;
+
+            Be.Windows.Forms.DynamicByteProvider provider = null;
+
+            if (node is TreeNodeSet1)
+            {
+                TreeNodeSet1 set1Node = (node as TreeNodeSet1);
+
+                provider = new Be.Windows.Forms.DynamicByteProvider(set1Node.Set.Unk1 != null ? set1Node.Set.Unk1 : new byte[0]);
+                provider.Changed += delegate
+                {
+                    if (provider.Bytes.Count == set1Node.Set.Unk1.Length)
+                        set1Node.Set.Unk1 = provider.Bytes.ToArray();
+                };
+                Set1Window.Draw(this, set1Node.Set);
+
+
+                switch (set1Node.Set.Type)
+                {
+                    case ObjectNodeCategory.HumanOrWeapon:
+                        if (set1Node.Set is ObjectHuman)
+                            ObjectHumanWindow.Draw(this, set1Node.Set as ObjectHuman);
+                        break;
+                }
+
+            }
+            else if (node is TreeNodeSet2)
+            {
+                TreeNodeSet2 set2Node = (node as TreeNodeSet2);
+
+                provider = new Be.Windows.Forms.DynamicByteProvider(set2Node.Set.Unk2);
+                provider.Changed += delegate
+                {
+                    if (provider.Bytes.Count == set2Node.Set.Unk2.Length)
+                        set2Node.Set.Unk2 = provider.Bytes.ToArray();
+                };
+                Set2Window.Draw(this, set2Node.Set);
+
+                if (set2Node.Set.Type == Set2NodeCategory.Element)
+                {
+                    Set2Element elem = set2Node.Set as Set2Element;
+
+                    if (elem is Set2Element1019)
+                        DrawElement1019(elem as Set2Element1019);
+                    else if (elem.Effect != null)
+                        DrawTEVEffectWindow(elem.Effect);
+
+                }
+            }
+            else if (node is TreeNodeEffect)
+            {
+                DrawTEVEffectWindow((node as TreeNodeEffect).Effect);
+                varPanel.ResumeLayout();
+                return;
+            }
+
+
+            unkBytesBox.ByteProvider = provider;
+            varPanel.ResumeLayout();
+        }
+
+        private void DrawElement1019(Set2Element1019 element, bool isCSVTree = false)
+        {
+            Set2Element1019Window.Draw(this, element);
+            DrawHActEvent(TevCsvEntry.TryGetHActEventData(element.Type1019), isCSVTree);
+        }
+
+
+        private void DrawHActEvent(CSVHActEvent hevent, bool isCSVTree)
+        {
+            if (hevent == null)
+                return;
+
+            CreateHeader("HAct Event (CSV)", isCsvTree: isCSVTree);
+            CreateInput("Type", hevent.Type, delegate (string val) { hevent.Type = val; }, isCsvTree: isCSVTree);
+
+            CreateInput("Unknown", hevent.HEUnknown1.ToString(), delegate (string val) { hevent.HEUnknown1 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Unknown", hevent.HEUnknown2.ToString(), delegate (string val) { hevent.HEUnknown2 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Unknown", hevent.HEUnknown3.ToString(), delegate (string val) { hevent.HEUnknown3 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Unknown", hevent.HEUnknown4.ToString(), delegate (string val) { hevent.HEUnknown4 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Unknown", hevent.HEUnknown5.ToString(), delegate (string val) { hevent.HEUnknown5 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Unknown", hevent.HEUnknown6.ToString(), delegate (string val) { hevent.HEUnknown6 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Unknown", hevent.HEUnknown7.ToString(), delegate (string val) { hevent.HEUnknown7 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+
+            if (string.IsNullOrEmpty(hevent.Type))
+                return;
+
+            string[] split = hevent.Type.Split('_');
+
+            if (split.Length < 3)
+                return;
+
+            switch (split[1])
+            {
+                case "GAUGE":
+                    HActEventGaugeWindow.Draw(this, (CSVHActEventHeatGauge)hevent, isCSVTree);
+                    break;
+                case "DAMAGE":
+                    if (split[2] != "99")
+                        HActEventDamageWindow.Draw(this, (CSVHActEventDamage)hevent, isCSVTree);
+                    break;
+            }
+        }
+
+
         //Example: expression target
         private void ProcessSpecialSelectedNode()
         {
@@ -658,15 +1073,31 @@ namespace CMNEdit
 
             switch (nodesTree.SelectedNode.GetType().Name)
             {
+                case "TreeViewItemExpressionTargetDataOE":
+                    TreeViewItemExpressionTargetDataOE itemExpDatOE = nodesTree.SelectedNode as TreeViewItemExpressionTargetDataOE;
+
+                    CreateButton("Curve", delegate
+                    {
+                        CurveView myNewForm = new CurveView();
+                        myNewForm.Visible = true;
+                        myNewForm.Init(itemExpDatOE.Data.AnimationData,
+                            delegate (byte[] outCurve)
+                            {
+                                itemExpDatOE.Data.AnimationData = outCurve;
+                            });
+                    });
+
+                    break;
+
                 case "TreeViewItemExpressionTargetData":
                     TreeViewItemExpressionTargetData itemExpDat = nodesTree.SelectedNode as TreeViewItemExpressionTargetData;
                     CreateHeader("Expression Target Data");
                     CreateComboBox("Target", (int)itemExpDat.Data.FaceTargetID, Enum.GetNames<DEFaceTarget>(),
                         delegate (int idx)
-                    {
-                        itemExpDat.Data.FaceTargetID = (DEFaceTarget)idx;
-                        itemExpDat.Update();
-                    });
+                        {
+                            itemExpDat.Data.FaceTargetID = (DEFaceTarget)idx;
+                            itemExpDat.Update();
+                        });
 
                     CreateButton("Curve", delegate
                     {
@@ -735,6 +1166,8 @@ namespace CMNEdit
         {
             MWTreeNodeWrapper[] nodes = nodesTree.SelNodes.Values.Cast<MWTreeNodeWrapper>().ToArray();
 
+            nodesTree.SelNodes.Clear();
+
             foreach (MWTreeNodeWrapper node in nodes)
                 nodesTree.RemoveNode(node);
         }
@@ -774,7 +1207,40 @@ namespace CMNEdit
 
                     if (bepConditionPaste)
                     {
-                        newNode.HActNode.Guid = hactNode.HActNode.Guid;
+                        newNode.HActNode.Guid = hactNode.HActNode.BEPDat.Guid2;
+                    }
+                }
+
+                if (IsTev)
+                {
+                    TreeNodeSet1 obj = nodesTree.SelectedNode as TreeNodeSet1;
+
+                    if (obj == null)
+                        return;
+
+                    foreach (TreeNode node in pastingNode)
+                    {
+                        TreeNode newNode = (TreeNode)node.Clone();
+                        obj.Nodes.Add(newNode);
+                    }
+
+                    return;
+                }
+                
+                if(pastingNode.Length > 0)
+                {
+                    if (pastingNode[0] is TreeViewItemMepNode)
+                    {
+                        //so bad
+                        foreach (TreeViewItemMepNode node in pastingNode)
+                        {
+                            if (node.Node is MepEffectOE)
+                            {
+                                NodeElement nodeElem = (node.Node as MepEffectOE).Effect;
+                                nodeElem.Name = TreeViewItemNode.TranslateName(nodeElem);
+                                PasteNode(new TreeViewItemNode(nodeElem));
+                            }
+                        }
                     }
                 }
 
@@ -785,29 +1251,33 @@ namespace CMNEdit
             }
             else
             {
-                /*
-                //Mep to mep paste
-                if (pastingNode is TreeViewItemMepNode)
+                if (IsMep)
                 {
-                    TreeViewItemMepNode orig = pastingNode as TreeViewItemMepNode;
-                    MepEffect cloned = orig.Node.Copy();
-                    TreeViewItemMepNode newNode = new TreeViewItemMepNode(cloned);
+                    foreach(TreeNode node in pastingNode)
+                    {
+                        //Mep to mep paste
+                        if (node is TreeViewItemMepNode)
+                        {
+                            TreeViewItemMepNode orig = node as TreeViewItemMepNode;
+                            MepEffect cloned = orig.Node.Copy();
+                            TreeViewItemMepNode newNode = new TreeViewItemMepNode(cloned);
 
-                    nodesTree.Nodes.Add(newNode);
-                } //Mep to hact paste
-                else
-                {
-                    Node hactNode = (pastingNode as TreeViewItemNode).HActNode;
+                            nodesTree.Nodes.Add(newNode);
+                        } //Mep to hact paste
+                        else
+                        {
+                            Node hactNode = (node as TreeViewItemNode).HActNode;
 
-                    if (hactNode.Category != AuthNodeCategory.Element)
-                        return;
+                            if (hactNode.Category != AuthNodeCategory.Element)
+                                return;
 
-                    MepEffectOE effectMep = new MepEffectOE();
-                    effectMep.Effect = (NodeElement)hactNode.Copy();
+                            MepEffectOE effectMep = new MepEffectOE();
+                            effectMep.Effect = (NodeElement)hactNode.Copy();
 
-                    nodesTree.Nodes.Add(new TreeViewItemMepNode(effectMep));
+                            nodesTree.Nodes.Add(new TreeViewItemMepNode(effectMep));
+                        }
+                    }
                 }
-                */
             }
         }
         private void nodesTree_KeyUp(object sender, KeyEventArgs e)
@@ -855,7 +1325,7 @@ namespace CMNEdit
         }
         private void GenerateBaseInfo(BaseCMN cmn)
         {
-            cmn.Version = Version;
+            cmn.Version = OECMN.GetCMNVersionForGame(curGame);
             cmn.HActStart = Utils.InvariantParse(hactStartBox.Text);
             cmn.HActEnd = Utils.InvariantParse(hactEndBox.Text);
             cmn.CutInfo = CutInfos.ToArray();
@@ -914,6 +1384,39 @@ namespace CMNEdit
             return bep;
         }
 
+        private ObjectBase GenerateTEVHierarchy()
+        {
+            void ChildLoop(TreeNode node)
+            {
+                if (node as TreeNodeSet1 == null)
+                    return;
+
+                TreeNodeSet1 set1Node = node as TreeNodeSet1;
+                set1Node.Set.Children.Clear();
+
+                foreach (TreeNode treeChild in node.Nodes.Cast<TreeNode>())
+                {
+                    if (treeChild is TreeNodeSet1)
+                    {
+                        TreeNodeSet1 set1Child = (treeChild as TreeNodeSet1);
+
+                        set1Node.Set.Children.Add(set1Child.Set);
+                        set1Child.Set.Parent = set1Node.Set;
+                    }
+                    else if (treeChild is TreeNodeSet2)
+                        set1Node.Set.Children.Add((treeChild as TreeNodeSet2).Set);
+                    else if (treeChild is TreeNodeEffect)
+                        set1Node.Set.Children.Add((treeChild as TreeNodeEffect).Effect);
+
+                    ChildLoop(treeChild);
+                }
+            }
+
+            ChildLoop(nodesTree.Nodes[0]);
+
+            return (nodesTree.Nodes[0] as TreeNodeSet1).Set;
+        }
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Yarhl.IO.DataStream stream = null;
@@ -927,15 +1430,14 @@ namespace CMNEdit
                     FilePath = dialog.FileName;
                 }
 
-
+            CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
+            curGame = (Game)targetGameCombo.SelectedIndex;
 
             //Write hact
             if (IsHact)
             {
                 if (!hactInf.IsPar)
                 {
-                    CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
-
                     BaseCMN cmn = (IsOE ? GenerateOEHAct() : GenerateHAct());
                     GenerateBaseInfo(cmn);
                     if (IsOE)
@@ -956,16 +1458,30 @@ namespace CMNEdit
                 }
             }
             else if (IsBep)
-                BEP.Write(GenerateBep(), FilePath, curVer);
+                BEP.Write(GenerateBep(), FilePath, curGame);
             else if (IsMep)
             {
                 curGame = (Game)targetGameCombo.SelectedIndex;
-
-                if (Mep.Version == MEPVersion.Y3)
-                    return;
-
                 ConvertCurrentMep();
                 MEP.Write(Mep, FilePath);
+            }
+            else if (IsTev)
+            {
+                Tev.Root = GenerateTEVHierarchy();
+                TEV.Write(Tev, FilePath);
+
+                string csvPath = null;
+
+                if (Csv != null)
+                {
+                    if (curGame == Game.Y3)
+                        csvPath = INISettings.Y3CsvPath;
+                    else if (curGame == Game.Y4)
+                        csvPath = INISettings.Y4CsvPath;
+
+                    if (MessageBox.Show("Save CSV too?", "Save", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        CSV.Write(Csv, csvPath);
+                }
             }
 
         }
@@ -974,32 +1490,57 @@ namespace CMNEdit
         private void ConvertCurrentMep()
         {
             curGame = (Game)targetGameCombo.SelectedIndex;
-            MepEffectOE[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffectOE>().ToArray();
+            MepEffect[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffect>().ToArray();
 
-            if (Mep.Version == MEPVersion.Y5)
+            if (Mep.Version == MEPVersion.Y5 || Mep.Version == MEPVersion.Y0)
             {
-                if (curGame >= Game.Y0)
+
+                if (Mep.Version == MEPVersion.Y5)
                 {
-                    foreach (MepEffectOE oe in mepNodes)
+                    if (curGame >= Game.Y0)
                     {
-                        oe.OE_ConvertToY0();
-                        oe.Effect.OE_ConvertToY0();
-                    }
+                        foreach (MepEffectOE oe in mepNodes)
+                        {
+                            oe.OE_ConvertToY0();
+                            oe.Effect.OE_ConvertToY0();
+                        }
 
-                }
-            }
-            else
-            {
-                if (curGame == Game.Y5)
-                    foreach (MepEffectOE oe in mepNodes)
-                    {
-                        oe.OE_ConvertToY5();
-                        oe.Effect.OE_ConvertToY5();
                     }
+                }
+                else
+                {
+                    if (curGame == Game.Y5)
+                        foreach (MepEffectOE oe in mepNodes)
+                        {
+                            oe.OE_ConvertToY5();
+                            oe.Effect.OE_ConvertToY5();
+                        }
+                }
             }
 
             Mep.Effects = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).ToList();
-            Mep.Version = (curGame == Game.Y5 ? MEPVersion.Y5 : MEPVersion.Y0);
+
+            switch(curGame)
+            {
+                default:
+                    Mep.Version = MEPVersion.Y0;
+                    break;
+                case Game.Y3:
+                    Mep.Version = MEPVersion.Y3;
+                    break;
+                case Game.Y4:
+                    Mep.Version = MEPVersion.Y3;
+                    break;
+                case Game.Y5:
+                    Mep.Version = MEPVersion.Y5;
+                    break;
+                case Game.Y0:
+                    Mep.Version = MEPVersion.Y0;
+                    break;
+                case Game.YK1:
+                    Mep.Version = MEPVersion.Y0;
+                    break;
+            }
         }
 
 
@@ -1080,6 +1621,10 @@ namespace CMNEdit
                     case 60010:
                         DECustomElementY7BTransitEXFollowupWindow.Draw(this, element);
                         break;
+                    //Like a Brawler 8: Character Selection
+                    case 70010:
+                        DECustomElementLAB8CharacterSelectionWindow.Draw(this, element);
+                        break;
                 }
 
                 switch (elemName)
@@ -1087,7 +1632,9 @@ namespace CMNEdit
                     case "e_auth_element_camera_param":
                         DEElementCameraParamWindow.Draw(this, element);
                         break;
-
+                    case "e_auth_element_apply_ubik":
+                        DEElementUBikApplyWindow.Draw(this, element);
+                        break;
                     case "e_auth_element_se":
                         DENodeElementSEWindow.Draw(this, element);
                         break;
@@ -1118,8 +1665,14 @@ namespace CMNEdit
                     case "e_auth_element_equip_asset_hide":
                         DEElementHideAssetWindow.Draw(this, element);
                         break;
+                    case "e_auth_element_battle_followup_window":
+                        DEEelementFollowupWindowWindow.Draw(this, element);
+                        break;
                     case "e_auth_element_color_correction":
                         DEElementColorCorrectionWindow.Draw(this, element);
+                        break;
+                    case "e_auth_element_color_correction_v2":
+                        DEElementColorCorrection2Window.Draw(this, element);
                         break;
                     case "e_auth_element_rim_flash":
                         DEElementRimflashWindow.Draw(this, element);
@@ -1159,6 +1712,12 @@ namespace CMNEdit
                         break;
                     case "e_auth_element_post_effect_gradation":
                         DEElementGradationWindow.Draw(this, element);
+                        break;
+                    case "e_auth_element_post_effect_dof2":
+                        DEElementDOF2Window.Draw(this, element);
+                        break;
+                    case "e_auth_element_post_effect_motion_blur2":
+                        DEElementMotionBlur2Window.Draw(this, element);
                         break;
                     case "e_auth_element_particle_ground":
                         DEElementParticleGroundWindow.Draw(this, element);
@@ -1230,7 +1789,7 @@ namespace CMNEdit
                         Process(child);
                 }
 
-                if(!IsBep)
+                if (!IsBep)
                     Process(nodesTree.Nodes[0]);
                 else
                 {
@@ -1268,6 +1827,55 @@ namespace CMNEdit
                    .Cast<TreeViewItemNode>()
                    .Select(x => x.HActNode)
                    .ToArray();
+            }
+        }
+
+        public TreeNode[] GetAllTreeNodes()
+        {
+
+            if (!IsMep)
+            {
+                List<TreeNode> nodes = new List<TreeNode>();
+
+                void Process(TreeNode node)
+                {
+                    nodes.Add(node);
+
+                    foreach (TreeNode child in node.Nodes)
+                        Process(child);
+                }
+
+                if (!IsBep)
+                    Process(nodesTree.Nodes[0]);
+                else
+                {
+                    foreach (TreeNode node in nodesTree.Nodes)
+                        Process(node);
+                }
+
+                return nodes.ToArray();
+            }
+            else
+            {
+                List<TreeNode> children = new List<TreeNode>();
+
+                void ChildLoop(TreeNode parent)
+                {
+                    foreach (TreeNode node in parent.Nodes)
+                    {
+                        children.Add(node);
+                        ChildLoop(node);
+                    }
+                }
+
+                foreach (TreeNode node in nodesTree.Nodes)
+                {
+                    children.Add(node);
+                    ChildLoop(node);
+                }
+
+
+                return children.ToArray();
             }
         }
 
@@ -1362,17 +1970,17 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
+            CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
+
             //TODO: GENERATE HACT
             if (IsHact)
             {
-                CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
-
                 BaseCMN cmn = (IsOE ? GenerateOEHAct() : GenerateHAct());
                 GenerateBaseInfo(cmn);
                 if (IsOE)
-                    OECMN.Write(cmn as OECMN, Path.Combine(folderDir, $"cmn.bin"));
+                    OECMN.Write(cmn as OECMN, dialog.FileName);
                 else
-                    CMN.Write(cmn as CMN, hactInf.FindFile("cmn.bin").Path);
+                    CMN.Write(cmn as CMN, dialog.FileName);
             }
             else
             {
@@ -1396,8 +2004,6 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
-            ClearEverything();
-
             EditingNode = null;
             EditingResource = null;
             m_rightClickedNode = null;
@@ -1408,17 +2014,22 @@ namespace CMNEdit
             BEP Bep = BEP.Read(dialog.FileName, curGame);
             FilePath = dialog.FileName;
 
+            InitBEP(Bep);
+        }
+
+        private void InitBEP(BEP Bep)
+        {
+            ClearEverything();
+
             SetBEPMode();
 
             foreach (Node node in Bep.Nodes)
-            {
                 nodesTree.Nodes.Add(new TreeViewItemNode(node));
-            }
 
             ProcessBEPHierarchy();
         }
 
-        private void ProcessBEPHierarchy()
+        public void ProcessBEPHierarchy()
         {
             TreeViewItemNode[] nodes = GetAllNodesTreeView();
 
@@ -1454,6 +2065,7 @@ namespace CMNEdit
             IsOE = true;
             IsMep = true;
             IsBep = false;
+            IsTev = false;
 
             curGame = (Game)targetGameCombo.SelectedIndex;
             curVer = CMN.GetVersionForGame(curGame);
@@ -1661,7 +2273,7 @@ namespace CMNEdit
         private void nodesTree_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                m_rightClickedNode = (TreeViewItemNode)nodesTree.GetNodeAt(e.X, e.Y);
+                m_rightClickedNode = (TreeNode)nodesTree.GetNodeAt(e.X, e.Y);
         }
 
         private void hactStartBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -2137,15 +2749,26 @@ namespace CMNEdit
         private void convertBetweenGamesDEToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            if (curVer <= GameVersion.Y0_K1)
+            if (curVer < GameVersion.Y0_K1)
                 return;
 
-            Game[] deGames = CMN.GetDEGames();
 
             List<string> options = new List<string>();
 
-            foreach (Game game in deGames)
-                options.Add(HActLib.Internal.Reflection.GetGamePrefixes(game)[0]);
+            if (!IsOE)
+            {
+                Game[] deGames = CMN.GetDEGames();
+
+                foreach (Game game in deGames)
+                    options.Add(HActLib.Internal.Reflection.GetGamePrefixes(game)[0]);
+            }
+            else
+            {
+                Game[] oeGames = CMN.GetOEGames();
+
+                foreach (Game game in oeGames)
+                    options.Add(HActLib.Internal.Reflection.GetGamePrefixes(game)[0]);
+            }
 
             string messageString = "Please enter the name of game you want to convert to. \nAvailable:\n";
 
@@ -2165,18 +2788,57 @@ namespace CMNEdit
 
             Node[] nodes = null;
 
-            if (IsBep)
+            GameVersion targetVer = CMN.GetVersionForGame(prefixGame);
+
+            if (IsBep || IsMep)
                 nodes = GetAllNodes();
             else
             {
-                CMN genHact = GenerateHAct();
-                GenerateBaseInfo(genHact);
+                BaseCMN genHact = null;
 
-                nodes = genHact.AllNodes;
+                if (IsOE)
+                    genHact = GenerateOEHAct();
+                else
+                    genHact = GenerateHAct();
+
+                GenerateBaseInfo(genHact);
+                nodes = genHact.GetNodes();
+
+
+                foreach (AuthPage page in AuthPagesDE)
+                {
+                    page.IsOldDE = targetVer <= GameVersion.DE1;
+
+
+                    if (page.IsTalkPage())
+                    {
+                        if (curVer <= GameVersion.DE1 && targetVer >= GameVersion.DE2)
+                        {
+                            if ((page.Flag & 0x40) == 0)
+                                page.Flag |= 0x40;
+                        }
+                    }
+                    else
+                    {
+                        if (curVer <= GameVersion.DE1)
+                            page.Flag = 0;
+                    }
+                }
 
             }
 
-            RyuseModule.ConversionInformation inf = RyuseModule.ConvertNodes(nodes, Form1.curGame, prefixGame);
+            Node[] outputNodes;
+
+            if (!IsOE)
+            {
+                RyuseModule.ConversionInformation inf = RyuseModule.ConvertNodes(nodes, Form1.curGame, prefixGame);
+                outputNodes = inf.OutputNodes;
+            }
+            else
+            {
+                RyuseOEModule.ConversionInformation inf = RyuseOEModule.ConvertNodes(nodes, Form1.curGame, prefixGame);
+                outputNodes = inf.OutputNodes;
+            }
 
             curGame = prefixGame;
             curVer = CMN.GetVersionForGame(curGame);
@@ -2186,15 +2848,436 @@ namespace CMNEdit
             ClearNodes();
 
             if (!IsBep)
-                nodesTree.Nodes.Add(new TreeViewItemNode(inf.OutputNodes[0]));
+            {
+                nodesTree.Nodes.Add(new TreeViewItemNode(outputNodes[0]));
+            }
             else
             {
-                foreach (Node node in inf.OutputNodes)
+                foreach (Node node in outputNodes)
                     nodesTree.Nodes.Add(new TreeViewItemNode(node));
 
                 ProcessBEPHierarchy();
             }
+        }
 
+        private void propertybinTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!CMN.IsDEGame((Game)targetGameCombo.SelectedIndex))
+            {
+                MessageBox.Show("Select a DE game first before converting!", "Choose DE Game", MessageBoxButtons.OK, MessageBoxIcon.Warning); ;
+                return;
+            }
+
+            OpenFileDialog propertyBinPath = new OpenFileDialog();
+
+            if (propertyBinPath.ShowDialog() != DialogResult.OK)
+                return;
+
+            OldEngineFormat oeProperty = OldEngineFormat.Read(propertyBinPath.FileName);
+
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Entry name to convert. Leave blank to convert everything",
+                "Property to BEP",
+                "",
+                0,
+                0);
+
+            bool convertAll = string.IsNullOrEmpty(input);
+
+            if (convertAll)
+            {
+                MessageBox.Show("Choose which directory to save all the converted properties to");
+
+                FolderBrowserDialog folderDialog = new FolderBrowserDialog();
+
+                if (folderDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                foreach (OEAnimEntry entry in oeProperty.Moves)
+                {
+                    BEP converted = ConvertAnimEntryToBEP(entry);
+                    BEP.Write(converted, Path.Combine(folderDialog.SelectedPath, entry.Name + ".bep"), CMN.GetVersionForGame((Game)targetGameCombo.SelectedIndex));
+                }
+            }
+            else
+            {
+                OEAnimEntry entry = oeProperty.Moves.Where(x => x.Name == input).FirstOrDefault();
+
+                if (entry == null)
+                    return;
+
+                BEP converted = ConvertAnimEntryToBEP(entry);
+                InitBEP(converted);
+            }
+        }
+
+        private BEP ConvertPropertyBinToBEP(OldEngineFormat format)
+        {
+            BEP bep = new BEP();
+
+            return bep;
+        }
+
+        private static BEP ConvertAnimEntryToBEP(OEAnimEntry entry)
+        {
+            BEP bep = new BEP();
+
+            foreach (OEAnimProperty property in entry.Properties)
+            {
+                Node convertedNode = ConvertPropertyToNode(property, 16, Game.YK1, curGame);
+
+                if (convertedNode != null)
+                    bep.Nodes.Add(convertedNode);
+            }
+
+            return bep;
+        }
+
+        private static Node ConvertPropertyToNode(OEAnimProperty property, uint version, Game oeGame, Game game)
+        {
+            NodeElement deNode = null;
+
+            switch (property.Type)
+            {
+                case OEPropertyType.VoiceAudio:
+                    ushort voiceCuesheet = 0;
+
+                    voiceCuesheet = RyuseModule.GetGVFighterIDForGame(game);
+
+                    OEAnimPropertyVoiceSE oePropertyVoiceSE = property as OEAnimPropertyVoiceSE;
+                    DEElementSE voiceSE = new DEElementSE();
+
+                    voiceSE.ElementKind = Reflection.GetElementIDByName("e_auth_element_se", game);
+                    voiceSE.CueSheet = voiceCuesheet;
+                    voiceSE.SoundIndex = (byte)oePropertyVoiceSE.ID;
+                    voiceSE.Unk = 128;
+
+                    deNode = voiceSE;
+                    break;
+
+                case OEPropertyType.SEAudio:
+                    OEAnimPropertySE oePropertySE = property as OEAnimPropertySE;
+                    DEElementSE seNode = new DEElementSE();
+
+                    seNode.ElementKind = Reflection.GetElementIDByName("e_auth_element_se", game);
+                    seNode.CueSheet = oePropertySE.Cuesheet;
+                    seNode.SoundIndex = (byte)(oePropertySE.ID + 1);
+
+                    deNode = seNode;
+                    break;
+
+                case OEPropertyType.FollowupWindow:
+                    DEElementFollowupWindow deFollowup = new DEElementFollowupWindow();
+                    deFollowup.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_followup_window", game);
+
+                    deNode = deFollowup;
+                    break;
+
+                case OEPropertyType.ControlLock:
+                    DEElementControlLock deControl = new DEElementControlLock();
+                    deControl.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_control_window", game);
+
+                    deNode = deControl;
+                    break;
+
+                case OEPropertyType.Hitbox:
+                    OEAnimPropertyHitbox oeHitbox = property as OEAnimPropertyHitbox;
+                    DETimingInfoAttack attack = new DETimingInfoAttack();
+
+                    attack.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_attack", game);
+
+                    attack.Data.Damage = oeHitbox.Damage;
+
+                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftHand))
+                        attack.Data.Parts |= 4104;
+
+                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightHand))
+                        attack.Data.Parts |= 2052;
+
+                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftElbow))
+                        attack.Data.Parts |= 5128;
+
+                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightElbow))
+                        attack.Data.Parts |= 2564;
+
+                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftKnee))
+                        attack.Data.Parts |= 81952;
+
+                    //Placeholder
+                    attack.Data.Attributes = 1;
+                    attack.Data.Power = 1;
+
+
+                    deNode = attack;
+
+                    break;
+
+                case OEPropertyType.Muteki:
+                    DETimingInfoMuteki invincibility = new DETimingInfoMuteki();
+                    invincibility.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_muteki", game);
+
+                    deNode = invincibility;
+
+                    break;
+
+            }
+
+            if (deNode != null)
+            {
+                deNode.Start = property.Start;
+                deNode.End = property.End;
+                deNode.BEPDat.Guid2 = Guid.NewGuid();
+                deNode.PlayType = ElementPlayType.Normal;
+                deNode.UpdateTimingMode = 1;
+            }
+
+            return deNode;
+        }
+
+        private void ımportBEPDEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            BEP bep = BEP.Read(dialog.FileName, (Game)targetGameCombo.SelectedIndex);
+
+
+            foreach (Node node in bep.Nodes)
+                nodesTree.Nodes.Add(new TreeViewItemNode(node));
+        }
+
+        private TreeNode DrawObject(ITEVObject obj)
+        {
+            if (obj is ObjectBase)
+                return DrawTEVSet1(obj as ObjectBase);
+            else if (obj is Set2)
+                return DrawTEVSet2(obj as Set2);
+            else
+                return new TreeNodeEffect(obj as EffectBase);
+        }
+
+        private TreeNodeSet1 DrawTEVSet1(ObjectBase set)
+        {
+            TreeNodeSet1 node = new TreeNodeSet1(set);
+
+            foreach (ITEVObject child in set.Children)
+                node.Nodes.Add(DrawObject(child));
+
+            return node;
+        }
+
+        private TreeNode DrawTEVSet2(Set2 set)
+        {
+            TreeNodeSet2 node = new TreeNodeSet2(set);
+
+            return node;
+        }
+
+        private TreeNode DrawTEVEffect(EffectBase effect)
+        {
+            TreeNodeEffect node = new TreeNodeEffect(effect);
+
+            return node;
+        }
+
+        private void DrawTEVEffectWindow(EffectBase effect)
+        {
+            EffectWindowBase.Draw(this, effect);
+            Be.Windows.Forms.DynamicByteProvider provider = new Be.Windows.Forms.DynamicByteProvider(effect.Data == null ? new byte[0] : effect.Data);
+            provider.Changed += delegate { effect.Data = provider.Bytes.ToArray(); };
+
+            if ((effect as EffectElement) != null)
+                EffectElementWindow.Draw(this, effect as EffectElement);
+
+            switch (effect.ElementKind)
+            {
+                case EffectID.Sound:
+                    EffectWindowSound.Draw(this, effect as EffectSound);
+                    break;
+                case EffectID.Particle:
+                    EffectWindowParticle.Draw(this, effect as EffectParticle);
+                    break;
+            }
+
+            unkBytesBox.ByteProvider = provider;
+        }
+
+
+        TreeNode m_csvCharactersRoot;
+        TreeNode m_csvHActEventsRoot;
+        private void DrawCSV()
+        {
+            UpdateCSV();
+
+            csvTree.Nodes.Clear();
+
+            m_csvCharactersRoot = new TreeNode("Characters");
+            m_csvHActEventsRoot = new TreeNode("HAct Events");
+
+            m_csvCharactersRoot.ContextMenuStrip = csvContextHEvent;
+            m_csvHActEventsRoot.ContextMenuStrip = csvContextHEvent;
+
+            csvTree.Nodes.Add(m_csvCharactersRoot);
+            csvTree.Nodes.Add(m_csvHActEventsRoot);
+
+            foreach (CSVCharacter chara in TevCsvEntry.Characters)
+            {
+                m_csvCharactersRoot.Nodes.Add(new TreeNodeCSVCharacter(chara));
+            }
+
+            foreach (CSVHActEvent hevent in TevCsvEntry.SpecialNodes)
+            {
+                m_csvHActEventsRoot.Nodes.Add(new TreeNodeCSVHActEvent(hevent));
+            }
+        }
+
+
+        private TreeNode m_selectedNodeCsvTree;
+        private void csvTree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            csvVarPanel.Controls.Clear();
+            csvVarPanel.RowCount = 0;
+            csvVarPanel.RowStyles.Clear();
+
+            rowCount = 1;
+
+            TreeNode selectedNode = e.Node;
+
+            if (selectedNode is TreeNodeCSVCharacter)
+            {
+                CSVCharacterWindow.Draw(this, (selectedNode as TreeNodeCSVCharacter).Character, true);
+            }
+            else if (selectedNode is TreeNodeCSVHActEvent)
+            {
+                CSVHActEvent hevent = (selectedNode as TreeNodeCSVHActEvent).Event;
+                DrawHActEvent(hevent, true);
+            }
+        }
+
+        private TreeNodeSet2[] GetAllHActEvents()
+        {
+            return GetAllTreeNodes().Where(x => x is TreeNodeSet2).Cast<TreeNodeSet2>().Where(x => x.Set is Set2Element1019).ToArray();
+        }
+
+        //Example:
+        //HE_DAMAGE_00
+        //HE_DAMAGE_01
+        //Returns: 1
+        private int GetCurrentIDForEvent(string type)
+        {
+            if (Csv == null || TevCsvEntry == null)
+                return 0;
+
+            return TevCsvEntry.SpecialNodes.Where(x => x.Type.StartsWith(type)).Count();
+        }
+
+        private void UpdateCSV()
+        {
+            if (Csv == null || TevCsvEntry == null)
+                return;
+
+            //Order csv events
+            TreeNodeSet2[] events = GetAllHActEvents().GroupBy(x => (x.Set as Set2Element1019).Type1019).Select(y => y.First()).ToArray();
+
+            List<CSVHActEvent> eventsCsv = new List<CSVHActEvent>();
+
+            foreach (TreeNodeSet2 set2 in events)
+            {
+                Set2Element1019 elem = set2.Set as Set2Element1019;
+                eventsCsv.Add(TevCsvEntry.TryGetHActEventData(elem.Type1019));
+            }
+
+            TevCsvEntry.SpecialNodes = eventsCsv.ToList();
+        }
+
+        private void csvTree_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                m_selectedNodeCsvTree = (TreeNode)csvTree.GetNodeAt(e.X, e.Y);
+        }
+
+        private void addCharacterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSVCharacter chara = new CSVCharacter();
+            chara.UnknownExtraData.Add(new CSVCharacterExtraData());
+            TevCsvEntry.Characters.Add(chara);
+
+            m_csvCharactersRoot.Nodes.Add(new TreeNodeCSVCharacter(chara));
+        }
+
+        private void addDamageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSVHActEventDamage dmg = new CSVHActEventDamage();
+            TevCsvEntry.SpecialNodes.Add(dmg);
+
+            m_csvHActEventsRoot.Nodes.Add(new TreeNodeCSVHActEvent(dmg));
+        }
+
+        private void addHeatChangeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSVHActEventHeatGauge gauge = new CSVHActEventHeatGauge();
+            TevCsvEntry.SpecialNodes.Add(gauge);
+
+            m_csvHActEventsRoot.Nodes.Add(new TreeNodeCSVHActEvent(gauge));
+        }
+
+        private void damageHActEventToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Csv == null || TevCsvEntry == null)
+                return;
+
+            TreeNode parent = nodesTree.SelectedNode == null ? nodesTree.Nodes[0] : nodesTree.SelectedNode;
+
+            Set2Element1019 elem = new Set2Element1019();
+            elem.Type1019 = "HE_DAMAGE_" + (TevCsvEntry.SpecialNodes.Where(x => x.Type.StartsWith("HE_DAMAGE_") && !x.Type.EndsWith("99")).Count()).ToString("D2");
+
+            CSVHActEventDamage dmg = new CSVHActEventDamage();
+            dmg.Type = elem.Type1019;
+
+            TevCsvEntry.SpecialNodes.Add(dmg);
+            parent.Nodes.Add(new TreeNodeSet2(elem));
+        }
+
+        public void ProcessSelectedNodeYAct()
+        {
+            TreeNode node = nodesTree.SelectedNode;
+
+            Be.Windows.Forms.DynamicByteProvider provider = null;
+
+            if(node is TreeNodeYActCameraMotion)
+            {
+                CreateHeader("Camera Animation");
+                CreateButton("Export", delegate
+                {
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Filter = "PS2 Camera Animation (*.mtbw)|*.mtbw";
+                    dialog.FileName = "camera.mtbw";
+
+                    if(dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllBytes(dialog.FileName, (node as TreeNodeYActCameraMotion).File.Buffer);
+                    }
+                });
+            }
+            else if(node is TreeNodeYActCharacterMotion)
+            {
+                CreateHeader("Character Animation");
+                CreateButton("Export", delegate
+                {
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Filter = "PS2 Animation (*.omt)|*.omt";
+                    dialog.FileName = node.Parent.Text + ".omt";
+
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllBytes(dialog.FileName, (node as TreeNodeYActCharacterMotion).File.Buffer);
+                    }
+                });
+            }
+
+            unkBytesBox.ByteProvider = provider;
+            varPanel.ResumeLayout();
         }
     }
 }

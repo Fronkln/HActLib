@@ -8,6 +8,8 @@ namespace HActLib
 {
     public enum Game
     {
+        Y1,
+        Y2,
         Kenzan,
         Y3,
         Y4,

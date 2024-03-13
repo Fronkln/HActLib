@@ -7,7 +7,7 @@ namespace HActLib
 {
     [ElementID(Game.Y5, 9)]
     [ElementID(Game.Ishin, 9)]
-    [ElementID(Game.Y0, 9)]
+    //[ElementID(Game.Y0, 9)]
     public class OEGradation : OEBaseEffect
     {
         public uint Unknown1;

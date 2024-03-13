@@ -5,6 +5,7 @@ using Yarhl.FileFormat;
 using HActLib.OOE;
 using System.Data;
 using System.Linq;
+using System.Xml;
 
 namespace HActLib
 {
@@ -114,24 +115,6 @@ namespace HActLib
                 }
             }
 
-            /*
-            for (int i = 0; i < effects.Length; i++)
-            {
-                EffectBase set = effects[i];
-                h_set3Addresses[set] = writer.Stream.Position;
-
-                set.WriteToStream(writer);
-
-             
-
-                if(i == effects.Length - 1)
-                {
-                    writer.WriteTimes(255, 16);
-                    writer.WriteTimes(0, 16);
-                }    
-            }
-            */
-
             int unkPtr1 = (int)writer.Stream.Position;
             //writer.Align(512);
 
@@ -140,9 +123,14 @@ namespace HActLib
             //Write set 1 data section 1 (and resources which is part of data)
 
             foreach (ObjectBase set in objects)
+            {
                 set._InternalInfo.DataPtr1 = set.WriteData(writer, set.UnkFloatDats[0]);
+            }
 
-            writer.WriteTimes(0, tev.TEVHeader.DataPadding);
+            writer.Align(512);
+
+            int weirdSpaceStart = (int)writer.Stream.Position;
+            writer.WriteTimes(0, 44);
 
             int setData2Start = (int)writer.Stream.Position;
 
@@ -316,6 +304,13 @@ namespace HActLib
                 set.WriteSetData(writer, true);
             }
 
+            tev.TEVHeader.CameraCount = tev.AllObjects.Where(x => x is ObjectCamera).Count();
+            tev.TEVHeader.CameraCount2 = tev.TEVHeader.CameraCount;
+            tev.TEVHeader.CameraCount3 = tev.TEVHeader.CameraCount;
+
+            tev.TEVHeader.CharacterCount = tev.AllObjects.Where(x => x is ObjectHuman).Count();
+            tev.TEVHeader.CharacterCount2 = tev.TEVHeader.CharacterCount;
+
             //finish header
             writer.Stream.Seek(pointersArea, SeekMode.Start);
 
@@ -333,17 +328,16 @@ namespace HActLib
             
             writer.Write(setData2Start);
 
-            writer.Write(tev.TEVHeader.UnkCount2);
+            writer.Write(tev.TEVHeader.CameraCount3);
             writer.Write(stringsStart);
 
-            writer.Write(tev.TEVHeader.UnkCount3);
-            writer.Write(setData2Start - tev.TEVHeader.StringTableOffset);
+            writer.Write(System.Convert.ToInt32(tev.TEVHeader.UseSoundACB));
+            writer.Write(weirdSpaceStart);
 
-
-            writer.Write(tev.TEVHeader.UnkVal1);
-            writer.Write(tev.TEVHeader.UnkVal2);
-            writer.Write(tev.TEVHeader.UnkVal3);
-            writer.Write(tev.TEVHeader.UnkVal4);
+            writer.Write(tev.TEVHeader.CameraCount);
+            writer.Write(tev.TEVHeader.CameraCount2);
+            writer.Write(tev.TEVHeader.CharacterCount);
+            writer.Write(tev.TEVHeader.CharacterCount2);
 
             writer.Write(tev.TEVHeader.UnkRegion1);
             writer.Write(tev.TEVHeader.UnkRegion2);

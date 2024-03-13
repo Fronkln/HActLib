@@ -8,6 +8,7 @@ using HActLib.Internal;
 using ParLibrary;
 using System.Runtime.CompilerServices;
 
+
 namespace HActLib
 {
     [Yarhl.IO.Serialization.Attributes.Serializable]
@@ -55,7 +56,7 @@ namespace HActLib
         public BinaryFormat Convert(CMN cmn)
         {
             CMN.LastFile = AuthFile.CMN;
-            
+
             var binary = new BinaryFormat();
             var writer = new DataWriter(binary.Stream);
 
@@ -267,7 +268,7 @@ namespace HActLib
                 return;
 
             DataStream file = WriteToStream(cmn);
-           
+
             LastGameVersion = cmn.GameVersion;
             LastFile = AuthFile.CMN;
 
@@ -311,43 +312,56 @@ namespace HActLib
 
         public static OECMN ToOE(CMN cmn, uint targetOEVer)
         {
-            if(targetOEVer < 10)
+            if (targetOEVer < 10)
                 targetOEVer = 10;
-            if(targetOEVer > 16)
+            if (targetOEVer > 16)
                 targetOEVer = 16;
 
             LastGameVersion = GameVersion.Y0_K1;
-            OECMN converted = (OECMN)ConvertFormat.With<DE2OECmn>(new DEToOEConversionInfo() { Cmn = cmn, TargetVer = targetOEVer});
+            OECMN converted = (OECMN)ConvertFormat.With<DE2OECmn>(new DEToOEConversionInfo() { Cmn = cmn, TargetVer = targetOEVer });
             return converted;
         }
 
         public static bool IsDE(GameVersion version)
         {
+            if (version == GameVersion.OOE || version == GameVersion.OOE_KENZAN)
+                return false;
+
             return !IsOE(version);
+        }
+
+        public static bool IsOEGame(Game game)
+        {
+            if (game == Game.Y5 ||
+                game == Game.Ishin ||
+                game == Game.Y0 ||
+                game == Game.YK1)
+                return true;
+            else
+                return false;
         }
 
         public static bool IsDEGame(Game game)
         {
-            if (game == Game.Y6Demo || 
-                game == Game.Y6 || 
-                game == Game.YK2  ||
+            if (game == Game.Y6Demo ||
+                game == Game.Y6 ||
+                game == Game.YK2 ||
                 game == Game.JE ||
-                game == Game.YLAD || 
-                game == Game.LJ || 
-                game == Game.LADIW || 
+                game == Game.YLAD ||
+                game == Game.LJ ||
+                game == Game.LADIW ||
                 game == Game.LAD7Gaiden)
                 return true;
             else
                 return false;
-
         }
 
-        public  static Game[] GetOEGames()
+        public static Game[] GetOEGames()
         {
             List<Game> games = new List<Game>();
 
             for (int i = 0; i < Enum.GetValues<Game>().Length; i++)
-                if (!IsDEGame((Game)i))
+                if (IsOEGame((Game)i))
                     games.Add((Game)i);
 
             return games.ToArray();
@@ -366,8 +380,13 @@ namespace HActLib
 
         public static Game GetGameFromString(string str)
         {
-            switch(str.ToLowerInvariant())
+            switch (str.ToLowerInvariant())
             {
+                case "y3":
+                    return Game.Y3;
+                case "y4":
+                    return Game.Y4;
+
                 case "y5":
                     return Game.Y5;
                 case "yakuza5":
@@ -433,6 +452,10 @@ namespace HActLib
                 default:
                     return GameVersion.DE2;
 
+                case Game.Y3:
+                    return GameVersion.OOE;
+                case Game.Y4:
+                    return GameVersion.OOE;
                 case Game.Y0:
                     return GameVersion.Y0_K1;
                 case Game.YK1:
@@ -468,7 +491,7 @@ namespace HActLib
             if (!Reflection.Done)
                 Reflection.Process();
 
-            CMN.LastFile = AuthFile.CMN;
+            LastFile = AuthFile.CMN;
 
             DataStream readStream = DataStreamFactory.FromArray(buffer, 0, buffer.Length);
             DataReader cmnReader = new DataReader(readStream) { Endianness = EndiannessMode.LittleEndian, DefaultEncoding = System.Text.Encoding.GetEncoding(932) };
@@ -586,7 +609,7 @@ namespace HActLib
 
             void ReadNode()
             {
-                Root = (Node)ConvertFormat.With<DENodeConverter>(new NodeConvInf() 
+                Root = (Node)ConvertFormat.With<DENodeConverter>(new NodeConvInf()
                 {
                     format = new BinaryFormat(reader.Stream),
                     version = Header.Version,

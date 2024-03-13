@@ -21,6 +21,8 @@ namespace HActLib
                     return new ConditionHActFlag();
                 case ConditionType.enemy_num:
                     return new ConditionEnemyNum();
+                case ConditionType.program_param:
+                    return new ConditionProgramParam();
             }
         }
 

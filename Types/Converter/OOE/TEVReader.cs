@@ -50,16 +50,16 @@ namespace HActLib
             tev.TEVHeader.UnkCount1 = reader.ReadUInt32();
             tev.TEVHeader.DataPtr2 = reader.ReadUInt32();
 
-            tev.TEVHeader.UnkCount2 = reader.ReadUInt32();
+            tev.TEVHeader.CameraCount3 = reader.ReadInt32();
             tev.TEVHeader.UnkPtr2 = reader.ReadUInt32();
 
-            tev.TEVHeader.UnkCount3 = reader.ReadUInt32();
+            tev.TEVHeader.UseSoundACB = reader.ReadUInt32() > 0;
             tev.TEVHeader.UnkPtr3 = reader.ReadUInt32();
 
-            tev.TEVHeader.UnkVal1 = reader.ReadUInt32();
-            tev.TEVHeader.UnkVal2 = reader.ReadUInt32();
-            tev.TEVHeader.UnkVal3 = reader.ReadUInt32();
-            tev.TEVHeader.UnkVal4 = reader.ReadUInt32();
+            tev.TEVHeader.CameraCount = reader.ReadInt32();
+            tev.TEVHeader.CameraCount2 = reader.ReadInt32();
+            tev.TEVHeader.CharacterCount = reader.ReadInt32();
+            tev.TEVHeader.CharacterCount2 = reader.ReadInt32();
 
             tev.TEVHeader.UnkRegion1 = reader.ReadBytes(32);
             tev.TEVHeader.UnkRegion2 = reader.ReadBytes(28);

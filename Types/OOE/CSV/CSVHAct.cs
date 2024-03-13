@@ -29,5 +29,10 @@ namespace HActLib
         {
             return SpecialNodes.FirstOrDefault(x => x.Type == type);
         }
+
+        public CSVCharacter TryGetHActCharacter(string name)
+        {
+            return Characters.FirstOrDefault(x => x.Name == name);
+        }
     }
 }

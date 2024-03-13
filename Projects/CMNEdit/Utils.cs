@@ -85,5 +85,15 @@ namespace CMNEdit
             return result;
         }
 
+        public static ToolStripItem[] GetAllChildren(this ToolStripDropDownItem item)
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem> { item };
+
+            foreach (ToolStripItem itemy in item.DropDownItems)
+                Items.Add(itemy);
+
+            return Items.ToArray();
+        }
+
     }
 }

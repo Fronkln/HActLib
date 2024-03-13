@@ -29,7 +29,10 @@ namespace HActLib
             TickLength = reader.ReadUInt32();
             RagdollInfoExists = reader.ReadInt32() == 1;
             Hash = reader.Read<PXDHash>();
-           // RagdollInfo = reader.Read<TimingInfoRagdoll>();
+            RagdollInfo = new TimingInfoRagdoll();
+            
+           // if (RagdollInfoExists)
+               // RagdollInfo.Read(reader);
         }
 
         internal override void WriteElementData(DataWriter writer, GameVersion version)
@@ -39,7 +42,9 @@ namespace HActLib
             writer.Write(TickLength);
             writer.Write(RagdollInfoExists == true ? 1 : 0);
             writer.WriteOfType(Hash);
-          //  writer.WriteOfType(RagdollInfo);
+
+           // if(RagdollInfoExists)
+                //RagdollInfo.Write(writer);
         }
     }
 }

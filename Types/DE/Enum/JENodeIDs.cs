@@ -319,6 +319,7 @@ namespace HActLib
         e_auth_element_uid_after_replace = 0x13F,
         e_auth_element_connect_camera_special = 0x140,
         e_auth_element_window_rain = 0x167,
+        e_auth_element_post_effect_glare2 = 0x169,
         e_auth_element_post_effect_dof2 = 0x172,
         e_auth_element_skin_correction = 0x175,
         e_auth_element_color_scheme = 0x176,

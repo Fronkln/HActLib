@@ -9,6 +9,8 @@ using HActLib.OOE;
 using HActLib.Internal;
 using System.Runtime;
 
+
+
 namespace HActLib
 {
     public class OOEToOEConversionInfo
@@ -259,7 +261,7 @@ namespace HActLib
             switch (set.Type)
             {
                 case ObjectNodeCategory.Camera:
-                    deNode = GenerateCamera(tev, set as ObjectCamera, (int)set.Set2Object.End);
+                    deNode = GenerateCamera(tev, set as ObjectCamera, (int)set.GetChildOfType<Set2ElementMotion>().End);
                     break;
 
                 case ObjectNodeCategory.Path:

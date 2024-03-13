@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+
 using Yarhl.IO;
 
 namespace HActLib
@@ -82,7 +83,6 @@ namespace HActLib
 
             Color = RGBA.Read(reader);
 
-            /*
             TickOffset = reader.ReadUInt32();
             TickScale = reader.ReadSingle();
             ColorScaleA = reader.ReadSingle();
@@ -90,6 +90,7 @@ namespace HActLib
             OutFrame = reader.ReadSingle();
             DisableFrameChangeMotion = reader.ReadSingle();
             Animation = reader.ReadBytes(32);
+            /*
 
             
             VectorQuaternion = reader.ReadVector4();
@@ -156,7 +157,6 @@ namespace HActLib
 
             Color.Write(writer);
 
-            /*
             writer.Write(TickOffset);
             writer.Write(TickScale);
             writer.Write(ColorScaleA);
@@ -164,6 +164,7 @@ namespace HActLib
             writer.Write(OutFrame);
             writer.Write(DisableFrameChangeMotion);
             writer.Write(Animation);
+            /*
             
             writer.Write(VectorQuaternion);
             writer.Write(VectorScale);

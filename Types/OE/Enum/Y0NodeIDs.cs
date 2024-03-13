@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace HActLib
 {
+    [GamePrefix(Game.Y0, "y0", "yakuza0", "cima")]
+    [GamePrefix(Game.YK1, "yk1", "yakuzakiwami", "lexus")]
     public enum Y0NodeIDs : uint
     {
         e_auth_element_particle = 2,

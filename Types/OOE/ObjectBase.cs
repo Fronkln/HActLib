@@ -34,14 +34,16 @@ namespace HActLib.OOE
             public byte[] Unk2;
         }
 
-        public string[] StringTable = new string[4];
+        public string[] StringTable = new string[4] { null, null, null, null };
         public ObjectNodeCategory Type;
         public uint Category;
 
-        public byte[] Unk1 = new byte[296];
-        public float[] UnkFloatArray = new float[4];
+        public uint Unk2 = 1;
 
-        public float[][] UnkFloatDats;
+        public byte[] Unk1;
+        public float[] UnkFloatArray = new float[4] { 1f, 1f, 1f, 1f };
+
+        public float[][] UnkFloatDats = new float[2][];
 
         public Set2 Set2Object = null;
         public EffectBase Set3Object = null;
@@ -58,6 +60,23 @@ namespace HActLib.OOE
         public _Set1Internal _InternalInfo = new _Set1Internal();
 
         public virtual string GetName() => "Unknown Set 1";
+
+
+        public ObjectBase()
+        {
+            _InternalInfo = new _Set1Internal();
+            _InternalInfo.StringTables = new int[4] {-1, -1, -1, -1};
+
+            UnkFloatDats[0] = new float[]
+            {
+                0.580971062f,
+                1.01288545f,
+                0.185546815f,
+                0.7408517f,
+                0.9738375f,
+                0.7094903f
+            };
+        }
 
 
         public ObjectBase[] GetChildObjects()
@@ -184,7 +203,20 @@ namespace HActLib.OOE
             StringTable = ReadStringTable(stringTable);
             Type = (ObjectNodeCategory)reader.ReadUInt32();
             Category = reader.ReadUInt32();
-            Unk1 = reader.ReadBytes(296);
+            Unk2 = reader.ReadUInt32();
+
+            long start = reader.Stream.Position;
+            long target = reader.Stream.Position + 292;
+
+            ReadObjectData(reader);
+
+            if (reader.Stream.Position < target)
+                Unk1 = reader.ReadBytes((int)(target - reader.Stream.Position));
+            else if (reader.Stream.Position > target)
+                reader.Stream.Position = target;
+
+            //Unk1 = reader.ReadBytes(296);
+           
             UnkFloatArray = new float[]
             {
                reader.ReadSingle(),
@@ -215,6 +247,16 @@ namespace HActLib.OOE
             ReadEffect(reader, _InternalInfo.Set3Ptr);
 
             reader.Stream.Seek(curReadPos);
+        }
+
+        internal virtual void ReadObjectData(DataReader reader)
+        {
+
+        }
+
+        internal virtual void WriteObjectData(DataWriter writer)
+        {
+
         }
 
         private float[] ReadDataSection(DataReader reader, int position)
@@ -302,7 +344,20 @@ namespace HActLib.OOE
 
             writer.Write((uint)Type);
             writer.Write(Category);
-            writer.Write(Unk1);
+            writer.Write(Unk2);
+
+            long start = writer.Stream.Position;
+            long target = writer.Stream.Position + 292;
+
+            WriteObjectData(writer);
+
+            if(Unk1 != null)
+                writer.Write(Unk1);
+
+            if (writer.Stream.Position > target)
+                new Exception("Overwrite on Object!");
+            else if(writer.Stream.Position < target)
+                new Exception("Underwrite on Object!");
 
             foreach (float f in UnkFloatArray)
                 writer.Write(f);

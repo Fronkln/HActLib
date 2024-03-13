@@ -11,6 +11,9 @@ namespace CMNEdit
         {
             OEGradation gradation = node as OEGradation;
 
+            if (gradation == null)
+                return;
+            
             form.CreateHeader("Gradation");
 
             form.CreateInput("Unknown Color Related?", gradation.Unknown1.ToString(), delegate (string val) { gradation.Unknown1 = uint.Parse(val); }, NumberBox.NumberMode.UInt);

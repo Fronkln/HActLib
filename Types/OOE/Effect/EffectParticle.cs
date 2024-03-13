@@ -10,10 +10,16 @@ namespace HActLib.OOE
 {
     public class EffectParticle : EffectElement
     {
-        public uint ParticleID;
+        public uint ParticleID = 0;
         public int Unknown1;
         public int Unknown2;
-        public Matrix4x4 Matrix;
+        public Matrix4x4 Matrix = Matrix4x4.Default;
+
+        public EffectParticle() : base()
+        {
+            ElementKind = EffectID.Particle;
+            EffectID2 = EffectID.Particle;
+        }
 
         internal override void ReadEffectData(DataReader reader, bool alt)
         {

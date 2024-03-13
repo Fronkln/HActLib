@@ -20,12 +20,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Ionic.Zlib.Core" Version="1.0.0" />
     <PackageReference Include="Yarhl" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="ParLibrary">
-      <HintPath>..\ParManager\ParLibrary\bin\Release\net5.0\ParLibrary.dll</HintPath>
+      <HintPath>Dependencies\ParLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 

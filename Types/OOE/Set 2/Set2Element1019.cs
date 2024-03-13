@@ -11,6 +11,11 @@ namespace HActLib.OOE
     {
         public string Type1019 = "";
 
+        public Set2Element1019() : base()
+        {
+            Type = Set2NodeCategory.Element;
+        }
+
         public override string GetName()
         {
             return Type1019;

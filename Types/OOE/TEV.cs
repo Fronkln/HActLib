@@ -7,7 +7,8 @@ using System.IO;
 using Yarhl.IO;
 using Yarhl.FileFormat;
 using HActLib.OOE;
-using System.Security.AccessControl;
+
+
 
 namespace HActLib
 {
@@ -26,26 +27,26 @@ namespace HActLib
             public uint DataPtr2;
 
             ///<summary>Offset: 0x30</summary>
-            public uint UnkCount2;
+            public int CameraCount3;
             ///<summary>Offset: 0x34</summary>
             public uint UnkPtr2; //seems to be the 4 bytes right before the string table
 
             ///<summary>Offset: 0x38</summary>
-            public uint UnkCount3;
+            public bool UseSoundACB;
             ///<summary>Offset: 0x3C</summary>
             public uint UnkPtr3; //Unknown blank area, 44 bytes,  not constantly 44 
 
             ///<summary>Offset: 0x40</summary>
-            public uint UnkVal1;
+            public int CameraCount;
 
             ///<summary>Offset: 0x44</summary>
-            public uint UnkVal2;
+            public int CameraCount2;
 
             ///<summary>Offset: 0x48</summary>
-            public uint UnkVal3;
+            public int CharacterCount;
 
             ///<summary>Offset: 0x4C</summary>
-            public uint UnkVal4;
+            public int CharacterCount2;
 
             //32 bytes, mostly all zeroes, not the case on 6090 hact though.
             public byte[] UnkRegion1;
@@ -69,6 +70,21 @@ namespace HActLib
         public uint CuesheetID;
 
         public ObjectBase Root;
+
+
+        public TEV()
+        {
+            TEVHeader.UnkRegion1 = new byte[32];
+            TEVHeader.UnkRegion2 = new byte[28];
+
+            TEVHeader.UnkRegion2[7] = 1;
+            TEVHeader.UnkRegion2[11] = 1;
+            TEVHeader.UnkRegion2[15] = 13;
+            TEVHeader.UnkRegion2[19] = 14;
+            TEVHeader.UnkRegion2[23] = 5;
+
+            //TEVHeader.UnkCount3 = 1;
+        }
 
 
         public ObjectBase[] AllObjects

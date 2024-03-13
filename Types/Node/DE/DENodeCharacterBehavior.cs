@@ -13,22 +13,30 @@ namespace HActLib
         public uint Flags;
         public GameTick InFrame;
         public GameTick OutFrame;
+        public uint BehaviorSet;
+        public uint BehaviorGroup;
+        public uint BehaviorAction;
 
         internal override void ReadNodeData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
-            dat = reader.ReadBytes(inf.expectedSize);
-
-            /*
             Flags = reader.ReadUInt32();
             InFrame = new GameTick(reader.ReadUInt32());
             OutFrame = new GameTick(reader.ReadUInt32());
-            */
+            BehaviorSet = reader.ReadUInt32();
+            BehaviorGroup = reader.ReadUInt32();
+            BehaviorAction = reader.ReadUInt32();
         }
 
         internal override void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
         {
             base.WriteNodeData(writer, version, hactVer);
-            writer.Write(dat);
+
+            writer.Write(Flags);
+            writer.Write(InFrame.Tick);
+            writer.Write(OutFrame.Tick);
+            writer.Write(BehaviorSet);
+            writer.Write(BehaviorGroup);
+            writer.Write(BehaviorAction);
         }
     }
 }

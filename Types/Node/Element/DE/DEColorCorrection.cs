@@ -13,6 +13,7 @@ namespace HActLib
     [ElementID(Game.JE, 0x17)]
     [ElementID(Game.YLAD, 0x16)]
     [ElementID(Game.LJ, 0x16)]
+    [ElementID(Game.LAD7Gaiden, 0x16)]
     [ElementID(Game.LADIW, 0x16)]
     public class DEElementColorCorrection : NodeElement
     {

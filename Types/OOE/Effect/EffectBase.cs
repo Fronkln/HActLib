@@ -15,7 +15,7 @@ namespace HActLib.OOE
         public uint Unk2;
         public uint Unk3;
 
-        public byte[] Data;
+        public byte[] Data = new byte[0];
         public override string ToString()
         {
             return GetName();

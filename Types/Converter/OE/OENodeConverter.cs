@@ -7,6 +7,7 @@ using Yarhl.IO;
 using Yarhl.FileFormat;
 using HActLib.Internal;
 
+
 namespace HActLib
 {
     public class OENodeConverter : IConverter<NodeConvInf, Node>
@@ -92,6 +93,8 @@ namespace HActLib
             int nodeSize = (inf.file == AuthFile.CMN ? node.NodeSize * 4 : node.NodeSize);
             long preReadPos = reader.Stream.Position;
             long postDataPos = preReadPos + nodeSize;
+
+            inf.expectedSize = nodeSize;
 
             node.ReadNodeData(reader, inf, CMN.LastGameVersion);
 

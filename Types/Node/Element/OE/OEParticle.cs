@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+
 using Yarhl.IO;
 
 namespace HActLib
@@ -68,6 +69,14 @@ namespace HActLib
 
         internal override void WriteElementData(DataWriter writer, GameVersion version)
         {
+            if(Animation == null)
+            {
+                Animation = new byte[32];
+
+                for (int i = 0; i < Animation.Length; i++)
+                    Animation[i] = 255;
+            }
+
             writer.Write(ParticleID);
             writer.Write(Flags);
             writer.Write(Unknown2);

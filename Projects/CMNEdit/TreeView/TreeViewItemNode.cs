@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,12 @@ namespace CMNEdit
         {
 
         }
+
+        public void Update()
+        {
+            Text = TranslateName(HActNode);
+        }
+
         public TreeViewItemNode(Node node) : base()
         {
             HActNode = node;
@@ -52,7 +59,7 @@ namespace CMNEdit
 
             SetIcon();
           
-            if (!isOE && HActNode.Category == AuthNodeCategory.Element)
+            if (HActNode.Category == AuthNodeCategory.Element)
                 SpecialDraw();
         }
 
@@ -238,7 +245,7 @@ namespace CMNEdit
                             return $"{heatElem.HeatChange} Heat Change";
                         case "e_auth_element_sound":
                             OEElementSE seElem = node as OEElementSE;
-                            return $"Sound Cue {seElem.Cuesheet} ID {seElem.Sound}";
+                            return $"Sound Cue {seElem.Cuesheet.ToString("x")} ID {seElem.Sound}";
                     }
                 }
 
@@ -258,7 +265,10 @@ namespace CMNEdit
                 case AuthNodeCategory.ModelMotion:
                     return "Model Animation";
                 case AuthNodeCategory.FolderCondition:
-                    return $"Condition ({(node as DENodeConditionFolder).Condition})";
+                    if (!Form1.IsOE)
+                        return $"Condition ({(node as DENodeConditionFolder).Condition})";
+                    else
+                        return "Condition Folder";
                 case AuthNodeCategory.ModelCustom:
                     return  "Model";
                 case AuthNodeCategory.Element:
@@ -270,20 +280,47 @@ namespace CMNEdit
         {
             string name = HActLib.Internal.Reflection.GetElementNameByID((HActNode as NodeElement).ElementKind, Form1.curGame);
 
-            switch(name)
+            if (!Form1.IsOE)
             {
-                case "e_auth_element_expression_target":
-                    DEElementExpressionTarget expTarget = HActNode as DEElementExpressionTarget;
+                switch (name)
+                {
+                    case "e_auth_element_expression_target":
+                        DEElementExpressionTarget expTarget = HActNode as DEElementExpressionTarget;
 
-                    TreeNode root = new TreeNode("Animation Curves");
-                    root.ImageIndex = 5;
-                    root.SelectedImageIndex = 5;
-                    Nodes.Add(root);
+                        TreeNode root = new TreeNode("Animation Curves");
+                        root.ImageIndex = 5;
+                        root.SelectedImageIndex = 5;
+                        Nodes.Add(root);
 
-                    foreach(ExpressionTargetData expDat in expTarget.Data)
-                        root.Nodes.Add(new TreeViewItemExpressionTargetData(expDat));
+                        foreach (ExpressionTargetData expDat in expTarget.Data)
+                            root.Nodes.Add(new TreeViewItemExpressionTargetData(expDat));
 
-                    break;
+                        break;
+                }
+            }
+            else
+            {
+                switch (name)
+                {
+                    case "e_auth_element_expression_target":
+                        OEExpressionTarget expTarget = HActNode as OEExpressionTarget;
+
+                        TreeNode root = new TreeNode("Animation Curves");
+                        root.ImageIndex = 5;
+                        root.SelectedImageIndex = 5;
+                        Nodes.Add(root);
+
+                        for(int i = 0; i < expTarget.Datas.Length; i++)
+                        {
+                            OEExpressionTarget.ExpressionData expDat = expTarget.Datas[i];
+
+                            TreeViewItemExpressionTargetDataOE nod = new TreeViewItemExpressionTargetDataOE(expDat);
+                            nod.Text = ((OEExpressionTarget.Type)i).ToString();
+                            root.Nodes.Add(nod);
+                        }
+
+                        break;
+                }
             }
         }
     }

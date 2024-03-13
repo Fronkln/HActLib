@@ -4,7 +4,7 @@ using Yarhl.IO;
 
 namespace HActLib
 {
-    internal class CSVHActEventHeatGauge : CSVHActEvent
+    public class CSVHActEventHeatGauge : CSVHActEvent
     {
         public int Change = 0;
 

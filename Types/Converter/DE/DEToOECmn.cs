@@ -5,6 +5,8 @@ using Yarhl.FileFormat;
 using Yarhl.IO;
 using HActLib.Internal;
 
+
+
 namespace HActLib
 {
     public class DEToOEConversionInfo
@@ -72,6 +74,11 @@ namespace HActLib
                     break;
 
                 case AuthNodeCategory.Model_node:
+                    NodeModel model = deNode as NodeModel;
+
+                    if (MEPDict.OEBoneID.ContainsKey(model.BoneName.Text))
+                        model.BoneID = MEPDict.OEBoneID[model.BoneName.Text];
+
                     oeNode = deNode; //No conversion needed
                     break;
 
@@ -144,10 +151,24 @@ namespace HActLib
 
             switch(deNodeName)
             {
+                case "e_auth_element_particle":
+                    DEElementParticle dePtc = node as DEElementParticle;
+                    OEParticle oePtc = new OEParticle();
+                    oePtc.ParticleID = dePtc.ParticleID;
+                    oePtc.Color = dePtc.Color;
+                    oePtc.Animation = dePtc.Animation;
+                    oePtc.Matrix = dePtc.Matrix;
+                    oePtc.Scale = dePtc.Scale;
+                    oePtc.ElementKind = Reflection.GetElementIDByName("e_auth_element_particle", oeGame);
+                    return oePtc;
+ 
                 case "e_auth_element_battle_damage":
                     NodeBattleDamage deDmg = node as NodeBattleDamage;
                     OEDamage oeDmg = new OEDamage();
-                    oeDmg.Damage = (int)deDmg.Damage;
+
+                    if(oeDmg.Damage > 1)
+                        oeDmg.Damage = (int)(deDmg.Damage * 0.2f);
+
                     oeDmg.ElementKind = Reflection.GetElementIDByName("e_auth_element_damage", oeGame);
                     return oeDmg;
                 case "e_auth_element_battle_heat":
@@ -187,7 +208,7 @@ namespace HActLib
                     oeSE.Volume = deSE.Volume;
 
                     //GV Fighter
-                    if (deSE.CueSheet == 36 || deSE.CueSheet == 49)
+                    if (deSE.CueSheet == RyuseModule.GetGVFighterIDForGame(CMN.LastHActDEGame))
                     {
                         if (CMN.LastHActDEGame >= Game.Ishin)
                             oeSE.Cuesheet = 32828;
@@ -231,18 +252,25 @@ namespace HActLib
 
         public static string GetReplaceName(HActReplaceID replaceID)
         {
-            if (replaceID == HActReplaceID.hu_player || replaceID == HActReplaceID.hu_player1)
-                return "ZA_HUPLAYER";
+            try
+            {
+                if (replaceID == HActReplaceID.hu_player || replaceID == HActReplaceID.hu_player1)
+                    return "ZA_HUPLAYER";
 
-            string[] names = Enum.GetNames(typeof(HActReplaceID));
-            string deName = names[(int)replaceID];
-            string[] deNameSplit = deName.Split('_');
+                string[] names = Enum.GetNames(typeof(HActReplaceID));
+                string deName = names[(int)replaceID];
+                string[] deNameSplit = deName.Split('_');
 
-            if (deName.Contains("_enemy"))
-                return "ZA_HUENEMY" + int.Parse(deNameSplit[2]);
+                if (deName.Contains("_enemy"))
+                    return "ZA_HUENEMY" + int.Parse(deNameSplit[2]);
 
 
-            return null;
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
 

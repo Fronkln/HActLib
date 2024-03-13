@@ -6,6 +6,7 @@ using System.Text;
 using HActLib;
 using HActLib.Types.DE.Enum;
 
+
 namespace RyuseGaGotoku
 {
     class Program

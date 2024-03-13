@@ -49,6 +49,10 @@
 
   <ItemGroup>
     <PackageReference Include="Be.Windows.Forms.HexBox" Version="1.6.1" />
+    <PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +60,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="MotionLib">
+      <HintPath>..\..\..\..\..\Documents\GitHub\MotionLibrary\MotionLib\bin\x64\Debug\net6.0\MotionLib.dll</HintPath>
+    </Reference>
     <Reference Include="MWTreeView">
       <HintPath>..\..\..\..\..\Downloads\mwtreeview\bin\Debug\MWTreeView.dll</HintPath>
     </Reference>
@@ -83,6 +90,21 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dependencies\" />
+    <Folder Include="Misc\" />
+    <Folder Include="Windows\Common\PS2\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Misc\hammertime.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Misc\hammertime.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,8 @@ using HActLib;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
+
+
 namespace Frame_Progression_GUI
 {
     public partial class FrameProgressionWindow : Form

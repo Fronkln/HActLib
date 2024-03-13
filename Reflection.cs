@@ -122,6 +122,9 @@ namespace HActLib.Internal
 
         public static void Process()
         {
+            if (Done)
+                return;
+
             ElementNodes.Clear();
 
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();

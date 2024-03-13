@@ -4,6 +4,7 @@ using Yarhl.IO;
 using Yarhl.FileFormat;
 using HActLib.Internal;
 
+
 namespace HActLib
 {
     public class DENodeConverter : IConverter<NodeConvInf, Node>
@@ -96,7 +97,7 @@ namespace HActLib
 
 
                 case AuthNodeCategory.ModelMotion:
-                    node = new NodeMotionBase();
+                    node = new NodeModelMotion();
                     break;
 
             }

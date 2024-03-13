@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HActLib;
+
+
 using PIBLib;
 
 namespace HActBridge
@@ -58,11 +61,56 @@ namespace HActBridge
                 success = FromOOE(args);
             else
             {
-                if (isDE)
-                    success = HActFactory.ConvertOEToDE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), OutputGame);
+                if (CMN.IsDEGame(InputGame))
+                {
+                    if (outputGameVer == GameVersion.OOE)
+                        success = HActFactory.ConvertDEToOOE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), "", InputGame);
+                    else if (outputGameVer == GameVersion.Y0_K1)
+                        success = FromDE(args, outputGameVer);
+                }
                 else
+                {
                     if (outputGameVer == GameVersion.Y0_K1)
-                    success = HActFactory.ConvertDEToOE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), InputGame, OECMN.GetCMNVersionForGame(OutputGame));
+                    {
+                        string outputDir = args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant();
+
+                        bool to_y5 = OutputGame == Game.Y5;
+
+                        success = HActFactory.ConvertOEToOE(args[0], outputDir, to_y5);
+
+                        HActDir hactDir = new HActDir();
+                        hactDir.Open(args[0]);
+                        HActDir ptcDir = hactDir.GetParticle();
+
+                        HActFile[] pibs = ptcDir.FindFilesOfType(".pib");
+                        HActFile[] tex = ptcDir.FindFilesOfType(".dds");
+
+                        if (pibs.Length > 0)
+                        {
+                            string inputPibDir = new FileInfo(pibs[0].Path).FullName;
+                            string pibDir = Path.Combine(outputDir, "ptc");
+
+                            if (!Directory.Exists(pibDir))
+                                Directory.CreateDirectory(pibDir);
+
+
+                            foreach (var file in pibs)
+                            {
+                                BasePib pib = PIB.Read(file.Path);
+                                PIB.Write(PIB.Convert(pib, GetVersionForGame(OutputGame)), Path.Combine(pibDir, Path.GetFileName(file.Path)));
+                            }
+
+                            foreach (var file in tex)
+                            {
+                                File.Copy(file.Path, Path.Combine(pibDir, Path.GetFileName(file.Path)), true);
+                            }
+                        }
+                    }
+                    if (outputGameVer == GameVersion.OOE)
+                        success = HActFactory.ConvertOEToOOE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), "");
+                    else if(outputGameVer >= GameVersion.DE1)
+                        success = HActFactory.ConvertOEToDE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), OutputGame);
+                }
 
             }
 
@@ -81,6 +129,34 @@ namespace HActBridge
                 Console.WriteLine("Fail");
 
             System.Threading.Thread.Sleep(2500);
+        }
+
+        static bool FromDE(string[] args, GameVersion outputGameVer)
+        {
+            string outputDir = args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant();
+            bool success = HActFactory.ConvertDEToOE(args[0], outputDir, InputGame, OECMN.GetCMNVersionForGame(OutputGame));
+
+
+
+            if(InputGame == Game.Y6 && OECMN.GetCMNVersionForGame(OutputGame) == 16)
+            {
+                string outputCMNDir = Path.Combine(outputDir, "cmn");
+                string outputPTCDir = Path.Combine(outputDir, "ptc");
+                HActInfo hactInf = new HActInfo(args[0]);
+
+                DirectoryInfo hactDir = new DirectoryInfo(hactInf.MainPath);
+
+
+                if(DEParticleConverter.Convert(InputGame, hactInf, outputPTCDir))
+                {
+                    OECMN cmn = OECMN.Read(Path.Combine(outputCMNDir, "cmn.bin"));
+                    cmn.SetFlags(1); //Use PTC
+
+                    OECMN.Write(cmn, Path.Combine(outputCMNDir, "cmn.bin"));
+                }
+            }
+
+            return success;
         }
 
         static bool FromOOE(string[] args)

@@ -9,7 +9,6 @@ namespace HActLib
 {
     [ElementID(Game.Y5, 22)]
     [ElementID(Game.Ishin, 22)]
-    [ElementID(Game.Y0, 22)]
     public class OEFaceExpression : NodeElement
     {
         public int Unk1;

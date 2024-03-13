@@ -4,6 +4,7 @@ using Yarhl.IO.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
+
 namespace HActLib
 {
     public class AuthPageConverter : IConverter<BinaryFormat, AuthPage>
@@ -58,6 +59,7 @@ namespace HActLib
             //Console.WriteLine(reader.ReadUInt32());
             //reader.Stream.Position -= 4;
 
+            
 
             //DE 1.0: Fake talk page
             if(page.IsOldDE)
@@ -65,8 +67,8 @@ namespace HActLib
                 uint count = reader.ReadUInt32();
                 reader.Stream.Position -= 4;
 
-                if (count <= 0)
-                    page.Flag = 0;
+                //if (count <= 0)
+                    //page.Flag = 0;
             }
 
             //read talk page related info

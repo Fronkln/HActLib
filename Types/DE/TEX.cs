@@ -83,7 +83,7 @@ namespace HActLib
 
         public static void Write(TEX tex, string path, bool isDE)
         {
-            DataWriter writer = new DataWriter(new DataStream()) { Endianness = (isDE ? EndiannessMode.LittleEndian : EndiannessMode.BigEndian) };
+            DataWriter writer = new DataWriter(new DataStream()) { Endianness = isDE ? EndiannessMode.LittleEndian : EndiannessMode.BigEndian };
             writer.Write(tex.Textures.Count);
 
             writer.WriteTimes(0, 12);
@@ -101,7 +101,7 @@ namespace HActLib
                         texName = texName.Replace(".dds", "");
                 }
 
-                writer.Write(texName.ToLength(32), false, maxSize:32);
+                writer.Write(texName.ToLength(32), false, maxSize: 32);
             }
 
             writer.Stream.WriteTo(path);

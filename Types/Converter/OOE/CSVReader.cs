@@ -3,6 +3,7 @@ using Yarhl.FileFormat;
 using System.Text;
 using System.Net;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace HActLib
 {
@@ -10,6 +11,8 @@ namespace HActLib
     {
         private DataReader reader = null;
         private CSV csv = null;
+
+        private Dictionary<CSVCharacter, int> m_extraDatPtr = new Dictionary<CSVCharacter, int>();
 
         public CSV Convert(BinaryFormat format)
         {
@@ -77,6 +80,12 @@ namespace HActLib
                 {
                     CSVCharacter character = new CSVCharacter();
                     character.Read(reader);
+                    int unkDatPointer = reader.ReadInt32();
+                    int unkDatCount = reader.ReadInt32();
+
+                    character.UnknownNum = unkDatCount;
+
+                    m_extraDatPtr[character] = unkDatPointer;
 
                     hactEntry.Characters.Add(character);
                 }
@@ -108,8 +117,14 @@ namespace HActLib
 
                     //Then read the data...
                     hactEvent.Type = type;
-                    hactEvent.Unknown1 = reader.ReadInt32();
-                    hactEvent.UnknownData1 = reader.ReadBytes(24);
+                    hactEvent.HEUnknown1 = reader.ReadInt32();
+
+                    hactEvent.HEUnknown2 = reader.ReadInt32();
+                    hactEvent.HEUnknown3 = reader.ReadInt32();
+                    hactEvent.HEUnknown4 = reader.ReadInt32();
+                    hactEvent.HEUnknown5 = reader.ReadInt32();
+                    hactEvent.HEUnknown6 = reader.ReadInt32();
+                    hactEvent.HEUnknown7 = reader.ReadInt32();
 
                     for (int l = 0; l < 4; l++)
                         hactEvent.Resources[l] = ReadStringPointer(reader.ReadInt32());
@@ -152,6 +167,54 @@ namespace HActLib
                 reader.Stream.Seek(entryEnd);
 
                 csv.Entries.Add(hactEntry);
+            }
+
+            reader.Stream.Seek(entriesPointer, SeekMode.Start);
+            for (int i = 0; i < entriesCount; i++)
+            {
+                CSVHAct hact = csv.Entries[i];
+
+                if (hact.Characters.Count == 0)
+                    continue;
+
+                //Last
+                if (i == entriesCount - 1)
+                {
+
+                }
+                else
+                {
+                    CSVHAct nextHAct = null;
+                    int start = i + 1;
+                    while(true)
+                    {
+
+                        if (csv.Entries[start].Characters.Count > 0)
+                        {
+                            nextHAct = csv.Entries[start];
+                            break;
+                        }
+
+                        //super edge case i dont care about
+                        if (start == entriesCount - 1)
+                            Debug.Fail("Uh oh, this should never happen, tell Jhrino!");
+
+                        start++;
+                    }
+
+
+                    int bytesToRead = m_extraDatPtr[nextHAct.Characters[0]] - m_extraDatPtr[hact.Characters[0]];
+                    int numExtraDatas = bytesToRead / 48;
+                    reader.Stream.Seek(m_extraDatPtr[hact.Characters[0]]);
+
+                    for (int k = 0; k < numExtraDatas; k++)
+                    {
+                        CSVCharacterExtraData dat = new CSVCharacterExtraData();
+                        dat.Read(reader);
+
+                        hact.Characters[0].UnknownExtraData.Add(dat);
+                    }
+                }
             }
 
             return csv;

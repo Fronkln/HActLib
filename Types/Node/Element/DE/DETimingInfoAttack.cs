@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Yarhl.IO;
 
 namespace HActLib
@@ -14,7 +15,7 @@ namespace HActLib
         public ushort Power;
         public ushort Flag;
         public uint Parts;
-        public byte[] Attributes; // 8
+        public ulong Attributes; // battle_reaction_attr.bin
         public int AttackID;
     };
 
@@ -37,14 +38,15 @@ namespace HActLib
             Data.Power = reader.ReadUInt16();
             Data.Flag = reader.ReadUInt16();     
             Data.Parts = reader.ReadUInt32();
-          
-            Data.Attributes = version == GameVersion.DE2 ? reader.ReadBytes(6) : reader.ReadBytes(4);
+
+
+            if (version >= GameVersion.DE2)
+                Data.Attributes = reader.ReadUInt64();
+            else
+                Data.Attributes = reader.ReadUInt32();
 
             if (isNewDE)
-            {
-                reader.ReadBytes(2);
                 Data.AttackID = reader.ReadInt32();
-            }
         }
 
 
@@ -55,14 +57,14 @@ namespace HActLib
             writer.Write(Data.Flag);
             writer.Write(Data.Parts);
 
-            foreach (byte b in Data.Attributes)
-                writer.Write(b);
 
-            if (version == GameVersion.DE2)
-            {
-                writer.WriteTimes(0, 2);
+            if (version >= GameVersion.DE2)
+                writer.Write(Data.Attributes);
+            else
+                writer.Write((int)Data.Attributes);
+
+            if (version >= GameVersion.DE2)
                 writer.Write(Data.AttackID);
-            }
         }
 
         public override bool TryConvert(Game input, Game output)
@@ -70,6 +72,7 @@ namespace HActLib
             GameVersion inputGameVer = CMN.GetVersionForGame(input);
             GameVersion outputGameVer = CMN.GetVersionForGame(output);
 
+            /*
             if(inputGameVer <= GameVersion.DE1 && outputGameVer == GameVersion.DE2)
             {
                 byte[] newAttribs = new byte[6];
@@ -84,6 +87,7 @@ namespace HActLib
                 Array.Copy(Data.Attributes, newAttribs, 4);
                 Data.Attributes = newAttribs;
             }
+            */
 
             return true;
         }

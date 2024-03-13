@@ -2,7 +2,7 @@
   "profiles": {
     "HActScout": {
       "commandName": "Project",
-      "commandLineArgs": "\"H:\\steamapps2\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\hact\" 98 y6"
+      "commandLineArgs": "\"C:\\SteamLibrary\\steamapps\\common\\LikeADragon8\\runtime\\media\\data\\motion.par.unpack\\bep\" 80 ylad bep"
     }
   }
 }

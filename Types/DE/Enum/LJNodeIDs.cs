@@ -452,12 +452,18 @@ namespace HActLib
         e_auth_element_move_continuous_track = 0x1BB,
         e_auth_element_fullscreen_auth_movie = 0x1C5,
         e_auth_element_lens_flare = 0x1BE,
-        e_auth_element_color_correction_mask_v2 = 0x1C9,
+        e_auth_element_conversation_camera = 0x1BC,
+        e_auth_element_face2 = 0x1BD,
+        e_auth_element_path_animation_curve = 0x1BF,
+        e_auth_element_color_correction_v2 = 0x1C9,
         e_auth_element_color_scheme = 0x1CB,
+        e_auth_element_floor_fog = 0x1CD,
         e_auth_element_asset_posture_maintenance_scene = 0x1E1,
+        e_auth_element_apply_ubik = 0x1E6,
         e_auth_element_qte_command = 0x1E9,
         e_auth_element_skateboard_trick_processing = 0x1ED,
-        e_auth_element_kind_num = 0x1F0 , //Atleast this amount, could be more
+        e_auth_element_cloud_parameters = 0x1D8,
+        e_auth_element_kind_num = 496 , //Atleast this amount, could be more
     };
 
 }

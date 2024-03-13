@@ -1,7 +1,7 @@
 ﻿namespace HActLib
 {
-    [GamePrefix(Game.LADIW, "ladiw", "y8", "iw", "infinitewealth")]
-    public enum LADIWNodeIDs
+    [GamePrefix(Game.LADIW, "y8", "ladiw", "iw", "infinitewealth")]
+    public enum LADIWNodeIDs : uint
     {
         e_auth_element_kind_dmy = 0x0,
         e_auth_element_camera_param = 0x1,
@@ -449,11 +449,48 @@
         e_auth_element_move_continuous_track = 0x1BB,
         e_auth_element_fullscreen_auth_movie = 0x1C5,
         e_auth_element_lens_flare = 0x1BE,
-        e_auth_element_color_correction_mask_v2 = 0x1C9,
+        e_auth_element_conversation_camera = 0x1BC,
+        e_auth_element_face2 = 0x1BD,
+        e_auth_element_path_animation_curve = 0x1BF,
+        e_auth_element_color_correction_v2 = 0x1C9,
         e_auth_element_color_scheme = 0x1CB,
+        e_auth_element_floor_fog = 0x1CD,
+        e_auth_element_cloud_parameters = 0x1D8,
         e_auth_element_asset_posture_maintenance_scene = 0x1E1,
+        e_auth_element_apply_ubik = 0x1E6,
         e_auth_element_qte_command = 0x1E9,
         e_auth_element_skateboard_trick_processing = 0x1ED,
-        e_auth_element_kind_num = 0x1F0, //Atleast this amount, could be more
+        e_auth_element_nightlife_display = 0x1F0,
+        e_auth_element_resort_general_notification = 0x1F9,
+        e_auth_element_banquet_talk_cut_in = 0x1FD,
+        e_auth_element_weather_control = 0x1FF,
+        e_auth_element_character_offset = 0x200,
+        e_auth_element_crazy_delivery_connect_camera = 0x205,
+        e_auth_element_crazy_delivery_parameters = 0x206,
+        e_auth_element_skin_shine = 0x207,
+        e_auth_element_parts_blend_tag = 0x209,
+        e_auth_element_auth_playback_speed = 0x20A,
+        e_auth_element_sujimon_battle_management = 0x20C,
+        e_auth_element_skin_clarity = 0x20D,
+        e_auth_element_skin_tone = 0x20E,
+        e_auth_element_npc_freeze  = 0x210,
+        e_auth_element_familiarity_gauge = 0x212,
+        e_auth_element_whip_effect = 0x21A,
+        e_auth_element_resort_guest_ui = 0x220,
+        e_auth_element_cloud_solar_direction_control = 0x222,
+        e_auth_element_data_storage = 0x225,
+        e_auth_element_character_select = 0x226,
+        e_auth_element_matching_app_results = 0x227,
+        e_auth_element_camera_parameter_offset = 0x228,
+        e_auth_element_color_grading = 0x22A,
+        e_auth_element_shadow_stripe_supression = 0x22E,
+        e_auth_element_banquet_talk_live = 0x23D,
+        e_auth_element_draw_wire = 0x23E,
+        e_auth_element_generic_launch_menu = 0x231,
+        e_auth_element_fishing_gacha = 0x233,
+        e_auth_element_equip_asset_display = 0x234,
+        e_auth_element_general_money_confirmation_yesno = 0x238,
+        e_auth_element_resort_general_ui_confirmation_yesno = 0x239,
+        e_auth_element_kind_num = 575, //Atleast this amount, could be more
     }
 }

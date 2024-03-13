@@ -3,9 +3,16 @@ using System.Linq;
 using System.Collections.Generic;
 using Yarhl.FileFormat;
 using Yarhl.IO;
+using System.ComponentModel.DataAnnotations;
 
 namespace HActLib
 {
+
+    //Character Data: Aligned
+    //Special Elements Data: Aligned
+    //Character Data 2: Being written TWICE?!!!!
+    //String Table: Unaligned
+
     public class CSVWriter : IConverter<CSV, BinaryFormat>
     {
         private DataWriter m_writer;
@@ -39,7 +46,7 @@ namespace HActLib
 
             writer.Write(new byte[] { 0x54, 0x43, 0x41, 0x48 });
             writer.Write(0x102);
-            writer.Write(20081118);
+            writer.Write(20081217);
             writer.WriteTimes(0, 4);
 
             long pointersRegion = writer.Stream.Position;
@@ -84,7 +91,9 @@ namespace HActLib
                 {
                     m_csvSpecialNodes[special] = (int)writer.Stream.Position;
                     special.WriteData(writer);
-                    writer.Write(special.UnreadData);
+
+                    if(special.UnreadData != null)
+                        writer.Write(special.UnreadData);
                 }
             }
         
@@ -109,6 +118,7 @@ namespace HActLib
             //Serious problem: Writes string table for some reason : i == 252
             
 
+
             for(int i = 0; i < csv.Entries.Count; i++)
             {
                 CSVHAct entry = csv.Entries[i];
@@ -122,26 +132,10 @@ namespace HActLib
                         extraDat.Write(writer);
                     }
             }
-            
-            foreach (var entry in csv.Entries)
-            {
-                m_csvCharacterExtraDataStart[entry] = (int)writer.Stream.Position;
-
-                foreach (var chara in entry.Characters)
-                    foreach (var extraDat in chara.UnknownExtraData)
-                    {
-                        m_csvCharacterExtraDatas[extraDat] = (int)writer.Stream.Position;
-                        extraDat.Write(writer);
-                    }
-            }
-            
-
-
 
             long m_stringTableRegion = writer.Stream.Position;
             m_stringTableAddr = writer.Stream.Position;
 
-            
             //Go back to hact entries. write everything.
             foreach (var entry in csv.Entries)
             {
@@ -168,7 +162,7 @@ namespace HActLib
                     writer.Write(WriteToStringTable(chara.ModelOverride));
                     writer.Stream.Position += 64;
                     writer.Write(m_csvCharacterExtraDataStart[entry]);
-                    writer.Write(chara.UnknownExtraData.Count);
+                    writer.Write(chara.UnknownNum);
                 }
 
                 //Go back to special nodes. link things.
@@ -185,7 +179,7 @@ namespace HActLib
                     foreach (string str in specialNode.Resources)
                         writer.Write(WriteToStringTable(str));
 
-                    writer.Write(specialNode.UnknownResource);
+                    writer.Write(WriteToStringTable(specialNode.UnknownResource));
                 }
 
                 //Go back to section 4. Link things.
@@ -197,8 +191,17 @@ namespace HActLib
                     foreach (string str in sec4.Resources)
                         writer.Write(WriteToStringTable(str));
 
-                    writer.Write(sec4.Unknown);
+                    writer.Write(sec4.Unknown2);
                 }
+            }
+
+            //Go back to extra character data, take care of pointers.
+            foreach(var kv in m_csvCharacterExtraDatas)
+            {
+                writer.Stream.Seek(kv.Value + 4);
+
+                foreach (string str in kv.Key.Resources)
+                    writer.Write(WriteToStringTable(str));
             }
 
             //Go back to header. Write everything
@@ -215,7 +218,7 @@ namespace HActLib
             writer.Write(m_csvSection4.Count);
             writer.Write((int)characterExtraDataRegion);
             writer.Write(m_csvCharacterExtraDatas.Count);
-            writer.Write(0);
+            writer.Write((int)(m_stringTableRegion - 64));
             writer.Write((int)m_stringTableRegion);
 
             writer.Stream.Seek(writer.Stream.Length);

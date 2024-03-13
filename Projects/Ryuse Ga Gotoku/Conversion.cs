@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using HActLib;
 
+
 namespace RyuseGaGotoku
 {
     internal static class Conversion

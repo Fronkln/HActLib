@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HActLib
+{
+    public enum BattleAttributeYLAD
+    {
+        invalid = 0,
+        normal = 1,
+        fly = 2,
+        slash = 3,
+        asset = 4,
+        Break = 5,
+        involve = 6,
+        sync = 7,
+        no_dead = 8,
+        around = 9,
+        force_dead = 10,
+        piyori = 11,
+        cough = 12,
+        fire = 13,
+        heavy = 14,
+        bibiri = 15,
+        bomb = 16,
+        sting = 17,
+        electric = 18,
+        bound = 19,
+        launch = 20,
+        kirimomi = 21,
+        bodydown = 22,
+        blind = 23,
+        no_guard = 24,
+        fatal = 25,
+        force_guard = 26,
+        push = 27,
+        break_g = 28,
+        paralysis = 29,
+        sleep = 30,
+        poison = 31,
+        burn = 32,
+        cold = 33,
+        silence = 34,
+        charm = 35,
+        drunk = 36,
+        mind_control = 37,
+        terror = 38,
+        anger = 39,
+        avoid = 40,
+        sp_kinteki = 41,
+        sp_hato = 42,
+        gun = 43,
+        sp_yoroke = 44,
+        bleed = 45,
+    }
+}

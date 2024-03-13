@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Yarhl.IO;
 using Yarhl.FileFormat;
 
+
 namespace HActLib
 {
     public class OECMNConverter : IConverter<OECMN, BinaryFormat>
@@ -52,16 +53,20 @@ namespace HActLib
             #endregion
 
             //Fourth write: resource cut info
-            uint resourceCutInfo = (uint)writer.Stream.Position;
+            uint resourceCutInfo = 0;
 
             #region Resource Cut Info
+            if (cmn.CMNHeader.Version > 10)
+            {
+                resourceCutInfo = (uint)writer.Stream.Position;
 
-            writer.Write(cmn.ResourceCutInfo.Length);
-            writer.WriteTimes(0, 12);
+                writer.Write(cmn.ResourceCutInfo.Length);
+                writer.WriteTimes(0, 12);
 
-            //start end probably not single
-            foreach (float f in cmn.ResourceCutInfo)
-                writer.Write(f);
+                //start end probably not single
+                foreach (float f in cmn.ResourceCutInfo)
+                    writer.Write(f);
+            }
 
             #endregion
 
@@ -69,14 +74,11 @@ namespace HActLib
 
             #region Sound Info
 
-            if (cmn.CMNHeader.Version > 10)
-            {
                 writer.Write(cmn.SoundInfo.Length);
                 writer.WriteTimes(0, 12);
 
                 foreach (uint i in cmn.SoundInfo)
                     writer.Write(i);
-            }
 
             #endregion
 
@@ -105,13 +107,14 @@ namespace HActLib
             writer.Write(cmn.CMNHeader.Start);
             writer.Write(cmn.CMNHeader.End);
             writer.Write(cmn.CMNHeader.NodeDrawNum);
+
             writer.Write(cutInfoPointer);
             writer.Write(disableFramePointer);
-            writer.Write(resourceCutInfo);
 
-            if (cmn.CMNHeader.Version > 10)
-                writer.Write(soundInfo);
+            if (resourceCutInfo > 0)
+                writer.Write(resourceCutInfo);
 
+            writer.Write(soundInfo);
             writer.Write(nodeInfoPointer);
 
             writer.Write(cmn.CMNHeader.ChainCameraIn);

@@ -15,7 +15,7 @@ namespace HActLib
         public bool IsFile;
 
         private string m_path;
-        private Yarhl.FileSystem.Node Par;
+        public Yarhl.FileSystem.Node Par;
 
         ~HActDir()
         {
@@ -135,6 +135,12 @@ namespace HActLib
                     if (Directory.Exists(path))
                     {
                         HActDir dir = new HActDir() { m_path = path };
+                        dirs.Add(dir);
+                        start++;
+                    }
+                    else if(Directory.Exists(path + ".par.unpack"))
+                    {
+                        HActDir dir = new HActDir() { m_path = path + ".par.unpack" };
                         dirs.Add(dir);
                         start++;
                     }
