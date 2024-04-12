@@ -254,9 +254,9 @@ namespace HActLib
         /// <summary>
         /// Conversions that concern same engine different game
         /// </summary>
-        public virtual bool TryConvert(Game input, Game output)
+        public virtual Node TryConvert(Game input, Game output)
         {
-            return true;
+            return null;
         }
     }
 }

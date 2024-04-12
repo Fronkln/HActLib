@@ -10,9 +10,9 @@ namespace CMNEdit
         {
             form.CreateHeader("Condition Information");
 
-            switch((ConditionType)cond.Condition.ConditionID)
+            switch(ConditionConvert.GetName(cond.Condition.ConditionID, Form1.curGame))
             {
-                case ConditionType.enemy_num:
+                case "enemy_num":
                     ConditionEnemyNum enemyCountCond = cond.Condition as ConditionEnemyNum;
 
 
@@ -42,7 +42,7 @@ namespace CMNEdit
                     }, NumberBox.NumberMode.Int);
                     break;
 
-                case ConditionType.page_play_count:
+                case "page_play_count":
                     ConditionPagePlayCount playCountCond = cond.Condition as  ConditionPagePlayCount;
 
 
@@ -54,7 +54,7 @@ namespace CMNEdit
                     break;
 
 
-                case ConditionType.hact_condition_flag:
+                case "hact_condition_flag":
 
                     ConditionHActFlag condHAct = cond.Condition as ConditionHActFlag;
 
@@ -72,7 +72,7 @@ namespace CMNEdit
 
                     break;
 
-                case ConditionType.program_param:
+                case "program_param":
 
                     ConditionProgramParam condprog = cond.Condition as ConditionProgramParam;
 

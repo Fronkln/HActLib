@@ -151,14 +151,6 @@ namespace HActLib
                 }
                 else
                 {
-                    if (!element.TryConvert(inputGame, outputGame))
-                    {
-                        element.ElementKind = 0;
-                        element.Name += " (invalid)";
-
-                        return ConversionResult.Fail;
-                    }
-
                     element.ElementKind = outputID;
                     element.BEPDat.PropertyType = (ushort)outputID;
 
@@ -169,6 +161,24 @@ namespace HActLib
             }
             else
             {
+                NodeElement convertedNode = node.TryConvert(inputGame, outputGame) as NodeElement;
+
+                if (convertedNode != null)
+                {
+                    Node.CopyBaseInfo(node, convertedNode);
+                    Node.CopyBaseElementInfo(element, convertedNode);
+
+                    if (node.Parent != null)
+                    {
+                        int origIdx = node.Parent.Children.IndexOf(node);
+                        node.Parent.Children.Remove(node);
+                        node.Parent.Children.Insert(origIdx, convertedNode);
+                        convertedNode.Parent = node.Parent;
+                        node.Parent = null;
+                    }
+                    return ConversionResult.Success;
+                }
+
                 element.ElementKind = 0;
                 element.Name += " (invalid)";
 

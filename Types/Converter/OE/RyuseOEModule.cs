@@ -157,6 +157,7 @@ namespace HActLib
                     return ConversionResult.NoChange;
                 else
                 {
+                    /*
                     if(!element.TryConvert(inputGame, outputGame))
                     {
                         element.ElementKind = 0;
@@ -164,6 +165,7 @@ namespace HActLib
 
                         return ConversionResult.Fail;
                     }
+                    */
 
                     element.ElementKind = outputID;
                     element.BEPDat.PropertyType = (ushort)outputID;

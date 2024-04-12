@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HActLib
 {
-    public enum ConditionType : uint
+    public enum AuthPageConditionsGeneric : uint
     {
         dmy = 0x0,
         random = 0x1,
@@ -85,5 +85,5 @@ namespace HActLib
         damage_reaction = 0x4A,
         has_cd = 0x4B,
         equip_armor = 0x4C,
-    };
+    }
 }

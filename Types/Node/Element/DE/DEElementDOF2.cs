@@ -16,53 +16,53 @@ namespace HActLib
     {
         public bool DisableDof;
 
-        public float FocusDistBefore;
-        public float FocusDistAfter;
+        public float FocusDistBefore = 0;
+        public float FocusDistAfter = 0;
 
         public bool UseIntr;
 
-        public float FarCocRate;
-        public float NearCocRate;
+        public float FarCocRate = 2;
+        public float NearCocRate = 2;
 
-        public float FocusFarD;
-        public float FarMaxCocDist;
-        public float FocusNearD;
-        public float NearMaxCocDist;
-        public float MaxCocRadius;
+        public float FocusFarD = 0.5f;
+        public float FarMaxCocDist = 1f;
+        public float FocusNearD = 0.5f;
+        public float NearMaxCocDist = 0.5f;
+        public float MaxCocRadius = 8;
 
-        public float SpecularBrightness;
-        public float SpecularThresold;
+        public float SpecularBrightness = 0;
+        public float SpecularThresold = 0.95f;
 
-        public float Alpha;
-        public float ColorScale;
+        public float Alpha = 1;
+        public float ColorScale = 1;
 
-        public int Shape;
+        public int Shape = 7;
 
-        public int DiaphragmBladesNum;
-        public int ShapeRotAngle;
-        public float ApertureCircularity;
-        public float BokehAttenBeginRate;
-        public float HighLumiEmphasisThresold;
-        public float HighLumiEmphasisColor;
-        public float HighLumiEmphasisScale;
+        public int DiaphragmBladesNum = 6;
+        public int ShapeRotAngle = 0;
+        public float ApertureCircularity = 1;
+        public float BokehAttenBeginRate = 0.9f;
+        public float HighLumiEmphasisThresold = 2;
+        public float HighLumiEmphasisColor = 1;
+        public float HighLumiEmphasisScale = 1;
 
-        public bool FullResoBokeh;
-        public int NearFocusDistance;
-        public float FNumber;
-        public bool UseFNumber;
-        public bool EnableFocusAdjust;
-        public float FocusNearDFNumber;
-        public float FocusFarDFNumber;
-        public bool CalcBeforeTAA;
-        public float MaxCocRadiusF;
+        public bool FullResoBokeh = false;
+        public int NearFocusDistance = 0;
+        public float FNumber = 16;
+        public bool UseFNumber = true;
+        public bool EnableFocusAdjust = false;
+        public float FocusNearDFNumber = 0.5f;
+        public float FocusFarDFNumber = 0.5f;
+        public bool CalcBeforeTAA = false;
+        public float MaxCocRadiusF = 20f;
 
-        public int CinematicDofQualityLevel;
-        public bool EnableMirror;
-        public bool EnableMirrorOnly;
-        public int ScatterMode;
-        public int RingCount;
-        public int TAAQuality;
-        public int RecombineQuality;
+        public int CinematicDofQualityLevel = 0;
+        public bool EnableMirror = false;
+        public bool EnableMirrorOnly = false;
+        public int ScatterMode = 0;
+        public int RingCount = 3;
+        public int TAAQuality = 0;
+        public int RecombineQuality = 0;
         public int DOFFlag;
 
         public float[] Animation = new float[32];

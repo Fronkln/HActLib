@@ -82,7 +82,7 @@ namespace HActLib
 
             #region Page Info
 
-            if (cmn.GameVersion > GameVersion.Yakuza6)
+            if (cmn.GameVersion > GameVersion.Yakuza6Demo)
             {
 
                 writer.Write(cmn.AuthPages.Count);
@@ -92,18 +92,29 @@ namespace HActLib
 
                 foreach (AuthPage page in cmn.AuthPages)
                 {
-                    writer.Write(page.Version);
-                    writer.Write(page.Flag);
+                    if (page.Format > 0)
+                    {
+                        writer.Write(page.Version);
+                        writer.Write(page.Flag);
+                    }
+
                     writer.Write(page.Start.Tick);
                     writer.Write(page.End.Tick);
+
+                    if (page.Format < 1)
+                        writer.Write(page.Unk);
+
                     writer.Write(page.Transitions.Count);
                     writer.Write(page.GetTransitionSize());
                     writer.Write(page.SkipTick.Tick);
-                    writer.Write(page.PageIndex);
-                    writer.Write(page.SkipLinkIndexNum);
-                    writer.WriteTimes(0, 12);
 
-                    if (cmn.GameVersion == GameVersion.DE2)
+                    if(page.Format > 0)
+                        writer.Write(page.PageIndex);
+
+                    writer.Write(page.SkipLinkIndexNum);
+                    writer.WriteTimes(0, page.Format > 0 ? 12 : 4);
+
+                    if (page.Format > 1)
                         writer.Write(page.PageTitleText.ToLength(32), fixedSize: 32, nullTerminator: false, encoding: writer.DefaultEncoding);
 
                     foreach (int i in page.SkipLink)
@@ -566,7 +577,7 @@ namespace HActLib
 
 
             //Read auth pages
-            if (VersionGreater(version, GameVersion.Yakuza6))
+            if (VersionGreater(version, GameVersion.Yakuza6Demo))
                 cmn.ReadAuthPages(cmnReader);
             else
             {
@@ -591,6 +602,10 @@ namespace HActLib
             for (int i = 0; i < AuthPages.Count; i++)
             {
                 AuthPage page = (AuthPage)ConvertFormat.With<AuthPageConverter>(new BinaryFormat(reader.Stream));
+
+                if (page.Format <= 1)
+                    page.PageTitleText = "Page " + i;
+
                 AuthPages[i] = page;
 #if !DEBUG
                 }

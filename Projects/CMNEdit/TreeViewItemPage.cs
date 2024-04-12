@@ -4,15 +4,13 @@ using HActLib;
 
 namespace CMNEdit
 {
-    public class TreeViewItemPage: TreeNode
+    public class TreeViewItemPage : TreeNode
     {
         public AuthPage Page;
 
         public TreeViewItemPage(AuthPage page) : base()
         {
             Page = page;
-            Text = page.PageTitleText + $"  ({page.PageIndex})";
-
             Update();
 
             foreach (Transition transition in page.Transitions)
@@ -23,7 +21,10 @@ namespace CMNEdit
 
         public void Update()
         {
-            Text = Page.PageTitleText + $"  ({Page.PageIndex})";
+            if(Page.Format > 0)
+                Text = Page.PageTitleText + $"  ({Page.PageIndex})";
+            else
+                Text = Page.PageTitleText;
         }
     }
 }

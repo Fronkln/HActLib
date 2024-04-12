@@ -9,9 +9,9 @@ namespace HActLib
 {
     public class ConditionPageEnd : Condition
     {
-        public ConditionPageEnd()
+        public ConditionPageEnd(Game game)
         {
-            ConditionID = (uint)ConditionType.page_end;
+            ConditionID = ConditionConvert.GetID("page_end", game);
         }
 
         internal override void Read(DataReader reader, uint parameterSize)

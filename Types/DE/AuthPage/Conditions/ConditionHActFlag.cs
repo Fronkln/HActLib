@@ -12,14 +12,14 @@ namespace HActLib
         public uint ConditionFlagOn;
         public uint ConditionFlagOff;
 
-        public ConditionHActFlag()
+        public ConditionHActFlag(Game game)
         {
-            ConditionID = (uint)ConditionType.hact_condition_flag;
+            ConditionID = ConditionConvert.GetID("hact_condition_flag", game);
         }
 
-        public ConditionHActFlag(uint on, uint off)
+        public ConditionHActFlag(Game game, uint on, uint off)
         {
-            ConditionID = (uint)ConditionType.hact_condition_flag;
+            ConditionID = ConditionConvert.GetID("hact_condition_flag", game);
 
             ConditionFlagOn = on;
             ConditionFlagOff = off;

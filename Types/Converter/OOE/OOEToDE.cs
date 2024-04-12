@@ -170,8 +170,8 @@ namespace HActLib
                     else
                     {
                         successPage.End.Frame = branchNodes.ElementAt(i + 1).Start - 1;
-                        successPage.Transitions.Add(new Transition(pageIdx + 2, new ConditionHActFlag(1, 0), new ConditionPageEnd()));
-                        successPage.Transitions.Add(new Transition(pageIdx + 3, new ConditionHActFlag(0, 1), new ConditionPageEnd()));
+                        successPage.Transitions.Add(new Transition(pageIdx + 2, new ConditionHActFlag(CMN.LastHActDEGame, 1, 0), new ConditionPageEnd(CMN.LastHActDEGame)));
+                        successPage.Transitions.Add(new Transition(pageIdx + 3, new ConditionHActFlag(CMN.LastHActDEGame, 0, 1), new ConditionPageEnd(CMN.LastHActDEGame)));
                     }
 
                     if (failEnd != null)
@@ -192,12 +192,12 @@ namespace HActLib
                 }
 
 
-                startPage.Transitions.Add(new Transition(1, new ConditionPageEnd()));
+                startPage.Transitions.Add(new Transition(1, new ConditionPageEnd(CMN.LastHActDEGame)));
 
                 AuthPage promptPage = new AuthPage("PROMPT START", buttonNodes.ElementAt(0).Start, branchNodes.ElementAt(0).Start - 1);
                 promptPage.PageIndex = 1;
-                promptPage.Transitions.Add(new Transition(2, new ConditionHActFlag(1, 0), new ConditionPageEnd()));
-                promptPage.Transitions.Add(new Transition(3, new ConditionHActFlag(0, 1), new ConditionPageEnd()));
+                promptPage.Transitions.Add(new Transition(2, new ConditionHActFlag(CMN.LastHActDEGame, 1, 0), new ConditionPageEnd(CMN.LastHActDEGame)));
+                promptPage.Transitions.Add(new Transition(3, new ConditionHActFlag(CMN.LastHActDEGame, 0, 1), new ConditionPageEnd(CMN.LastHActDEGame)));
 
                 pages.Insert(1, promptPage);
 

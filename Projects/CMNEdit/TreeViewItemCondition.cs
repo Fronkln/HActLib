@@ -21,9 +21,9 @@ namespace CMNEdit
 
         public string GetName()
         {
-            switch((ConditionType)Condition.ConditionID)
+            switch(ConditionConvert.GetName(Condition.ConditionID, Form1.curGame))
             {
-                case ConditionType.hact_condition_flag:
+                case "hact_condition_flag":
                     ConditionHActFlag flag = Condition as ConditionHActFlag;
 
                     if (flag.ConditionFlagOn == 1 && flag.ConditionFlagOff == 0)
@@ -33,7 +33,13 @@ namespace CMNEdit
                     break;
             }
 
-            return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(((ConditionType)Condition.ConditionID).ToString().Replace("_", " "));
+
+            string name = ConditionConvert.GetName(Condition.ConditionID, Form1.curGame);
+
+            if (string.IsNullOrEmpty(name))
+                name = "Condition " + Condition.ConditionID.ToString();
+
+            return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(name).ToString().Replace("_", " ");
         }
     }
 }

@@ -7,21 +7,46 @@ namespace HActLib
 {
     public class ConditionConvert : IConverter<BinaryFormat, Condition>
     {
-        internal Condition GetCondFromType(ConditionType cond)
+
+        public static string GetName(uint cond, Game game)
         {
-            switch(cond)
+            Type enumType;
+
+            if (game <= Game.Y6)
+                enumType = typeof(AuthPageConditionsY6);
+            else
+                enumType = typeof(AuthPageConditionsGeneric);
+
+            return Enum.GetName(enumType, cond);
+        }
+
+        public static uint GetID(string name, Game game)
+        {
+            Type enumType;
+
+            if (game == Game.Y6)
+                enumType = typeof(AuthPageConditionsY6);
+            else
+                enumType = typeof(AuthPageConditionsGeneric);
+
+            return (uint)Enum.Parse(enumType, name);
+        }
+
+        internal Condition GetCondFromType(uint cond, Game game)
+        {
+            switch(GetName(cond, game))
             {
                 default:
                     return new Condition();
-                case ConditionType.page_play_count:
+                case "page_play_count":
                     return new ConditionPagePlayCount();
-                case ConditionType.play_count:
+                case "play_count":
                     return new ConditionPlayCount();
-                case ConditionType.hact_condition_flag:
-                    return new ConditionHActFlag();
-                case ConditionType.enemy_num:
+                case "hact_condition_flag":
+                    return new ConditionHActFlag(game);
+                case "enemy_num":
                     return new ConditionEnemyNum();
-                case ConditionType.program_param:
+                case "program_param":
                     return new ConditionProgramParam();
             }
         }
@@ -31,13 +56,13 @@ namespace HActLib
         {
             DataReader reader = new DataReader(format.Stream) { Endianness = EndiannessMode.LittleEndian, DefaultEncoding = System.Text.Encoding.GetEncoding(932) };
           
-            ConditionType condType = (ConditionType)reader.ReadUInt32();
+            uint condType = reader.ReadUInt32();
             uint parameterSize = reader.ReadUInt32();
            
             reader.ReadBytes(8);
             
-            Condition cond = GetCondFromType(condType);
-            cond.ConditionID = (uint)condType;
+            Condition cond = GetCondFromType(condType, CMN.LastHActDEGame);
+            cond.ConditionID = condType;
 
             long paramStart = reader.Stream.Position;
             long paramTargetPos = reader.Stream.Position + parameterSize;

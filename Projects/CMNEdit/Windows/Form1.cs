@@ -1713,8 +1713,14 @@ namespace CMNEdit
                     case "e_auth_element_post_effect_gradation":
                         DEElementGradationWindow.Draw(this, element);
                         break;
+                    case "e_auth_element_post_effect_dof":
+                        DEElementDOFWindow.Draw(this, element);
+                        break;
                     case "e_auth_element_post_effect_dof2":
                         DEElementDOF2Window.Draw(this, element);
+                        break;
+                    case "e_auth_element_post_effect_motion_blur":
+                        DEElementMotionBlurWindow.Draw(this, element);
                         break;
                     case "e_auth_element_post_effect_motion_blur2":
                         DEElementMotionBlur2Window.Draw(this, element);
@@ -2805,10 +2811,30 @@ namespace CMNEdit
                 nodes = genHact.GetNodes();
 
 
-                foreach (AuthPage page in AuthPagesDE)
+                for(int i = 0; i < AuthPagesDE.Length; i++)
                 {
-                    page.IsOldDE = targetVer <= GameVersion.DE1;
+                    AuthPage page = AuthPagesDE[i];
 
+                    //Convert between old and new formats
+                    if ((page.Format == 0 && targetVer > GameVersion.Yakuza6) || (page.Format > 0 && targetVer <= GameVersion.Yakuza6))
+                    {
+                        page.PageIndex = i;
+
+                        foreach (Transition transition in page.Transitions)
+                            foreach (Condition condition in transition.Conditions)
+                            {
+                                string name = ConditionConvert.GetName(condition.ConditionID, curGame);
+                                uint newID = ConditionConvert.GetID(name, prefixGame);
+                                condition.ConditionID = newID;
+                            }
+                    }
+
+                    if (targetVer <= GameVersion.Yakuza6)
+                        page.Format = 0;
+                    else if (targetVer == GameVersion.DE1)
+                        page.Format = 1;
+                    else
+                        page.Format = 2;
 
                     if (page.IsTalkPage())
                     {

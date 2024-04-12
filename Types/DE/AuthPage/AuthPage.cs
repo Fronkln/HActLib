@@ -34,12 +34,45 @@ namespace HActLib
             }
 
             //read basic info
-            AuthPage page = reader.Read<AuthPage>();
-            page.IsOldDE = CMN.LastGameVersion == GameVersion.DE1;
+            AuthPage page = new AuthPage();
+            GameVersion ver = CMN.LastGameVersion;
 
-            if (!page.IsOldDE)
-             //   page.PageTitleText = reader.ReadString(32);
-                  page.PageTitleText = reader.ReadString(32, System.Text.Encoding.GetEncoding(932)).Split(new[] { '\0' }, 2)[0]; 
+            if (ver <= GameVersion.Yakuza6)
+                page.Format = 0;
+            else if (ver == GameVersion.DE1)
+                page.Format = 1;
+            else if (ver >= GameVersion.DE2)
+                page.Format = 2;
+
+            if(page.Format > 0)
+            {
+                page.Version = reader.ReadUInt32();
+                page.Flag = reader.ReadUInt32();
+            }
+
+            page.Start = new GameTick(reader.ReadUInt32());
+            page.End = new GameTick(reader.ReadUInt32());
+
+            if (page.Format < 1)
+                page.Unk = reader.ReadInt32();
+
+            page.TransitionCount = reader.ReadInt32();
+            page.TransitionSize = reader.ReadInt32();
+
+            page.SkipTick = new GameTick(reader.ReadUInt32());
+
+            if (page.Format > 0)
+                page.PageIndex = reader.ReadInt32();
+
+            page.SkipLinkIndexNum = reader.ReadInt32();
+
+            if (page.Format < 1)
+                reader.Stream.Position += 4;
+            else
+                reader.Stream.Position += 12;
+
+            if (page.Format > 1)
+                  page.PageTitleText = reader.ReadString(32, System.Text.Encoding.GetEncoding(932)).Split(new[] { '\0' }, 2)[0];
 
             //Read transitions
             // long transitionStart = startPos + 80 + (page.SkipLinkIndexNum * 4);
@@ -55,21 +88,6 @@ namespace HActLib
 
             for (int i = 0; i < page.TransitionCount; i++)
                 page.Transitions[i] = (ProcessTransitionData(page));
-
-            //Console.WriteLine(reader.ReadUInt32());
-            //reader.Stream.Position -= 4;
-
-            
-
-            //DE 1.0: Fake talk page
-            if(page.IsOldDE)
-            {
-                uint count = reader.ReadUInt32();
-                reader.Stream.Position -= 4;
-
-                //if (count <= 0)
-                    //page.Flag = 0;
-            }
 
             //read talk page related info
             if (page.IsTalkPage())
@@ -89,30 +107,31 @@ namespace HActLib
     [Yarhl.IO.Serialization.Attributes.Serializable]
     public class AuthPage : IFormat
     {
-        public uint Version { get; set; }
-        public uint Flag { get; set; }
+        public uint Version;
+        public uint Flag;
 
-        public GameTick Start { get; set; } = new GameTick(0);
-        public GameTick End { get; set; } = new GameTick(0);
+        public GameTick Start = new GameTick(0);
+        public GameTick End = new GameTick(0);
 
-        public int TransitionCount { get; set; }
-        public int TransitionSize { get; set; }
+        public int Unk = 0; //Y6
+
+        public int TransitionCount = 0;
+        public int TransitionSize = 0;
 
         public List<Transition> Transitions = new List<Transition>();
 
         public int[] SkipLink = new int[0];
-        public GameTick SkipTick { get; set; } = new GameTick(0);
+        public GameTick SkipTick = new GameTick(0);
 
-        public int PageIndex { get; set; }
-        public int SkipLinkIndexNum { get; set; }
+        public int PageIndex = 0;
+        public int SkipLinkIndexNum = 0;
 
         [BinaryString(FixedSize = 12, MaxSize = 12)]
         public string Padding { get; set; } = "";
 
-        // [BinaryString(FixedSize = 32, MaxSize = 32)]
         public string PageTitleText = "";
 
-        public bool IsOldDE = false;
+        public int Format = 0; //0 = Y6, 1 = DE 1.0, 2 = DE 2.0
 
         /// <summary>
         /// The talk information header of the page if it exists. Otherwise null.
@@ -149,7 +168,7 @@ namespace HActLib
 
         public bool IsTalkPage()
         {
-            if (IsOldDE)
+            if (Format <= 1)
                 return Flag > 0;
             else
                 return (Flag & 0x40) > 0;
@@ -159,7 +178,16 @@ namespace HActLib
         //Get the size of page. Used for writing.
         public int GetPageSize()
         {
-            int baseSize = (!IsOldDE ? 80 : 48) + GetTransitionSize() + (SkipLinkIndexNum * 4);
+            int pageSize = 0;
+
+            if (Format == 0)
+                pageSize = 32;
+            else if (Format == 1)
+                pageSize = 48;
+            else
+                pageSize = 80;
+
+            int baseSize = (pageSize) + GetTransitionSize() + (SkipLinkIndexNum * 4);
 
             if (TalkInfo != null && TalkInfo.Length > 0)
                 baseSize += 16 + (TalkInfo.Length * 16);
@@ -184,7 +212,12 @@ namespace HActLib
 
         public uint BaseSize()
         {
-            return (uint)((!IsOldDE ? 80 : 48) + TransitionSize + (SkipLinkIndexNum * 4)); 
+            if(Format == 0)
+                return (uint)((32) + TransitionSize + (SkipLinkIndexNum * 4));
+            else if(Format == 1)
+                return (uint)((48) + TransitionSize + (SkipLinkIndexNum * 4));
+            else
+                return (uint)((80) + TransitionSize + (SkipLinkIndexNum * 4));
         }
 
         public uint Size()

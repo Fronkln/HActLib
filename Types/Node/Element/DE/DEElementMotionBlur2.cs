@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HActLib.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,8 @@ namespace HActLib
             BlurLength = reader.ReadSingle();
             SampleCount = reader.ReadInt32();
 
-            if (inf.expectedSize > 12)
+            //Spotted: LADIW
+            if (inf.expectedSize > 44)
                 Unknown = reader.ReadSingle();
         }
 
@@ -36,6 +38,25 @@ namespace HActLib
 
             if (CMN.LastHActDEGame >= Game.LADIW)
                 writer.Write(Unknown);
+        }
+
+        public override Node TryConvert(Game input, Game output)
+        {
+            GameVersion outputVer = CMN.GetVersionForGame(output);
+
+            if (outputVer <= GameVersion.DE1)
+            {
+                DEElementMotionBlur blur = new DEElementMotionBlur();
+                blur.ShutterSpeed = ShutterSpeed;
+                blur.BlurLength = BlurLength;
+
+                blur.ElementKind = Reflection.GetElementIDByName("e_auth_element_post_effect_motion_blur", output);
+                blur.BEPDat.PropertyType = (ushort)blur.ElementKind;
+
+                return blur;
+            }
+
+            return this;
         }
     }
 }

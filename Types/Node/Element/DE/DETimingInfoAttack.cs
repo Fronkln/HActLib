@@ -67,7 +67,7 @@ namespace HActLib
                 writer.Write(Data.AttackID);
         }
 
-        public override bool TryConvert(Game input, Game output)
+        public override Node TryConvert(Game input, Game output)
         {
             GameVersion inputGameVer = CMN.GetVersionForGame(input);
             GameVersion outputGameVer = CMN.GetVersionForGame(output);
@@ -89,7 +89,7 @@ namespace HActLib
             }
             */
 
-            return true;
+            return this;
         }
 
     }
