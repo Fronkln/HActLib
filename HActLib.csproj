@@ -30,4 +30,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Types\DE\Flowdust\" />
+  </ItemGroup>
+
 </Project>

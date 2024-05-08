@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using HActLib;
 
 namespace CMNEdit.Windows
@@ -31,6 +34,11 @@ namespace CMNEdit.Windows
         private Action<byte[]> m_finishedCallback = null;
         private Action<float[]> m_finishedCallback_float = null;
 
+        DataPoint curPoint = null;
+        int curPointIdx = 0;
+
+        bool byteMode = false;
+
         public CurveView()
         {
             InitializeComponent();
@@ -52,7 +60,6 @@ namespace CMNEdit.Windows
             m_LabelCurY = 0;
 
             ResumeLayout(true);
-
             FormClosed += delegate { OnClose(); };
         }
 
@@ -68,7 +75,14 @@ namespace CMNEdit.Windows
 
             SuspendLayout();
 
-            for(int i = 0; i < curve.Length; i++)
+            m_float_curve = new float[curve.Length];
+
+            for(int i = 0; i < m_float_curve.Length; i++)
+            {
+                m_float_curve[i] = (curve[i] / 255f);
+            }
+
+            for (int i = 0; i < curve.Length; i++)
             {
                 byte bit = curve[i];
 
@@ -92,9 +106,12 @@ namespace CMNEdit.Windows
                 m_labels[i] = label;
             }
 
-            ResumeLayout(true);
+            byteMode = true;
 
+            ResumeLayout(true);
             FormClosed += delegate { OnClose(); };
+
+            InitFinish();
         }
 
         public void Init(float[] curve, Action<float[]> finished)
@@ -130,23 +147,59 @@ namespace CMNEdit.Windows
             }
 
             ResumeLayout(true);
-
             FormClosed += delegate { OnClose(); };
+
+            InitFinish();
+        }
+
+        private void InitFinish()
+        {
+            var objChart = chart1.ChartAreas[0];
+            objChart.AxisX.Minimum = 0.0f;
+            objChart.AxisX.Maximum = m_float_curve.Length - 1;
+            objChart.AxisY.Minimum = 0f;
+            objChart.AxisY.Maximum = 1f;
+            objChart.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
+
+            chart1.Series.Clear();
+            chart1.Series.Add("Value");
+            chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series[0].MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
+            chart1.Series[0].MarkerSize = 8 ;
+
+            for (int i = 0; i < m_float_curve.Length; i++)
+            {
+                chart1.Series[0].Points.AddXY(i, m_float_curve[i]);
+            }
         }
 
         private void OnClose()
         {
             Form1.Instance.Enabled = true;
-            m_finishedCallback?.Invoke(m_curve);
-            m_finishedCallback_float?.Invoke(m_float_curve);
+
+            if(byteMode)
+            {
+                byte[] byteArray = new byte[m_float_curve.Length];
+
+                for (int i = 0; i < byteArray.Length; i++)
+                    byteArray[i] = (byte)(m_float_curve[i] * 255);
+
+                m_finishedCallback?.Invoke(byteArray);
+            }
+            else
+            {
+                m_finishedCallback_float?.Invoke(m_float_curve);
+            }
         }
 
         private void SetValue(int index, string val)
         {
-            if (m_curve != null)
+            if(byteMode)
                 m_curve[index] = (byte)(Utils.InvariantParse(val) * 255);
             else
                 m_float_curve[index] = Utils.InvariantParse(val);
+
+            InitFinish();
         }
 
         private void SetRange(int start, int end, float value)
@@ -170,10 +223,7 @@ namespace CMNEdit.Windows
             {
                 for (int i = start; i < end + 1; i++)
                 {
-                    if (m_curve != null)
-                        m_curve[i] = conv;
-                    else
-                        m_float_curve[i] = value;
+                    m_float_curve[i] = value;
                     m_textBoxes[i].Text = value.ToString();
                 }
             }
@@ -209,6 +259,88 @@ namespace CMNEdit.Windows
         private void button3_Click(object sender, EventArgs e)
         {
             SetRange(int.Parse(startRangeBox.Text), int.Parse(endRangeBox.Text), 1f);
+        }
+
+        RectangleF ChartAreaClientRectangle(Chart chart, ChartArea CA)
+        {
+            RectangleF CAR = CA.Position.ToRectangleF();
+            float pw = chart.ClientSize.Width / 100f;
+            float ph = chart.ClientSize.Height / 100f;
+            return new RectangleF(pw * CAR.X, ph * CAR.Y, pw * CAR.Width, ph * CAR.Height);
+        }
+
+        RectangleF InnerPlotPositionClientRectangle(Chart chart, ChartArea CA)
+        {
+            RectangleF IPP = CA.InnerPlotPosition.ToRectangleF();
+            RectangleF CArp = ChartAreaClientRectangle(chart, CA);
+
+            float pw = CArp.Width / 100f;
+            float ph = CArp.Height / 100f;
+
+            return new RectangleF(CArp.X + pw * IPP.X, CArp.Y + ph * IPP.Y,
+                                    pw * IPP.Width, ph * IPP.Height);
+        }
+
+        private void chart1_MouseUp(object sender, MouseEventArgs e)
+        {
+            curPoint = null;
+        }
+
+        private void chart1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button.HasFlag(MouseButtons.Left))
+            {
+                ChartArea ca = chart1.ChartAreas[0];
+                Axis ax = ca.AxisX;
+                Axis ay = ca.AxisY;
+
+                //  RectangleF ippRect = InnerPlotPositionClientRectangle(chart1, ca);
+                //   if (!ippRect.Contains(e.Location)) return;
+
+                int yPos = e.Y;
+
+                if (yPos < 0)
+                    yPos = 0;
+
+                System.Diagnostics.Debug.WriteLine(yPos);
+
+                HitTestResult hit = chart1.HitTest(e.X, yPos);
+
+                if (hit == null) return;
+                if (hit.PointIndex >= 0 && curPoint == null)
+                {
+                    curPoint = hit.Series.Points[hit.PointIndex];
+                    curPointIdx = hit.PointIndex;
+                }
+
+                if (curPoint != null)
+                {
+                    Series s = hit.Series;
+                    double dy = 0;
+
+                    try
+                    {
+                        dy = ay.PixelPositionToValue(yPos);
+                    }
+
+                    catch
+                    {
+                        dy = 0;
+                    }
+
+
+                    if (dy > ca.AxisY.Maximum)
+                        dy = ca.AxisY.Maximum;
+                    if (dy < ca.AxisY.Minimum)
+                        dy = ca.AxisY.Minimum;
+
+                    curPoint.XValue = curPoint.XValue;
+                    curPoint.YValues[0] = dy;
+
+                    m_textBoxes[curPointIdx].Text = dy.ToString();
+                    m_float_curve[curPointIdx] = (float)dy;
+                }
+            }
         }
     }
 }

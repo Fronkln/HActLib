@@ -212,7 +212,11 @@ namespace CMNEdit
                     {
                         case "e_auth_element_particle":
                             DEElementParticle particleElem = node as DEElementParticle;
-                            return "PIB " + particleElem.ParticleID;
+                            if (Form1.curGame > Game.Y6)
+                                return "PIB " + particleElem.ParticleID + $" ({particleElem.ParticleName})";
+                            else
+                                return "PIB " + particleElem.ParticleID;
+
                         case "e_auth_element_se":
                             DEElementSE seElem = node as DEElementSE;
                             return $"Sound Cue {seElem.CueSheet} ID {seElem.SoundIndex}";
@@ -224,7 +228,18 @@ namespace CMNEdit
                             return $"{heatElem.HeatChange} Heat Change";
                         case "e_auth_element_rim_flash":
                             DEElementRimflash rimflashElem = node as DEElementRimflash;
-                            return "Rimflash Ver." + rimflashElem.RimflashVersion + $"{(rimflashElem.ParamID > 0 ? " (DB Ref)" : "")}";
+                            if (rimflashElem.ParamID > 0)
+                                return "Rimflash Ver." + rimflashElem.RimflashVersion + " (DB Ref)";
+                            else
+                                return "Rimflash Ver." + rimflashElem.RimflashVersion + "." + rimflashElem.ParamVersion;
+                        case "e_auth_element_flow_dust_gen":
+                            DEElementFlowdust flowdustElem = node as DEElementFlowdust;
+                            if (flowdustElem.ParameterFlowdust)
+                                return "Flowdust Ver." + flowdustElem.FlowVersion + " (DB Ref)";
+                            else
+                                return "Flowdust Ver." + flowdustElem.FlowVersion + "." + flowdustElem.SetParamVersion;
+                            break;
+
                         case "e_auth_element_battle_command_special":
                             DEElementBattleCommandSpecial battleSpecialElem = node as DEElementBattleCommandSpecial;
                             return $"Battle Special ({battleSpecialElem.Type})";

@@ -704,6 +704,37 @@ namespace CMNEdit
             return input;
         }
 
+        public Panel CreatePanelFI(string label, Color color, Action<HActLib.RGB> finished, bool isCsvTree = false)
+        {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
+            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            rowCount++;
+            varPanel.RowCount = rowCount;
+
+            Panel input = new Panel();
+            input.BorderStyle = BorderStyle.Fixed3D;
+            input.Size = new Size(200, 50);
+            input.Click += delegate
+            {
+                CMNEdit.Windows.ColorViewFI myNewForm = new CMNEdit.Windows.ColorViewFI();
+                myNewForm.Visible = true;
+                myNewForm.Init(input.BackColor, finished);
+            };
+            input.BackColor = color;
+
+            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 2);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 2);
+            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+
+            return input;
+        }
+
         public void CreateComboBox(string label, int defaultIndex, string[] items, Action<int> editedCallback, bool isCsvTree = false)
         {
             TableLayoutPanel varPanel = null;
@@ -1674,6 +1705,9 @@ namespace CMNEdit
                     case "e_auth_element_color_correction_v2":
                         DEElementColorCorrection2Window.Draw(this, element);
                         break;
+                    case "e_auth_element_flow_dust_gen":
+                        DEElementFlowdustWindow.Draw(this, element);
+                        break;
                     case "e_auth_element_rim_flash":
                         DEElementRimflashWindow.Draw(this, element);
                         break;
@@ -1695,15 +1729,12 @@ namespace CMNEdit
                     case "e_auth_element_face_anim":
                         DEElementFaceAnimWindow.Draw(this, element);
                         break;
-
                     case "e_auth_element_expression_target":
                         DEElementExpressionTargetWindow.Draw(this, element);
                         break;
-
                     case "e_auth_element_grain_noise":
                         DEElementGrainNoiseWindow.Draw(this, element);
                         break;
-
                     case "e_auth_element_character_node_scale":
                         DEElementCharacterNodeScaleWindow.Draw(this, element);
                         break;
@@ -1766,9 +1797,14 @@ namespace CMNEdit
                     case "e_auth_element_battle_command_special":
                         DEElementBattleCommandSpecialWindow.Draw(this, element);
                         break;
-
                     case "e_auth_element_battle_transit_stun":
                         DEElementTimingInfoStunWindow.Draw(this, element);
+                        break;
+                    case "e_auth_element_asset_arms_reduce_use_count":
+                        DEElementArmsReduceAssetCountWindow.Draw(this, element);
+                        break;
+                    case "e_auth_element_talk_text":
+                        DEElementTalkTextWindow.Draw(this, element);
                         break;
                 }
             }

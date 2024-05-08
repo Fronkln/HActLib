@@ -24,7 +24,8 @@ namespace HActLib
         public uint ParamID;
         public AttachmentSlot AttachmentSlot;
 
-        public object RimflashParams;
+        public uint ParamVersion { get; private set; }
+        public RimflashParams RimflashParams;
 
         uint parametersOffset;
         uint curveOffset;
@@ -85,6 +86,7 @@ namespace HActLib
         {
             uint paramsVer = 0;
             reader.Stream.RunInPosition(() => paramsVer = reader.ReadUInt32(), 0, SeekMode.Current);
+            ParamVersion = paramsVer;
 
             switch(paramsVer)
             {
@@ -92,7 +94,15 @@ namespace HActLib
                 case 0:
                     break;
                 case 3:
-                    RimflashParams = reader.Read<RimflashParamsV3>();
+                    RimflashParamsV3 paramsV3 = new RimflashParamsV3();
+                    paramsV3.Read(reader);
+                    RimflashParams = paramsV3;
+                    break;
+                //LJ and above
+                case 4:
+                    RimflashParamsV4 paramsV4 = new RimflashParamsV4();
+                    paramsV4.Read(reader);
+                    RimflashParams = paramsV4;
                     break;
             }
         }
@@ -119,8 +129,7 @@ namespace HActLib
                 writer.Write(unreadSections);
 
             if (RimflashParams != null)
-                writer.WriteOfType(RimflashParams.GetType(), RimflashParams);
-
+                RimflashParams.Write(writer);
         }
     }
 }

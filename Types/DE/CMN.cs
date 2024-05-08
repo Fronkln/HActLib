@@ -141,7 +141,13 @@ namespace HActLib
 
                     if (page.IsTalkPage())
                     {
-                        if (page.TalkInfo != null && page.TalkInfo.Length > 0)
+                        if (page.TalkInfo == null)
+                        {
+                            page.TalkInfo = new TalkInfo[0];
+                            page.TalkInfoHeader = new TalkInfoHeader();
+                        }
+
+                        if (page.TalkInfo != null)
                         {
                             writer.Write(page.TalkInfo.Length);
                             writer.Write(page.TalkInfo.Length * 16);

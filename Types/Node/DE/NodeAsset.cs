@@ -31,6 +31,7 @@ namespace HActLib
 
         //44
         private byte[] unk_LJ;
+        private byte[] unk_GD; //20
 
         internal override void ReadNodeData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
@@ -69,8 +70,10 @@ namespace HActLib
                     ReplaceOrientZ = reader.ReadSingle();
                     ReplaceOrientX = reader.ReadSingle();
 
-                    if (nodeSize >= 120)
+                    if (CMN.LastHActDEGame == Game.LJ)
                         unk_LJ = reader.ReadBytes(44);
+                    if (CMN.LastHActDEGame >= Game.LAD7Gaiden) //Shrink node, no more unk LJ
+                        unk_GD = reader.ReadBytes(20);
                 }
             }
         }
@@ -125,8 +128,21 @@ namespace HActLib
 
                 }
 
-                if (unk_LJ != null)
+                if (CMN.LastHActDEGame == Game.LJ)
+                {
+                    if (unk_LJ == null)
+                        unk_LJ = new byte[44];
+
                     writer.Write(unk_LJ);
+                }
+
+                if(CMN.LastHActDEGame >= Game.LAD7Gaiden)
+                {
+                    if (unk_GD == null)
+                        unk_GD = new byte[20];
+
+                    writer.Write(unk_GD);
+                }
             }
             else
             {

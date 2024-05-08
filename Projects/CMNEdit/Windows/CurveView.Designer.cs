@@ -31,6 +31,8 @@
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label3;
             System.Windows.Forms.Label label4;
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.panel = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -39,9 +41,11 @@
             this.startRangeBox = new System.Windows.Forms.TextBox();
             this.endRangeBox = new System.Windows.Forms.TextBox();
             this.customValueBox = new System.Windows.Forms.TextBox();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -144,11 +148,27 @@
             this.customValueBox.TabIndex = 15;
             this.customValueBox.Text = "0";
             // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(418, 32);
+            this.chart1.Name = "chart1";
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
+            this.chart1.Size = new System.Drawing.Size(486, 421);
+            this.chart1.TabIndex = 16;
+            this.chart1.Text = "chart1";
+            this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
+            this.chart1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseUp);
+            // 
             // CurveView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 541);
+            this.ClientSize = new System.Drawing.Size(950, 541);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.customValueBox);
             this.Controls.Add(this.endRangeBox);
             this.Controls.Add(this.startRangeBox);
@@ -162,6 +182,7 @@
             this.Controls.Add(this.panel);
             this.Name = "CurveView";
             this.Text = "CurveView";
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -179,5 +200,6 @@
         private System.Windows.Forms.TextBox startRangeBox;
         private System.Windows.Forms.TextBox endRangeBox;
         private System.Windows.Forms.TextBox customValueBox;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using HActLib;
+using HActLib.OOE;
 
 namespace CMNEdit
 {
@@ -16,6 +17,14 @@ namespace CMNEdit
 
         public TreeViewItemExpressionTargetData()
         { 
+        }
+
+        public override object Clone()
+        {
+            TreeViewItemExpressionTargetData cloned = (TreeViewItemExpressionTargetData)base.Clone();
+            cloned.Data = Data.Copy();
+
+            return cloned;
         }
 
         public TreeViewItemExpressionTargetData(ExpressionTargetData dat)

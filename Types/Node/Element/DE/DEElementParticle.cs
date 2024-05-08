@@ -48,7 +48,7 @@ namespace HActLib
         public float DofAlphaMax = 1;
         public float DofAlphaMin = 0;
 
-        public float EmissivePower;
+        public float EmissivePower = 1;
         public float EmissivePowerOffset;
 
         public string ParticleName = "AAa0000"; //8 bytes
@@ -60,6 +60,7 @@ namespace HActLib
 
         public uint UISort;
 
+        private byte[] Unknown_LJ2 = new byte[12];
 
 
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
@@ -90,9 +91,7 @@ namespace HActLib
             OutFrame = reader.ReadSingle();
             DisableFrameChangeMotion = reader.ReadSingle();
             Animation = reader.ReadBytes(32);
-            /*
-
-            
+   
             VectorQuaternion = reader.ReadVector4();
             VectorScale = reader.ReadSingle();
             DofDepthBias = reader.ReadSingle();
@@ -103,7 +102,7 @@ namespace HActLib
                 reader.ReadBytes(4);
                 return;
             }
-
+     
             if (CMN.LastHActDEGame < Game.LJ)
                 DofAlphaMin = reader.ReadSingle();
 
@@ -112,11 +111,13 @@ namespace HActLib
                 EmissivePower = reader.ReadSingle();
                 EmissivePowerOffset = reader.ReadSingle();
             }
-
-            ParticleName = reader.ReadString(8);
+        
+            ParticleName = reader.ReadString(8).Split(new[] { '\0' }, 2)[0];
             TickStart = reader.ReadUInt32();
             RenderTiming = reader.ReadUInt32();
 
+            if (CMN.LastHActDEGame > Game.Y6)
+                reader.ReadBytes(16);
 
             if (CMN.LastHActDEGame >= Game.YLAD)
             {
@@ -124,11 +125,8 @@ namespace HActLib
                 UISort = reader.ReadUInt32();
             }
 
-            reader.ReadBytes(16);
-
             if (CMN.LastHActDEGame >= Game.LJ)
-                reader.ReadBytes(12);
-            */
+              Unknown_LJ2 = reader.ReadBytes(12);
         }
 
         internal override void WriteElementData(DataWriter writer, GameVersion version)
@@ -147,7 +145,7 @@ namespace HActLib
             writer.Write(NearFadeOffset);
 
             if (CMN.LastHActDEGame >= Game.LJ)
-                writer.WriteTimes(0, 12);
+                writer.Write(Unknown_LJ);
 
             Matrix.Write(writer);
             Scale.Write(writer);
@@ -164,8 +162,7 @@ namespace HActLib
             writer.Write(OutFrame);
             writer.Write(DisableFrameChangeMotion);
             writer.Write(Animation);
-            /*
-            
+
             writer.Write(VectorQuaternion);
             writer.Write(VectorScale);
             writer.Write(DofDepthBias);
@@ -186,7 +183,7 @@ namespace HActLib
                 writer.Write(EmissivePowerOffset);
             }
 
-            writer.Write(ParticleName.ToString());
+            writer.Write(ParticleName.ToLength(8));
             writer.Write(TickStart);
             writer.Write(RenderTiming);
 
@@ -199,8 +196,7 @@ namespace HActLib
             writer.WriteTimes(0, 16);
 
             if (CMN.LastHActDEGame >= Game.LJ)
-                writer.WriteTimes(0, 12);
-            */
+                writer.Write(Unknown_LJ2);
         }
     }
 }

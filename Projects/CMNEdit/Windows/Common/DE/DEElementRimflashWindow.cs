@@ -16,7 +16,8 @@ namespace CMNEdit.Windows.Common.DE
             form.CreateSpace(25);
             form.CreateHeader("Rimflash");
 
-            form.CreateInput("Version", inf.RimflashVersion.ToString(), null, readOnly: true);
+            form.CreateInput("Rimflash Version", inf.RimflashVersion.ToString(), null, readOnly: true);
+            form.CreateInput("Parameter Version", inf.ParamVersion.ToString(), null, readOnly: true);
             form.CreateInput("Fade Time", inf.FadeOutTime.ToString(), delegate (string val) { inf.FadeOutTime = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Root Value", inf.RootValue.ToString(), delegate (string val) { inf.RootValue = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
@@ -28,7 +29,7 @@ namespace CMNEdit.Windows.Common.DE
 
             if (inf.RimflashParams != null)
             {
-                if (inf.RimflashVersion == 5)
+                if (inf.ParamVersion >= 3)
                 {
                     RimflashParamsV3 v3params = inf.RimflashParams as RimflashParamsV3;
 
@@ -45,30 +46,30 @@ namespace CMNEdit.Windows.Common.DE
                     form.CreateInput("Color 0 Intensity", v3params.Color0Intensity.ToString(), delegate (string val) { v3params.Color0Intensity = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
                     form.CreateInput("Color 1 Intensity", v3params.Color1Intensity.ToString(), delegate (string val) { v3params.Color1Intensity = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                    color00Panel = form.CreatePanel("Color 00", v3params.Color00, 
-                        delegate(Color col) 
-                        { 
+                    color00Panel = form.CreatePanel("Color 00", v3params.Color00,
+                        delegate (Color col)
+                        {
                             v3params.Color00 = col;
                             color00Panel.BackColor = col;
                         });
-                    color01Panel = form.CreatePanel("Color 01", v3params.Color01, 
-                        delegate (Color col) 
-                        { 
+                    color01Panel = form.CreatePanel("Color 01", v3params.Color01,
+                        delegate (Color col)
+                        {
                             v3params.Color01 = col;
                             color01Panel.BackColor = col;
                         });
 
                     form.CreateInput("Color 01 Fresnel", v3params.Color01Fresnel.ToString(), delegate (string val) { v3params.Color01Fresnel = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                    color10Panel = form.CreatePanel("Color 10", v3params.Color10, 
-                        delegate (Color col) 
-                        { 
+                    color10Panel = form.CreatePanel("Color 10", v3params.Color10,
+                        delegate (Color col)
+                        {
                             v3params.Color10 = col;
                             color10Panel.BackColor = col;
                         });
-                    color11Panel = form.CreatePanel("Color 11", v3params.Color11, 
-                        delegate (Color col) 
-                        { 
+                    color11Panel = form.CreatePanel("Color 11", v3params.Color11,
+                        delegate (Color col)
+                        {
                             v3params.Color11 = col;
                             color11Panel.BackColor = col;
                         });

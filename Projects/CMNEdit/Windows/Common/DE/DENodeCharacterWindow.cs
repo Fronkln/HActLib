@@ -23,6 +23,7 @@ namespace CMNEdit.Windows.Common.DE
             form.CreateComboBox("Scale ID", (int)deChar.ScaleID, Enum.GetNames(typeof(DECharacterScaleID)), delegate (int id) { deChar.ScaleID = (uint)id; });
             form.CreateInput("Option Flag", deChar.OptionFlag.ToString(), delegate (string var) { deChar.OptionFlag = uint.Parse(var); }, NumberBox.NumberMode.Int);
             form.CreateComboBox("Replace ID", (int)deChar.ReplaceID, Enum.GetNames(typeof(HActReplaceID)), delegate (int id) { deChar.ReplaceID = (HActReplaceID)id; });
+            form.CreateInput("UID", deChar.UID.ToString(), delegate (string var) { deChar.UID = ulong.Parse(var); }, NumberBox.NumberMode.Long);
 
             form.CreateSpace(15);
 

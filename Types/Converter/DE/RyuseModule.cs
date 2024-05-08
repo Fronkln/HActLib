@@ -203,13 +203,6 @@ namespace HActLib
 
                     if (input <= Game.LJ && output >= Game.LAD7Gaiden)
                         dof2Elem.Unknown2 = 2;
-
-                    if (input <= Game.LAD7Gaiden && output >= Game.LADIW)
-                    {
-                        dof2Elem.SpecularBrightness = 0;
-                        dof2Elem.SpecularThresold = 0;
-                        dof2Elem.FNumber -= 1f;
-                    }
                         break;
                        
             }

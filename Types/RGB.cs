@@ -32,5 +32,27 @@ namespace HActLib
             G = g;
             B = b;
         }
+
+        public RGB Clamp()
+        {
+            RGB rgb = new RGB(R, G, B);
+
+            if (rgb.R < 0)
+                rgb.R = 0;
+            if (rgb.R > 1)
+                rgb.R = 1;
+
+            if (rgb.G < 0)
+                rgb.G = 0;
+            if (rgb.G > 1)
+                rgb.G = 1;
+
+            if (rgb.B < 0)
+                rgb.B = 0;
+            if (rgb.B > 1)
+                rgb.B = 1;
+
+            return rgb;
+        }
     }
 }

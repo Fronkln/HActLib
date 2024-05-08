@@ -10,22 +10,23 @@ namespace HActLib
     public class ConditionPlayCount : Condition
     {
         public uint PlayCount;
+        public int Unk2;
 
         internal override void Read(DataReader reader, uint parameterSize)
         {
             PlayCount = reader.ReadUInt32();
-            reader.ReadBytes(12);
+            Unk2 = reader.ReadInt32();
         }
 
         internal override void Write(DataWriter writer)
         {
             writer.Write(PlayCount);
-            writer.WriteTimes(0, 12);
+            writer.Write(Unk2);
         }
 
         internal override int Size()
         {
-            return 16;
+            return 8;
         }
     }
 }

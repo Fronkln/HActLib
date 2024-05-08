@@ -312,8 +312,10 @@ namespace RyuseGaGotoku
                         if (page.IsTalkPage() && (page.Flag & 0x40) == 0)
                             page.Flag |= 0x40;
 
-                        page.IsOldDE = false;
+                        page.Format = 2;
                         page.PageTitleText = "page" + (i + 1) + " (converted by Ryuse)";
+
+                        //TODO: Fix
 
                         //Improvement 1:
                         //Add transition for pages that dont have any to finish
@@ -324,7 +326,7 @@ namespace RyuseGaGotoku
                                 {
                                     DestinationPageIndex = -1,
                                     ConditionSize = 0,
-                                    Conditions =  new List<Condition> (new Condition[]{new ConditionPageEnd()})
+                                   // Conditions =  new List<Condition> (new Condition[]{new ConditionPageEnd()})
     
                                 }
                             });
