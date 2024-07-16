@@ -600,6 +600,7 @@
             // 
             varPanel.AutoScroll = true;
             varPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            varPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             varPanel.ColumnCount = 2;
             varPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             varPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 317F));
@@ -986,9 +987,9 @@
             checkBox1.AutoSize = true;
             checkBox1.Location = new System.Drawing.Point(458, 395);
             checkBox1.Name = "checkBox1";
-            checkBox1.Size = new System.Drawing.Size(281, 19);
+            checkBox1.Size = new System.Drawing.Size(165, 19);
             checkBox1.TabIndex = 11;
-            checkBox1.Text = "Use Dev Names For Nodes (Requires File Reload)";
+            checkBox1.Text = "Use Dev Names For Nodes";
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
@@ -1109,7 +1110,6 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem openCtrlOToolStripMenuItem;
         public System.Windows.Forms.ContextMenuStrip nodeContext;
-        private System.Windows.Forms.ComboBox targetGameCombo;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TableLayoutPanel varPanel;
@@ -1175,7 +1175,6 @@
         private System.Windows.Forms.ToolStripDropDownButton advancedButton;
         private System.Windows.Forms.ToolStripMenuItem convertMEPWithPibsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem frameProgressionToolStripMenuItem;
-        private MWControlSuite.MWTreeView nodesTree;
         private System.Windows.Forms.ToolStripMenuItem authPagesDEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transitStunToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disableFrameInfoToolStripMenuItem;
@@ -1202,5 +1201,7 @@
         private System.Windows.Forms.ToolStripMenuItem damageHActEventToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem heatGaugeHActEventToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openYActToolStripMenuItem;
+        public MWControlSuite.MWTreeView nodesTree;
+        public System.Windows.Forms.ComboBox targetGameCombo;
     }
 }

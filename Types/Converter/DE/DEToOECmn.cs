@@ -43,6 +43,23 @@ namespace HActLib
             converted.Root = Convert(deCmn.Root, deCmn.GameVersion, CMN.LastHActDEGame, oeGame);
 
 
+            if(converted.AllCameras.Length > 0)
+            {
+                NodeCamera cam = converted.AllCameras[0];
+
+                if (cam.FrameProgression[cam.FrameProgression.Length - 1] < converted.HActEnd)
+                {
+                    float end = cam.FrameProgression[cam.FrameProgression.Length - 1];
+                    OEHActEnd hactEnd = new OEHActEnd();
+                    hactEnd.Start = end - 1;
+                    hactEnd.End = end;
+
+                    hactEnd.ElementKind = Reflection.GetElementIDByName("e_auth_element_hact_end", oeGame);
+
+                    converted.Root.Children.Add(hactEnd);
+                }
+            }
+
             return converted;
         }
 
@@ -156,10 +173,19 @@ namespace HActLib
                     OEParticle oePtc = new OEParticle();
                     oePtc.ParticleID = dePtc.ParticleID;
                     oePtc.Color = dePtc.Color;
+                    oePtc.Color.a = 255;
                     oePtc.Animation = dePtc.Animation;
                     oePtc.Matrix = dePtc.Matrix;
                     oePtc.Scale = dePtc.Scale;
+                    oePtc.Speed = dePtc.TickScale;
                     oePtc.ElementKind = Reflection.GetElementIDByName("e_auth_element_particle", oeGame);
+                    oePtc.Flag = dePtc.Flag;
+
+                    if((dePtc.ParticleFlag & (1 << 2)) != 0)
+                    {
+
+                    }
+
                     return oePtc;
  
                 case "e_auth_element_battle_damage":

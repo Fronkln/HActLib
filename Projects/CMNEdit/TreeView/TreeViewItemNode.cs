@@ -219,7 +219,7 @@ namespace CMNEdit
 
                         case "e_auth_element_se":
                             DEElementSE seElem = node as DEElementSE;
-                            return $"Sound Cue {seElem.CueSheet} ID {seElem.SoundIndex}";
+                            return $"Sound Cue {seElem.CueSheet} ID {seElem.SoundIndex}" + $"{(seElem.Unk > 0 ? $"Unk {seElem.Unk}" : "")}";
                         case "e_auth_element_battle_damage":
                             NodeBattleDamage damageElem = node as NodeBattleDamage;
                             return $"{damageElem.Damage} Damage {(damageElem.NoDead ? "(Non-Lethal)" : "(Lethal)")}";

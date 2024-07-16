@@ -32,6 +32,12 @@ namespace HActLib.OOE
             Effect.ElementKind = EffectID;
 
             int unreadBytes = (int)(end - reader.Stream.Position);
+            
+            if (reader.Stream.Position < end)
+                Debug.WriteLine("Set2: Read " + unreadBytes + " less than expected! " + Effect.ToString());
+            else if(reader.Stream.Position > end)
+                Debug.WriteLine("Set2: Read " + -unreadBytes + " more than expected! " + Effect.ToString());
+
 
             // if (reader.Stream.Position < end)
             Unk2 = reader.ReadBytes(unreadBytes);

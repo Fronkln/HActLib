@@ -24,6 +24,7 @@ namespace CMNEdit
 
             form.CreateInput("Cuesheet ID", inf.CueSheet.ToString(), delegate (string val) { inf.CueSheet = ushort.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
             form.CreateInput("Sound ID", inf.SoundIndex.ToString(), delegate (string val) { inf.SoundIndex = byte.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Byte);
+            form.CreateInput("Sound Unknown ID (?)", inf.Unk.ToString(), delegate (string val) { inf.Unk = byte.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Byte);
             form.CreateInput("Flag?", inf.Flags.ToString(), delegate (string val) { inf.Flags = byte.Parse(val); }, NumberBox.NumberMode.Byte);
 
             form.CreateInput("Near Decay Distance", inf.CustomDecayNearDist.ToString(), delegate (string val) { inf.CustomDecayNearDist = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);

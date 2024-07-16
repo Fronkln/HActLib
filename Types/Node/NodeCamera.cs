@@ -28,7 +28,14 @@ namespace HActLib
             CameraFlags = reader.ReadUInt32();
 
             int FrameProgressionCount = reader.ReadInt32();
-            int CaptionCount = reader.ReadInt32();
+            int CaptionCount = 0;
+
+            if (inf.version > 10)
+                CaptionCount = reader.ReadInt32();
+            else
+            {
+                reader.Stream.Position += 8;
+            }
 
             FrameProgression = new float[FrameProgressionCount];
             FrameProgressionSpeed = new float[FrameProgressionCount];
@@ -36,15 +43,19 @@ namespace HActLib
             for (int i = 0; i < FrameProgression.Length; i++)
                 FrameProgression[i] = reader.ReadSingle();
 
-            ProgressionEnd = reader.ReadSingle();
+            if(inf.version > 10)
+                ProgressionEnd = reader.ReadSingle();
 
             for (int i = 0; i < FrameProgressionSpeed.Length; i++)
                 FrameProgressionSpeed[i] = reader.ReadSingle();
 
-            Caption = new float[CaptionCount];
+            if (inf.version > 10)
+            {
+                Caption = new float[CaptionCount];
 
-            for (int i = 0; i < Caption.Length; i++)
-                Caption[i] = reader.ReadSingle();
+                for (int i = 0; i < Caption.Length; i++)
+                    Caption[i] = reader.ReadSingle();
+            }
         }
 
         internal override void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
@@ -53,12 +64,20 @@ namespace HActLib
 
             writer.Write(CameraFlags);
             writer.Write(FrameProgression.Length);
-            writer.Write(Caption.Length);
+
+            if(hactVer > 10)
+                writer.Write(Caption.Length);
+            else
+            {
+                writer.Write(0f);
+                writer.Write(0f);
+            }
 
             foreach (float f in FrameProgression)
                 writer.Write(f);
 
-            writer.Write(ProgressionEnd);
+            if (hactVer > 10)
+                writer.Write(ProgressionEnd);
 
             foreach (float f in FrameProgressionSpeed)
                 writer.Write(f);

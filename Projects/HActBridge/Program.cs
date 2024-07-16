@@ -97,6 +97,8 @@ namespace HActBridge
                             foreach (var file in pibs)
                             {
                                 BasePib pib = PIB.Read(file.Path);
+
+                                Console.WriteLine("Converting " + pib.Name);
                                 PIB.Write(PIB.Convert(pib, GetVersionForGame(OutputGame)), Path.Combine(pibDir, Path.GetFileName(file.Path)));
                             }
 
@@ -107,8 +109,40 @@ namespace HActBridge
                         }
                     }
                     if (outputGameVer == GameVersion.OOE)
-                        success = HActFactory.ConvertOEToOOE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), "");
-                    else if(outputGameVer >= GameVersion.DE1)
+                    {
+                        string outputDir = args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant();
+                        success = HActFactory.ConvertOEToOOE(args[0], outputDir, "");
+
+                        HActDir hactDir = new HActDir();
+                        hactDir.Open(args[0]);
+                        HActDir ptcDir = hactDir.GetParticle();
+
+                        HActFile[] pibs = ptcDir.FindFilesOfType(".pib");
+                        HActFile[] tex = ptcDir.FindFilesOfType(".dds");
+
+                        if (pibs.Length > 0)
+                        {
+                            string inputPibDir = new FileInfo(pibs[0].Path).FullName;
+                            string pibDir = Path.Combine(outputDir, "ptc");
+
+                            if (!Directory.Exists(pibDir))
+                                Directory.CreateDirectory(pibDir);
+
+                            foreach (var file in pibs)
+                            {
+                                BasePib pib = PIB.Read(file.Path);
+
+                                Console.WriteLine("Converting " + pib.Name);
+                                PIB.Write(PIB.Convert(pib, PibVersion.Y3), Path.Combine(pibDir, Path.GetFileName(file.Path)));
+                            }
+
+                            foreach (var file in tex)
+                            {
+                                File.Copy(file.Path, Path.Combine(pibDir, Path.GetFileName(file.Path)), true);
+                            }
+                        }
+                    }
+                    else if (outputGameVer >= GameVersion.Yakuza6Demo)
                         success = HActFactory.ConvertOEToDE(args[0], args[0] + "_" + outputGameVer.ToString().ToLowerInvariant() + "_" + OutputGame.ToString().ToLowerInvariant(), OutputGame);
                 }
 

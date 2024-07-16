@@ -161,6 +161,14 @@ namespace HActLib
             SkipTick.Frame = End.Frame;
         }
 
+        public AuthPage(string name, float start, float end, int format)
+        {
+            PageTitleText = name;
+            Start.Frame = start;
+            End.Frame = end;
+            Format = format;
+        }
+
         public AuthPage Clone()
         {
             return (AuthPage)MemberwiseClone();
@@ -226,6 +234,30 @@ namespace HActLib
                 return BaseSize() + 16 + TalkInfoHeader.Size;
             else
                 return BaseSize();
+        }
+
+        public static int GetFormatForGame(Game game)
+        {
+            if (game == Game.Y6)
+                return 0;
+
+            if (game < Game.YLAD)
+                return 1;
+
+            return 2;
+        }
+        public static int GetFormatForGameVer(GameVersion ver)
+        {
+            if (ver == GameVersion.Yakuza6 || ver == GameVersion.Yakuza6Demo)
+                return 0;
+
+            if (ver == GameVersion.DE1)
+                return 1;
+
+            if (ver == GameVersion.DE2)
+                return 2;
+
+            return 2;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -77,7 +78,17 @@ namespace HActLib.OOE
 
             int unreadBytes = (int)(endAddress - reader.Stream.Position);
 
-            set3.Data = reader.ReadBytes((int)(endAddress - reader.Stream.Position));
+            if (reader.Stream.Position < endAddress)
+            {
+                Debug.WriteLine("Effect: Read " + unreadBytes + " less than expected! " + set3.ToString());
+                set3.Data = reader.ReadBytes((int)(unreadBytes));
+            }
+
+            if(reader.Stream.Position > endAddress)
+            {
+                Debug.WriteLine("Effect  Read " + -unreadBytes + " more than expected! " + set3.ToString());
+                reader.Stream.Position = endAddress;
+            }
 
             bool isLastElement = true;
 
@@ -115,7 +126,8 @@ namespace HActLib.OOE
             writer.Write(Data);
 
             long size = writer.Stream.Position - dataStart;
-            writer.Stream.RunInPosition(() => writer.Write((uint)size), startAddr + 20, SeekMode.Start);
+            uint size32 = Convert.ToUInt32(size);
+            writer.Stream.RunInPosition(() => writer.Write(size32), startAddr + 20, SeekMode.Start);
         }
 
         internal static EffectBase CreateEffectObject(EffectID id)

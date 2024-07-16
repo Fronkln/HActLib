@@ -82,9 +82,7 @@ namespace HActLib
                 writer.Write(DirectDamageIsHpRatio);
                 writer.Write(AttackId);
             }
-
         }
-
 
         internal override int GetSize(GameVersion version, uint hactVer)
         {

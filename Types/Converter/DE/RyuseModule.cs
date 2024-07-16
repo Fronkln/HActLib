@@ -189,13 +189,42 @@ namespace HActLib
 
         private static void ProcessSpecialNode(NodeElement element, Game input, Game output)
         {
-            switch(Reflection.GetElementNameByID(element.ElementKind, output))
+            switch (Reflection.GetElementNameByID(element.ElementKind, output))
             {
                 case "e_auth_element_se":
                     DEElementSE seElem = element as DEElementSE;
 
-                    if (seElem.CueSheet == GetGVFighterIDForGame(input))
-                        seElem.CueSheet = GetGVFighterIDForGame(output);
+                    Type specialSoundsInput = DEElementSE.GetSpecialSoundTypeForGame(input);
+
+                    if(Enum.IsDefined(specialSoundsInput, seElem.CueSheet))
+                    {
+                        Type specialSoundsOutput = DEElementSE.GetSpecialSoundTypeForGame(output);
+
+                        string value = Enum.ToObject(specialSoundsInput, seElem.CueSheet).ToString();
+                        object outVal;
+
+                        if (Enum.TryParse(specialSoundsOutput, value, out outVal))
+                            seElem.CueSheet = (ushort)outVal;
+
+                    }
+                    else
+                    {
+                        Type cuesheetsInput = DEElementSE.GetSoundCuesheetTypeForGame(input);
+
+                        if(cuesheetsInput != null && Enum.IsDefined(cuesheetsInput, seElem.CueSheet))
+                        {
+                            Type cuesheetsOutput = DEElementSE.GetSoundCuesheetTypeForGame(output);
+
+                            if (cuesheetsOutput != null)
+                            {
+                                string value = Enum.ToObject(cuesheetsInput, seElem.CueSheet).ToString();
+                                object outVal;
+
+                                if (Enum.TryParse(cuesheetsOutput, value, out outVal))
+                                    seElem.CueSheet = (ushort)outVal;
+                            }
+                        }
+                    }
 
                     break;
                 case "e_auth_element_post_effect_dof2":

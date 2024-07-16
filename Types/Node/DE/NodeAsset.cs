@@ -29,9 +29,16 @@ namespace HActLib
         public float ReplaceOrientZ;
         public float ReplaceOrientW;
 
+
+        private float UnkGD1;
+        private float UnkGD2;
+        private float UnkGD3;
+        private float UnkGD4;
+        private float UnkGD5;
+
+
         //44
-        private byte[] unk_LJ;
-        private byte[] unk_GD; //20
+        private byte[] unk_LJ; //LJ ONLY
 
         internal override void ReadNodeData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
@@ -73,7 +80,13 @@ namespace HActLib
                     if (CMN.LastHActDEGame == Game.LJ)
                         unk_LJ = reader.ReadBytes(44);
                     if (CMN.LastHActDEGame >= Game.LAD7Gaiden) //Shrink node, no more unk LJ
-                        unk_GD = reader.ReadBytes(20);
+                    {
+                        UnkGD1 = reader.ReadSingle();
+                        UnkGD2 = reader.ReadSingle();
+                        UnkGD3 = reader.ReadSingle();
+                        UnkGD4 = reader.ReadSingle();
+                        UnkGD5 = reader.ReadSingle();
+                    }
                 }
             }
         }
@@ -138,10 +151,11 @@ namespace HActLib
 
                 if(CMN.LastHActDEGame >= Game.LAD7Gaiden)
                 {
-                    if (unk_GD == null)
-                        unk_GD = new byte[20];
-
-                    writer.Write(unk_GD);
+                    writer.Write(UnkGD1);
+                    writer.Write(UnkGD2);
+                    writer.Write(UnkGD3);
+                    writer.Write(UnkGD4);
+                    writer.Write(UnkGD5);
                 }
             }
             else

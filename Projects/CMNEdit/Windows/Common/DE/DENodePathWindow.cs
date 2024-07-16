@@ -32,7 +32,7 @@ namespace CMNEdit.Windows
             form.CreateInput("Coordinate X (Left)", mtx.VM3.x.ToString(), delegate (string val) { mtx.VM3.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Coordinate Y (Up)", mtx.VM3.y.ToString(), delegate (string val) { mtx.VM3.y = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Coordinate Z (Forward)", mtx.VM3.z.ToString(), delegate (string val) { mtx.VM3.z = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Direction W", mtx.VM3.w.ToString(), delegate (string val) { mtx.VM3.w = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            form.CreateInput("Unused", mtx.VM3.w.ToString(), delegate (string val) { mtx.VM3.w = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

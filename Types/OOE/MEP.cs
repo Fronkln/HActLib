@@ -120,7 +120,7 @@ namespace HActLib
         public static void Write(MEP mep, string path)
         {
             var binary = new BinaryFormat();
-            var writer = new DataWriter(binary.Stream);
+            var writer = new DataWriter(new DataStream());
             writer.DefaultEncoding = Encoding.GetEncoding(932);
 
             CMN.LastHActDEGame = (mep.Version == MEPVersion.Y5 ? Game.Y5 : Game.Y0);

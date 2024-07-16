@@ -50,6 +50,8 @@ namespace CMNEdit
                         particle.Animation = outCurve;
                     });
             });
+
+            MatrixWindow.Draw(form, particle.Matrix);
         }
     }
 }

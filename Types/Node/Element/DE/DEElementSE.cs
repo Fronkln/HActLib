@@ -113,5 +113,45 @@ namespace HActLib
         {
             return 48;
         }
+
+        public static Type GetSoundCuesheetTypeForGame(Game game)
+        {
+            switch(game)
+            {
+                default:
+                    return null;
+                case Game.Y6:
+                    return typeof(CuesheetsY6);
+                case Game.YK2:
+                    return typeof(CuesheetsYK2);
+                case Game.JE:
+                    return typeof(CuesheetsJE);
+                case Game.YLAD:
+                    return typeof(CuesheetsYLAD);
+                case Game.LJ:
+                    return typeof(CuesheetsLJ);
+                case Game.LAD7Gaiden:
+                    return typeof(CuesheetsTMWEHI);
+                case Game.LADIW:
+                    return typeof(CuesheetsIW);
+            }
+        }
+
+        public static Type GetSpecialSoundTypeForGame(Game game)
+        {
+            if (game < Game.YLAD)
+                return typeof(SpecialSoundsY6);
+
+            if (game == Game.YLAD || game == Game.LJ)
+                return typeof(SpecialSoundsYLAD);
+
+            if (game == Game.LAD7Gaiden)
+                return typeof(SpecialSoundsTMWEHI);
+
+            if (game == Game.LADIW)
+                return typeof(SpecialSoundsIW);
+
+            return typeof(SpecialSoundsTMWEHI);
+        }
     }
 }

@@ -22,7 +22,6 @@ using MotionLibrary;
 using MotionLib;
 using HActLib.Internal;
 using HActLib.OOE;
-using System.Media;
 using HActLib.YAct;
 
 namespace CMNEdit
@@ -84,7 +83,6 @@ namespace CMNEdit
 
         //0 = nodes, 1 res blablabla
         private int currentTab = 0;
-        int rowCount = 1;
 
         private static string folderDir = "";
         private static HActDir hactInf;
@@ -132,7 +130,7 @@ namespace CMNEdit
         {
             try
             {
-                SoundPlayer simpleSound = new SoundPlayer("Misc/hammertime.wav");
+                System.Media.SoundPlayer simpleSound = new System.Media.SoundPlayer("Misc/hammertime.wav");
                 simpleSound.Play();
             }
             catch
@@ -319,10 +317,17 @@ namespace CMNEdit
 
                 FileInfo inf = new FileInfo(FilePath);
 
-                if (inf.Directory.Name == "tmp")
-                    TevHActID = uint.Parse(inf.Directory.Parent.Name.Substring(0, 4));
-                else
-                    TevHActID = uint.Parse(inf.Directory.Name.Substring(0, 4));
+                try
+                {
+                    if (inf.Directory.Name == "tmp")
+                        TevHActID = uint.Parse(inf.Directory.Parent.Name.Substring(0, 4));
+                    else
+                        TevHActID = uint.Parse(inf.Directory.Name.Substring(0, 4));
+                }
+                catch
+                {
+                    TevHActID = 0;
+                }
 
                 TevCsvEntry = Csv.TryGetEntry(TevHActID);
 
@@ -518,6 +523,9 @@ namespace CMNEdit
         public void ClearNodes()
         {
             SuspendLayout();
+
+            DeleteSelectedNodes();
+
             nodesTree.Nodes.Clear();
             ResumeLayout(true);
         }
@@ -551,22 +559,11 @@ namespace CMNEdit
             label2.TabIndex = 0;
             label2.Text = label;
 
-            if (spacing > 0)
-            {
-                varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, spacing));
-                rowCount++;
-                varPanel.RowCount = rowCount;
-
-                varPanel.Controls.Add(CreateText("", isCsvTree), 0, varPanel.RowCount - 2);
-                varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 2);
-            }
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
-            rowCount++;
-            varPanel.RowCount = rowCount;
+            varPanel.RowCount++;
 
-            varPanel.Controls.Add(label2, 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 2);
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            varPanel.Controls.Add(label2, 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(CreateText(""), 1, varPanel.RowCount - 1);
         }
 
         public Control CreateText(string label, bool left = false, bool isCsvTree = false)
@@ -603,11 +600,10 @@ namespace CMNEdit
                 varPanel = csvVarPanel;
 
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, space));
-            rowCount++;
-            varPanel.RowCount = rowCount;
+            varPanel.RowCount++;
 
-            varPanel.Controls.Add(CreateText("", isCsvTree), 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 2);
+            varPanel.Controls.Add(CreateText("", isCsvTree), 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 1);
         }
 
         public void CreateSpace(bool big, bool isCsvTree = false)
@@ -633,17 +629,18 @@ namespace CMNEdit
                 varPanel = csvVarPanel;
 
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            rowCount++;
-            varPanel.RowCount = rowCount;
+            varPanel.RowCount++;
 
             NumberBox input = new NumberBox(mode, editedCallback);
             input.Text = defaultValue;
             input.Size = new Size(200, 15);
             input.ReadOnly = readOnly;
+            input.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 
-            varPanel.Controls.Add(CreateText(label, false, isCsvTree), 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 2);
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            Control text = CreateText(label, false);
+
+            varPanel.Controls.Add(text, 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
 
             return input;
         }
@@ -658,17 +655,15 @@ namespace CMNEdit
                 varPanel = csvVarPanel;
 
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            rowCount++;
-            varPanel.RowCount = rowCount;
+            varPanel.RowCount++;
 
             Button input = new Button();
             input.Text = text;
             input.Size = new Size(200, 50);
             input.Click += delegate { clicked?.Invoke(); };
 
-            varPanel.Controls.Add(CreateText(""), 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 2);
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            varPanel.Controls.Add(CreateText(""), 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
 
             return input;
         }
@@ -683,8 +678,7 @@ namespace CMNEdit
                 varPanel = csvVarPanel;
 
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            rowCount++;
-            varPanel.RowCount = rowCount;
+            varPanel.RowCount++;
 
             Panel input = new Panel();
             input.BorderStyle = BorderStyle.Fixed3D;
@@ -697,9 +691,8 @@ namespace CMNEdit
             };
             input.BackColor = color;
 
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 2);
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
 
             return input;
         }
@@ -714,8 +707,7 @@ namespace CMNEdit
                 varPanel = csvVarPanel;
 
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            rowCount++;
-            varPanel.RowCount = rowCount;
+            varPanel.RowCount++;
 
             Panel input = new Panel();
             input.BorderStyle = BorderStyle.Fixed3D;
@@ -728,9 +720,8 @@ namespace CMNEdit
             };
             input.BackColor = color;
 
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 2);
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
 
             return input;
         }
@@ -772,10 +763,6 @@ namespace CMNEdit
                 }
             }
 
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            rowCount++;
-            varPanel.RowCount = rowCount;
-
             ComboBox input = new ComboBox();
             input.Items.AddRange(items);
             input.SelectedIndex = defaultIndex;
@@ -783,9 +770,11 @@ namespace CMNEdit
 
             input.SelectedIndexChanged += delegate { editedCallback?.Invoke(input.SelectedIndex); };
 
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 2);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 2);
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            varPanel.RowCount++;
+
+            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
         }
 
         public void CreateHexBox(byte[] buf, bool isCsvTree = false)
@@ -807,8 +796,7 @@ namespace CMNEdit
             hexBox2.TabIndex = 3;
 
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 200));
-            rowCount++;
-            varPanel.RowCount = rowCount;
+            varPanel.RowCount++;
 
             varPanel.Controls.Add(hexBox2, 1, varPanel.RowCount - 1);
             varPanel.Controls.Add(CreateText(""), 0, varPanel.RowCount - 1);
@@ -818,7 +806,7 @@ namespace CMNEdit
         {
             varPanel.Controls.Clear();
             varPanel.RowStyles.Clear();
-            rowCount = 1;
+            varPanel.RowCount = 0;
         }
 
         private void ToggleOutputDEGameList(bool toggle)
@@ -832,6 +820,8 @@ namespace CMNEdit
             varPanel.SuspendLayout();
 
             ClearNodeMenu();
+
+            System.Diagnostics.Debug.Print(varPanel.RowStyles.Count.ToString());
 
             if (IsYAct)
             {
@@ -985,6 +975,7 @@ namespace CMNEdit
             }
 
             varPanel.VerticalScroll.Value = 0;
+            varPanel.RowCount++;
             varPanel.ResumeLayout();
         }
 
@@ -1193,9 +1184,32 @@ namespace CMNEdit
         }
 
 
+        private void UnselectSelectedNodes()
+        {
+            MWTreeNodeWrapper[] nodes = nodesTree.SelNodes.Values.Cast<MWTreeNodeWrapper>().ToArray();
+            Hashtable table = (Hashtable)nodesTree.SelNodes.Clone();
+
+            foreach (DictionaryEntry kv in table)
+            {
+                MWTreeNodeWrapper node = (MWTreeNodeWrapper)kv.Value;
+                node.Deselect();
+                nodesTree.DeselectNode(node.Node, true);
+            }
+
+            nodesTree.SelNodes.Clear();
+        }
+
         private void DeleteSelectedNodes()
         {
             MWTreeNodeWrapper[] nodes = nodesTree.SelNodes.Values.Cast<MWTreeNodeWrapper>().ToArray();
+            Hashtable table = (Hashtable)nodesTree.SelNodes.Clone();
+
+            foreach(DictionaryEntry kv in table)
+            {
+                MWTreeNodeWrapper node = (MWTreeNodeWrapper)kv.Value;
+                node.Deselect();
+                nodesTree.DeselectNode(node.Node, true);
+            }
 
             nodesTree.SelNodes.Clear();
 
@@ -1205,7 +1219,7 @@ namespace CMNEdit
 
         private void PasteNode(TreeNode[] pastingNode)
         {
-            if (pastingNode == null)
+            if (pastingNode == null || pastingNode.Length == 0)
                 return;
 
             if (!IsMep)
@@ -1255,6 +1269,7 @@ namespace CMNEdit
                         obj.Nodes.Add(newNode);
                     }
 
+                    UnselectSelectedNodes();
                     return;
                 }
                 
@@ -1279,6 +1294,8 @@ namespace CMNEdit
                 {
                     PasteNode((node as TreeViewItemNode));
                 }
+
+                UnselectSelectedNodes();
             }
             else
             {
@@ -1299,14 +1316,17 @@ namespace CMNEdit
                         {
                             Node hactNode = (node as TreeViewItemNode).HActNode;
 
-                            if (hactNode.Category != AuthNodeCategory.Element)
-                                return;
+                            if (hactNode.Category == AuthNodeCategory.Element)
+                            {
 
-                            MepEffectOE effectMep = new MepEffectOE();
-                            effectMep.Effect = (NodeElement)hactNode.Copy();
+                                MepEffectOE effectMep = new MepEffectOE();
+                                effectMep.Effect = (NodeElement)hactNode.Copy();
 
-                            nodesTree.Nodes.Add(new TreeViewItemMepNode(effectMep));
+                                nodesTree.Nodes.Add(new TreeViewItemMepNode(effectMep));
+                            }
                         }
+
+                        UnselectSelectedNodes();
                     }
                 }
             }
@@ -1354,7 +1374,7 @@ namespace CMNEdit
             }
 
         }
-        private void GenerateBaseInfo(BaseCMN cmn)
+        public void GenerateBaseInfo(BaseCMN cmn)
         {
             cmn.Version = OECMN.GetCMNVersionForGame(curGame);
             cmn.HActStart = Utils.InvariantParse(hactStartBox.Text);
@@ -1385,7 +1405,7 @@ namespace CMNEdit
             cmn.Root = nodes[0].HActNode;
         }
 
-        private CMN GenerateHAct()
+        public CMN GenerateHAct()
         {
             CMN cmn = new CMN();
             cmn.GameVersion = CMN.GetVersionForGame(curGame);
@@ -1398,7 +1418,7 @@ namespace CMNEdit
             return cmn;
         }
 
-        private OECMN GenerateOEHAct()
+        public OECMN GenerateOEHAct()
         {
             OECMN cmn = new OECMN();
             cmn.SoundInfo = SoundInfoOE;
@@ -1406,7 +1426,7 @@ namespace CMNEdit
             return cmn;
         }
 
-        private BEP GenerateBep()
+        public BEP GenerateBep()
         {
             BEP bep = new BEP();
             bep.Nodes.AddRange(GetAllNodes());
@@ -1927,6 +1947,25 @@ namespace CMNEdit
                .Where(x => x is TreeViewItemNode)
                .Cast<TreeViewItemNode>()
                .ToArray();
+        }
+
+        private List<TreeViewItemNode> GetAllHActNodesRecursive(TreeViewItemNode nodeStart)
+        {
+            List<TreeViewItemNode> list = new List<TreeViewItemNode>();
+            list.Add(nodeStart);
+
+            foreach (TreeNode node in nodeStart.Nodes)
+            {
+                TreeViewItemNode node2 = node as TreeViewItemNode;
+
+                if(node2 != null)
+                {
+                    list.AddRange(GetAllHActNodesRecursive(node2));
+                }
+
+            }
+
+            return list;
         }
 
         private Node[] FilterNodesBasedOnResource(ResourceType type)
@@ -2728,6 +2767,18 @@ namespace CMNEdit
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             Form1.TranslateNames = checkBox1.Checked;
+
+
+            foreach(TreeViewItemNode rootNode in nodesTree.Nodes)
+            {
+                foreach(TreeViewItemNode node in GetAllHActNodesRecursive(rootNode))
+                {
+                    if (Form1.TranslateNames)
+                        node.Text = TreeViewItemNode.TranslateName(node.HActNode);
+                    else
+                        node.Text = node.HActNode.Name;
+                }
+            }
         }
 
         private void equipAssetToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2794,6 +2845,10 @@ namespace CMNEdit
             if (curVer < GameVersion.Y0_K1)
                 return;
 
+            RyuseWindow wind = new RyuseWindow();
+            wind.Visible = true;
+
+            return;
 
             List<string> options = new List<string>();
 
@@ -2904,6 +2959,7 @@ namespace CMNEdit
 
             curGame = prefixGame;
             curVer = CMN.GetVersionForGame(curGame);
+            CMN.LastHActDEGame = curGame;
 
             targetGameCombo.SelectedIndex = (int)curGame;
 
@@ -3201,8 +3257,6 @@ namespace CMNEdit
             csvVarPanel.Controls.Clear();
             csvVarPanel.RowCount = 0;
             csvVarPanel.RowStyles.Clear();
-
-            rowCount = 1;
 
             TreeNode selectedNode = e.Node;
 

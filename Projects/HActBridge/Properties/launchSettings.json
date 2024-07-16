@@ -2,7 +2,7 @@
   "profiles": {
     "HActBridge": {
       "commandName": "Project",
-      "commandLineArgs": "\"H:\\steamapps2\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\hact\\h23760_buki_n.par.unpack\" y6 y0"
+      "commandLineArgs": "\"G:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\hact\\H1040_kyuukyoku.par.unpack\" y5 y6"
     }
   }
 }

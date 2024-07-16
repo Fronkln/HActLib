@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CMNEdit.Windows;
 using HActLib.OOE;
 
 namespace CMNEdit
@@ -14,6 +15,7 @@ namespace CMNEdit
             form.CreateHeader("Particle");
 
             form.CreateInput("Particle ID", particle.ParticleID.ToString(), delegate (string val) { particle.ParticleID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            MatrixWindow.Draw(form, particle.Matrix);
         }
     }
 }

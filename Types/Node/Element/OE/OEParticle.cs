@@ -29,7 +29,7 @@ namespace HActLib
         public RGBA Color = new RGBA(255, 255, 255, 255);
 
         public int Unknown6 = 0;
-        public float Unknown7 = 1;
+        public float Speed = 1;
 
         //Y0 and Above
         public Vector4 Unknown8 = new Vector4(1, -1, -1, 0);
@@ -57,7 +57,7 @@ namespace HActLib
 
             Color = RGBA.Read(reader);
             Unknown6 = reader.ReadInt32();
-            Unknown7 = reader.ReadSingle(); //1 in Y0, 0 in Y5
+            Speed = reader.ReadSingle(); //1 in Y0, 0 in Y5
             //---END OF Y5 DATA--
 
             if (inf.version > 15)
@@ -90,7 +90,7 @@ namespace HActLib
 
             writer.Write(Color);
             writer.Write(Unknown6);
-            writer.Write(Unknown7);
+            writer.Write(Speed);
 
             if (CMN.LastHActDEGame > Game.Ishin)
             {
@@ -103,7 +103,7 @@ namespace HActLib
         {
             base.OE_ConvertToY5();
 
-            Unknown7 = 1;
+            Speed = 1;
             Unknown8 = new Vector4(1, -1, -1, 0);
             Animation = new byte[32];
 
@@ -115,7 +115,7 @@ namespace HActLib
         {
             base.OE_ConvertToY5();
 
-            Unknown7 = 0;
+            Speed = 0;
         }
     }
 }

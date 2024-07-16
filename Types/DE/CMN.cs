@@ -82,6 +82,8 @@ namespace HActLib
 
             #region Page Info
 
+            int format = AuthPage.GetFormatForGameVer(cmn.GameVersion);
+
             if (cmn.GameVersion > GameVersion.Yakuza6Demo)
             {
 
@@ -92,7 +94,7 @@ namespace HActLib
 
                 foreach (AuthPage page in cmn.AuthPages)
                 {
-                    if (page.Format > 0)
+                    if (format > 0)
                     {
                         writer.Write(page.Version);
                         writer.Write(page.Flag);
@@ -101,20 +103,20 @@ namespace HActLib
                     writer.Write(page.Start.Tick);
                     writer.Write(page.End.Tick);
 
-                    if (page.Format < 1)
+                    if (format < 1)
                         writer.Write(page.Unk);
 
                     writer.Write(page.Transitions.Count);
                     writer.Write(page.GetTransitionSize());
                     writer.Write(page.SkipTick.Tick);
 
-                    if(page.Format > 0)
+                    if(format > 0)
                         writer.Write(page.PageIndex);
 
                     writer.Write(page.SkipLinkIndexNum);
-                    writer.WriteTimes(0, page.Format > 0 ? 12 : 4);
+                    writer.WriteTimes(0, format > 0 ? 12 : 4);
 
-                    if (page.Format > 1)
+                    if (format > 1)
                         writer.Write(page.PageTitleText.ToLength(32), fixedSize: 32, nullTerminator: false, encoding: writer.DefaultEncoding);
 
                     foreach (int i in page.SkipLink)

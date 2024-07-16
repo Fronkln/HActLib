@@ -117,7 +117,9 @@ namespace HActLib
             long postReadPos = reader.Stream.Position;
 
 
+#if DEBUG
             System.Diagnostics.Debug.Print("Read: " + node.ToString() + " " + node.Category + " " + node.Name);
+#endif
 
 
             if (postDataPos > postReadPos)

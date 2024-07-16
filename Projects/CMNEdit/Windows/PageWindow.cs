@@ -14,6 +14,9 @@ namespace CMNEdit
             if(page.Page.Format > 1)
                 form.CreateInput("Name", page.Page.PageTitleText, delegate (string newVal) { page.Page.PageTitleText = newVal; page.Update(); });
             
+            if(page.Page.Format >= 1)
+                form.CreateInput("Page Index", page.Page.PageIndex.ToString(), delegate (string newVal) { page.Page.PageIndex = int.Parse(newVal); page.Update(); }, NumberBox.NumberMode.UInt);
+
             form.CreateInput("Flag", page.Page.Flag.ToString(), delegate (string newVal) { page.Page.Flag = uint.Parse(newVal); page.Update(); }, NumberBox.NumberMode.UInt);
 
             form.CreateInput("Start", page.Page.Start.Frame.ToString(), delegate (string newVal) { page.Page.Start.Frame = Utils.InvariantParse(newVal); }, NumberBox.NumberMode.Float);

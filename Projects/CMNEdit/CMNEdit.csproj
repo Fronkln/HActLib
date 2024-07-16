@@ -71,7 +71,7 @@
       <HintPath>..\..\..\ParManager\ParLibrary\bin\Release\net5.0\ParLibrary.dll</HintPath>
     </Reference>
     <Reference Include="PIBLib">
-      <HintPath>..\..\..\PIBLib\bin\Debug\net5.0\PIBLib.dll</HintPath>
+      <HintPath>..\..\..\PIBLib\bin\x64\Release\net6.0\PIBLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -26,7 +26,7 @@ namespace CMNEdit
             form.CreateInput("Unknown", particle.Unknown4.ToString(), delegate (string val) { particle.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Unknown", particle.Unknown5.ToString(), delegate (string val) { particle.Unknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Unknown", particle.Unknown6.ToString(), delegate (string val) { particle.Unknown6 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", particle.Unknown7.ToString(), delegate (string val) { particle.Unknown7 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            form.CreateInput("Speed", particle.Speed.ToString(), delegate (string val) { particle.Speed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
             form.CreateInput("Scale X", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Scale Y", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
