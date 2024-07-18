@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>RyuseGaGotoku</RootNamespace>
     <PublishSingleFile>true</PublishSingleFile>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
     <Configurations>Debug;Release;Debug2</Configurations>
   </PropertyGroup>
 

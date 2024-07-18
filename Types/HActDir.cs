@@ -15,6 +15,7 @@ namespace HActLib
         public bool IsFile;
 
         private string m_path;
+        private string m_lang;
         public Yarhl.FileSystem.Node Par;
 
         ~HActDir()
@@ -23,7 +24,7 @@ namespace HActLib
                 Par.Dispose();
         }
 
-        public void Open(string path)
+        public void Open(string path, string lang = null)
         {
             if (path.EndsWith(".par"))
             {
@@ -36,6 +37,12 @@ namespace HActLib
                 IsFile = true;
             else
                 IsPar = false;
+
+            if (string.IsNullOrEmpty(lang))
+                m_lang = "";
+            else
+                m_lang = lang;
+
 
             m_path = path;
         }
@@ -69,6 +76,40 @@ namespace HActLib
             return new HActFile();
         }
 
+        public HActFile FindResourceFile()
+        {
+            string name = "";
+
+            if (string.IsNullOrEmpty(name))
+                name = "res.bin";
+            else name = $"res_{m_lang}.bin";
+
+            string parFiltered = name.Replace(".par", "");
+
+            if (IsPar)
+            {
+                Yarhl.FileSystem.Node file = Navigator.IterateNodes(Par).FirstOrDefault(x => x.Path.EndsWith(name) || x.Path.EndsWith(parFiltered));
+
+                if (file != null)
+                    return new HActFile() { ParEntry = file };
+            }
+            else
+            {
+                if (IsFile)
+                    return new HActFile() { Path = m_path };
+                else
+                {
+                    string file = Directory.GetFiles(m_path, "*", SearchOption.AllDirectories).FirstOrDefault(x => Path.GetFileName(x) == name);
+
+                    if (file != null)
+                        return new HActFile() { Path = file };
+                }
+            }
+
+            return new HActFile();
+        }
+
+
         public HActFile[] FindFilesOfType(string extension)
         {
             List<HActFile> filesArray = new List<HActFile>();
@@ -99,7 +140,12 @@ namespace HActLib
             if (IsFile)
                 return File.ReadAllBytes(m_path);
             else
-                return FindFile("cmn.bin").Read();
+            {
+                if(!string.IsNullOrEmpty(m_lang))
+                    return FindFile($"cmn_{m_lang}.bin").Read();
+                else
+                    return FindFile($"cmn.bin").Read();
+            }
         }
 
         public byte[] GetFile(string path)

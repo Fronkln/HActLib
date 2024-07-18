@@ -160,6 +160,8 @@ namespace CMNEdit
         {
             SuspendLayout();
 
+            DeleteSelectedNodes();
+
             EditingNode = null;
             EditingResource = null;
 
@@ -192,7 +194,7 @@ namespace CMNEdit
                 return;
 
             HActDir inf = new HActDir();
-            inf.Open(dialog.SelectedPath);
+            inf.Open(dialog.SelectedPath, langOverrideBox.Text);
 
             if (inf.FindFile("hact_tev.bin").Valid())
                 throw new NotImplementedException("TEV unimplemented");
@@ -214,10 +216,10 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
-            if(hactInf != null)
-            if (hactInf.IsPar)
-                if(hactInf.Par != null)
-                    hactInf.Par.Dispose();
+            if (hactInf != null)
+                if (hactInf.IsPar)
+                    if (hactInf.Par != null)
+                        hactInf.Par.Dispose();
 
             HActDir inf = new HActDir();
             inf.Open(dialog.FileName);
@@ -351,7 +353,7 @@ namespace CMNEdit
                 HActDir[] res = hactInf.GetResources();
 
                 if (res.Length > 0)
-                    Res = RES.Read(res[0].FindFile("res.bin").Read());
+                    Res = RES.Read(res[0].FindResourceFile().Read());
 
 
                 if (Res != null)
@@ -861,7 +863,7 @@ namespace CMNEdit
                 node = EditingNode.HActNode;
             else
             {
-                if(curGame > Game.Y4)
+                if (curGame > Game.Y4)
                     node = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).Effect;
                 else
                 {
@@ -1204,7 +1206,7 @@ namespace CMNEdit
             MWTreeNodeWrapper[] nodes = nodesTree.SelNodes.Values.Cast<MWTreeNodeWrapper>().ToArray();
             Hashtable table = (Hashtable)nodesTree.SelNodes.Clone();
 
-            foreach(DictionaryEntry kv in table)
+            foreach (DictionaryEntry kv in table)
             {
                 MWTreeNodeWrapper node = (MWTreeNodeWrapper)kv.Value;
                 node.Deselect();
@@ -1272,8 +1274,8 @@ namespace CMNEdit
                     UnselectSelectedNodes();
                     return;
                 }
-                
-                if(pastingNode.Length > 0)
+
+                if (pastingNode.Length > 0)
                 {
                     if (pastingNode[0] is TreeViewItemMepNode)
                     {
@@ -1301,7 +1303,7 @@ namespace CMNEdit
             {
                 if (IsMep)
                 {
-                    foreach(TreeNode node in pastingNode)
+                    foreach (TreeNode node in pastingNode)
                     {
                         //Mep to mep paste
                         if (node is TreeViewItemMepNode)
@@ -1435,6 +1437,26 @@ namespace CMNEdit
             return bep;
         }
 
+        public string GetLocalizedCMN()
+        {
+            string lang = langOverrideBox.Text;
+
+            if (string.IsNullOrEmpty(lang))
+                return "cmn.bin";
+            else
+                return $"cmn_{lang}.bin";
+        }
+
+        public string GetLocalizedRES()
+        {
+            string lang = langOverrideBox.Text;
+
+            if (string.IsNullOrEmpty(lang))
+                return "res.bin";
+            else
+                return $"res_{lang}.bin";
+        }
+
         private ObjectBase GenerateTEVHierarchy()
         {
             void ChildLoop(TreeNode node)
@@ -1494,7 +1516,7 @@ namespace CMNEdit
                     if (IsOE)
                         OECMN.Write(cmn as OECMN, Path.Combine(folderDir, $"cmn.bin"));
                     else
-                        CMN.Write(cmn as CMN, hactInf.FindFile("cmn.bin").Path);
+                        CMN.Write(cmn as CMN, hactInf.FindFile(GetLocalizedCMN()).Path);
 
 
                     if (hactInf.GetResources().Length > 0)
@@ -1504,7 +1526,7 @@ namespace CMNEdit
                         foreach (TreeViewItemResource res in resTree.Nodes)
                             newRes.Resources.Add(res.Resource);
 
-                        RES.Write(newRes, hactInf.GetResources()[0].FindFile("res.bin").Path, CMN.IsDE(curVer));
+                        RES.Write(newRes, hactInf.GetResources()[0].FindFile(GetLocalizedRES()).Path, CMN.IsDE(curVer));
                     }
                 }
             }
@@ -1571,7 +1593,7 @@ namespace CMNEdit
 
             Mep.Effects = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).ToList();
 
-            switch(curGame)
+            switch (curGame)
             {
                 default:
                     Mep.Version = MEPVersion.Y0;
@@ -1958,7 +1980,7 @@ namespace CMNEdit
             {
                 TreeViewItemNode node2 = node as TreeViewItemNode;
 
-                if(node2 != null)
+                if (node2 != null)
                 {
                     list.AddRange(GetAllHActNodesRecursive(node2));
                 }
@@ -2008,7 +2030,8 @@ namespace CMNEdit
             EditingResource.Resource.Name = resourceNameTextbox.Text;
             EditingResource.Resource.Type = (ResourceType)resourceTypeBox.SelectedIndex;
             EditingResource.Resource.NodeGUID = EditingResourceCurrentLinkedNodes[linkedNodeBox.SelectedIndex].Guid;
-
+            //EditingResource.Resource.StartFrame = Utils.InvariantParse(resStartBox.Text);
+            //EditingResource.Resource.EndFrame = Utils.InvariantParse(resEndBox.Text);
         }
 
         private void resTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -2016,6 +2039,8 @@ namespace CMNEdit
             EditingResource = e.Node as TreeViewItemResource;
             resourceNameTextbox.Text = EditingResource.Resource.Name;
             resourceTypeBox.SelectedIndex = (int)EditingResource.Resource.Type;
+            // resStartBox.Text = EditingResource.Resource.StartFrame.ToString(CultureInfo.InvariantCulture);
+            // resEndBox.Text = EditingResource.Resource.EndFrame.ToString(CultureInfo.InvariantCulture);
 
             EditingResourceCurrentLinkedNodes = FilterNodesBasedOnResource(EditingResource.Resource.Type);
 
@@ -2769,9 +2794,9 @@ namespace CMNEdit
             Form1.TranslateNames = checkBox1.Checked;
 
 
-            foreach(TreeViewItemNode rootNode in nodesTree.Nodes)
+            foreach (TreeViewItemNode rootNode in nodesTree.Nodes)
             {
-                foreach(TreeViewItemNode node in GetAllHActNodesRecursive(rootNode))
+                foreach (TreeViewItemNode node in GetAllHActNodesRecursive(rootNode))
                 {
                     if (Form1.TranslateNames)
                         node.Text = TreeViewItemNode.TranslateName(node.HActNode);
@@ -2902,7 +2927,7 @@ namespace CMNEdit
                 nodes = genHact.GetNodes();
 
 
-                for(int i = 0; i < AuthPagesDE.Length; i++)
+                for (int i = 0; i < AuthPagesDE.Length; i++)
                 {
                     AuthPage page = AuthPagesDE[i];
 
@@ -3361,7 +3386,7 @@ namespace CMNEdit
 
             Be.Windows.Forms.DynamicByteProvider provider = null;
 
-            if(node is TreeNodeYActCameraMotion)
+            if (node is TreeNodeYActCameraMotion)
             {
                 CreateHeader("Camera Animation");
                 CreateButton("Export", delegate
@@ -3370,13 +3395,13 @@ namespace CMNEdit
                     dialog.Filter = "PS2 Camera Animation (*.mtbw)|*.mtbw";
                     dialog.FileName = "camera.mtbw";
 
-                    if(dialog.ShowDialog() == DialogResult.OK)
+                    if (dialog.ShowDialog() == DialogResult.OK)
                     {
                         File.WriteAllBytes(dialog.FileName, (node as TreeNodeYActCameraMotion).File.Buffer);
                     }
                 });
             }
-            else if(node is TreeNodeYActCharacterMotion)
+            else if (node is TreeNodeYActCharacterMotion)
             {
                 CreateHeader("Character Animation");
                 CreateButton("Export", delegate
@@ -3394,6 +3419,17 @@ namespace CMNEdit
 
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
+        }
+
+        private void targetGameCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Game game = (Game)targetGameCombo.SelectedIndex;
+
+            langOverrideBox.Visible = game >= Game.YK2;
+            langOverrideLbl.Visible = game >= Game.YK2;
+
+            if (!langOverrideBox.Visible)
+                langOverrideBox.Text = "";
         }
     }
 }

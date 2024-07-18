@@ -74,7 +74,6 @@
             convertBetweenGamesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ımportBEPDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             propertybinTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            nodesTree = new MWControlSuite.MWTreeView();
             nodeIcons = new System.Windows.Forms.ImageList(components);
             nodeContext = new System.Windows.Forms.ContextMenuStrip(components);
             copyNodeCTRLCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,6 +129,8 @@
             addHeatChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            langOverrideLbl = new System.Windows.Forms.Label();
+            langOverrideBox = new System.Windows.Forms.TextBox();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -487,26 +488,6 @@
             propertybinTestToolStripMenuItem.Text = "Convert OE property.bin to BEP";
             propertybinTestToolStripMenuItem.Click += propertybinTestToolStripMenuItem_Click;
             // 
-            // nodesTree
-            // 
-            nodesTree.AllowDrop = true;
-            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
-            nodesTree.ImageIndex = 0;
-            nodesTree.ImageList = nodeIcons;
-            nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
-            nodesTree.Location = new System.Drawing.Point(-4, 0);
-            nodesTree.Name = "nodesTree";
-            nodesTree.SelectedImageIndex = 0;
-            nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
-            nodesTree.Size = new System.Drawing.Size(254, 341);
-            nodesTree.TabIndex = 1;
-            nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
-            nodesTree.AfterSelect += nodesTree_AfterSelect;
-            nodesTree.KeyDown += nodesTree_KeyDown;
-            nodesTree.KeyPress += nodesTree_KeyPress;
-            nodesTree.KeyUp += nodesTree_KeyUp;
-            nodesTree.MouseUp += nodesTree_MouseUp;
-            // 
             // nodeIcons
             // 
             nodeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
@@ -577,6 +558,7 @@
             targetGameCombo.Name = "targetGameCombo";
             targetGameCombo.Size = new System.Drawing.Size(121, 23);
             targetGameCombo.TabIndex = 2;
+            targetGameCombo.SelectedIndexChanged += targetGameCombo_SelectedIndexChanged;
             // 
             // textBox1
             // 
@@ -636,7 +618,6 @@
             // cmnTevTab
             // 
             cmnTevTab.Controls.Add(tabControl1);
-            cmnTevTab.Controls.Add(nodesTree);
             cmnTevTab.Location = new System.Drawing.Point(4, 24);
             cmnTevTab.Name = "cmnTevTab";
             cmnTevTab.Padding = new System.Windows.Forms.Padding(3);
@@ -1061,11 +1042,30 @@
             toolStripMenuItem1.Size = new System.Drawing.Size(150, 22);
             toolStripMenuItem1.Text = "Add Character";
             // 
+            // langOverrideLbl
+            // 
+            langOverrideLbl.AutoSize = true;
+            langOverrideLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            langOverrideLbl.Location = new System.Drawing.Point(629, 390);
+            langOverrideLbl.Name = "langOverrideLbl";
+            langOverrideLbl.Size = new System.Drawing.Size(155, 21);
+            langOverrideLbl.TabIndex = 11;
+            langOverrideLbl.Text = "Language Override";
+            // 
+            // langOverrideBox
+            // 
+            langOverrideBox.Location = new System.Drawing.Point(631, 414);
+            langOverrideBox.Name = "langOverrideBox";
+            langOverrideBox.Size = new System.Drawing.Size(85, 23);
+            langOverrideBox.TabIndex = 10;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(882, 450);
+            Controls.Add(langOverrideLbl);
+            Controls.Add(langOverrideBox);
             Controls.Add(checkBox1);
             Controls.Add(hactDurationPanel);
             Controls.Add(hactTabs);
@@ -1203,5 +1203,7 @@
         private System.Windows.Forms.ToolStripMenuItem openYActToolStripMenuItem;
         public MWControlSuite.MWTreeView nodesTree;
         public System.Windows.Forms.ComboBox targetGameCombo;
+        private System.Windows.Forms.TextBox langOverrideBox;
+        private System.Windows.Forms.Label langOverrideLbl;
     }
 }
