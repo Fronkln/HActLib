@@ -74,6 +74,7 @@
             convertBetweenGamesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ımportBEPDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             propertybinTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            nodesTree = new MWControlSuite.MWTreeView();
             nodeIcons = new System.Windows.Forms.ImageList(components);
             nodeContext = new System.Windows.Forms.ContextMenuStrip(components);
             copyNodeCTRLCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,6 +132,10 @@
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             langOverrideLbl = new System.Windows.Forms.Label();
             langOverrideBox = new System.Windows.Forms.TextBox();
+            label12 = new System.Windows.Forms.Label();
+            resStartBox = new System.Windows.Forms.TextBox();
+            label13 = new System.Windows.Forms.Label();
+            resEndBox = new System.Windows.Forms.TextBox();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -488,6 +493,29 @@
             propertybinTestToolStripMenuItem.Text = "Convert OE property.bin to BEP";
             propertybinTestToolStripMenuItem.Click += propertybinTestToolStripMenuItem_Click;
             // 
+            // nodesTree
+            // 
+            nodesTree.AllowDrop = true;
+            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
+            nodesTree.ImageIndex = 0;
+            nodesTree.ImageList = nodeIcons;
+            nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
+            nodesTree.Location = new System.Drawing.Point(-4, 0);
+            nodesTree.Name = "nodesTree";
+            nodesTree.SelectedImageIndex = 0;
+            nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
+            nodesTree.Size = new System.Drawing.Size(254, 341);
+            nodesTree.TabIndex = 1;
+            nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
+            nodesTree.AfterSelect += nodesTree_AfterSelect;
+            nodesTree.KeyDown += nodesTree_KeyDown;
+            nodesTree.KeyPress += nodesTree_KeyPress;
+            nodesTree.KeyUp += nodesTree_KeyUp;
+            nodesTree.MouseUp += nodesTree_MouseUp;
+            // 
+            // nodeIcons
+            // 
+            // 
             // nodeIcons
             // 
             nodeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
@@ -618,6 +646,7 @@
             // cmnTevTab
             // 
             cmnTevTab.Controls.Add(tabControl1);
+            cmnTevTab.Controls.Add(nodesTree);
             cmnTevTab.Location = new System.Drawing.Point(4, 24);
             cmnTevTab.Name = "cmnTevTab";
             cmnTevTab.Padding = new System.Windows.Forms.Padding(3);
@@ -760,6 +789,10 @@
             // 
             // panel3
             // 
+            panel3.Controls.Add(label13);
+            panel3.Controls.Add(resEndBox);
+            panel3.Controls.Add(label12);
+            panel3.Controls.Add(resStartBox);
             panel3.Controls.Add(linkedNodeBox);
             panel3.Controls.Add(targetNodeLbl);
             panel3.Controls.Add(resourceTypeBox);
@@ -775,7 +808,7 @@
             // linkedNodeBox
             // 
             linkedNodeBox.FormattingEnabled = true;
-            linkedNodeBox.Location = new System.Drawing.Point(13, 146);
+            linkedNodeBox.Location = new System.Drawing.Point(411, 38);
             linkedNodeBox.Name = "linkedNodeBox";
             linkedNodeBox.Size = new System.Drawing.Size(121, 23);
             linkedNodeBox.TabIndex = 6;
@@ -784,7 +817,7 @@
             // 
             targetNodeLbl.AutoSize = true;
             targetNodeLbl.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            targetNodeLbl.Location = new System.Drawing.Point(13, 118);
+            targetNodeLbl.Location = new System.Drawing.Point(410, 10);
             targetNodeLbl.Name = "targetNodeLbl";
             targetNodeLbl.Size = new System.Drawing.Size(122, 25);
             targetNodeLbl.TabIndex = 5;
@@ -793,7 +826,7 @@
             // resourceTypeBox
             // 
             resourceTypeBox.FormattingEnabled = true;
-            resourceTypeBox.Location = new System.Drawing.Point(13, 92);
+            resourceTypeBox.Location = new System.Drawing.Point(274, 38);
             resourceTypeBox.Name = "resourceTypeBox";
             resourceTypeBox.Size = new System.Drawing.Size(121, 23);
             resourceTypeBox.TabIndex = 4;
@@ -802,7 +835,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label1.Location = new System.Drawing.Point(13, 64);
+            label1.Location = new System.Drawing.Point(265, 10);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(140, 25);
             label1.TabIndex = 3;
@@ -810,7 +843,7 @@
             // 
             // applyResButton
             // 
-            applyResButton.Location = new System.Drawing.Point(13, 204);
+            applyResButton.Location = new System.Drawing.Point(172, 91);
             applyResButton.Name = "applyResButton";
             applyResButton.Size = new System.Drawing.Size(75, 23);
             applyResButton.TabIndex = 2;
@@ -832,7 +865,7 @@
             // 
             resourceNameTextbox.Location = new System.Drawing.Point(13, 38);
             resourceNameTextbox.Name = "resourceNameTextbox";
-            resourceNameTextbox.Size = new System.Drawing.Size(255, 23);
+            resourceNameTextbox.Size = new System.Drawing.Size(244, 23);
             resourceNameTextbox.TabIndex = 0;
             // 
             // resTree
@@ -1059,6 +1092,40 @@
             langOverrideBox.Size = new System.Drawing.Size(85, 23);
             langOverrideBox.TabIndex = 10;
             // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label12.Location = new System.Drawing.Point(12, 64);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(56, 25);
+            label12.TabIndex = 8;
+            label12.Text = "Start";
+            // 
+            // resStartBox
+            // 
+            resStartBox.Location = new System.Drawing.Point(12, 92);
+            resStartBox.Name = "resStartBox";
+            resStartBox.Size = new System.Drawing.Size(62, 23);
+            resStartBox.TabIndex = 7;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label13.Location = new System.Drawing.Point(90, 64);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(46, 25);
+            label13.TabIndex = 10;
+            label13.Text = "End";
+            // 
+            // resEndBox
+            // 
+            resEndBox.Location = new System.Drawing.Point(90, 92);
+            resEndBox.Name = "resEndBox";
+            resEndBox.Size = new System.Drawing.Size(62, 23);
+            resEndBox.TabIndex = 9;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1205,5 +1272,9 @@
         public System.Windows.Forms.ComboBox targetGameCombo;
         private System.Windows.Forms.TextBox langOverrideBox;
         private System.Windows.Forms.Label langOverrideLbl;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox resEndBox;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox resStartBox;
     }
 }

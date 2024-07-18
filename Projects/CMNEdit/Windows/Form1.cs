@@ -2030,8 +2030,8 @@ namespace CMNEdit
             EditingResource.Resource.Name = resourceNameTextbox.Text;
             EditingResource.Resource.Type = (ResourceType)resourceTypeBox.SelectedIndex;
             EditingResource.Resource.NodeGUID = EditingResourceCurrentLinkedNodes[linkedNodeBox.SelectedIndex].Guid;
-            //EditingResource.Resource.StartFrame = Utils.InvariantParse(resStartBox.Text);
-            //EditingResource.Resource.EndFrame = Utils.InvariantParse(resEndBox.Text);
+            EditingResource.Resource.StartFrame = Utils.InvariantParse(resStartBox.Text);
+            EditingResource.Resource.EndFrame = Utils.InvariantParse(resEndBox.Text);
         }
 
         private void resTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -2039,8 +2039,8 @@ namespace CMNEdit
             EditingResource = e.Node as TreeViewItemResource;
             resourceNameTextbox.Text = EditingResource.Resource.Name;
             resourceTypeBox.SelectedIndex = (int)EditingResource.Resource.Type;
-            // resStartBox.Text = EditingResource.Resource.StartFrame.ToString(CultureInfo.InvariantCulture);
-            // resEndBox.Text = EditingResource.Resource.EndFrame.ToString(CultureInfo.InvariantCulture);
+            resStartBox.Text = EditingResource.Resource.StartFrame.ToString(CultureInfo.InvariantCulture);
+            resEndBox.Text = EditingResource.Resource.EndFrame.ToString(CultureInfo.InvariantCulture);
 
             EditingResourceCurrentLinkedNodes = FilterNodesBasedOnResource(EditingResource.Resource.Type);
 
