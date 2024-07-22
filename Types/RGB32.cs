@@ -23,7 +23,7 @@ namespace HActLib
 
         public static implicit operator RGB32(System.Drawing.Color col)
         {
-            return new RGB32() { R = col.G, G = col.G, B = col.B };
+            return new RGB32() { R = col.R, G = col.G, B = col.B };
         }
 
         public RGB32 Clamp()
