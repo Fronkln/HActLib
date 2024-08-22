@@ -57,7 +57,7 @@ namespace HActLib
 
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             if (version >= GameVersion.DE2)
                 Version = 1;

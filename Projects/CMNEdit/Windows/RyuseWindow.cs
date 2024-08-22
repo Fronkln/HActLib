@@ -76,6 +76,8 @@ namespace CMNEdit.Windows
             Game prefixGame = CMN.GetGameFromString(targetGameBox.Items[targetGameBox.SelectedIndex].ToString());
             GameVersion targetVer = CMN.GetVersionForGame(prefixGame);
 
+            bool is58Game = prefixGame == Game.LJ || prefixGame == Game.LADIW || prefixGame == Game.LAD7Gaiden;
+
             if (Form1.IsBep || Form1.IsMep)
                 nodes = Form1.Instance.GetAllNodes();
             else
@@ -210,13 +212,22 @@ namespace CMNEdit.Windows
                                         BasePib pibFile = PIB.Read(ptcBuf, node.Name);
                                         BasePib newPib = PIB.Convert(pibFile, target);
 
-                                        if (pibFile.Version == newPib.Version)
+                                        if ((pibFile.Version == newPib.Version) && (pibFile.Version != PibVersion.LJ && !is58Game))
                                         {
                                             MessageBox.Show($"Don't know how to convert pib version {pibFile.Version} to {target}");
                                             return;
                                         }
 
                                         foreach (var emitter in newPib.Emitters)
+                                        {
+                                            if(pibFile.Version == PibVersion.LJ)
+                                            {
+                                                if (prefixGame == Game.LAD7Gaiden)
+                                                    (emitter as PibEmitterv58).ToGaidenRevision();
+                                                else
+                                                    (emitter as PibEmitterv58).ToLJRevision();
+                                            }
+
                                             foreach (string tex in emitter.Textures)
                                             {
                                                 string name = FixTexName(tex).ToLowerInvariant();
@@ -233,6 +244,7 @@ namespace CMNEdit.Windows
                                                     File.WriteAllBytes(Path.Combine(particleOutputBox.Text, name), texNode.Stream.ToArray());
                                                 }
                                             }
+                                        }
 
                                         PIB.Write(newPib, Path.Combine(particleOutputBox.Text, node.Name));
                                     }

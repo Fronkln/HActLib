@@ -98,7 +98,7 @@ namespace HActLib
             writer.Write(Effect.End);
             writer.Write(0);
 
-            Effect.WriteElementData(writer, GameVersion.Y0_K1);
+            Effect.WriteElementData(writer, GameVersion.Y0_K1, version == MEPVersion.Y0 ? 16 : 10);
 
             if (Effect.unkBytes != null)
                 writer.Write(Effect.unkBytes);

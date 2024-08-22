@@ -24,7 +24,7 @@ namespace HActLib
             Ubik = reader.ReadString(32);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Unknown1);
             writer.Write(Unknown2);

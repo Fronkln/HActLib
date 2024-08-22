@@ -78,7 +78,7 @@ namespace HActLib
             DOFAfterDisableDist = reader.ReadSingle();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Convert.ToInt32(DisableDof));
             writer.Write(Convert.ToInt32(UseIntr));

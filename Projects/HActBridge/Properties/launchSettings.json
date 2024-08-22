@@ -2,7 +2,7 @@
   "profiles": {
     "HActBridge": {
       "commandName": "Project",
-      "commandLineArgs": "\"G:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\hact\\H1040_kyuukyoku.par.unpack\" y5 y6"
+      "commandLineArgs": "\"G:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami\\media\\data\\hact.par.unpack\\h5040_shimano_throw.par.unpack\" y0 y6"
     }
   }
 }

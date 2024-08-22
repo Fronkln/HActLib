@@ -25,7 +25,7 @@ namespace HActLib
             PriorityID = reader.ReadInt32();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write((uint)Type);
             writer.Write(Scale);

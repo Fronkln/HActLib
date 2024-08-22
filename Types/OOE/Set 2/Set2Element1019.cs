@@ -23,7 +23,8 @@ namespace HActLib.OOE
 
         internal override void ReadArgs(DataReader reader)
         {
-            Type1019 = reader.ReadString(16).Split(new[] { '\0' }, 2)[0];
+            //Type1019 = reader.ReadString(16).Split(new[] { '\0' }, 2)[0];
+            Type1019 = reader.ReadString(16);
             Unk2 = reader.ReadBytes(236);
         }
 

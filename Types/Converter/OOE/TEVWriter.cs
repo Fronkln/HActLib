@@ -5,7 +5,7 @@ using Yarhl.FileFormat;
 using HActLib.OOE;
 using System.Data;
 using System.Linq;
-using System.Xml;
+using System.Diagnostics;
 
 namespace HActLib
 {
@@ -81,6 +81,9 @@ namespace HActLib
                 Set2 set = set2[i];
 
                 h_set2Addresses[set] = writer.Stream.Position;
+#if DEBUG
+                Debug.WriteLine("Writing Set2" + set.GetName() + "at " + writer.Stream.Position);
+#endif
 
                 writer.Write(i);
                 set.WriteSetData(writer, true);
@@ -127,12 +130,25 @@ namespace HActLib
                 set._InternalInfo.DataPtr1 = set.WriteData(writer, set.UnkFloatDats[0]);
             }
 
-            writer.Align(512);
+            if(tev.TEVHeader.DataPadding != 0)
+                writer.WriteTimes(0, tev.TEVHeader.DataPadding); //try to preserve TEV as much as possible
+            else
+                writer.Align(512);
 
-            int weirdSpaceStart = (int)writer.Stream.Position;
-            writer.WriteTimes(0, 44);
+            int weirdSpaceStart = 0;
+
+            if (tev.TEVHeader.DataPadding == 0)
+            {
+                weirdSpaceStart = (int)writer.Stream.Position;
+                writer.WriteTimes(0, 44);
+            }
 
             int setData2Start = (int)writer.Stream.Position;
+
+            if(tev.TEVHeader.DataPadding != 0)
+            {
+                weirdSpaceStart = setData2Start - tev.TEVHeader.WeirdSpaceOffset;
+            }
 
             foreach (ObjectBase set in objects)
                 set._InternalInfo.DataPtr2 = set.WriteData(writer, set.UnkFloatDats[1]);
@@ -311,6 +327,21 @@ namespace HActLib
             tev.TEVHeader.CharacterCount = tev.AllObjects.Where(x => x is ObjectHuman).Count();
             tev.TEVHeader.CharacterCount2 = tev.TEVHeader.CharacterCount;
 
+            tev.TEVHeader.SpecialElementCount = tev.AllSet2.Where(x => x is Set2Element1019).Count();
+
+            //Dont know what these do yet
+            if (tev.TEVHeader.UnkVal2 == 0)
+                tev.TEVHeader.UnkVal2 = 1;
+
+            if (tev.TEVHeader.UnkVal3 == 0)
+                tev.TEVHeader.UnkVal3 = 1;
+
+            if (tev.TEVHeader.UnkVal4 == 0)
+                tev.TEVHeader.UnkVal4 = 25;
+
+            if (tev.TEVHeader.UnkVal6 == 0)
+                tev.TEVHeader.UnkVal6 = 19;
+
             //finish header
             writer.Stream.Seek(pointersArea, SeekMode.Start);
 
@@ -325,7 +356,7 @@ namespace HActLib
 
             writer.Write(objects.Length);
 
-            
+           
             writer.Write(setData2Start);
 
             writer.Write(tev.TEVHeader.CameraCount3);
@@ -340,7 +371,14 @@ namespace HActLib
             writer.Write(tev.TEVHeader.CharacterCount2);
 
             writer.Write(tev.TEVHeader.UnkRegion1);
-            writer.Write(tev.TEVHeader.UnkRegion2);
+            writer.Write(tev.TEVHeader.UnkVal1);
+            writer.Write(tev.TEVHeader.UnkVal2);
+            writer.Write(tev.TEVHeader.UnkVal3);
+            writer.Write(tev.TEVHeader.UnkVal4);
+            writer.Write(tev.TEVHeader.SpecialElementCount);
+            writer.Write(tev.TEVHeader.UnkVal6);
+            writer.Write(tev.TEVHeader.UnkVal7);
+
 
             writer.Write(stringsStart + 4);
 

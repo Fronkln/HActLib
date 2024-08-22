@@ -50,7 +50,7 @@ namespace HActLib
 
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Data.Count);
 

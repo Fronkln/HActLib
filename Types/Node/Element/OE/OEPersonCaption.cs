@@ -28,7 +28,7 @@ namespace HActLib
             SizeY = reader.ReadSingle();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Texture.ToLength(32));
 

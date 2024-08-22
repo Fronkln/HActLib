@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using CMNEdit;
 using CMNEdit.Windows.Common.DE;
 using HActLib;
+using static System.Windows.Forms.LinkLabel;
 
 namespace CMNEdit.Windows.Common.DE
 {
@@ -16,10 +18,68 @@ namespace CMNEdit.Windows.Common.DE
             form.CreateSpace(25);
             form.CreateHeader("Rimflash");
 
+
+            if (inf.ParamID == 0)
+            {
+                form.CreateButton("Import Param", delegate
+                {
+                    OpenFileDialog wind = new OpenFileDialog();
+
+                    if (wind.ShowDialog() != DialogResult.OK)
+                        return;
+
+                    inf.ImportParams(wind.FileName);
+                });
+
+                form.CreateButton("Export Param", delegate
+                {
+                    SaveFileDialog wind = new SaveFileDialog();
+
+                    if (wind.ShowDialog() != DialogResult.OK)
+                        return;
+
+                    inf.ExportParams(wind.FileName);
+                });
+            }
+
             form.CreateInput("Rimflash Version", inf.RimflashVersion.ToString(), null, readOnly: true);
             form.CreateInput("Parameter Version", inf.ParamVersion.ToString(), null, readOnly: true);
             form.CreateInput("Fade Time", inf.FadeOutTime.ToString(), delegate (string val) { inf.FadeOutTime = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Root Value", inf.RootValue.ToString(), delegate (string val) { inf.RootValue = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
+            if(inf.Curve != null)
+            {
+                form.CreateButton("Curve", delegate
+                {
+                    CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
+                    myNewForm.Visible = true;
+                    myNewForm.Init(inf.Curve.ToArray(),
+                        delegate (float[] outCurve)
+                        {
+                            inf.Curve = outCurve.ToList();
+                        });
+                });
+
+                form.CreateButton("New Curve (8 values)", delegate
+                {
+                    float[] newCurve = new float[8];
+
+                    for (int i = 0; i < 8; i++)
+                        newCurve[i] = 1f;
+
+                    inf.Curve = newCurve.ToList();
+                });
+
+                form.CreateButton("New Curve (16 values)", delegate
+                {
+                    float[] newCurve = new float[16];
+
+                    for (int i = 0; i < 16; i++)
+                        newCurve[i] = 1f;
+
+                    inf.Curve = newCurve.ToList();
+                });
+            }
 
             if (inf.RimflashVersion < 5)
                 return;

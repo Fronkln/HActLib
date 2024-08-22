@@ -49,7 +49,7 @@ namespace HActLib
             ParamString = reader.ReadString(32);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write((uint)Type);
             writer.Write(Param1);

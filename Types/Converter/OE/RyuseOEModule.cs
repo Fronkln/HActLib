@@ -193,7 +193,110 @@ namespace HActLib
                 }
             }
 
+            if (node.Category == AuthNodeCategory.Model_node)
+            {
+                NodeModel model = node as NodeModel;
+
+                if(inputGame <= Game.Y5)
+                {
+                    model.BoneName.Set(OOEToOEBone(model.BoneName.Text));
+
+                    if (MEPDict.OEBoneID.ContainsKey(model.BoneName.Text))
+                        model.BoneID = MEPDict.OEBoneID[model.BoneName.Text];
+                }
+                else
+                {
+                    model.BoneName.Set(OEToOOEBone(model.BoneName.Text));
+
+                    if (MEPDict.OOEBoneID.ContainsKey(model.BoneName.Text))
+                        model.BoneID = MEPDict.OOEBoneID[model.BoneName.Text];
+                }
+            }
+
+            if(node.Category == AuthNodeCategory.Character)
+            {
+                OENodeCharacter character = node as OENodeCharacter;
+
+                if (inputGame <= Game.Y5)
+                {
+                    if((character.Flag & (1 << 0)) != 0)
+                    {
+                        character.Flag |= 1 << 1;
+                    }
+                }
+            }
+
             return ConversionResult.NoChange;
+        }
+
+        public static string OOEToOEBone(string bonename)
+        {
+            string boneName = "";
+
+            switch (bonename)
+            {
+                default:
+                    return bonename;
+                case "center_n":
+                    boneName = "center_c_n";
+                    break;
+                case "mune_n":
+                    boneName = "mune_c_n";
+                    break;
+                case "kubi_n":
+                    boneName = "kubi_c_n";
+                    break;
+                case "ketu_n":
+                    boneName = "ketu_c_n";
+                    break;
+                case "face":
+                    boneName = "face_c_n";
+                    break;
+                case "kosi_n":
+                    boneName = "kosi_c_n";
+                    break;
+                case "_lip_top":
+                    boneName = "_lip_top1_c_n";
+                    break;
+
+            }
+
+            return boneName;
+        }
+
+        public static string OEToOOEBone(string bonename)
+        {
+            string boneName = "";
+
+            switch (bonename)
+            {
+                default:
+                    return bonename;
+                case "center_c_n":
+                    boneName = "center_n";
+                    break;
+                case "mune_c_n":
+                    boneName = "mune_n";
+                    break;
+                case "kubi_c_n":
+                    boneName = "kubi_n";
+                    break;
+                case "ketu_c_n":
+                    boneName = "ketu_n";
+                    break;
+                case "face_c_n":
+                    boneName = "face";
+                    break;
+                case "kosi_c_n":
+                    boneName = "kosi_n";
+                    break;
+                case "_lip_top1_c_n":
+                    boneName = "_lip_top";
+                    break;
+
+            }
+
+            return boneName;
         }
     }
 }

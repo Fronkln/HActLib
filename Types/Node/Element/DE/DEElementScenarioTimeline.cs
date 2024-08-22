@@ -35,7 +35,7 @@ namespace HActLib
             UIDListNum = reader.ReadUInt32();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(TimelineCategory.ToLength(32));
             writer.Write(Timeline.ToLength(32));

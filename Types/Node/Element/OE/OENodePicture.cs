@@ -72,7 +72,7 @@ namespace HActLib
             PictureName = reader.ReadString(32).Split(new[] { '\0' }, 2)[0]; ;
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Unknown);
             writer.Write(Unknown2);

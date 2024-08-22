@@ -23,7 +23,7 @@ namespace HActLib
             MovieEnd = reader.ReadUInt32();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Movie.ToLength(64));
             writer.Write(MovieStart);

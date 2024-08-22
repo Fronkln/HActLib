@@ -63,6 +63,14 @@ namespace HActLib
         private byte[] Unknown_LJ2 = new byte[12];
 
 
+        public DEElementParticle() : base()
+        {
+            Animation = new byte[32];
+
+            for (int i = 0; i < 32; i++)
+                Animation[i] = 255;
+        }
+
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             if (CMN.LastHActDEGame > Game.YLAD)
@@ -129,7 +137,7 @@ namespace HActLib
               Unknown_LJ2 = reader.ReadBytes(12);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             if (CMN.LastHActDEGame > Game.YLAD)
             {

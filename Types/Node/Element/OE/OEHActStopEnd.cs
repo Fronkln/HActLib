@@ -18,7 +18,7 @@ namespace HActLib
             reader.ReadBytes(2);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Unknown);
             writer.WriteTimes(0, 2);

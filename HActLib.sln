@@ -22,8 +22,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameProgression", "Project
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HActScout", "Projects\HActScout\HActScout.csproj", "{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frame Progression GUI", "Projects\Frame Progression GUI\Frame Progression GUI.csproj", "{3E52F9DC-B498-451A-AA7B-07C40E01FD1D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HActMerge", "Projects\HActMerge\HActMerge.csproj", "{23F83390-C269-44D1-BD7B-F34AC69190B3}"
 EndProject
 Global
@@ -75,12 +73,6 @@ Global
 		{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}.Debug2|x64.Build.0 = Debug|Any CPU
 		{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}.Release|x64.ActiveCfg = Release|Any CPU
 		{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}.Release|x64.Build.0 = Release|Any CPU
-		{3E52F9DC-B498-451A-AA7B-07C40E01FD1D}.Debug|x64.ActiveCfg = Debug|x64
-		{3E52F9DC-B498-451A-AA7B-07C40E01FD1D}.Debug|x64.Build.0 = Debug|x64
-		{3E52F9DC-B498-451A-AA7B-07C40E01FD1D}.Debug2|x64.ActiveCfg = Debug|Any CPU
-		{3E52F9DC-B498-451A-AA7B-07C40E01FD1D}.Debug2|x64.Build.0 = Debug|Any CPU
-		{3E52F9DC-B498-451A-AA7B-07C40E01FD1D}.Release|x64.ActiveCfg = Release|Any CPU
-		{3E52F9DC-B498-451A-AA7B-07C40E01FD1D}.Release|x64.Build.0 = Release|Any CPU
 		{23F83390-C269-44D1-BD7B-F34AC69190B3}.Debug|x64.ActiveCfg = Debug|x64
 		{23F83390-C269-44D1-BD7B-F34AC69190B3}.Debug|x64.Build.0 = Debug|x64
 		{23F83390-C269-44D1-BD7B-F34AC69190B3}.Debug2|x64.ActiveCfg = Debug|Any CPU

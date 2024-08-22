@@ -185,13 +185,17 @@ namespace HActLib
 
                 bone.BoneName = boneName;
 
-                if (MEPDict.OOEBoneID.ContainsKey(boneName))
-                    bone.BoneID = MEPDict.OOEBoneID[boneName];
+                if (MEPDict.Y3BoneID.ContainsKey(bone.BoneName))
+                    bone.BoneID = MEPDict.Y3BoneID[bone.BoneName];
             }
             else
             {
                 bone.BoneName = oeBone.BoneName.Text;
                 bone.BoneID = oeBone.BoneID;
+
+
+                if (MEPDict.Y3BoneID.ContainsKey(bone.BoneName))
+                    bone.BoneID = MEPDict.Y3BoneID[bone.BoneName];
             }
 
 
@@ -250,6 +254,7 @@ namespace HActLib
             EffectParticle ptc = new EffectParticle();
             ptc.ParticleID = particle.ParticleID;
             ptc.Matrix = particle.Matrix;
+            ptc.Flag = particle.Flag;
 
             return ptc;
         }

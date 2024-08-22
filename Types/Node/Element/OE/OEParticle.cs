@@ -67,7 +67,7 @@ namespace HActLib
             }
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             if(Animation == null)
             {
@@ -92,7 +92,7 @@ namespace HActLib
             writer.Write(Unknown6);
             writer.Write(Speed);
 
-            if (CMN.LastHActDEGame > Game.Ishin)
+            if (hactVer > 10)
             {
                 writer.Write(Unknown8);
                 writer.Write(Animation);

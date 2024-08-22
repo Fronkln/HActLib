@@ -23,7 +23,7 @@ namespace HActLib
             Unk3 = reader.ReadSingle();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Unk1);
             writer.Write(ExpressionID);

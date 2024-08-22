@@ -101,10 +101,10 @@ namespace HActLib
             }          
 
             //assumes there are no unk bytes
-            WriteElementData(writer, version);
+            WriteElementData(writer, version, (int)hactVer);
         }
 
-        internal virtual void WriteElementData(DataWriter writer, GameVersion version)
+        internal virtual void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             // throw new NotImplementedException();
         }

@@ -26,7 +26,7 @@ namespace HActLib
             UID = reader.ReadUInt64();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(AssetID);
             writer.Write(EquipFlags);

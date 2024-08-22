@@ -102,6 +102,10 @@
             resTab = new System.Windows.Forms.TabPage();
             panel2 = new System.Windows.Forms.Panel();
             panel3 = new System.Windows.Forms.Panel();
+            label13 = new System.Windows.Forms.Label();
+            resEndBox = new System.Windows.Forms.TextBox();
+            label12 = new System.Windows.Forms.Label();
+            resStartBox = new System.Windows.Forms.TextBox();
             linkedNodeBox = new System.Windows.Forms.ComboBox();
             targetNodeLbl = new System.Windows.Forms.Label();
             resourceTypeBox = new System.Windows.Forms.ComboBox();
@@ -132,10 +136,7 @@
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             langOverrideLbl = new System.Windows.Forms.Label();
             langOverrideBox = new System.Windows.Forms.TextBox();
-            label12 = new System.Windows.Forms.Label();
-            resStartBox = new System.Windows.Forms.TextBox();
-            label13 = new System.Windows.Forms.Label();
-            resEndBox = new System.Windows.Forms.TextBox();
+            bulkConvertBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -221,49 +222,49 @@
             // openCtrlOToolStripMenuItem
             // 
             openCtrlOToolStripMenuItem.Name = "openCtrlOToolStripMenuItem";
-            openCtrlOToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            openCtrlOToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             openCtrlOToolStripMenuItem.Text = "Open HAct Folder";
             openCtrlOToolStripMenuItem.Click += openCtrlOToolStripMenuItem_Click;
             // 
             // openHActCMNToolStripMenuItem
             // 
             openHActCMNToolStripMenuItem.Name = "openHActCMNToolStripMenuItem";
-            openHActCMNToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            openHActCMNToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             openHActCMNToolStripMenuItem.Text = "Open HAct";
             openHActCMNToolStripMenuItem.Click += openHActCMNToolStripMenuItem_Click;
             // 
             // openYActToolStripMenuItem
             // 
             openYActToolStripMenuItem.Name = "openYActToolStripMenuItem";
-            openYActToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            openYActToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             openYActToolStripMenuItem.Text = "Open YAct";
             openYActToolStripMenuItem.Click += openYActToolStripMenuItem_Click;
             // 
             // openBEPToolStripMenuItem
             // 
             openBEPToolStripMenuItem.Name = "openBEPToolStripMenuItem";
-            openBEPToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            openBEPToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             openBEPToolStripMenuItem.Text = "Open BEP";
             openBEPToolStripMenuItem.Click += openBEPToolStripMenuItem_Click;
             // 
             // openMEPToolStripMenuItem
             // 
             openMEPToolStripMenuItem.Name = "openMEPToolStripMenuItem";
-            openMEPToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            openMEPToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             openMEPToolStripMenuItem.Text = "Open MEP";
             openMEPToolStripMenuItem.Click += openMEPToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // saveAsToolStripMenuItem
             // 
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             saveAsToolStripMenuItem.Text = "Save As";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             // 
@@ -423,21 +424,21 @@
             // adjustTimingToolStripMenuItem
             // 
             adjustTimingToolStripMenuItem.Name = "adjustTimingToolStripMenuItem";
-            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             adjustTimingToolStripMenuItem.Text = "Adjust Timing";
             adjustTimingToolStripMenuItem.Click += adjustTimingToolStripMenuItem_Click;
             // 
             // moveTimingToolStripMenuItem
             // 
             moveTimingToolStripMenuItem.Name = "moveTimingToolStripMenuItem";
-            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             moveTimingToolStripMenuItem.Text = "Move Timing";
             moveTimingToolStripMenuItem.Click += moveTimingToolStripMenuItem_Click;
             // 
             // advancedButton
             // 
             advancedButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertMEPWithPibsToolStripMenuItem, frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, authPagesDEToolStripMenuItem, convertBetweenGamesDEToolStripMenuItem, ımportBEPDEToolStripMenuItem, propertybinTestToolStripMenuItem });
+            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertMEPWithPibsToolStripMenuItem, frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, authPagesDEToolStripMenuItem, convertBetweenGamesDEToolStripMenuItem, ımportBEPDEToolStripMenuItem, propertybinTestToolStripMenuItem, bulkConvertBEPToolStripMenuItem });
             advancedButton.Image = (System.Drawing.Image)resources.GetObject("advancedButton.Image");
             advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             advancedButton.Name = "advancedButton";
@@ -496,7 +497,6 @@
             // nodesTree
             // 
             nodesTree.AllowDrop = true;
-            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
             nodesTree.ImageIndex = 0;
             nodesTree.ImageList = nodeIcons;
             nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
@@ -512,9 +512,6 @@
             nodesTree.KeyPress += nodesTree_KeyPress;
             nodesTree.KeyUp += nodesTree_KeyUp;
             nodesTree.MouseUp += nodesTree_MouseUp;
-            // 
-            // nodeIcons
-            // 
             // 
             // nodeIcons
             // 
@@ -805,6 +802,40 @@
             panel3.Size = new System.Drawing.Size(554, 321);
             panel3.TabIndex = 0;
             // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label13.Location = new System.Drawing.Point(90, 64);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(46, 25);
+            label13.TabIndex = 10;
+            label13.Text = "End";
+            // 
+            // resEndBox
+            // 
+            resEndBox.Location = new System.Drawing.Point(90, 92);
+            resEndBox.Name = "resEndBox";
+            resEndBox.Size = new System.Drawing.Size(62, 23);
+            resEndBox.TabIndex = 9;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label12.Location = new System.Drawing.Point(12, 64);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(56, 25);
+            label12.TabIndex = 8;
+            label12.Text = "Start";
+            // 
+            // resStartBox
+            // 
+            resStartBox.Location = new System.Drawing.Point(12, 92);
+            resStartBox.Name = "resStartBox";
+            resStartBox.Size = new System.Drawing.Size(62, 23);
+            resStartBox.TabIndex = 7;
+            // 
             // linkedNodeBox
             // 
             linkedNodeBox.FormattingEnabled = true;
@@ -1092,39 +1123,12 @@
             langOverrideBox.Size = new System.Drawing.Size(85, 23);
             langOverrideBox.TabIndex = 10;
             // 
-            // label12
+            // bulkConvertBEPToolStripMenuItem
             // 
-            label12.AutoSize = true;
-            label12.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label12.Location = new System.Drawing.Point(12, 64);
-            label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(56, 25);
-            label12.TabIndex = 8;
-            label12.Text = "Start";
-            // 
-            // resStartBox
-            // 
-            resStartBox.Location = new System.Drawing.Point(12, 92);
-            resStartBox.Name = "resStartBox";
-            resStartBox.Size = new System.Drawing.Size(62, 23);
-            resStartBox.TabIndex = 7;
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label13.Location = new System.Drawing.Point(90, 64);
-            label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(46, 25);
-            label13.TabIndex = 10;
-            label13.Text = "End";
-            // 
-            // resEndBox
-            // 
-            resEndBox.Location = new System.Drawing.Point(90, 92);
-            resEndBox.Name = "resEndBox";
-            resEndBox.Size = new System.Drawing.Size(62, 23);
-            resEndBox.TabIndex = 9;
+            bulkConvertBEPToolStripMenuItem.Name = "bulkConvertBEPToolStripMenuItem";
+            bulkConvertBEPToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            bulkConvertBEPToolStripMenuItem.Text = "Bulk Convert BEP";
+            bulkConvertBEPToolStripMenuItem.Click += bulkConvertBEPToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -1276,5 +1280,6 @@
         private System.Windows.Forms.TextBox resEndBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox resStartBox;
+        private System.Windows.Forms.ToolStripMenuItem bulkConvertBEPToolStripMenuItem;
     }
 }

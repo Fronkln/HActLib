@@ -34,9 +34,9 @@ namespace HActLib
             Animation = reader.ReadBytes(32);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
-            base.WriteElementData(writer, version);
+            base.WriteElementData(writer, version, hactVer);
 
             writer.Write(Power);
             writer.Write(Size);

@@ -79,7 +79,7 @@ namespace HActLib
             }
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             bool isVer1 = CMN.LastHActDEGame < Game.LJ;
 

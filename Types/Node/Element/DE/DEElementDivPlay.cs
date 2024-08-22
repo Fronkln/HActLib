@@ -23,7 +23,7 @@ namespace HActLib
             FileName = reader.ReadString(128);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(FileName.ToLength(128), maxSize: 128);
         }

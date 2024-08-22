@@ -11,7 +11,7 @@ namespace HActLib.OOE
     public class EffectParticle : EffectElement
     {
         public uint ParticleID = 0;
-        public int Unknown1;
+        public uint Flag;
         public int Unknown2;
         public Matrix4x4 Matrix = Matrix4x4.Default;
         public Vector3 Unknown3 = new Vector3(1, 1, 1);
@@ -34,7 +34,7 @@ namespace HActLib.OOE
             base.ReadEffectData(reader, alt);
 
             ParticleID = reader.ReadUInt32();
-            Unknown1 = reader.ReadInt32();
+            Flag = reader.ReadUInt32();
             Unknown2 = reader.ReadInt32();
             Matrix = reader.ReadMatrix4x4();
 
@@ -55,7 +55,7 @@ namespace HActLib.OOE
             base.WriteEffectData(writer, alt);
 
             writer.Write(ParticleID);
-            writer.Write(Unknown1);
+            writer.Write(Flag);
             writer.Write(Unknown2);
             writer.Write(Matrix);
 

@@ -29,7 +29,7 @@ namespace HActLib
             Movie = reader.ReadString();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(MovieVersion);
             writer.Write(FadeFrame);

@@ -291,7 +291,7 @@ namespace HActLib.OOE
 
         }
 
-        private void ReadSet2(DataReader reader, int pos, uint count)
+        private void ReadSet2(DataReader reader, int pos, uint count, bool optimized = true)
         {
             if (pos <= 0)
                 return;
@@ -311,7 +311,7 @@ namespace HActLib.OOE
                 {
                     Set2Element set2Element = set as Set2Element;
 
-                    if (set2Element.Effect != null && ((set2Element.EffectID == EffectID.Dummy && set2Element.Type == Set2NodeCategory.Element) || set2Element.EffectID == set2Element.Effect.ElementKind))
+                    if (optimized && (set2Element.Effect != null && ((set2Element.EffectID == EffectID.Dummy && set2Element.Type == Set2NodeCategory.Element) || set2Element.EffectID == set2Element.Effect.ElementKind)))
                         continue;
                 }
                 

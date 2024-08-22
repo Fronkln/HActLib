@@ -61,10 +61,13 @@ namespace HActLib.OOE
                 int difference = (int)(afterDataWrite - start);
                 int unk2WriteAmount = Unk2.Length - difference;
 
-                byte[] unk2ToWrite = new byte[unk2WriteAmount];
+                if (unk2WriteAmount > 0)
+                {
+                    byte[] unk2ToWrite = new byte[unk2WriteAmount];
 
-                Array.Copy(Unk2, difference, unk2ToWrite, 0, Unk2.Length - difference);
-                writer.Write(unk2ToWrite);
+                    Array.Copy(Unk2, difference, unk2ToWrite, 0, Unk2.Length - difference);
+                    writer.Write(unk2ToWrite);
+                }
             }
 
             int unwrittenBytes = (int)(end - writer.Stream.Position);

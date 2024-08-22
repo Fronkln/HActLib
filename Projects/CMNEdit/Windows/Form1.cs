@@ -89,6 +89,8 @@ namespace CMNEdit
 
         public static bool TranslateNames = false;
 
+        private ToolStripItem _convertMepButton;
+
         public Form1()
         {
             InitializeComponent();
@@ -124,6 +126,8 @@ namespace CMNEdit
                 SaveINIFile();
             else
                 ReadINIFile();
+
+            _convertMepButton = advancedButton.DropDownItems[0];
         }
 
         private void HammerTime()
@@ -1228,7 +1232,6 @@ namespace CMNEdit
             {
                 void PasteNode(TreeViewItemNode node)
                 {
-
                     TreeViewItemNode parentNode = null;
                     TreeViewItemNode hactNode = nodesTree.SelNode as TreeViewItemNode;
 
@@ -1516,7 +1519,7 @@ namespace CMNEdit
                     if (IsOE)
                         OECMN.Write(cmn as OECMN, Path.Combine(folderDir, $"cmn.bin"));
                     else
-                        CMN.Write(cmn as CMN, hactInf.FindFile(GetLocalizedCMN()).Path);
+                        CMN.Write(cmn as CMN, FilePath);
 
 
                     if (hactInf.GetResources().Length > 0)
@@ -3430,6 +3433,56 @@ namespace CMNEdit
 
             if (!langOverrideBox.Visible)
                 langOverrideBox.Text = "";
+        }
+
+        private void bulkConvertBEPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Game igame = (Game)targetGameCombo.SelectedIndex;
+
+            if (!CMN.IsDEGame(igame))
+                return;
+
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+
+                List<string> options = new List<string>();
+
+
+                Game[] deGames = CMN.GetDEGames();
+
+                foreach (Game game in deGames)
+                    options.Add(HActLib.Internal.Reflection.GetGamePrefixes(game)[0]);
+
+                string messageString = "Please enter the name of game you want to convert to. \nAvailable:\n";
+
+                foreach (string str in options)
+                    messageString += str + "\n";
+
+                string input = Microsoft.VisualBasic.Interaction.InputBox(messageString,
+                                "Convert",
+                                "",
+                                0,
+                                0);
+
+                Game prefixGame = CMN.GetGameFromString(input);
+
+                if ((uint)prefixGame >= 9999)
+                    return;
+
+                foreach(string bepFile in Directory.GetFiles(dialog.SelectedPath, "*.bep"))
+                {
+                    BEP bepfile = BEP.Read(bepFile, igame);
+
+                    var inf = RyuseModule.ConvertNodes(bepfile.Nodes.ToArray(), igame, prefixGame);
+                    bepfile.Nodes = inf.OutputNodes.ToList();
+
+                    BEP.Write(bepfile, bepFile, prefixGame);
+                }
+
+                MessageBox.Show("Complete!");
+            }
         }
     }
 }

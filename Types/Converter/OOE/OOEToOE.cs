@@ -447,7 +447,7 @@ namespace HActLib
                     oeParticle.Start = ooeParticle.Start;
                     oeParticle.End = ooeParticle.End;
                     oeParticle.ParticleID = ooeParticle.ParticleID;
-                    oeParticle.Flags = ooeParticle.Unknown1;
+                    oeParticle.Flags = (int)ooeParticle.Flag;
                     oeParticle.Matrix = ooeParticle.Matrix;
                     oeParticle.Name = "PTC: " + oeParticle.ParticleID;
                     oeParticle.UpdateTimingMode = 0;

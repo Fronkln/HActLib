@@ -62,7 +62,13 @@ namespace HActLib
             tev.TEVHeader.CharacterCount2 = reader.ReadInt32();
 
             tev.TEVHeader.UnkRegion1 = reader.ReadBytes(32);
-            tev.TEVHeader.UnkRegion2 = reader.ReadBytes(28);
+            tev.TEVHeader.UnkVal1 = reader.ReadInt32();
+            tev.TEVHeader.UnkVal2 = reader.ReadInt32();
+            tev.TEVHeader.UnkVal3 = reader.ReadInt32();
+            tev.TEVHeader.UnkVal4 = reader.ReadInt32();
+            tev.TEVHeader.SpecialElementCount = reader.ReadInt32();
+            tev.TEVHeader.UnkVal6 = reader.ReadInt32();
+            tev.TEVHeader.UnkVal7 = reader.ReadInt32();
 
             reader.Stream.RunInPosition(
                 delegate 
@@ -84,7 +90,11 @@ namespace HActLib
                // set.OnLoadComplete(tev);
 
             tev.TEVHeader.StringTableOffset = (int)(tev.TEVHeader.DataPtr2 - tev.TEVHeader.UnkPtr3);
-            tev.TEVHeader.DataPadding = (int)(tev.TEVHeader.DataPtr2 - m_dataPtr1End);
+
+            int unkSet1DatSize = tev.AllObjects.Where(x => x.UnkFloatDats[0] != null).Count() * 32;
+            tev.TEVHeader.DataPadding = (int)(tev.TEVHeader.DataPtr2 - (dataPtr1 + unkSet1DatSize));
+
+            tev.TEVHeader.WeirdSpaceOffset = (int)(tev.TEVHeader.DataPtr2 - tev.TEVHeader.UnkPtr3);
 
             return tev;
         }

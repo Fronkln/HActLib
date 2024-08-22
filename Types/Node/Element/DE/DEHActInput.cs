@@ -33,7 +33,7 @@ namespace HActLib
             reader.ReadBytes(4);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(InputID);
             writer.Write(CondFlagNo);

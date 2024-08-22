@@ -51,7 +51,7 @@ namespace HActLib
             }
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             foreach (ExpressionData dat in Datas)
                 writer.Write(dat.AnimationData);

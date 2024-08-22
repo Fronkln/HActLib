@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PublishSingleFile>true</PublishSingleFile>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
@@ -27,6 +27,9 @@
   <ItemGroup>
     <Reference Include="ParLibrary">
       <HintPath>Dependencies\ParLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="PIBLib">
+      <HintPath>..\PIBLib\bin\x64\Release\net6.0\PIBLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

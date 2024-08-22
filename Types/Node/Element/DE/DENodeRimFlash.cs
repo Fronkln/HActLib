@@ -34,6 +34,11 @@ namespace HActLib
 
         public Parameter Params;
 
+        private int m_curveUnk1;
+        public List<float> Curve = new List<float>();
+
+        public byte[] CommandData;
+
         private byte[] Unk1 = new byte[8];
 
         private byte[] unreadSections;
@@ -51,6 +56,7 @@ namespace HActLib
 
             //Header position + offset * 4 = structure
             long headerStart = reader.Stream.Position;
+            long nodeEnd = reader.Stream.Position + inf.expectedSize;
 
             //HEADER START - SAME BETWEEN V5 AND V4
             RimflashVersion = reader.ReadUInt32();
@@ -73,13 +79,46 @@ namespace HActLib
             ParamID = reader.ReadUInt32();
             AttachmentSlot = (AttachmentSlot)reader.ReadUInt32();
 
+            if(curveOffset > 0 && RimflashVersion >= 5)
+            {
+                reader.Stream.Seek(curveAddr);
+                ReadCurve(reader, inf, version);
+            }
+
+            if(commandOffset > 0 && RimflashVersion >= 5)
+            {
+                reader.Stream.Seek(commandAddr);
+
+                int numBytes = 0;
+
+                if (parameterAddr > commandAddr)
+                    numBytes = (int)(parameterAddr - commandAddr);
+                else
+                    numBytes = (int)(nodeEnd - commandAddr);
+
+                CommandData = reader.ReadBytes(numBytes);
+            }
+
+            //idk if this would work on 4, not taking risks
             if (parametersOffset > 0)
             {
                 unreadSections = reader.ReadBytes((int)(parameterAddr - reader.Stream.Position));
+                reader.Stream.Seek(parameterAddr);
                 unkBytes = null;
                // reader.Stream.Seek(headerStart + parametersOffset);
                 ReadParams(reader, inf, version);
             }
+        }
+
+        internal void ReadCurve(DataReader reader, NodeConvInf inf, GameVersion version)
+        {
+            m_curveUnk1 = reader.ReadInt32();
+            int curveLength = reader.ReadInt32();
+
+            Curve = new List<float>();
+
+            for(int i = 0; i < curveLength; i++)
+                Curve.Add(reader.ReadSingle());
         }
 
         internal void ReadParams(DataReader reader, NodeConvInf inf, GameVersion version)
@@ -107,13 +146,39 @@ namespace HActLib
             }
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        public void ImportParams(string path)
         {
+            byte[] dat = File.ReadAllBytes(path);
+            var buf = DataStreamFactory.FromArray(dat, 0, dat.Length);
+            var reader = new DataReader(buf);
+
+            ReadParams(reader, new NodeConvInf(), CMN.LastGameVersion);
+        }
+
+        public void ExportParams(string path)
+        {
+            var buf = DataStreamFactory.FromMemory();
+            DataWriter writer = new DataWriter(buf);
+            RimflashParams.Write(writer);
+
+            File.WriteAllBytes(path, buf.ToArray());
+
+            buf.Dispose();
+        }
+
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
+        {
+            long headerStart = writer.Stream.Position;
             writer.Write(RimflashVersion);
 
-            writer.Write(parametersOffset /4);
-            writer.Write(curveOffset / 4);
-            writer.Write(commandOffset / 4);
+            long offsets = writer.Stream.Position;
+            //writer.Write(parametersOffset /4);
+            //writer.Write(curveOffset / 4);
+            //writer.Write(commandOffset / 4);
+
+            writer.Write(0);
+            writer.Write(0);
+            writer.Write(0);
 
             writer.Write(FadeOutTime);
             writer.Write(RootValue);
@@ -125,11 +190,40 @@ namespace HActLib
             writer.Write(ParamID);
             writer.Write((uint)AttachmentSlot);
 
+            if(Curve != null)
+            {
+                curveOffset = (uint)(writer.Stream.Position - headerStart);
+                writer.Write(m_curveUnk1);
+                writer.Write(Curve.Count);
+
+                foreach (float f in Curve)
+                    writer.Write(f);
+            }
+
+            if(CommandData != null)
+            {
+                uint commandAddr = (uint)writer.Stream.Position;
+                commandOffset = commandAddr - (uint)headerStart;
+                writer.Write(CommandData);
+            }
+
             if (unreadSections != null && unreadSections.Length > 0)
                 writer.Write(unreadSections);
 
             if (RimflashParams != null)
+            {
+                parametersOffset = (uint)(writer.Stream.Position - headerStart);
                 RimflashParams.Write(writer);
+            }
+
+            long end = writer.Stream.Position;
+
+            writer.Stream.Seek(offsets);
+            writer.Write(parametersOffset / 4);
+            writer.Write(curveOffset / 4);
+            writer.Write(commandOffset / 4);
+
+            writer.Stream.Position = end;
         }
     }
 }

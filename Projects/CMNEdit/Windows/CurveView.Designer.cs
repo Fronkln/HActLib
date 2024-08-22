@@ -33,20 +33,22 @@
             System.Windows.Forms.Label label4;
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            this.panel = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.startRangeBox = new System.Windows.Forms.TextBox();
-            this.endRangeBox = new System.Windows.Forms.TextBox();
-            this.customValueBox = new System.Windows.Forms.TextBox();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            panel = new System.Windows.Forms.Panel();
+            button1 = new System.Windows.Forms.Button();
+            button2 = new System.Windows.Forms.Button();
+            button3 = new System.Windows.Forms.Button();
+            button4 = new System.Windows.Forms.Button();
+            startRangeBox = new System.Windows.Forms.TextBox();
+            endRangeBox = new System.Windows.Forms.TextBox();
+            customValueBox = new System.Windows.Forms.TextBox();
+            chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            copyCurveButton = new System.Windows.Forms.Button();
+            pasteCurveButton = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            this.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
+            SuspendLayout();
             // 
             // label2
             // 
@@ -77,115 +79,136 @@
             // 
             // panel
             // 
-            this.panel.AutoScroll = true;
-            this.panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel.Location = new System.Drawing.Point(3, 12);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(200, 517);
-            this.panel.TabIndex = 2;
+            panel.AutoScroll = true;
+            panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            panel.Location = new System.Drawing.Point(3, 12);
+            panel.Name = "panel";
+            panel.Size = new System.Drawing.Size(200, 517);
+            panel.TabIndex = 2;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(231, 189);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(137, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Set Range to 0";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Location = new System.Drawing.Point(231, 189);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(137, 23);
+            button1.TabIndex = 7;
+            button1.Text = "Set Range to 0";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(231, 218);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(137, 23);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "Set Range to 0.5";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            button2.Location = new System.Drawing.Point(231, 218);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(137, 23);
+            button2.TabIndex = 8;
+            button2.Text = "Set Range to 0.5";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(231, 247);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(137, 23);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "Set Range to 1";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            button3.Location = new System.Drawing.Point(231, 247);
+            button3.Name = "button3";
+            button3.Size = new System.Drawing.Size(137, 23);
+            button3.TabIndex = 9;
+            button3.Text = "Set Range to 1";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(231, 137);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(137, 23);
-            this.button4.TabIndex = 10;
-            this.button4.Text = "Set Range to Value";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            button4.Location = new System.Drawing.Point(231, 137);
+            button4.Name = "button4";
+            button4.Size = new System.Drawing.Size(137, 23);
+            button4.TabIndex = 10;
+            button4.Text = "Set Range to Value";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // startRangeBox
             // 
-            this.startRangeBox.Location = new System.Drawing.Point(243, 50);
-            this.startRangeBox.Name = "startRangeBox";
-            this.startRangeBox.Size = new System.Drawing.Size(30, 23);
-            this.startRangeBox.TabIndex = 13;
-            this.startRangeBox.Text = "0";
+            startRangeBox.Location = new System.Drawing.Point(243, 50);
+            startRangeBox.Name = "startRangeBox";
+            startRangeBox.Size = new System.Drawing.Size(30, 23);
+            startRangeBox.TabIndex = 13;
+            startRangeBox.Text = "0";
             // 
             // endRangeBox
             // 
-            this.endRangeBox.Location = new System.Drawing.Point(321, 50);
-            this.endRangeBox.Name = "endRangeBox";
-            this.endRangeBox.Size = new System.Drawing.Size(30, 23);
-            this.endRangeBox.TabIndex = 14;
-            this.endRangeBox.Text = "0";
+            endRangeBox.Location = new System.Drawing.Point(321, 50);
+            endRangeBox.Name = "endRangeBox";
+            endRangeBox.Size = new System.Drawing.Size(30, 23);
+            endRangeBox.TabIndex = 14;
+            endRangeBox.Text = "0";
             // 
             // customValueBox
             // 
-            this.customValueBox.Location = new System.Drawing.Point(259, 108);
-            this.customValueBox.Name = "customValueBox";
-            this.customValueBox.Size = new System.Drawing.Size(80, 23);
-            this.customValueBox.TabIndex = 15;
-            this.customValueBox.Text = "0";
+            customValueBox.Location = new System.Drawing.Point(259, 108);
+            customValueBox.Name = "customValueBox";
+            customValueBox.Size = new System.Drawing.Size(80, 23);
+            customValueBox.TabIndex = 15;
+            customValueBox.Text = "0";
             // 
             // chart1
             // 
             chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(418, 32);
-            this.chart1.Name = "chart1";
-            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
-            this.chart1.Size = new System.Drawing.Size(486, 421);
-            this.chart1.TabIndex = 16;
-            this.chart1.Text = "chart1";
-            this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
-            this.chart1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseUp);
+            chart1.Legends.Add(legend1);
+            chart1.Location = new System.Drawing.Point(418, 32);
+            chart1.Name = "chart1";
+            chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
+            chart1.Size = new System.Drawing.Size(486, 421);
+            chart1.TabIndex = 16;
+            chart1.Text = "chart1";
+            chart1.MouseMove += chart1_MouseMove;
+            chart1.MouseUp += chart1_MouseUp;
+            // 
+            // copyCurveButton
+            // 
+            copyCurveButton.Location = new System.Drawing.Point(231, 314);
+            copyCurveButton.Name = "copyCurveButton";
+            copyCurveButton.Size = new System.Drawing.Size(137, 23);
+            copyCurveButton.TabIndex = 17;
+            copyCurveButton.Text = "Copy Curve";
+            copyCurveButton.UseVisualStyleBackColor = true;
+            copyCurveButton.Click += copyCurveButton_Click;
+            // 
+            // pasteCurveButton
+            // 
+            pasteCurveButton.Location = new System.Drawing.Point(231, 343);
+            pasteCurveButton.Name = "pasteCurveButton";
+            pasteCurveButton.Size = new System.Drawing.Size(137, 23);
+            pasteCurveButton.TabIndex = 18;
+            pasteCurveButton.Text = "Paste Curve";
+            pasteCurveButton.UseVisualStyleBackColor = true;
+            pasteCurveButton.Click += pasteCurveButton_Click;
             // 
             // CurveView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(950, 541);
-            this.Controls.Add(this.chart1);
-            this.Controls.Add(this.customValueBox);
-            this.Controls.Add(this.endRangeBox);
-            this.Controls.Add(this.startRangeBox);
-            this.Controls.Add(label4);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(label3);
-            this.Controls.Add(label2);
-            this.Controls.Add(this.panel);
-            this.Name = "CurveView";
-            this.Text = "CurveView";
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(950, 541);
+            Controls.Add(pasteCurveButton);
+            Controls.Add(copyCurveButton);
+            Controls.Add(chart1);
+            Controls.Add(customValueBox);
+            Controls.Add(endRangeBox);
+            Controls.Add(startRangeBox);
+            Controls.Add(label4);
+            Controls.Add(button4);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(panel);
+            Name = "CurveView";
+            Text = "CurveView";
+            ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -201,5 +224,7 @@
         private System.Windows.Forms.TextBox endRangeBox;
         private System.Windows.Forms.TextBox customValueBox;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button copyCurveButton;
+        private System.Windows.Forms.Button pasteCurveButton;
     }
 }

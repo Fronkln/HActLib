@@ -40,6 +40,8 @@ namespace CMNEdit
                     particleColPanel.BackColor = col;
                 });
 
+            form.CreateInput("Color A", particle.Color.a.ToString(), delegate (string val) { particle.Color.a = byte.Parse(val); }, NumberBox.NumberMode.Byte);
+
             form.CreateButton("Alpha Curve", delegate
             {
                 CurveView myNewForm = new CurveView();

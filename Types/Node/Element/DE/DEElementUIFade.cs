@@ -38,7 +38,7 @@ namespace HActLib
             Color = (RGBA32)ConvertFormat.With<RGBA32Convert>(new ConversionInf(new BinaryFormat(reader.Stream), reader.Endianness));
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Flags);
             writer.Write(InFrame);

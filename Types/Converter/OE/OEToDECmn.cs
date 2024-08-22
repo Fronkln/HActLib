@@ -75,7 +75,13 @@ namespace HActLib
                     break;
 
                 case AuthNodeCategory.Model_node:
-                    deNode = oeNode; //No conversion needed
+
+                    NodeModel modelNode = (NodeModel)oeNode;
+
+                    if (oeGame <= Game.Y5)
+                        modelNode.BoneName.Set(RyuseOEModule.OOEToOEBone(modelNode.BoneName.Text));
+
+                    deNode = modelNode; //No conversion needed
                     break;
 
                 case AuthNodeCategory.Camera:
@@ -344,7 +350,7 @@ namespace HActLib
             dePtc.Scale = ptc.Scale;
             dePtc.ParticleID = ptc.ParticleID;
             dePtc.Name = "PTC " + dePtc.ParticleID;
-            dePtc.ParticleName = "AAa0000";
+            dePtc.ParticleName = ptc.Name.Substring(0, 7);
 
             return dePtc;
         }

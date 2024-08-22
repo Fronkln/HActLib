@@ -24,9 +24,9 @@ namespace HActLib
             JobRestriction = reader.ReadUInt32();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
-            base.WriteElementData(writer, version);
+            base.WriteElementData(writer, version, hactVer);
 
             writer.Write(YHCName.ToLength(32), true);
             writer.Write(YHCAttackName.ToLength(32), true);

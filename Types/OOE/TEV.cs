@@ -7,6 +7,7 @@ using System.IO;
 using Yarhl.IO;
 using Yarhl.FileFormat;
 using HActLib.OOE;
+using PIBLib;
 
 
 
@@ -51,15 +52,24 @@ namespace HActLib
             //32 bytes, mostly all zeroes, not the case on 6090 hact though.
             public byte[] UnkRegion1;
 
-            //28 bytes, random numbers. followed by the final value which is string table pointer
-            public byte[] UnkRegion2;
+            public int UnkVal1;
+            public int UnkVal2;
+            public int UnkVal3;
+            public int UnkVal4;
+            public int SpecialElementCount;
+            public int UnkVal6;
+            public int UnkVal7;
+
+            //Mysterious padding that unk3 pointer leads to
+            public int StringTableOffset;
 
             //Amount of padding between data ptr 1 and data ptr 2
             //Because i couldn't figure out the magic behind them, LOL!!!
             public int DataPadding;
 
-            //Mysterious padding that unk3 pointer leads to
-            public int StringTableOffset;
+            //Amount of offset between data ptr 2 and weird space
+            //Because i couldn't figure out the magic behind them, LOL!!!
+            public int WeirdSpaceOffset;
         }
 
         public Header TEVHeader = new Header();
@@ -75,13 +85,6 @@ namespace HActLib
         public TEV()
         {
             TEVHeader.UnkRegion1 = new byte[32];
-            TEVHeader.UnkRegion2 = new byte[28];
-
-            TEVHeader.UnkRegion2[7] = 1;
-            TEVHeader.UnkRegion2[11] = 1;
-            TEVHeader.UnkRegion2[15] = 13;
-            TEVHeader.UnkRegion2[19] = 14;
-            TEVHeader.UnkRegion2[23] = 5;
 
             //TEVHeader.UnkCount3 = 1;
         }
@@ -194,7 +197,7 @@ namespace HActLib
             return converted;
         }
 
-        public static CMN ToDE(TEV tev, Game game, CSVHAct csvData)
+        public static CMN ToDE(TEV tev, Game game, CSVHAct csvData, string pibsDir)
         {
             if (!CMN.IsDEGame(game))
                 game = Game.YK2;
@@ -202,7 +205,16 @@ namespace HActLib
             CMN.LastGameVersion = CMN.GetVersionForGame(game);
             CMN.LastHActDEGame = game;
 
-            CMN cmn = (CMN)ConvertFormat.With<OOEToDE>(new OOEToDEConversionInfo() { Tev = tev, CsvData = csvData});
+            OOEToDEConversionInfo convInf = new OOEToDEConversionInfo();
+            convInf.Tev = tev;
+            convInf.CsvData = csvData;
+
+            if (!string.IsNullOrEmpty(pibsDir))
+            {
+                convInf.Pibs = Directory.GetFiles(pibsDir, "*.pib", SearchOption.AllDirectories).Select(x => PIB.Read(x)).ToList();
+            }
+
+            CMN cmn = (CMN)ConvertFormat.With<OOEToDE>(convInf);
 
             if (!CMN.IsDEGame(game))
                 game = Game.YK2;

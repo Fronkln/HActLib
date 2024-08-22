@@ -235,7 +235,7 @@ namespace HActLib
 
             GameVersion ver = CMN.GetVersionForGame(game);
 
-            CMN convertedTEV = TEV.ToDE(tev, game, csvData);
+            CMN convertedTEV = TEV.ToDE(tev, game, csvData, Path.Combine(ooePath, "ptc"));
             RES res = new RES();
 
             foreach(DENodeCharacter chara in convertedTEV.AllCharacters)

@@ -22,7 +22,7 @@ namespace HActLib
             Intensity = reader.ReadSingle();
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(Y5_Unknown1);
             writer.Write(BoneID);

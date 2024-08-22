@@ -35,7 +35,7 @@ namespace HActLib
                // RagdollInfo.Read(reader);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write((uint)ReturnType);
             writer.Write(PlayRange.Tick);

@@ -34,6 +34,8 @@ namespace CMNEdit.Windows
         private Action<byte[]> m_finishedCallback = null;
         private Action<float[]> m_finishedCallback_float = null;
 
+        private static float[] copiedCurve = new float[0];
+
         DataPoint curPoint = null;
         int curPointIdx = 0;
 
@@ -77,7 +79,7 @@ namespace CMNEdit.Windows
 
             m_float_curve = new float[curve.Length];
 
-            for(int i = 0; i < m_float_curve.Length; i++)
+            for (int i = 0; i < m_float_curve.Length; i++)
             {
                 m_float_curve[i] = (curve[i] / 255f);
             }
@@ -165,7 +167,7 @@ namespace CMNEdit.Windows
             chart1.Series.Add("Value");
             chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             chart1.Series[0].MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
-            chart1.Series[0].MarkerSize = 8 ;
+            chart1.Series[0].MarkerSize = 8;
 
             for (int i = 0; i < m_float_curve.Length; i++)
             {
@@ -177,7 +179,7 @@ namespace CMNEdit.Windows
         {
             Form1.Instance.Enabled = true;
 
-            if(byteMode)
+            if (byteMode)
             {
                 byte[] byteArray = new byte[m_float_curve.Length];
 
@@ -194,7 +196,7 @@ namespace CMNEdit.Windows
 
         private void SetValue(int index, string val)
         {
-            if(byteMode)
+            if (byteMode)
                 m_curve[index] = (byte)(Utils.InvariantParse(val) * 255);
             else
                 m_float_curve[index] = Utils.InvariantParse(val);
@@ -341,6 +343,23 @@ namespace CMNEdit.Windows
                     m_float_curve[curPointIdx] = (float)dy;
                 }
             }
+        }
+
+        private void copyCurveButton_Click(object sender, EventArgs e)
+        {
+            if (m_float_curve.Length <= 0)
+                return;
+
+            copiedCurve = m_float_curve;
+        }
+
+        private void pasteCurveButton_Click(object sender, EventArgs e)
+        {
+            if (m_float_curve.Length != copiedCurve.Length)
+                return;
+
+            m_float_curve = copiedCurve;
+            InitFinish();
         }
     }
 }

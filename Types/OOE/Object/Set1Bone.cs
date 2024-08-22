@@ -34,7 +34,7 @@ namespace HActLib.OOE
         internal override void WriteSetData(DataWriter writer)
         {
             StringTable[0] = BoneName;
-            StringTable[0] = StringTable[0].ToLength(30); //loll
+            StringTable[0] = StringTable[0].Split(new[] { '\0' }, 2)[0]; //loll
 
             base.WriteSetData(writer);
         }

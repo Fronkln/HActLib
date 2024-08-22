@@ -93,7 +93,7 @@ namespace HActLib
             Debug.WriteLine("parameter addr " + parameterAddr);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(FlowVersion);
             writer.Write(SetParamOffset);

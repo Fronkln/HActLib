@@ -49,7 +49,7 @@ namespace HActLib
             Animation = reader.ReadBytes(64);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(LinkFlags);
             writer.Write(RotationYOffsetDegrees);

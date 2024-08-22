@@ -15,6 +15,8 @@ namespace CMNEdit
             form.CreateHeader("Particle");
 
             form.CreateInput("Particle ID", particle.ParticleID.ToString(), delegate (string val) { particle.ParticleID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            form.CreateInput("Flag", particle.Flag.ToString(), delegate (string val) { particle.Flag = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            form.CreateInput("Unknown", particle.Unknown2.ToString(), delegate (string val) { particle.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.UInt);
             MatrixWindow.Draw(form, particle.Matrix);
         }
     }

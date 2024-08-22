@@ -8,14 +8,16 @@ using Yarhl.FileFormat;
 using HActLib.OOE;
 using HActLib.Internal;
 using System.Runtime;
+using PIBLib;
 
 
 namespace HActLib
 {
     public class OOEToDEConversionInfo
     {
-        public TEV Tev;
-        public CSVHAct CsvData;
+        public TEV Tev = null;
+        public CSVHAct CsvData = null;
+        public List<BasePib> Pibs = new List<BasePib>();
     }
 
     public class OOEToDE : IConverter<OOEToDEConversionInfo, CMN>
@@ -28,8 +30,13 @@ namespace HActLib
 
         CSVHAct csvData;
 
+
+        OOEToDEConversionInfo inf;
+
         public CMN Convert(OOEToDEConversionInfo inf)
         {
+            this.inf = inf;
+
             csvData = inf.CsvData;
 
             TEV tev = inf.Tev;
@@ -538,6 +545,27 @@ namespace HActLib
 
             switch (effect.ElementKind)
             {
+
+                case EffectID.Particle:
+                    EffectParticle ooePtc = effect as EffectParticle;
+                    DEElementParticle ptc = new DEElementParticle();
+                    ptc.ElementKind = Reflection.GetElementIDByName("e_auth_element_particle", CMN.LastHActDEGame);
+
+                    ptc.Start = ooePtc.Start;
+                    ptc.End = ooePtc.End;
+                    ptc.Matrix = ooePtc.Matrix;
+                    ptc.ParticleID = ooePtc.ParticleID;
+
+                    BasePib pibFile = inf.Pibs.FirstOrDefault(x => x.ParticleID == ptc.ParticleID);
+
+                    if (pibFile != null)
+                        ptc.Name = pibFile.Name.Replace(".pib", "");
+                    else
+                        ptc.Name = "PIB " + pibFile.ParticleID;
+
+                    createdNode = ptc;
+                    break;
+
                 case EffectID.Sound:
                     DEElementSE soundNode = new DEElementSE();
                     EffectSound ooeSound = effect as EffectSound;

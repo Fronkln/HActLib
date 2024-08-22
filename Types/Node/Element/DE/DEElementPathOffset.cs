@@ -33,7 +33,7 @@ namespace HActLib
             reader.ReadBytes(8);
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             Matrix.Write(writer);
 

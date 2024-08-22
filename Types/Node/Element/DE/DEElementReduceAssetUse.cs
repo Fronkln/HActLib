@@ -39,7 +39,7 @@ namespace HActLib
                 reader.Stream.Position += 4;
         }
 
-        internal override void WriteElementData(DataWriter writer, GameVersion version)
+        internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(version > GameVersion.Yakuza6 ? 1 : 0);
 
