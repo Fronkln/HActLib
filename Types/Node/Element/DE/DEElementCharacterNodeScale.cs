@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x9E)]
     [ElementID(Game.LAD7Gaiden, 0x9E)]
     [ElementID(Game.LADIW, 0x9E)]
+    [ElementID(Game.LADPYIH, 0x9E)]
     public class DEElementCharacterNodeScale : NodeElement
     {
         public float HeadScale = 1;

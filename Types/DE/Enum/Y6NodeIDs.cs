@@ -28,7 +28,7 @@ namespace HActLib
         e_auth_element_particle_ground = 0x16,
         e_auth_element_color_correction = 0x17,
         e_auth_element_scenario_timeline = 0x18,
-        e_auth_element_battle = 0x19,
+        e_auth_element_battle_flag = 0x19,
         e_auth_element_se = 0x1A,
         e_auth_element_vollight = 0x1B,
         e_auth_element_vollight_spot = 0x1C,

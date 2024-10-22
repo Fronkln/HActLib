@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x68)]
     [ElementID(Game.LAD7Gaiden, 0x68)]
     [ElementID(Game.LADIW, 0x68)]
+    [ElementID(Game.LADPYIH, 0x68)]
     public class DEElementCharaOut : NodeElement
     {
         public AuthReturnType ReturnType;

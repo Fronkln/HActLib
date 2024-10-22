@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x9A)]
     [ElementID(Game.LAD7Gaiden, 0x9A)]
     [ElementID(Game.LADIW, 0x9A)]
+    [ElementID(Game.LADPYIH, 0x9A)]
     public class DEElementReduceAssetUse : NodeElement
     {
         public enum EFlag

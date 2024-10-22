@@ -135,6 +135,19 @@ namespace HActLib
             return filesArray.ToArray();
         }
 
+        public string GetCmnPath()
+        {
+            if (IsFile)
+                return m_path;
+            else
+            {
+                if (!string.IsNullOrEmpty(m_lang))
+                    return FindFile($"cmn_{m_lang}.bin").Path;
+                else
+                    return FindFile($"cmn.bin").Path;
+            }
+        }
+
         public byte[] GetCmnBuffer()
         {
             if (IsFile)
@@ -180,13 +193,13 @@ namespace HActLib
 
                     if (Directory.Exists(path))
                     {
-                        HActDir dir = new HActDir() { m_path = path };
+                        HActDir dir = new HActDir() { m_path = path, m_lang = m_lang };
                         dirs.Add(dir);
                         start++;
                     }
                     else if(Directory.Exists(path + ".par.unpack"))
                     {
-                        HActDir dir = new HActDir() { m_path = path + ".par.unpack" };
+                        HActDir dir = new HActDir() { m_path = path + ".par.unpack", m_lang = m_lang };
                         dirs.Add(dir);
                         start++;
                     }

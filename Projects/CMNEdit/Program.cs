@@ -17,6 +17,7 @@ namespace CMNEdit
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            AppRegistry.Init();
             Application.Run(new Form1());
         }
     }

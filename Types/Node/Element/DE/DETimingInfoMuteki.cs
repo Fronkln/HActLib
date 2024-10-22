@@ -22,6 +22,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x7D)]
     [ElementID(Game.LAD7Gaiden, 0x7D)]
     [ElementID(Game.LADIW, 0x7D)]
+    [ElementID(Game.LADPYIH, 0x7D)]
     public class DETimingInfoMuteki : DETimingInfo
     {
     }

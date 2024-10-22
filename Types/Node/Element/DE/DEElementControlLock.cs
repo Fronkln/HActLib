@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x48)]
     [ElementID(Game.LAD7Gaiden, 0x48)]
     [ElementID(Game.LADIW, 0x48)]
+    [ElementID(Game.LADPYIH, 0x48)]
     public class DEElementControlLock : NodeElement
     {
         public uint Unknown = 0;

@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x5F)]
     [ElementID(Game.LAD7Gaiden, 0x5F)]
     [ElementID(Game.LADIW, 0x5F)]
+    [ElementID(Game.LADPYIH, 0x5F)]
     public class DEElementTimingInfoStun : NodeElement
     {
         public uint Type;

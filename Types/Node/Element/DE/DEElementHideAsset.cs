@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x91)]
     [ElementID(Game.LAD7Gaiden, 0x91)]
     [ElementID(Game.LADIW, 0x91)]
+    [ElementID(Game.LADPYIH, 0x91)]
     public class DEElementHideAsset : NodeElement
     {
         public AttachmentSlot ID;

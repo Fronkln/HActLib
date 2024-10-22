@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x97)]
     [ElementID(Game.LAD7Gaiden, 0x97)]
     [ElementID(Game.LADIW, 0x97)]
+    [ElementID(Game.LADPYIH, 0x97)]
     public class DEElementMovie : NodeElement
     {
         public int MovieVersion = 0;

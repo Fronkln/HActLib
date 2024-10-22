@@ -16,6 +16,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x120)]
     [ElementID(Game.LAD7Gaiden, 0x120)]
     [ElementID(Game.LADIW, 0x120)]
+    [ElementID(Game.LADPYIH, 0x120)]
     public class DEElementAnalogNoise : NodeElement
     {
         public float Speed = 0.1f;

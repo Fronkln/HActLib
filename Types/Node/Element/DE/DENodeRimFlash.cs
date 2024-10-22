@@ -15,7 +15,8 @@ namespace HActLib
     [ElementID(Game.YLAD, 0x1D)]
     [ElementID(Game.LJ, 0x1D)]
     [ElementID(Game.LAD7Gaiden, 0x1D)]
-    [ElementID(Game.LADIW, 0x1D)]    
+    [ElementID(Game.LADIW, 0x1D)]
+    [ElementID(Game.LADPYIH, 0x1D)]
     public class DEElementRimflash : NodeElement
     {
         public uint RimflashVersion;
@@ -100,7 +101,7 @@ namespace HActLib
             }
 
             //idk if this would work on 4, not taking risks
-            if (parametersOffset > 0)
+            if (parametersOffset > 0 && RimflashVersion > 4)
             {
                 unreadSections = reader.ReadBytes((int)(parameterAddr - reader.Stream.Position));
                 reader.Stream.Seek(parameterAddr);

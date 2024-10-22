@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x63)]
     [ElementID(Game.LAD7Gaiden, 0x63)]
     [ElementID(Game.LADIW, 0x63)]
+    [ElementID(Game.LADPYIH, 0x63)]
     public class DEElementCameraLink : NodeElement
     {
         public uint LinkFlags;

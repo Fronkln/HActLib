@@ -10,6 +10,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x1C5)]
     [ElementID(Game.LAD7Gaiden, 0x1C5)]
     [ElementID(Game.LADIW, 0x1C5)]
+    [ElementID(Game.LADPYIH, 0x1C5)]
     public class DEElementFullscreenAuthMovie : NodeElement
     {
         public string Movie;

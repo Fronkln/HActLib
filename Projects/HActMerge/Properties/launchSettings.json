@@ -2,7 +2,7 @@
   "profiles": {
     "HActMerge": {
       "commandName": "Project",
-      "commandLineArgs": "ylad \"G:\\Program Files (x86)\\SteamLibrary\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\Brawler\\hact_src\\y7b1750_glass_over\\cmn\\cmn.bin\" 809 \"H:\\steamapps2\\steamapps\\common\\Yakuza Kiwami 2\\data\\hact_lexus2\\h24601_head_player.par.unpack\\cmn\\cmn.bin\" 152"
+      "commandLineArgs": "y8 \"C:\\Program Files (x86)\\Steam\\steamapps\\common\\LikeADragon8\\runtime\\media\\mods\\Like A Brawler 8\\hact_src\\y8bb1780_ebn_party_decide\\cmn\\cmn_vo.bin\" 2 \"E:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\hact\\h25040_han2_btlst.par.unpack\\cmn.par.unpack\\cmn.bin\" 256"
     }
   }
 }

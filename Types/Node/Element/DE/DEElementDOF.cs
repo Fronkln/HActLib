@@ -45,6 +45,8 @@ namespace HActLib
 
         public float DOFAfterDisableDist;
 
+        public byte[] UnknownY6Data = new byte[16];
+
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             DisableDof = reader.ReadInt32() > 0;
@@ -56,6 +58,9 @@ namespace HActLib
 
             FocusDistBefore = reader.ReadSingle();
             FocusDistAfter = reader.ReadSingle();
+
+            if (version == GameVersion.Yakuza6)
+                UnknownY6Data = reader.ReadBytes(16);
 
             EdgeType = reader.ReadInt32();
             EdgeThreshold = reader.ReadSingle();
@@ -86,9 +91,12 @@ namespace HActLib
             writer.Write(Shape);
             writer.Write(DiaphragmBladesNum);
             writer.Write(ApertureCircularity);
-
+                
             writer.Write(FocusDistBefore);
             writer.Write(FocusDistAfter);
+
+            if (version == GameVersion.Yakuza6)
+                writer.Write(UnknownY6Data);
 
             writer.Write(EdgeType);
             writer.Write(EdgeThreshold);

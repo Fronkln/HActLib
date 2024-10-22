@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x1)]
     [ElementID(Game.LAD7Gaiden, 0x1)]
     [ElementID(Game.LADIW, 0x1)]
+    [ElementID(Game.LADPYIH, 0x1)]
     public class DEElementCameraParam : NodeElement
     {
         public uint ParamFlags;

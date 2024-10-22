@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0xF7)]
     [ElementID(Game.LAD7Gaiden, 0xF7)]
     [ElementID(Game.LADIW, 0xF7)]
+    [ElementID(Game.LADPYIH, 0xF7)]
     public class DEElementTalkText : NodeElement
     {
         public uint TalkCategory;

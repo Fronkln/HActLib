@@ -37,6 +37,7 @@ namespace CMNEdit
         public static bool IsTev;
         public static bool IsOE;
         public static bool IsYAct;
+        public static bool IsPS2Prop;
 
         private static MEP Mep;
 
@@ -71,6 +72,8 @@ namespace CMNEdit
         public AuthPage[] AuthPagesDE;
         public byte[] AuthPagesDEUnk;
 
+        private static BaseYAct yact;
+
         private static Node[] EditingResourceCurrentLinkedNodes = null;
 
         //toggled depending on file
@@ -80,6 +83,15 @@ namespace CMNEdit
 
         private ToolStripDropDownItem addNodeTab;
         private ToolStripItem nodeAddTabDE;
+        private ToolStripItem nodeAddTabOOE;
+
+        private ToolStripDropDownItem advancedTab;
+        private ToolStripItem advancedFrameProgressionButton;
+        private ToolStripItem disableFrameInfoButton;
+        private ToolStripItem authPagesButton;
+        private ToolStripItem convertBetweenGamesButton;
+
+        private ToolStripDropDownItem convertTab;
 
         //0 = nodes, 1 res blablabla
         private int currentTab = 0;
@@ -110,8 +122,17 @@ namespace CMNEdit
 
             addNodeTab = (ToolStripDropDownItem)appTools.Items[1];
             nodeAddTabDE = addNodeTab.DropDownItems[0];
+            nodeAddTabOOE = addNodeTab.DropDownItems[1];
 
-            //addNodeTab.DropDownItems.Remove(nodeAddTabDE);
+            advancedTab = (ToolStripDropDownItem)appTools.Items[3];
+            advancedFrameProgressionButton = advancedTab.DropDownItems[0];
+            disableFrameInfoButton = advancedTab.DropDownItems[1];
+            authPagesButton = advancedTab.DropDownItems[2];
+
+            convertTab = (ToolStripDropDownItem)advancedTab.DropDownItems[3];
+            convertBetweenGamesButton = convertTab.DropDownItems[0];
+
+            convertTab.DropDownItems.Remove(convertBetweenGamesButton);
 
             hactTabs.TabPages.Remove(csvTab);
 
@@ -128,6 +149,8 @@ namespace CMNEdit
                 ReadINIFile();
 
             _convertMepButton = advancedButton.DropDownItems[0];
+
+            ClearEverything();
         }
 
         private void HammerTime()
@@ -182,6 +205,14 @@ namespace CMNEdit
             IsHact = false;
             IsOE = false;
             IsBep = false;
+
+
+            addNodeTab.DropDownItems.Remove(nodeAddTabOOE);
+            addNodeTab.DropDownItems.Remove(nodeAddTabDE);
+
+            advancedTab.DropDownItems.Remove(advancedFrameProgressionButton);
+            advancedTab.DropDownItems.Remove(disableFrameInfoButton);
+            advancedTab.DropDownItems.Remove(authPagesButton);
         }
 
         private void toolStripLabel1_Click(object sender, EventArgs e)
@@ -208,11 +239,13 @@ namespace CMNEdit
 
             ProcessHAct(inf);
 
+            FilePath = inf.GetCmnPath();
         }
 
         private void openHActCMNToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
+            dialog.InitialDirectory = AppRegistry.GetFileOpenPath();
             dialog.CheckFileExists = true;
 
             DialogResult res = dialog.ShowDialog();
@@ -236,6 +269,8 @@ namespace CMNEdit
 
         private void ProcessHAct(HActDir hactInf)
         {
+            AppRegistry.Root.SetValue("LastFileDir", folderDir);
+
             ClearEverything();
 
             curGame = (Game)targetGameCombo.SelectedIndex;
@@ -252,6 +287,7 @@ namespace CMNEdit
             IsTev = false;
             IsOE = false;
             IsYAct = false;
+            IsPS2Prop = false;
 
             hactTabs.TabPages.Remove(csvTab);
             addNodeTab.DropDownItems.Remove(nodeAddTabDE);
@@ -311,6 +347,7 @@ namespace CMNEdit
                 hactTabs.TabPages.Remove(cutPage);
                 hactTabs.TabPages.Add(csvPage);
 
+                addNodeTab.DropDownItems.Add(nodeAddTabOOE);
 
                 hactStartBox.Visible = false;
                 hactEndBox.Visible = false;
@@ -375,6 +412,7 @@ namespace CMNEdit
                     curGame = (Game)targetGameCombo.SelectedIndex;
                     curVer = CMN.GetVersionForGame(curGame);
                     HAct = CMN.Read(buf, curGame);
+                    OnOpenDEFormat();
                 }
                 else
                 {
@@ -425,32 +463,14 @@ namespace CMNEdit
 
             saveToolStripMenuItem.Enabled = !hactInf.IsPar;
 
+            OnOpenHAct();
             DrawCutInfo();
-        }
-
-        private void openYActToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.CheckFileExists = true;
-
-            DialogResult res = dialog.ShowDialog();
-
-            if (res != DialogResult.OK)
-                return;
-
-            HActDir inf = new HActDir();
-            inf.Open(dialog.FileName);
-
-            hactInf = inf;
-            folderDir = Path.GetDirectoryName(dialog.FileName);
-
-            BaseYAct yact = BaseYAct.Read(dialog.FileName);
-
-            ProcessYAct(yact);
         }
 
         private void ProcessYAct(BaseYAct yact)
         {
+            AppRegistry.Root.SetValue("LastFileDir", folderDir);
+
             ClearEverything();
 
             curGame = (Game)targetGameCombo.SelectedIndex;
@@ -460,6 +480,7 @@ namespace CMNEdit
             IsHact = false;
             IsTev = false;
             IsOE = false;
+            IsPS2Prop = false;
             IsYAct = true;
 
             hactTabs.TabPages.Remove(csvTab);
@@ -468,28 +489,110 @@ namespace CMNEdit
 
             hactTabs.TabPages[0].Text = "YAct";
 
-            for (int i = 0; i < yact.Characters.Count; i++)
-            {
-                TreeNodeYActCharacter chara = new TreeNodeYActCharacter(yact.Characters[i]);
-                chara.Nodes.Add(new TreeNodeYActCharacterMotion(yact.CharacterAnimations[i]));
-                nodesTree.Nodes.Add(chara);
-            }
+            HashSet<YActEffect> parentedEffects = new HashSet<YActEffect>();
 
-            for (int i = 0; i < yact.Cameras.Count; i++)
+            if(yact is YActY2)
             {
-                TreeNodeYActCamera cam = new TreeNodeYActCamera(yact.Cameras[i]);
-                cam.Nodes.Add(new TreeNodeYActCameraMotion(new YActFile() { Buffer = cam.Camera.MTBWFile }));
-                nodesTree.Nodes.Add(cam);
+                for (int i = 0; i < yact.Characters.Count; i++)
+                {
+                    YActY2Character yactChara = yact.Characters[i] as YActY2Character;
+                    TreeNodeYActCharacter charaNode = new TreeNodeYActCharacter(yactChara);
+
+                    foreach(var anim in yactChara.AnimationData)
+                    {
+                        charaNode.Nodes.Add(new TreeNodeYActY2Animation(anim));
+                    }
+
+                    for(int k = yactChara.UnknownY2[0]; k < yactChara.UnknownY2[0] + yactChara.UnknownY2[1]; k++)
+                    {
+                        YActEffect yactEffect = yact.Effects[k];
+                        parentedEffects.Add(yactEffect);
+                        TreeNodeYActEffect yactNode = new TreeNodeYActEffect(yactEffect);
+
+                        charaNode.Nodes.Add(yactNode);
+                    }
+
+                    nodesTree.Nodes.Add(charaNode);
+                }
+
+                for (int i = 0; i < yact.Cameras.Count; i++)
+                {
+                    YActY2Camera yactCam = yact.Cameras[i] as YActY2Camera;
+                    TreeNodeYActCamera camNode = new TreeNodeYActCamera(yactCam);
+
+                    foreach(var anim in yactCam.AnimationData)
+                    {
+                        camNode.Nodes.Add(new TreeNodeYActY2Animation(anim));
+                    }
+
+                    nodesTree.Nodes.Add(camNode);
+                }
+            }
+            else
+            {
+                int cur = 0;
+
+                for (int i = 0; i < yact.Characters.Count; i++)
+                {
+                    TreeNodeYActCharacter chara = new TreeNodeYActCharacter(yact.Characters[i]);
+                    chara.Nodes.Add(new TreeNodeYActCharacterMotion(yact.CharacterAnimations[i]));
+
+                    nodesTree.Nodes.Add(chara);
+                }
+
+                for (int i = 0; i < yact.Cameras.Count; i++)
+                {
+                    TreeNodeYActCamera cam = new TreeNodeYActCamera(yact.Cameras[i]);
+                    cam.Nodes.Add(new TreeNodeYActCameraMotion(new YActFile() { Buffer = cam.Camera.MTBWFile }));
+                    nodesTree.Nodes.Add(cam);
+                }
             }
 
             for (int i = 0; i < yact.Effects.Count; i++)
             {
-                nodesTree.Nodes.Add(new TreeNodeYActEffect(yact.Effects[i]));
+                YActEffect yactEffect = yact.Effects[i];
+
+                if (parentedEffects.Contains(yactEffect))
+                    continue;
+
+                TreeNodeYActEffect yactNode = new TreeNodeYActEffect(yactEffect);
+                nodesTree.Nodes.Add(yactNode);
             }
 
             hactDurationPanel.Visible = false;
         }
 
+
+        private void ProcessPS2Prop(OMTProperty prop)
+        {
+            IsBep = false;
+            IsMep = false;
+            IsHact = false;
+            IsTev = false;
+            IsOE = false;
+            IsPS2Prop = true;
+            IsYAct = false;
+
+            hactTabs.TabPages.Remove(csvTab);
+            hactTabs.TabPages.Remove(resPage);
+            hactTabs.TabPages.Remove(cutPage);
+
+
+            hactTabs.TabPages[0].Text = "Property";
+
+
+            foreach(var dat1 in prop.MoveProperties)
+            {
+                TreeNodePS2PropertyData1 propNode = new TreeNodePS2PropertyData1(dat1);
+                nodesTree.Nodes.Add(propNode);
+            }
+
+            foreach (var dat2 in prop.Effects)
+            {
+                TreeNodePS2PropertyData2 propNode = new TreeNodePS2PropertyData2(dat2);
+                nodesTree.Nodes.Add(propNode);
+            }
+        }
 
         public void DrawCutInfo()
         {
@@ -829,6 +932,13 @@ namespace CMNEdit
 
             System.Diagnostics.Debug.Print(varPanel.RowStyles.Count.ToString());
 
+
+            if(IsPS2Prop)
+            {
+                ProcessSelectedNodePS2Prop();
+                return;
+            }
+
             if (IsYAct)
             {
                 ProcessSelectedNodeYAct();
@@ -954,7 +1064,7 @@ namespace CMNEdit
 
                 provider.Changed += delegate
                 {
-                    if (provider.Bytes.Count == node.unkBytes.Length)
+                    if (provider.Bytes.Count >= node.unkBytes.Length)
                         node.unkBytes = provider.Bytes.ToArray();
                     else
                         unkBytesBox.ByteProvider = CreateProvider();
@@ -1227,6 +1337,16 @@ namespace CMNEdit
         {
             if (pastingNode == null || pastingNode.Length == 0)
                 return;
+
+            if(IsPS2Prop)
+            {
+                foreach(var node in pastingNode)
+                {
+                    TreeNode newNode = (TreeNode)node.Clone();
+                    nodesTree.Nodes.Add(newNode);
+                }
+                return;
+            }
 
             if (!IsMep)
             {
@@ -1559,6 +1679,22 @@ namespace CMNEdit
                         CSV.Write(Csv, csvPath);
                 }
             }
+            else if (IsPS2Prop)
+            {
+                OMTProperty propFile = new OMTProperty();
+
+                List<OMTMoveProperty> dat1s = nodesTree.Nodes.Cast<TreeNode>().Where(x => x is TreeNodePS2PropertyData1).Cast<TreeNodePS2PropertyData1>().Select(x => x.Data1).ToList();
+                List<OMTEffectProperty> dat2s = nodesTree.Nodes.Cast<TreeNode>().Where(x => x is TreeNodePS2PropertyData2).Cast<TreeNodePS2PropertyData2>().Select(x => x.Data2).ToList();
+
+                propFile.MoveProperties = dat1s;
+                propFile.Effects = dat2s;
+
+                OMTProperty.Write(propFile, FilePath);
+            }
+            else if(IsYAct)
+            {
+                YActY1.Write(FilePath, yact);
+            }
 
         }
 
@@ -1851,6 +1987,9 @@ namespace CMNEdit
                     case "e_auth_element_talk_text":
                         DEElementTalkTextWindow.Draw(this, element);
                         break;
+                    case "e_auth_element_battle_slide":
+                        DEElementBattleSlideWindow.Draw(this, element);
+                        break;
                 }
             }
         }
@@ -2119,11 +2258,45 @@ namespace CMNEdit
 
             curGame = (Game)targetGameCombo.SelectedIndex;
             curVer = CMN.GetVersionForGame(curGame);
-
-            BEP Bep = BEP.Read(dialog.FileName, curGame);
+            CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
             FilePath = dialog.FileName;
 
-            InitBEP(Bep);
+            nodesTree.SuspendLayout();
+
+            if(curGame == Game.Y1 || curGame == Game.Y2)
+            {
+                FilePath = dialog.FileName;
+                OMTProperty property = OMTProperty.Read(dialog.FileName);
+
+                ProcessPS2Prop(property);
+            }
+            else if(curGame > Game.Y3 && curGame < Game.Y6Demo)
+            {
+                Mep = MEP.Read(dialog.FileName);
+                InitMEP(Mep);
+            }
+            else
+            {
+                BEP Bep = BEP.Read(dialog.FileName, curGame);
+                FilePath = dialog.FileName;
+
+                InitBEP(Bep);
+            }
+
+            nodesTree.ResumeLayout();
+        }
+
+
+        private void OnOpenDEFormat()
+        {
+            addNodeTab.DropDownItems.Add(nodeAddTabDE);
+            advancedTab.DropDownItems.Add(authPagesButton);
+            convertTab.DropDownItems.Add(convertBetweenGamesButton);
+        }
+        private void OnOpenHAct()
+        {
+            advancedTab.DropDownItems.Add(advancedFrameProgressionButton);
+            advancedTab.DropDownItems.Add(disableFrameInfoButton);
         }
 
         private void InitBEP(BEP Bep)
@@ -2136,6 +2309,34 @@ namespace CMNEdit
                 nodesTree.Nodes.Add(new TreeViewItemNode(node));
 
             ProcessBEPHierarchy();
+        }
+
+        private void InitMEP(MEP Mep)
+        {
+            ClearEverything();
+
+            EditingNode = null;
+            EditingResource = null;
+            m_rightClickedNode = null;
+
+            IsHact = false;
+            IsOE = true;
+            IsMep = true;
+            IsBep = false;
+            IsTev = false;
+
+            hactTabs.TabPages[0].Text = "MEP";
+            hactTabs.TabPages.Remove(resPage);
+            hactTabs.TabPages.Remove(cutPage);
+
+            hactTabs.TabPages[0].Text = "MEP";
+            hactTabs.TabPages.Remove(resPage);
+            hactTabs.TabPages.Remove(cutPage);
+
+            resTree.Nodes.Clear();
+
+            foreach (MepEffect node in Mep.Effects)
+                nodesTree.Nodes.Add(new TreeViewItemMepNode(node));
         }
 
         public void ProcessBEPHierarchy()
@@ -2163,37 +2364,6 @@ namespace CMNEdit
 
             if (res != DialogResult.OK)
                 return;
-
-            ClearEverything();
-
-            EditingNode = null;
-            EditingResource = null;
-            m_rightClickedNode = null;
-
-            IsHact = false;
-            IsOE = true;
-            IsMep = true;
-            IsBep = false;
-            IsTev = false;
-
-            curGame = (Game)targetGameCombo.SelectedIndex;
-            curVer = CMN.GetVersionForGame(curGame);
-
-            CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
-
-            Mep = MEP.Read(dialog.FileName);
-            FilePath = dialog.FileName;
-
-            hactTabs.TabPages[0].Text = "MEP";
-            hactTabs.TabPages.Remove(resPage);
-            hactTabs.TabPages.Remove(cutPage);
-
-            hactDurationPanel.Visible = false;
-
-            resTree.Nodes.Clear();
-
-            foreach (MepEffect node in Mep.Effects)
-                nodesTree.Nodes.Add(new TreeViewItemMepNode(node));
         }
 
 
@@ -2211,6 +2381,7 @@ namespace CMNEdit
             hactDurationPanel.Visible = false;
 
             resTree.Nodes.Clear();
+            OnOpenDEFormat();
         }
 
         private NodeElement AddElementOfType(Type t, string name, string kind)
@@ -2869,7 +3040,6 @@ namespace CMNEdit
         //Ryuse Ga Gotoku
         private void convertBetweenGamesDEToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             if (curVer < GameVersion.Y0_K1)
                 return;
 
@@ -3049,7 +3219,10 @@ namespace CMNEdit
                 OEAnimEntry entry = oeProperty.Moves.Where(x => x.Name == input).FirstOrDefault();
 
                 if (entry == null)
+                {
+                    MessageBox.Show($"Couldn't find {input}, please check case sensitivity!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
+                }
 
                 BEP converted = ConvertAnimEntryToBEP(entry);
                 InitBEP(converted);
@@ -3389,17 +3562,53 @@ namespace CMNEdit
 
             Be.Windows.Forms.DynamicByteProvider provider = null;
 
+            if(node is TreeNodeYActY2Animation)
+            {
+                var y2Anim = node as TreeNodeYActY2Animation;
+                CreateHeader($"Animation ({y2Anim.Animation.Format})");
+                CreateInput("Start", y2Anim.Animation.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                CreateInput("End", y2Anim.Animation.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
+                CreateButton("Export", delegate
+                {
+                    string format = y2Anim.Animation.Format.ToString().ToLowerInvariant();
+
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Filter = $"PS2 Animation File (*.{format})|*.{format}";
+                    dialog.FileName = $"{y2Anim.Parent.Text}.{format}";
+                    dialog.InitialDirectory = AppRegistry.GetFileExtractOpenPath();
+
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        AppRegistry.Root.SetValue("LastHActAssetExportDir", Path.GetDirectoryName(dialog.FileName));
+                        File.WriteAllBytes(dialog.FileName, y2Anim.Animation.File.Buffer);
+                    }
+                });
+            }
+
             if (node is TreeNodeYActCameraMotion)
             {
                 CreateHeader("Camera Animation");
+                CreateButton("Import", delegate
+                {
+                    OpenFileDialog dialog = new OpenFileDialog();
+                    dialog.Filter = "PS2 Object/Camera Animation (*.mtbw)|*.mtbw";
+
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        (node as TreeNodeYActCameraMotion).File.Buffer = File.ReadAllBytes(dialog.FileName);
+                    }
+                });
                 CreateButton("Export", delegate
                 {
                     SaveFileDialog dialog = new SaveFileDialog();
                     dialog.Filter = "PS2 Camera Animation (*.mtbw)|*.mtbw";
                     dialog.FileName = "camera.mtbw";
+                    dialog.InitialDirectory = AppRegistry.GetFileExtractOpenPath();
 
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
+                        AppRegistry.Root.SetValue("LastHActAssetExportDir", Path.GetDirectoryName(dialog.FileName));
                         File.WriteAllBytes(dialog.FileName, (node as TreeNodeYActCameraMotion).File.Buffer);
                     }
                 });
@@ -3407,19 +3616,92 @@ namespace CMNEdit
             else if (node is TreeNodeYActCharacterMotion)
             {
                 CreateHeader("Character Animation");
+                CreateButton("Import", delegate
+                {
+                    OpenFileDialog dialog = new OpenFileDialog();
+                    dialog.Filter = "Character Animation|*.omt;*.dat";
+
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        (node as TreeNodeYActCharacterMotion).File.Buffer = File.ReadAllBytes(dialog.FileName);
+                    }
+                });
                 CreateButton("Export", delegate
                 {
                     SaveFileDialog dialog = new SaveFileDialog();
                     dialog.Filter = "PS2 Animation (*.omt)|*.omt";
                     dialog.FileName = node.Parent.Text + ".omt";
+                    dialog.InitialDirectory = AppRegistry.GetFileExtractOpenPath();
 
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
+                        AppRegistry.Root.SetValue("LastHActAssetExportDir", Path.GetDirectoryName(dialog.FileName));
                         File.WriteAllBytes(dialog.FileName, (node as TreeNodeYActCharacterMotion).File.Buffer);
                     }
                 });
             }
+            else if (node is TreeNodeYActEffect)
+            {
+                var effectNode = node as TreeNodeYActEffect;
+                CreateHeader("YAct Effect");
 
+                if(!string.IsNullOrEmpty(effectNode.Effect.Name))
+                    CreateInput("Name", effectNode.Effect.Name.ToString(), delegate (string val) { effectNode.Effect.Name = val; });
+
+                CreateInput("Start", effectNode.Effect.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                CreateInput("End", effectNode.Effect.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
+            }
+
+            CreateHeader("");
+            unkBytesBox.ByteProvider = provider;
+            varPanel.ResumeLayout();
+        }
+
+        public void ProcessSelectedNodePS2Prop()
+        {
+            TreeNode node = nodesTree.SelectedNode;
+
+            Be.Windows.Forms.DynamicByteProvider provider = null;
+
+            if(node is TreeNodePS2PropertyData1)
+            {
+                var dat1Node = node as TreeNodePS2PropertyData1;
+                CreateHeader("Property (Data1)");
+                CreateInput("Type", dat1Node.Data1.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
+                CreateInput("Start", dat1Node.Data1.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                CreateInput("End", dat1Node.Data1.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
+                if (dat1Node.Data1.UnknownData != null)
+                {
+                    provider = new Be.Windows.Forms.DynamicByteProvider(dat1Node.Data1.UnknownData);
+                    provider.Changed += delegate
+                    {
+                        if (provider.Bytes.Count == dat1Node.Data1.UnknownData.Length)
+                            dat1Node.Data1.UnknownData = provider.Bytes.ToArray();
+                    };
+                }
+            }
+            else if(node is TreeNodePS2PropertyData2)
+            {
+                var dat2Node = node as TreeNodePS2PropertyData2;
+                CreateHeader("Property (Data2)");
+                CreateInput("Type?", dat2Node.Data2.Type.ToString(), delegate (string val) {  }, NumberBox.NumberMode.Int, true);
+                CreateInput("Start", dat2Node.Data2.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                CreateInput("End", dat2Node.Data2.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
+                if (dat2Node.Data2.UnknownData != null)
+                {
+                    provider = new Be.Windows.Forms.DynamicByteProvider(dat2Node.Data2.UnknownData);
+                    provider.Changed += delegate
+                    {
+                        if (provider.Bytes.Count == dat2Node.Data2.UnknownData.Length)
+                            dat2Node.Data2.UnknownData = provider.Bytes.ToArray();
+                    };
+                }
+            }
+
+            CreateHeader("");
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
         }
@@ -3471,7 +3753,7 @@ namespace CMNEdit
                 if ((uint)prefixGame >= 9999)
                     return;
 
-                foreach(string bepFile in Directory.GetFiles(dialog.SelectedPath, "*.bep"))
+                foreach (string bepFile in Directory.GetFiles(dialog.SelectedPath, "*.bep"))
                 {
                     BEP bepfile = BEP.Read(bepFile, igame);
 
@@ -3483,6 +3765,46 @@ namespace CMNEdit
 
                 MessageBox.Show("Complete!");
             }
+        }
+
+        private void openYActToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.InitialDirectory = AppRegistry.GetFileOpenPath();
+            dialog.CheckFileExists = true;
+
+            DialogResult res = dialog.ShowDialog();
+
+            if (res != DialogResult.OK)
+                return;
+
+            HActDir inf = new HActDir();
+            inf.Open(dialog.FileName);
+
+            hactInf = inf;
+            folderDir = Path.GetDirectoryName(dialog.FileName);
+            FilePath = dialog.FileName;
+
+            yact = BaseYAct.Read(FilePath);
+
+            ProcessYAct(yact);
+        }
+
+        private void openPropertyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.InitialDirectory = AppRegistry.GetFileOpenPath();
+            dialog.CheckFileExists = true;
+
+            DialogResult res = dialog.ShowDialog();
+
+            if (res != DialogResult.OK)
+                return;
+
+            FilePath = dialog.FileName;
+            OMTProperty property = OMTProperty.Read(dialog.FileName);
+
+            ProcessPS2Prop(property);
         }
     }
 }

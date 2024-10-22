@@ -10,6 +10,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x55)]
     [ElementID(Game.LAD7Gaiden, 0x55)]
     [ElementID(Game.LADIW, 0x55)]
+    [ElementID(Game.LADPYIH, 0x55)]
     public class DEElementCameraShake : NodeElement
     {
         public CameraShakeType Type;

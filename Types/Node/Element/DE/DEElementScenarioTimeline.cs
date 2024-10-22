@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x17)]
     [ElementID(Game.LAD7Gaiden, 0x17)]
     [ElementID(Game.LADIW, 0x17)]
+    [ElementID(Game.LADPYIH, 0x17)]
     public class DEElementScenarioTimeline : NodeElement
     {
         public string TimelineCategory;

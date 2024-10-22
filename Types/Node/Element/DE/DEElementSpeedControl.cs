@@ -24,6 +24,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x5C)]
     [ElementID(Game.LAD7Gaiden, 0x5C)]
     [ElementID(Game.LADIW, 0x5C)]
+    [ElementID(Game.LADPYIH, 0x5C)]
     public class DEElementSpeedControl : NodeElement
     {
         public SpeedType Type;

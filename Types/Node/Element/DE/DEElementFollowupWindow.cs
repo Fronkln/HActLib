@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x47)]
     [ElementID(Game.LAD7Gaiden, 0x47)]
     [ElementID(Game.LADIW, 0x47)]
+    [ElementID(Game.LADPYIH, 0x47)]
     public class DEElementFollowupWindow : NodeElement
     {
         public uint Unknown = 0;

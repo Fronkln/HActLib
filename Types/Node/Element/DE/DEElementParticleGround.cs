@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x15)]
     [ElementID(Game.LAD7Gaiden, 0x15)]
     [ElementID(Game.LADIW, 0x15)]
+    [ElementID(Game.LADPYIH, 0x15)]
     public class DEElementParticleGround : NodeElement
     {
         public Vector3 Scale = new Vector3(1, 1, 1);

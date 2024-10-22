@@ -16,6 +16,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x2A)]
     [ElementID(Game.LAD7Gaiden, 0x2A)]
     [ElementID(Game.LADIW, 0x2A)]
+    [ElementID(Game.LADPYIH, 0x2A)]
     public class DEElementPathOffset : NodeElement
     {
         public Matrix4x4 Matrix = Matrix4x4.Default;

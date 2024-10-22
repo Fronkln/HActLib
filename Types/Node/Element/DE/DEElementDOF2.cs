@@ -12,6 +12,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x170)]
     [ElementID(Game.LAD7Gaiden, 0x170)]
     [ElementID(Game.LADIW, 0x170)]
+    [ElementID(Game.LADPYIH, 0x170)]
     public class DEElementDOF2 : NodeElement
     {
         public bool DisableDof;

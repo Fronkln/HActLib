@@ -1,11 +1,9 @@
-﻿using HActLib.PS2;
-using HActLib.YAct;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using Yarhl.IO;
 
-namespace HActLib
+namespace HActLib.YAct
 {
     public class BaseYAct
     {
@@ -15,6 +13,9 @@ namespace HActLib
 
         public List<YActFile> CharacterAnimations = new List<YActFile>();
         public List<YActFile> CameraAnimations = new List<YActFile>();
+
+        public List<YActUnkStructure2> Unks2 = new List<YActUnkStructure2>();
+        public List<YActUnkStructure2> Unks3 = new List<YActUnkStructure2>();
 
         public static BaseYAct Read(string path)
         {
@@ -34,6 +35,11 @@ namespace HActLib
                 return YActY1.Read(buf);
         }
 
+        public static void Write(string path, BaseYAct yact)
+        {
+
+        }
+
         private static YActVersion DetermineVersion(byte[] buf)
         {
             if (BitConverter.ToInt32(buf, 0) != buf.Length)
@@ -42,11 +48,11 @@ namespace HActLib
                 return YActVersion.Y1;
         }
 
-        protected virtual void ReadCharacters(DataReader yactReader, SizedPointer characterChunk)
+        protected virtual void ReadCharacters(DataReader yactReader, SizedPointer characterChunk, List<YActFile> characterFiles)
         {
         }
 
-        protected virtual void ReadCameras(DataReader yactReader, SizedPointer cameraChunk)
+        protected virtual void ReadCameras(DataReader yactReader, SizedPointer cameraChunk, List<YActFile> cameraFiles)
         {
             Cameras = new List<YActCamera>();
 
@@ -72,6 +78,62 @@ namespace HActLib
         protected virtual void ReadEffects(DataReader yactReader, SizedPointer effectChunk)
         {
 
+        }
+
+        protected virtual void ReadUnk2s(DataReader yactReader, SizedPointer unk2Chunk)
+        {
+            if (unk2Chunk.Size <= 0)
+                return;
+
+            Unks2 = new List<YActUnkStructure2>();
+
+            yactReader.Stream.Seek(unk2Chunk.Pointer);
+
+            for(int i = 0; i < unk2Chunk.Size; i++)
+            {
+                YActUnkStructure2 str2 = new YActUnkStructure2();
+                str2.Data = new float[8]
+                {
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                };
+
+                Unks2.Add(str2);
+            }
+        }
+
+        protected virtual void ReadUnk3s(DataReader yactReader, SizedPointer unk3Chunk)
+        {
+            if (unk3Chunk.Size <= 0)
+                return;
+
+            Unks3 = new List<YActUnkStructure2>();
+
+            yactReader.Stream.Seek(unk3Chunk.Pointer);
+
+            for (int i = 0; i < unk3Chunk.Size; i++)
+            {
+                YActUnkStructure2 str3 = new YActUnkStructure2();
+                str3.Data = new float[8]
+                {
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                    yactReader.ReadSingle(),
+                };
+
+                Unks3.Add(str3);
+            }
         }
 
         protected virtual void ReadCharacterAnimations(DataReader yactReader, SizedPointer charaAnimChunk)

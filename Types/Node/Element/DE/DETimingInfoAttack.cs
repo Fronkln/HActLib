@@ -26,6 +26,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x4A)]
     [ElementID(Game.LAD7Gaiden, 0x4A)]
     [ElementID(Game.LADIW, 0x4A)]
+    [ElementID(Game.LADPYIH, 0x4A)]
     public class DETimingInfoAttack : NodeElement
     {
         public TimingInfoAttack Data = new TimingInfoAttack();

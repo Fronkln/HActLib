@@ -32,6 +32,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0xBB)]
     [ElementID(Game.LAD7Gaiden, 0xBB)]
     [ElementID(Game.LADIW, 0xBB)]
+    [ElementID(Game.LADPYIH, 0xBB)]
     public class DEElementBattleCommandSpecial : NodeElement
     {
         public BattleCommandSpecialID Type;

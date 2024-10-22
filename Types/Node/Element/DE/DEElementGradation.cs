@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x9)]
     [ElementID(Game.LAD7Gaiden, 0x9)]
     [ElementID(Game.LADIW, 0x9)]
+    [ElementID(Game.LADPYIH, 0x9)]
     public class DEElementGradation : NodeElement
     {
         public bool IsAnimation;

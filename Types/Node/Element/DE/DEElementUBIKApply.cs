@@ -11,6 +11,7 @@ namespace HActLib
 
     [ElementID(Game.LAD7Gaiden, 0x1E6)]
     [ElementID(Game.LADIW, 0x1E6)]
+    [ElementID(Game.LADPYIH, 0x1E6)]
     public class DEElementUBIKApply : NodeElement
     {
         public int Unknown1;

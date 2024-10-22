@@ -12,6 +12,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x172)]
     [ElementID(Game.LAD7Gaiden, 0x172)]
     [ElementID(Game.LADIW, 0x172)]
+    [ElementID(Game.LADPYIH, 0x172)]
     public class DEElementMotionBlur2 : NodeElement
     {
         public float ShutterSpeed = 30;

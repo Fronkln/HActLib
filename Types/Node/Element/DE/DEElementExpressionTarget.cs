@@ -18,6 +18,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0xAF)]
     [ElementID(Game.LAD7Gaiden, 0xAF)]
     [ElementID(Game.LADIW, 0xAF)]
+    [ElementID(Game.LADPYIH, 0xAF)]
     public class DEElementExpressionTarget : NodeElement
     {
         public List<ExpressionTargetData> Data = new List<ExpressionTargetData>();

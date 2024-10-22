@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x124)]
     [ElementID(Game.LAD7Gaiden, 0x124)]
     [ElementID(Game.LADIW, 0x124)]
+    [ElementID(Game.LADPYIH, 0x124)]
     public class DEElementCharacterSpeed : NodeElement
     {
         public float MaxSpeed;

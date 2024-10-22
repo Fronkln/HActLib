@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x8E)]
     [ElementID(Game.LAD7Gaiden, 0x8E)]
     [ElementID(Game.LADIW, 0x8E)]
+    [ElementID(Game.LADPYIH, 0x8E)]
     public class DEElementSpeech : NodeElement
     {
         public uint SpeechVersion;

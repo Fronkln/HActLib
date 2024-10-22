@@ -23,6 +23,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x19)]
     [ElementID(Game.LAD7Gaiden, 0x19)]
     [ElementID(Game.LADIW, 0x19)]
+    [ElementID(Game.LADPYIH, 0x19)]
     public class DEElementSE : NodeElement
     {
         public enum Versions

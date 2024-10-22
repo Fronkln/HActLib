@@ -19,7 +19,8 @@ namespace HActLib.Internal
             {
                 default:
                     return typeof(LADIWNodeIDs);
-
+                case Game.LADPYIH:
+                    return typeof(LADPYIHNodeIDs);
                 case Game.LADIW:
                     return typeof(LADIWNodeIDs);
                 case Game.LAD7Gaiden:

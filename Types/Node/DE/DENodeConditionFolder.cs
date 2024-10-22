@@ -78,7 +78,7 @@ namespace HActLib
         public int Index;
         public int TagValue;
         public uint DataFlag;
-        public byte[] ConditionTag; //64
+        public string ConditionTag; //64
         public Guid TagGUID;
         public ulong TagUID;
         public uint PuidID;
@@ -93,8 +93,13 @@ namespace HActLib
             Index = reader.ReadInt32();
             TagValue = reader.ReadInt32();
             DataFlag = reader.ReadUInt32();
+            ConditionTag = reader.ReadString(64);
             TagGUID = new Guid(reader.ReadBytes(16));
+            TagUID = reader.ReadUInt64();
             PuidID = reader.ReadUInt32();
+            Unknown2 = reader.ReadUInt32();
+            reader.Stream.Position += 32;
+
         }
 
         internal override void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
@@ -106,6 +111,10 @@ namespace HActLib
             writer.Write(DataFlag);
             writer.Write(TagGUID.ToByteArray());
             writer.Write(PuidID);
+            writer.Write(ConditionTag.ToLength(64));
+            writer.Write(TagUID);
+            writer.Write(PuidID);
+            writer.Write(Unknown2);
         }
     }
 }

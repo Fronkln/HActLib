@@ -40,7 +40,6 @@
             openHActCMNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openYActToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            openMEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             nodeTooltip = new System.Windows.Forms.ToolStripSplitButton();
@@ -67,13 +66,14 @@
             adjustTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             moveTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
-            convertMEPWithPibsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             frameProgressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             disableFrameInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             authPagesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            convertBetweenGamesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ımportBEPDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            propertybinTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            convertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            convertToOtherDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            bulkConvertBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            convertOEPropertybinToBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            convertMEPWithPibsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             nodesTree = new MWControlSuite.MWTreeView();
             nodeIcons = new System.Windows.Forms.ImageList(components);
             nodeContext = new System.Windows.Forms.ContextMenuStrip(components);
@@ -136,7 +136,6 @@
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             langOverrideLbl = new System.Windows.Forms.Label();
             langOverrideBox = new System.Windows.Forms.TextBox();
-            bulkConvertBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -212,7 +211,7 @@
             // toolStripDropDownButton1
             // 
             toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { openCtrlOToolStripMenuItem, openHActCMNToolStripMenuItem, openYActToolStripMenuItem, openBEPToolStripMenuItem, openMEPToolStripMenuItem, saveToolStripMenuItem, saveAsToolStripMenuItem });
+            toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { openCtrlOToolStripMenuItem, openHActCMNToolStripMenuItem, openYActToolStripMenuItem, openBEPToolStripMenuItem, saveToolStripMenuItem, saveAsToolStripMenuItem });
             toolStripDropDownButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripDropDownButton1.Image");
             toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -222,49 +221,42 @@
             // openCtrlOToolStripMenuItem
             // 
             openCtrlOToolStripMenuItem.Name = "openCtrlOToolStripMenuItem";
-            openCtrlOToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            openCtrlOToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             openCtrlOToolStripMenuItem.Text = "Open HAct Folder";
             openCtrlOToolStripMenuItem.Click += openCtrlOToolStripMenuItem_Click;
             // 
             // openHActCMNToolStripMenuItem
             // 
             openHActCMNToolStripMenuItem.Name = "openHActCMNToolStripMenuItem";
-            openHActCMNToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            openHActCMNToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             openHActCMNToolStripMenuItem.Text = "Open HAct";
             openHActCMNToolStripMenuItem.Click += openHActCMNToolStripMenuItem_Click;
             // 
             // openYActToolStripMenuItem
             // 
             openYActToolStripMenuItem.Name = "openYActToolStripMenuItem";
-            openYActToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            openYActToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             openYActToolStripMenuItem.Text = "Open YAct";
-            openYActToolStripMenuItem.Click += openYActToolStripMenuItem_Click;
+            openYActToolStripMenuItem.Click += openYActToolStripMenuItem1_Click;
             // 
             // openBEPToolStripMenuItem
             // 
             openBEPToolStripMenuItem.Name = "openBEPToolStripMenuItem";
-            openBEPToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            openBEPToolStripMenuItem.Text = "Open BEP";
+            openBEPToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            openBEPToolStripMenuItem.Text = "Open BEP/MEP/PS2 Property";
             openBEPToolStripMenuItem.Click += openBEPToolStripMenuItem_Click;
-            // 
-            // openMEPToolStripMenuItem
-            // 
-            openMEPToolStripMenuItem.Name = "openMEPToolStripMenuItem";
-            openMEPToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            openMEPToolStripMenuItem.Text = "Open MEP";
-            openMEPToolStripMenuItem.Click += openMEPToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            saveToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // saveAsToolStripMenuItem
             // 
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            saveAsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             saveAsToolStripMenuItem.Text = "Save As";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             // 
@@ -424,79 +416,87 @@
             // adjustTimingToolStripMenuItem
             // 
             adjustTimingToolStripMenuItem.Name = "adjustTimingToolStripMenuItem";
-            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             adjustTimingToolStripMenuItem.Text = "Adjust Timing";
             adjustTimingToolStripMenuItem.Click += adjustTimingToolStripMenuItem_Click;
             // 
             // moveTimingToolStripMenuItem
             // 
             moveTimingToolStripMenuItem.Name = "moveTimingToolStripMenuItem";
-            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             moveTimingToolStripMenuItem.Text = "Move Timing";
             moveTimingToolStripMenuItem.Click += moveTimingToolStripMenuItem_Click;
             // 
             // advancedButton
             // 
             advancedButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertMEPWithPibsToolStripMenuItem, frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, authPagesDEToolStripMenuItem, convertBetweenGamesDEToolStripMenuItem, ımportBEPDEToolStripMenuItem, propertybinTestToolStripMenuItem, bulkConvertBEPToolStripMenuItem });
+            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, authPagesDEToolStripMenuItem, convertToolStripMenuItem });
             advancedButton.Image = (System.Drawing.Image)resources.GetObject("advancedButton.Image");
             advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             advancedButton.Name = "advancedButton";
             advancedButton.Size = new System.Drawing.Size(73, 22);
             advancedButton.Text = "Advanced";
             // 
-            // convertMEPWithPibsToolStripMenuItem
-            // 
-            convertMEPWithPibsToolStripMenuItem.Name = "convertMEPWithPibsToolStripMenuItem";
-            convertMEPWithPibsToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            convertMEPWithPibsToolStripMenuItem.Text = "Convert MEP (With Pibs)";
-            convertMEPWithPibsToolStripMenuItem.Click += convertMEPWithPibsToolStripMenuItem_Click;
-            // 
             // frameProgressionToolStripMenuItem
             // 
             frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
-            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             frameProgressionToolStripMenuItem.Text = "Frame Progression";
             frameProgressionToolStripMenuItem.Click += frameProgressionToolStripMenuItem_Click;
             // 
             // disableFrameInfoToolStripMenuItem
             // 
             disableFrameInfoToolStripMenuItem.Name = "disableFrameInfoToolStripMenuItem";
-            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             disableFrameInfoToolStripMenuItem.Text = "Disable Frame Info";
             disableFrameInfoToolStripMenuItem.Click += disableFrameInfoToolStripMenuItem_Click;
             // 
             // authPagesDEToolStripMenuItem
             // 
             authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
-            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
             authPagesDEToolStripMenuItem.Click += authPagesDEToolStripMenuItem_Click;
             // 
-            // convertBetweenGamesDEToolStripMenuItem
+            // convertToolStripMenuItem
             // 
-            convertBetweenGamesDEToolStripMenuItem.Name = "convertBetweenGamesDEToolStripMenuItem";
-            convertBetweenGamesDEToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            convertBetweenGamesDEToolStripMenuItem.Text = "Convert Between Games (DE)";
-            convertBetweenGamesDEToolStripMenuItem.Click += convertBetweenGamesDEToolStripMenuItem_Click;
+            convertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertToOtherDEToolStripMenuItem, bulkConvertBEPToolStripMenuItem, convertOEPropertybinToBEPToolStripMenuItem, convertMEPWithPibsToolStripMenuItem1 });
+            convertToolStripMenuItem.Name = "convertToolStripMenuItem";
+            convertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            convertToolStripMenuItem.Text = "Convert";
             // 
-            // ımportBEPDEToolStripMenuItem
+            // convertToOtherDEToolStripMenuItem
             // 
-            ımportBEPDEToolStripMenuItem.Name = "ımportBEPDEToolStripMenuItem";
-            ımportBEPDEToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            ımportBEPDEToolStripMenuItem.Text = "Import BEP (DE)";
-            ımportBEPDEToolStripMenuItem.Click += ımportBEPDEToolStripMenuItem_Click;
+            convertToOtherDEToolStripMenuItem.Name = "convertToOtherDEToolStripMenuItem";
+            convertToOtherDEToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            convertToOtherDEToolStripMenuItem.Text = "Convert to Other DE";
+            convertToOtherDEToolStripMenuItem.Click += convertBetweenGamesDEToolStripMenuItem_Click;
             // 
-            // propertybinTestToolStripMenuItem
+            // bulkConvertBEPToolStripMenuItem
             // 
-            propertybinTestToolStripMenuItem.Name = "propertybinTestToolStripMenuItem";
-            propertybinTestToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            propertybinTestToolStripMenuItem.Text = "Convert OE property.bin to BEP";
-            propertybinTestToolStripMenuItem.Click += propertybinTestToolStripMenuItem_Click;
+            bulkConvertBEPToolStripMenuItem.Name = "bulkConvertBEPToolStripMenuItem";
+            bulkConvertBEPToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            bulkConvertBEPToolStripMenuItem.Text = "Bulk Convert BEP";
+            bulkConvertBEPToolStripMenuItem.Click += bulkConvertBEPToolStripMenuItem_Click;
+            // 
+            // convertOEPropertybinToBEPToolStripMenuItem
+            // 
+            convertOEPropertybinToBEPToolStripMenuItem.Name = "convertOEPropertybinToBEPToolStripMenuItem";
+            convertOEPropertybinToBEPToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            convertOEPropertybinToBEPToolStripMenuItem.Text = "Convert OE property.bin to BEP";
+            convertOEPropertybinToBEPToolStripMenuItem.Click += propertybinTestToolStripMenuItem_Click;
+            // 
+            // convertMEPWithPibsToolStripMenuItem1
+            // 
+            convertMEPWithPibsToolStripMenuItem1.Name = "convertMEPWithPibsToolStripMenuItem1";
+            convertMEPWithPibsToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
+            convertMEPWithPibsToolStripMenuItem1.Text = "Convert MEP (With Pibs)";
+            convertMEPWithPibsToolStripMenuItem1.Click += convertMEPWithPibsToolStripMenuItem_Click;
             // 
             // nodesTree
             // 
             nodesTree.AllowDrop = true;
+            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
             nodesTree.ImageIndex = 0;
             nodesTree.ImageList = nodeIcons;
             nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
@@ -1123,13 +1123,6 @@
             langOverrideBox.Size = new System.Drawing.Size(85, 23);
             langOverrideBox.TabIndex = 10;
             // 
-            // bulkConvertBEPToolStripMenuItem
-            // 
-            bulkConvertBEPToolStripMenuItem.Name = "bulkConvertBEPToolStripMenuItem";
-            bulkConvertBEPToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            bulkConvertBEPToolStripMenuItem.Text = "Bulk Convert BEP";
-            bulkConvertBEPToolStripMenuItem.Click += bulkConvertBEPToolStripMenuItem_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1242,16 +1235,11 @@
         public System.Windows.Forms.TreeView resTree;
         private System.Windows.Forms.ToolStripMenuItem moveTimingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assetBreakUIDToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openMEPToolStripMenuItem;
         private System.Windows.Forms.ToolStripDropDownButton advancedButton;
-        private System.Windows.Forms.ToolStripMenuItem convertMEPWithPibsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem frameProgressionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem authPagesDEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transitStunToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disableFrameInfoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem convertBetweenGamesDEToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem propertybinTestToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ımportBEPDEToolStripMenuItem;
         private System.Windows.Forms.TabPage csvTab;
         private System.Windows.Forms.TreeView csvTree;
         private System.Windows.Forms.TableLayoutPanel csvVarPanel;
@@ -1271,7 +1259,6 @@
         private System.Windows.Forms.ToolStripMenuItem addOOEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem damageHActEventToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem heatGaugeHActEventToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openYActToolStripMenuItem;
         public MWControlSuite.MWTreeView nodesTree;
         public System.Windows.Forms.ComboBox targetGameCombo;
         private System.Windows.Forms.TextBox langOverrideBox;
@@ -1280,6 +1267,11 @@
         private System.Windows.Forms.TextBox resEndBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox resStartBox;
+        private System.Windows.Forms.ToolStripMenuItem openYActToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertToOtherDEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bulkConvertBEPToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertOEPropertybinToBEPToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertMEPWithPibsToolStripMenuItem1;
     }
 }

@@ -16,6 +16,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x12)]
     [ElementID(Game.LAD7Gaiden, 0x12)]
     [ElementID(Game.LADIW, 0x12)]
+    [ElementID(Game.LADPYIH, 0x12)]
     public class DEElementParticle : NodeElement
     {
         public uint ParticleID = 1;

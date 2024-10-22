@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LJ, 0x87)]
     [ElementID(Game.LAD7Gaiden, 0x87)]
     [ElementID(Game.LADIW, 0x87)]
+    [ElementID(Game.LADPYIH, 0x87)]
     public class DEElementCharacterChange : NodeElement
     {
         public uint CharacterID = 0x1;

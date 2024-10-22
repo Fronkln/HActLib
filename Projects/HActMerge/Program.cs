@@ -56,9 +56,11 @@ namespace HActMerge
             TEX sourceCmnTex = TEX.Read(Path.Combine(new FileInfo(args[1]).Directory.FullName, "tex.bin"), CMN.IsDEGame(game));
             TEX destCmnTex = TEX.Read(Path.Combine(new FileInfo(args[3]).Directory.FullName, "tex.bin"), CMN.IsDEGame(game));
 
-            sourceCmnTex.Textures.AddRange(destCmnTex.Textures);
-
-            MergeRES(sourceCmnRes, destCmnRes);
+            if (sourceCmnTex != null && destCmnTex != null)
+            {
+                sourceCmnTex.Textures.AddRange(destCmnTex.Textures);
+                MergeRES(sourceCmnRes, destCmnRes);
+            }
 
 
             if (!dontFilter)
@@ -71,7 +73,7 @@ namespace HActMerge
                 NodeCamera sourceCamera = (NodeCamera)sourceHact.AllNodes.FirstOrDefault(x => x.Category == AuthNodeCategory.Camera);
                 NodeCamera destCamera = (NodeCamera)destinationHact.AllNodes.FirstOrDefault(x => x.Category == AuthNodeCategory.Camera);
 
-                if(sourceCamera != null && destCamera != null)
+                if (sourceCamera != null && destCamera != null)
                 {
                     sourceCamera.FrameProgression = destCamera.FrameProgression;
                     sourceCamera.FrameProgressionSpeed = destCamera.FrameProgressionSpeed;
@@ -86,7 +88,7 @@ namespace HActMerge
 
             if (destinationHact.AuthPages != null)
             {
-                if(!dontFilter)
+                if (!dontFilter)
                     AdjustPages(destinationHact, sourceHactEnd);
 
                 sourceHact.AuthPages.AddRange(destinationHact.AuthPages);
@@ -100,8 +102,12 @@ namespace HActMerge
 
             CMN.Write(sourceHact, Path.Combine(basePath, "output/cmn/cmn.bin"));
             RES.Write(sourceHActRes, Path.Combine(basePath, "output/000/res.bin"), CMN.IsDEGame(game));
-            RES.Write(sourceCmnRes, Path.Combine(basePath, "output/cmn/res.bin"), CMN.IsDEGame(game));
-            TEX.Write(sourceCmnTex, Path.Combine(basePath, "output/cmn/tex.bin"), CMN.IsDEGame(game));
+
+            if (sourceCmnRes != null)
+                RES.Write(sourceCmnRes, Path.Combine(basePath, "output/cmn/res.bin"), CMN.IsDEGame(game));
+
+            if (sourceCmnRes != null)
+                TEX.Write(sourceCmnTex, Path.Combine(basePath, "output/cmn/tex.bin"), CMN.IsDEGame(game));
 
             if (game >= Game.JE)
                 CMN.Write(sourceHact, Path.Combine(basePath, "output/cmn/cmn_vo.bin"));
@@ -182,12 +188,29 @@ namespace HActMerge
             NodeCamera sourceCamera = (NodeCamera)hact1.AllNodes.FirstOrDefault(x => x.Category == AuthNodeCategory.Camera);
             NodeCamera destCamera = (NodeCamera)hact2.AllNodes.FirstOrDefault(x => x.Category == AuthNodeCategory.Camera);
 
-            NodeCameraMotion[] destCameraMotion = destCamera.GetChildsOfType<NodeCameraMotion>();
 
-            foreach (NodeCameraMotion motion in destCameraMotion)
+            if (sourceCamera != null)
             {
-                motion.Parent.Children.Remove(motion);
-                sourceCamera.Children.Add(motion);
+                NodeCameraMotion[] destCameraMotion = destCamera.GetChildsOfType<NodeCameraMotion>();
+
+                foreach (NodeCameraMotion motion in destCameraMotion)
+                {
+                    motion.Parent.Children.Remove(motion);
+                    sourceCamera.Children.Add(motion);
+                }
+
+
+                if (!nofilter)
+                {
+                    List<float> frameProgression = new List<float>(sourceCamera.FrameProgression);
+                    List<float> frameProgressionSpeed = new List<float>(sourceCamera.FrameProgressionSpeed);
+
+                    frameProgression.AddRange(destCamera.FrameProgression);
+                    frameProgressionSpeed.AddRange(destCamera.FrameProgressionSpeed);
+
+                    sourceCamera.FrameProgression = frameProgression.ToArray();
+                    sourceCamera.FrameProgressionSpeed = frameProgressionSpeed.ToArray();
+                }
             }
 
             Node[] destRootNodes = hact2.AllNodes.Where(x => x.Parent == hact2.Root).ToArray();
@@ -198,21 +221,10 @@ namespace HActMerge
                     hact1.Root.Children.Add(node);
                 else
                 {
-                    foreach (Node child in node.Children)
-                        sourceCamera.Children.Add(child);
+                    if (sourceCamera != null)
+                        foreach (Node child in node.Children)
+                            sourceCamera.Children.Add(child);
                 }
-            }
-
-            if (!nofilter)
-            {
-                List<float> frameProgression = new List<float>(sourceCamera.FrameProgression);
-                List<float> frameProgressionSpeed = new List<float>(sourceCamera.FrameProgressionSpeed);
-
-                frameProgression.AddRange(destCamera.FrameProgression);
-                frameProgressionSpeed.AddRange(destCamera.FrameProgressionSpeed);
-
-                sourceCamera.FrameProgression = frameProgression.ToArray();
-                sourceCamera.FrameProgressionSpeed = frameProgressionSpeed.ToArray();
             }
         }
 

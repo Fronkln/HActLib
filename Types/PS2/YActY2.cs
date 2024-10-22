@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Yarhl.IO;
 using System.Security.Cryptography;
-using HActLib.PS2;
 
 namespace HActLib.YAct
 {
@@ -20,17 +19,57 @@ namespace HActLib.YAct
             YActY2 yact = new YActY2();
             YActHeaderY2 yactHeader = yactReader.Read<YActHeaderY2>();
 
-            yact.ReadCharacters(yactReader, yactHeader.Character);
-            yact.ReadCameras(yactReader, yactHeader.Camera);
-            yact.ReadEffects(yactReader, yactHeader.Effect);
-
             yact.ReadCharacterAnimations(yactReader, yactHeader.CharacterAnimations);
             yact.ReadCameraAnimations(yactReader, yactHeader.CameraAnimations);
+
+            yact.ReadCharacters(yactReader, yactHeader.Character, yact.CharacterAnimations);
+            yact.ReadCameras(yactReader, yactHeader.Camera, yact.CameraAnimations);
+            yact.ReadEffects(yactReader, yactHeader.Effect);
 
             return yact;
         }
 
-        protected override void ReadCharacters(DataReader yactReader, SizedPointer characterChunk)
+        protected override void ReadCameras(DataReader yactReader, SizedPointer cameraChunk, List<YActFile> cameraFiles)
+        {
+            Cameras = new List<YActCamera>();
+
+            if (cameraChunk.Size <= 0)
+                return;
+
+            yactReader.Stream.Seek(cameraChunk.Pointer);
+
+            for (int i = 0; i < cameraChunk.Size; i++)
+            {
+                YActY2Camera cam = new YActY2Camera();
+                cam.Unk1Y2 = yactReader.ReadInt32();
+                cam.Unk2Y2 = yactReader.ReadInt32();
+                cam.Unk3Y2 = yactReader.ReadInt32();
+
+                SizedPointer animPtr = yactReader.Read<SizedPointer>();
+
+                cam.Unk4Y2 = yactReader.ReadBytes(12);
+
+                if (animPtr.Size > 0)
+                {
+                    yactReader.Stream.RunInPosition(delegate
+                    {
+                        for (int i = 0; i < animPtr.Size; i++)
+                        {
+                            YActY2AnimationData animationData = new YActY2AnimationData();
+                            animationData.Read(yactReader);
+                            animationData.File = cameraFiles[animationData.AnimationID];
+                            animationData.Format = PS2.OGREAnimationFormat.MTBW;
+
+                            cam.AnimationData.Add(animationData);
+                        }
+                    }, animPtr.Pointer, SeekMode.Start);
+                }
+
+                Cameras.Add(cam);
+            }
+        }
+
+        protected override void ReadCharacters(DataReader yactReader, SizedPointer characterChunk, List<YActFile> characterFiles)
         {
             Characters = new List<YActCharacter>();
 
@@ -41,10 +80,29 @@ namespace HActLib.YAct
 
             for(int i = 0; i < characterChunk.Size; i++)
             {
-                YActCharacter character = new YActCharacter();
+                YActY2Character character = new YActY2Character();
                 character.Name = yactReader.ReadStringPointer(yactReader.ReadInt32());
 
-                yactReader.Stream.Position += 16; //Unknown data i dont care about yet
+                SizedPointer animPtr = yactReader.Read<SizedPointer>();
+
+                character.UnknownY2 = new int[2];
+                character.UnknownY2[0] = yactReader.ReadInt32();
+                character.UnknownY2[1] = yactReader.ReadInt32();
+                
+                if(animPtr.Size > 0)
+                {
+                    yactReader.Stream.RunInPosition(delegate
+                    {
+                        for(int i = 0; i < animPtr.Size; i++)
+                        {
+                            YActY2AnimationData animationData = new YActY2AnimationData();
+                            animationData.Read(yactReader);
+                            character.AnimationData.Add(animationData);
+                            animationData.File = characterFiles[animationData.AnimationID];
+                            animationData.Format = PS2.OGREAnimationFormat.OMT;
+                        }
+                    }, animPtr.Pointer, SeekMode.Start);
+                }
 
                 Characters.Add(character);
             }
