@@ -20,8 +20,8 @@ namespace HActLib
 
             if (inf.file == AuthFile.CMN)
             {
-                reader.Stream.RunInPosition(delegate 
-                { 
+                reader.Stream.RunInPosition(delegate
+                {
                     category = (AuthNodeCategory)reader.ReadUInt32();
 
                     if (category == AuthNodeCategory.Element)
@@ -32,16 +32,22 @@ namespace HActLib
 
                 }, 16, SeekMode.Current);
             }
-            else if(inf.file == AuthFile.BEP)
+            else if (inf.file == AuthFile.BEP)
             {
                 reader.Stream.RunInPosition(delegate
                 {
                     category = (AuthNodeCategory)reader.ReadUInt16();
-
-                    if (category == AuthNodeCategory.Element)
-                        elementKind = reader.ReadUInt16();
-
                 }, 64, SeekMode.Current);
+
+                if (category == AuthNodeCategory.Element)
+                {
+                    reader.Stream.RunInPosition(delegate
+                {
+                    if (category == AuthNodeCategory.Element)
+                        elementKind = reader.ReadUInt32();
+                }, 80, SeekMode.Current);
+                }
+
             }
 
             Node node;
@@ -66,11 +72,11 @@ namespace HActLib
                 case AuthNodeCategory.CharacterMotion:
                     node = new DENodeCharacterMotion();
                     break;
-                  
+
                 case AuthNodeCategory.Character:
                     node = new DENodeCharacter();
                     break;
-                    
+
                 case AuthNodeCategory.Model_node:
                     node = new NodeModel();
                     break;
@@ -92,7 +98,22 @@ namespace HActLib
                     if (Reflection.ElementNodes[CMN.LastHActDEGame].ContainsKey(elementKind))
                         node = (NodeElement)Activator.CreateInstance(Reflection.ElementNodes[CMN.LastHActDEGame][elementKind]);
                     else
-                        node = new NodeElement();
+                    {
+                        if (Reflection.UserNodes[CMN.LastHActDEGame].ContainsKey(elementKind))
+                        {
+                            NodeElementUser userNode = new NodeElementUser();
+                            userNode.UserData = Reflection.UserNodes[CMN.LastHActDEGame][elementKind];
+
+                            foreach (var field in userNode.UserData.Fields)
+                            {
+                                userNode.Fields.Add(field.Copy());
+                            }
+
+                            node = userNode;
+                        }
+                        else
+                            node = new NodeElement();
+                    }
                     break;
 
 
@@ -108,7 +129,7 @@ namespace HActLib
             //Every single fucking element's data has this value that has ranges between 2-3
             //But it's not accounted for in the node size, why JUST WHY GODDAMN IT
             //It's clearly part of the element's core information. So why trick me you sick fuck 
-            int nodeSize = (inf.file == AuthFile.CMN ?  node.NodeSize * 4 : node.NodeSize);
+            int nodeSize = (inf.file == AuthFile.CMN ? node.NodeSize * 4 : node.NodeSize);
             long preReadPos = reader.Stream.Position;
             long postDataPos = preReadPos + nodeSize;
 
@@ -135,7 +156,7 @@ namespace HActLib
 
                 node.unkBytes = reader.ReadBytes((int)(postDataPos - postReadPos));
             }
-            else if(postReadPos > postDataPos)
+            else if (postReadPos > postDataPos)
             {
                 string debugStr = $"[WARNING] Read {(postReadPos - postDataPos)} bytes more ({postReadPos - preReadPos}) than the expected {nodeSize}!\nAddress:{preReadPos}\nGNode type: {node.Category}\nGUID:{node.Guid}";
 

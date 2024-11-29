@@ -17,6 +17,9 @@ namespace CMNEdit
 
             string elemName = HActLib.Internal.Reflection.GetElementNameByID(element.ElementKind, Form1.curGame);
 
+            if (element is NodeElementUser)
+                NodeElementUserWindow.Draw(Form1.Instance, element);
+
             if (Form1.curVer == GameVersion.Y0_K1)
             {
                 switch (elemName)
@@ -243,10 +246,10 @@ namespace CMNEdit
                         DEElementBattleSlideWindow.Draw(Form1.Instance, element);
                         break;
                     case "e_auth_element_spot_light":
-                        DEElementLightSpotWindow.Draw(Form1.Instance, element);
+                        //DEElementLightSpotWindow.Draw(Form1.Instance, element);
                         break;
                     case "e_auth_element_point_light":
-                        DEElementLightPointWindow.Draw(Form1.Instance, element);
+                        //DEElementLightPointWindow.Draw(Form1.Instance, element);
                         break;
                     case "e_auth_element_chromatic_aberration":
                         DEElementChromaticAberrationWindow.Draw(Form1.Instance, element);

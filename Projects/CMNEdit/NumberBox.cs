@@ -16,11 +16,13 @@ namespace CMNEdit
         {
             Text,
             Byte,
+            Short,
             Ushort,
             Int,
             UInt,
             Float,
             Long,
+            ULong,
         }
 
         private NumberMode mode;
@@ -54,6 +56,13 @@ namespace CMNEdit
                 case NumberMode.Long:
                     long l;
                     return long.TryParse(text, out l);
+                case NumberMode.ULong:
+                    ulong ul;
+                    return ulong.TryParse(text, out ul);
+
+                case NumberMode.Short:
+                    short s;
+                    return short.TryParse(text, out s);
 
                 case NumberMode.Ushort:
                     ushort us;

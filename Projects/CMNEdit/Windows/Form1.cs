@@ -2735,6 +2735,8 @@ namespace CMNEdit
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            nodesTree.SuspendLayout();
+
             Form1.TranslateNames = checkBox1.Checked;
 
 
@@ -2748,6 +2750,8 @@ namespace CMNEdit
                         node.Text = node.HActNode.Name;
                 }
             }
+
+            nodesTree.ResumeLayout();
         }
 
         private void equipAssetToolStripMenuItem_Click(object sender, EventArgs e)

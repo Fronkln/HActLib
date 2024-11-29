@@ -111,4 +111,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(ProjectDir)config\*.*&quot; &quot;$(OutDir)\config&quot; /Y /I /E" />
+  </Target>
+
 </Project>

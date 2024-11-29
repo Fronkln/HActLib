@@ -11,6 +11,7 @@ namespace HActLib.Internal
     {
         public static bool Done = false;
         public static Dictionary<Game, Dictionary<uint, Type>> ElementNodes = new Dictionary<Game, Dictionary<uint, Type>>();
+        public static Dictionary<Game, Dictionary<uint, UserElementData>> UserNodes = new Dictionary<Game, Dictionary<uint, UserElementData>>();
         public static Dictionary<Game, List<string>> GamePrefixes = new Dictionary<Game, List<string>>();
 
         public static Type GetElementEnumFromGame(Game game)
@@ -46,6 +47,14 @@ namespace HActLib.Internal
                 case Game.YK1:
                     return typeof(Y0NodeIDs);
             }
+        }
+
+        public static void RegisterUserNode(Game game, UserElementData dat)
+        {
+            if (!Done)
+                Process();
+
+            UserNodes[game][dat.ElementID] = dat;
         }
 
         public static string[] GetGamePrefixes(Game game)
@@ -134,6 +143,7 @@ namespace HActLib.Internal
             for (int i = 0; i < Enum.GetValues(typeof(Game)).Length; i++)
             {
                 ElementNodes.Add((Game)i, new Dictionary<uint, Type>());
+                UserNodes.Add((Game)i, new Dictionary<uint, UserElementData>());
                 GamePrefixes.Add((Game)i, new List<string>());
             }
 

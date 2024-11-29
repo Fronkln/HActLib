@@ -208,7 +208,10 @@ namespace CMNEdit
 
                 if (!isOE)
                 {
-                    switch(nodeName)
+                    if (node is NodeElementUser)
+                        return (node as NodeElementUser).UserData.NodeName.Replace("_", " ");
+
+                    switch (nodeName)
                     {
                         case "e_auth_element_particle":
                             DEElementParticle particleElem = node as DEElementParticle;
@@ -262,6 +265,9 @@ namespace CMNEdit
                             OEElementSE seElem = node as OEElementSE;
                             return $"Sound Cue {seElem.Cuesheet.ToString("x")} ID {seElem.Sound}";
                     }
+
+                    if (node is NodeElementUser)
+                        return (node as NodeElementUser).UserData.NodeName;
                 }
 
                 return nodeName.Replace("e_auth_element_", "").Replace("_", " ").ToTitleCase();

@@ -7,6 +7,7 @@ namespace HActLib
     //HActLib user defined node
     public class NodeElementUser : NodeElement
     {
+        public UserElementData UserData;
         public List<UserElementField> Fields = new List<UserElementField>();
 
         internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
