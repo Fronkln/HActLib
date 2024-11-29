@@ -6,11 +6,36 @@ using System.Threading.Tasks;
 using HActLib;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace CMNEdit
 {
     internal static class DEElementGradationWindow
     {
+        static void CreateCircleUI(Form1 form, DEElementGradation grad, int i)
+        {
+            Panel circlePanel = null;
+            Panel circlePanel2 = null;
+
+            form.CreateHeader("Circle " + (i + 1));
+            var circle = grad.Circles[i];
+
+
+            circlePanel = form.CreatePanel("Inner Color", circle.ColorInner,
+            delegate (Color col)
+            {
+                circle.ColorInner = col;
+                circlePanel.BackColor = col;
+            });
+
+            circlePanel2 = form.CreatePanel("Outer Color", circle.ColorOuter,
+            delegate (Color col)
+            {
+                circle.ColorOuter = col;
+                circlePanel2.BackColor = col;
+            });
+        }
+
         public static void Draw(Form1 form, Node node)
         {
             DEElementGradation grad = node as DEElementGradation;
@@ -48,6 +73,15 @@ namespace CMNEdit
                     grad.ColorL1After = col;
                     color1AfterPanel.BackColor = col;
                 });
+
+            Panel[] circlePanels = new Panel[3];
+            Panel[] circlePanels2 = new Panel[3];
+
+            for (int i = 0; i < 3; i++)
+            {
+                CreateCircleUI(form, grad, i);
+
+            }
 
             /*
             form.CreateButton("Color1", delegate

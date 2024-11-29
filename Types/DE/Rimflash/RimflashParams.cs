@@ -6,6 +6,8 @@ namespace HActLib
     [Yarhl.IO.Serialization.Attributes.Serializable]
     public class RimflashParams
     {
+        public uint Version { get; set; }
+
         internal virtual void Read(DataReader reader)
         {
 

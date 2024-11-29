@@ -27,9 +27,10 @@ namespace CMNEdit.Windows
                 Close(); 
             };
 
-            rBox.TextChanged += delegate { try { panel1.BackColor = Color.FromArgb(int.Parse(rBox.Text), panel1.BackColor.G, panel1.BackColor.B); } catch { } };
-            gBox.TextChanged += delegate { try { panel1.BackColor = Color.FromArgb(panel1.BackColor.R, int.Parse(gBox.Text), panel1.BackColor.B); } catch { } };
-            bBox.TextChanged += delegate { try { panel1.BackColor = Color.FromArgb(panel1.BackColor.R, panel1.BackColor.G, int.Parse(bBox.Text)); } catch { } };
+            rBox.TextChanged += delegate { try { panel1.BackColor = Color.FromArgb(panel1.BackColor.A, int.Parse(rBox.Text), panel1.BackColor.G, panel1.BackColor.B); } catch { } };
+            gBox.TextChanged += delegate { try { panel1.BackColor = Color.FromArgb(panel1.BackColor.A, panel1.BackColor.R, int.Parse(gBox.Text), panel1.BackColor.B); } catch { } };
+            bBox.TextChanged += delegate { try { panel1.BackColor = Color.FromArgb(panel1.BackColor.A, panel1.BackColor.R, panel1.BackColor.G, int.Parse(bBox.Text)); } catch { } };
+            aBox.TextChanged += delegate { try { panel1.BackColor = Color.FromArgb(int.Parse(aBox.Text), panel1.BackColor.R, panel1.BackColor.G, panel1.BackColor.B); } catch { } };
 
             FormClosed += delegate { Form1.Instance.Enabled = true; };
         }
@@ -40,6 +41,7 @@ namespace CMNEdit.Windows
             rBox.Text = defaultCol.R.ToString();
             gBox.Text = defaultCol.G.ToString();
             bBox.Text = defaultCol.B.ToString();
+            aBox.Text = defaultCol.A.ToString();
 
             m_finish = finished;
         }

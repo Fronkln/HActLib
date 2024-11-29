@@ -543,7 +543,9 @@ namespace CMNEdit
                 for (int i = 0; i < yact.Cameras.Count; i++)
                 {
                     TreeNodeYActCamera cam = new TreeNodeYActCamera(yact.Cameras[i]);
-                    cam.Nodes.Add(new TreeNodeYActCameraMotion(new YActFile() { Buffer = cam.Camera.MTBWFile }));
+                    var camNode = new TreeNodeYActCameraMotion(new YActFile() { Buffer = cam.Camera.MTBWFile });
+                    camNode.OrigCamera = yact.Cameras[i];
+                    cam.Nodes.Add(camNode);
                     nodesTree.Nodes.Add(cam);
                 }
             }
@@ -763,7 +765,7 @@ namespace CMNEdit
             else
                 varPanel = csvVarPanel;
 
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 35));
             varPanel.RowCount++;
 
             Button input = new Button();
@@ -1289,7 +1291,6 @@ namespace CMNEdit
             {
                 if (e.KeyCode == Keys.Delete)
                 {
-
                     if (currentTab == 0 && nodesTree.SelNodes.Count > 0)
                     {
                         TreeNode node = nodesTree.SelectedNode as TreeNode;
@@ -1760,238 +1761,7 @@ namespace CMNEdit
 
         public void DrawElementWindow(NodeElement element)
         {
-            //use curver to display things accordingly.
-
-            string elemName = HActLib.Internal.Reflection.GetElementNameByID(element.ElementKind, curGame);
-
-            if (curVer == GameVersion.Y0_K1)
-            {
-                switch (elemName)
-                {
-                    case "e_auth_element_particle":
-                        OEParticleWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_damage":
-                        OEDamageWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_heat_change":
-                        OEHeatChangeWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_fade":
-                        OEFadeWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_sound":
-                        OENodeElementSEWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_hact_input":
-                        OEHActInputWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_hact_input_barrage":
-                        OEHActInputBarrageWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_face_expression":
-                        OEFaceExpressionWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_rim_light_scale":
-                        OERimlightScaleWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_picture":
-                        OEPictureWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_noise":
-                        OENoiseWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_subtitles":
-                        OESubtitleWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_person_caption":
-                        OEPersonCaptionWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_hact_branching":
-                        OEHActBranchWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_hact_end":
-                        OEHActEndWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_hact_stop_end":
-                        OEHActStopEndWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_gradation":
-                        OEGradationWindow.Draw(this, element);
-                        break;
-                }
-            }
-            else if (CMN.IsDE(curVer))
-            {
-                switch (element.ElementKind)
-                {
-                    //AuthExtended: System Speed
-                    case 1337:
-                        DECustomElementSystemSpeedWindow.Draw(this, element);
-                        break;
-                    //Like a Brawler: Transit HAct
-                    case 60010:
-                        DECustomElementY7BTransitEXFollowupWindow.Draw(this, element);
-                        break;
-                    //Like a Brawler 8: Character Selection
-                    case 70010:
-                        DECustomElementLAB8CharacterSelectionWindow.Draw(this, element);
-                        break;
-                }
-
-                switch (elemName)
-                {
-                    case "e_auth_element_camera_param":
-                        DEElementCameraParamWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_apply_ubik":
-                        DEElementUBikApplyWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_se":
-                        DENodeElementSEWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_speech":
-                        DEElementSpeechWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_ui_fade":
-                        DEElementUIFadeWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_ui_texture":
-                        DEElementUITextureWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_particle":
-                        DEElementParticleWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_hact_input":
-                        DEHActInputWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_hact_input_barrage":
-                        DEHActInputBarrageWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_damage":
-                        DENodeBattleDamageWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_heat":
-                        DEElementBattleHeatWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_equip_asset_hide":
-                        DEElementHideAssetWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_followup_window":
-                        DEEelementFollowupWindowWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_color_correction":
-                        DEElementColorCorrectionWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_color_correction_v2":
-                        DEElementColorCorrection2Window.Draw(this, element);
-                        break;
-                    case "e_auth_element_flow_dust_gen":
-                        DEElementFlowdustWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_rim_flash":
-                        DEElementRimflashWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_color_correction_mask":
-                        DEElementColorCorrectionMaskWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_muteki":
-                        DEElementTimingInfoWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_attack":
-                        DEElementBattleAttackWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_connect_chara_out":
-                        DEElementCharaOutWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_stage_warp":
-                        DEElementStageWarpWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_face_anim":
-                        DEElementFaceAnimWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_expression_target":
-                        DEElementExpressionTargetWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_grain_noise":
-                        DEElementGrainNoiseWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_character_node_scale":
-                        DEElementCharacterNodeScaleWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_movie":
-                        DEElementMovieWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_post_effect_gradation":
-                        DEElementGradationWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_post_effect_dof":
-                        DEElementDOFWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_post_effect_dof2":
-                        DEElementDOF2Window.Draw(this, element);
-                        break;
-                    case "e_auth_element_post_effect_motion_blur":
-                        DEElementMotionBlurWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_post_effect_motion_blur2":
-                        DEElementMotionBlur2Window.Draw(this, element);
-                        break;
-                    case "e_auth_element_particle_ground":
-                        DEElementParticleGroundWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_fullscreen_auth_movie":
-                        DEElementFullscreenAuthMovieWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_equip_asset":
-                        DEElementAssetEquipWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_speed_control":
-                        DEElementSpeedControlWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_character_speed":
-                        DEElementCharacterSpeedWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_div_play":
-                        DEElementDivPlayWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_character_change":
-                        DEElementCharacterChangeWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_asset_break_uid":
-                        DEElementAssetBreakUIDWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_connect_camera":
-                        DEElementCameraLinkWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_path_offset":
-                        CreateHeader("Path Offset");
-                        MatrixWindow.Draw(this, (element as DEElementPathOffset).Matrix);
-                        break;
-                    case "e_auth_element_scenario_timeline":
-                        DEElementScenarioTimelineWindow.Draw(this, element);
-                        break;
-
-                    case "e_auth_element_camera_shake":
-                        DEEElementCameraShakeWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_command_special":
-                        DEElementBattleCommandSpecialWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_transit_stun":
-                        DEElementTimingInfoStunWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_asset_arms_reduce_use_count":
-                        DEElementArmsReduceAssetCountWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_talk_text":
-                        DEElementTalkTextWindow.Draw(this, element);
-                        break;
-                    case "e_auth_element_battle_slide":
-                        DEElementBattleSlideWindow.Draw(this, element);
-                        break;
-                }
-            }
+            DrawWindow.Draw(element);
         }
 
         public NodeElement[] GetCurrentAuthAllElements()
@@ -3596,7 +3366,11 @@ namespace CMNEdit
 
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
-                        (node as TreeNodeYActCameraMotion).File.Buffer = File.ReadAllBytes(dialog.FileName);
+                        var animNode = (node as TreeNodeYActCameraMotion);
+                        animNode.File.Buffer = File.ReadAllBytes(dialog.FileName);
+
+                        if (animNode.OrigCamera != null)
+                            animNode.OrigCamera.MTBWFile = animNode.File.Buffer;
                     }
                 });
                 CreateButton("Export", delegate
@@ -3650,7 +3424,26 @@ namespace CMNEdit
 
                 CreateInput("Start", effectNode.Effect.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
                 CreateInput("End", effectNode.Effect.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                CreateInput("Bone ID", effectNode.Effect.BoneID.ToString(), delegate (string val) { effectNode.Effect.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
 
+
+                switch ((YActEffectType)effectNode.Effect.Type)
+                {
+                    case YActEffectType.Particle:
+                        var ptcEffect = effectNode.Effect as YActEffectParticle;
+                        CreateHeader("Particle");
+                        CreateInput("Particle ID", ptcEffect.Particle.ToString(), delegate (string val) { ptcEffect.Particle = int.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Int);
+                        break;
+                    case YActEffectType.Sound:
+                        var soundEffect = effectNode.Effect as YActEffectSound;
+                        CreateHeader("Sound");
+                        CreateInput("Cuesheet ID", soundEffect.CuesheetID.ToString(), delegate (string val) { soundEffect.CuesheetID = ushort.Parse(val) ; effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
+                        CreateInput("Sound ID", soundEffect.SoundID.ToString(), delegate (string val) { soundEffect.SoundID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
+                        break;
+                }
+
+
+                provider = new Be.Windows.Forms.DynamicByteProvider(effectNode.Effect.UnknownData);
             }
 
             CreateHeader("");

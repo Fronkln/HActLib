@@ -113,6 +113,7 @@ namespace HActLib
             long postDataPos = preReadPos + nodeSize;
 
             inf.expectedSize = nodeSize;
+            inf.endAddress = postDataPos;
             node.ReadNodeData(reader, inf, CMN.LastGameVersion);
             long postReadPos = reader.Stream.Position;
 

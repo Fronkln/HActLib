@@ -2,7 +2,7 @@
   "profiles": {
     "HActBridge": {
       "commandName": "Project",
-      "commandLineArgs": "\"G:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami\\media\\data\\hact.par.unpack\\h5040_shimano_throw.par.unpack\" y0 y6"
+      "commandLineArgs": "\"C:\\Users\\orhan\\Downloads\\Ishin hact\\hact.par.unpack\\h20150.par.unpack\" ishin y8"
     }
   }
 }

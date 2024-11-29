@@ -210,6 +210,18 @@ namespace CMNEdit.Windows
                                     {
                                         PibVersion target = GetPibVersionForGame(prefixGame);
                                         BasePib pibFile = PIB.Read(ptcBuf, node.Name);
+
+                                        if (pibFile.Version == PibVersion.LJ)
+                                        {
+                                            foreach (var emitter in pibFile.Emitters)
+                                            {
+                                                if (prefixGame == Game.LAD7Gaiden)
+                                                    (emitter as PibEmitterv58).ToGaidenRevision();
+                                                else
+                                                    (emitter as PibEmitterv58).ToLJRevision();
+                                            }
+                                        }
+
                                         BasePib newPib = PIB.Convert(pibFile, target);
 
                                         if ((pibFile.Version == newPib.Version) && (pibFile.Version != PibVersion.LJ && !is58Game))
@@ -220,14 +232,6 @@ namespace CMNEdit.Windows
 
                                         foreach (var emitter in newPib.Emitters)
                                         {
-                                            if(pibFile.Version == PibVersion.LJ)
-                                            {
-                                                if (prefixGame == Game.LAD7Gaiden)
-                                                    (emitter as PibEmitterv58).ToGaidenRevision();
-                                                else
-                                                    (emitter as PibEmitterv58).ToLJRevision();
-                                            }
-
                                             foreach (string tex in emitter.Textures)
                                             {
                                                 string name = FixTexName(tex).ToLowerInvariant();

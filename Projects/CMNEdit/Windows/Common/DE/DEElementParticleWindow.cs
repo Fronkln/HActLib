@@ -33,7 +33,7 @@ namespace CMNEdit
             form.CreateInput("Color Scale A", particle.ColorScaleA.ToString(), delegate (string val) { particle.ColorScaleA = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
             Panel particleColPanel = null;
-            particleColPanel = form.CreatePanel("Particle Color", particle.Color,
+            particleColPanel = form.CreatePanel("Color", particle.Color,
                 delegate (Color col)
                 {
                     particle.Color = col;

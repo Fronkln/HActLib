@@ -19,5 +19,12 @@ namespace HActLib
 
             UnknownV4_1 = reader.ReadSingle();
         }
+
+        internal override void Write(DataWriter writer)
+        {
+            base.Write(writer);
+
+            writer.Write(UnknownV4_1);
+        }
     }
 }

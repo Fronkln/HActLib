@@ -119,15 +119,43 @@ namespace HActLib.YAct
 
             for(int i = 0; i < effectChunk.Size; i++)
             {
-                YActEffect effect = new YActEffect();
 
-                effect.Name = yactReader.ReadStringPointer(yactReader.ReadInt32());
+                int namePtr = yactReader.ReadInt32();
                 int unk = yactReader.ReadInt32();
-                effect.Unknown1 = yactReader.ReadStringPointer(yactReader.ReadInt32());
-
+                int unknown1 = yactReader.ReadInt32();
                 int dataPointer = yactReader.ReadInt32();
 
-                yactReader.Stream.RunInPosition(delegate { effect.ReadData(yactReader); }, dataPointer);
+
+                YActEffect effect = null;
+
+                //effect.Name = yactReader.ReadStringPointer(yactReader.ReadInt32());
+               // int unk = yactReader.ReadInt32();
+                //effect.Unknown1 = yactReader.ReadStringPointer(yactReader.ReadInt32());
+
+                yactReader.Stream.RunInPosition(
+                    delegate 
+                    {
+                        int type = 0;
+                        yactReader.Stream.RunInPosition(delegate { type = yactReader.ReadInt32(); }, 0x2C, SeekMode.Current);
+
+                        switch ((YActEffectType)type)
+                        {
+                            default:
+                                effect = new YActEffect();
+                                break;
+                            case YActEffectType.Sound:
+                                effect = new YActEffectSound();
+                                break;
+                            case YActEffectType.Particle:
+                                effect = new YActEffectParticle();
+                                break;
+                        }
+
+                        effect.ReadData(yactReader); 
+                    }, dataPointer);
+
+                effect.Name = yactReader.ReadStringPointer(namePtr);
+                effect.Unknown1 = yactReader.ReadStringPointer(unknown1);
 
                 Effects.Add(effect);
             }

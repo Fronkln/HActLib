@@ -46,7 +46,23 @@ namespace HActLib.YAct
             {
                 yactReader.Stream.RunInPosition(delegate
                 {
-                    YActEffect effect = new YActEffect();
+                    int type = 0;
+                    yactReader.Stream.RunInPosition(delegate { type = yactReader.ReadInt32(); }, 0x2C, SeekMode.Current);
+
+                    YActEffect effect = null;
+
+                    switch((YActEffectType)type)
+                    {
+                        default:
+                            effect = new YActEffect();
+                            break;
+                        case YActEffectType.Sound:
+                            effect = new YActEffectSound();
+                            break;
+                        case YActEffectType.Particle:
+                            effect = new YActEffectParticle();
+                            break;
+                    }
 
                     effect.ReadData(yactReader);
                     Effects.Add(effect);
@@ -84,15 +100,20 @@ namespace HActLib.YAct
             long chunk7TableStart = writer.Stream.Position;
             writer.WriteTimes(0, 0);
 
-            writer.Align(32);
+            writer.Align(16);
 
             long effectDataStart = writer.Stream.Position; 
             uint[] effectLocations = new uint[yact.Effects.Count];
 
             for(int i = 0; i < yact.Effects.Count; i++)
             {
+                long end = writer.Stream.Position + 96;
+
                 effectLocations[i] = (uint)writer.Stream.Position;
                 yact.Effects[i].WriteData(writer);
+
+                if (writer.Stream.Position != end)
+                    throw new Exception($"Write position mismatch on effect {i} ({(YActEffectType)yact.Effects[i].Type}), expected {end}, got {writer.Stream.Position}");
             }
 
             long unk2DataStart = writer.Stream.Position;

@@ -583,7 +583,7 @@ namespace HActLib
                         soundNode.Name = "GV_FIGHTER";
 
                         if (CMN.GetVersionForGame(CMN.LastHActDEGame) >= GameVersion.DE2)
-                            soundNode.CueSheet = 49;
+                            soundNode.CueSheet = (ushort)Enum.Parse(DEElementSE.GetSpecialSoundTypeForGame(CMN.LastHActDEGame), "gv_fighter");
                         else
                             soundNode.CueSheet = 36;
 

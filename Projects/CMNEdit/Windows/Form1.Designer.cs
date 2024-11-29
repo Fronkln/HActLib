@@ -163,7 +163,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label5.Location = new System.Drawing.Point(3, 1);
+            label5.Location = new System.Drawing.Point(3, 6);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(87, 21);
             label5.TabIndex = 7;
@@ -173,7 +173,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label6.Location = new System.Drawing.Point(96, 1);
+            label6.Location = new System.Drawing.Point(96, 6);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(80, 21);
             label6.TabIndex = 9;
@@ -193,7 +193,7 @@
             // 
             targetGameLbl.AutoSize = true;
             targetGameLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            targetGameLbl.Location = new System.Drawing.Point(12, 391);
+            targetGameLbl.Location = new System.Drawing.Point(12, 404);
             targetGameLbl.Name = "targetGameLbl";
             targetGameLbl.Size = new System.Drawing.Size(106, 21);
             targetGameLbl.TabIndex = 3;
@@ -204,7 +204,7 @@
             appTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripDropDownButton1, nodeTooltip, toolStripSplitButton1, advancedButton });
             appTools.Location = new System.Drawing.Point(0, 0);
             appTools.Name = "appTools";
-            appTools.Size = new System.Drawing.Size(882, 25);
+            appTools.Size = new System.Drawing.Size(967, 25);
             appTools.TabIndex = 0;
             appTools.Text = "Tools";
             // 
@@ -440,21 +440,21 @@
             // frameProgressionToolStripMenuItem
             // 
             frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
-            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             frameProgressionToolStripMenuItem.Text = "Frame Progression";
             frameProgressionToolStripMenuItem.Click += frameProgressionToolStripMenuItem_Click;
             // 
             // disableFrameInfoToolStripMenuItem
             // 
             disableFrameInfoToolStripMenuItem.Name = "disableFrameInfoToolStripMenuItem";
-            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             disableFrameInfoToolStripMenuItem.Text = "Disable Frame Info";
             disableFrameInfoToolStripMenuItem.Click += disableFrameInfoToolStripMenuItem_Click;
             // 
             // authPagesDEToolStripMenuItem
             // 
             authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
-            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
             authPagesDEToolStripMenuItem.Click += authPagesDEToolStripMenuItem_Click;
             // 
@@ -462,7 +462,7 @@
             // 
             convertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertToOtherDEToolStripMenuItem, bulkConvertBEPToolStripMenuItem, convertOEPropertybinToBEPToolStripMenuItem, convertMEPWithPibsToolStripMenuItem1 });
             convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            convertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            convertToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             convertToolStripMenuItem.Text = "Convert";
             // 
             // convertToOtherDEToolStripMenuItem
@@ -504,7 +504,7 @@
             nodesTree.Name = "nodesTree";
             nodesTree.SelectedImageIndex = 0;
             nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
-            nodesTree.Size = new System.Drawing.Size(254, 341);
+            nodesTree.Size = new System.Drawing.Size(342, 341);
             nodesTree.TabIndex = 1;
             nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
             nodesTree.AfterSelect += nodesTree_AfterSelect;
@@ -579,7 +579,7 @@
             // 
             targetGameCombo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             targetGameCombo.FormattingEnabled = true;
-            targetGameCombo.Location = new System.Drawing.Point(12, 415);
+            targetGameCombo.Location = new System.Drawing.Point(12, 428);
             targetGameCombo.Name = "targetGameCombo";
             targetGameCombo.Size = new System.Drawing.Size(121, 23);
             targetGameCombo.TabIndex = 2;
@@ -617,7 +617,7 @@
             varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            varPanel.Size = new System.Drawing.Size(557, 308);
+            varPanel.Size = new System.Drawing.Size(550, 308);
             varPanel.TabIndex = 4;
             // 
             // panel1
@@ -636,7 +636,7 @@
             hactTabs.Location = new System.Drawing.Point(12, 33);
             hactTabs.Name = "hactTabs";
             hactTabs.SelectedIndex = 0;
-            hactTabs.Size = new System.Drawing.Size(821, 355);
+            hactTabs.Size = new System.Drawing.Size(911, 368);
             hactTabs.TabIndex = 5;
             hactTabs.SelectedIndexChanged += hactTabs_SelectedIndexChanged;
             // 
@@ -647,7 +647,7 @@
             cmnTevTab.Location = new System.Drawing.Point(4, 24);
             cmnTevTab.Name = "cmnTevTab";
             cmnTevTab.Padding = new System.Windows.Forms.Padding(3);
-            cmnTevTab.Size = new System.Drawing.Size(813, 327);
+            cmnTevTab.Size = new System.Drawing.Size(903, 340);
             cmnTevTab.TabIndex = 0;
             cmnTevTab.Text = "CMN";
             cmnTevTab.UseVisualStyleBackColor = true;
@@ -656,10 +656,10 @@
             // 
             tabControl1.Controls.Add(infoPage);
             tabControl1.Controls.Add(unkInfoPage);
-            tabControl1.Location = new System.Drawing.Point(256, 0);
+            tabControl1.Location = new System.Drawing.Point(340, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(561, 327);
+            tabControl1.Size = new System.Drawing.Size(561, 337);
             tabControl1.TabIndex = 6;
             // 
             // infoPage
@@ -668,7 +668,7 @@
             infoPage.Location = new System.Drawing.Point(4, 24);
             infoPage.Name = "infoPage";
             infoPage.Padding = new System.Windows.Forms.Padding(3);
-            infoPage.Size = new System.Drawing.Size(553, 299);
+            infoPage.Size = new System.Drawing.Size(553, 309);
             infoPage.TabIndex = 0;
             infoPage.Text = "Info";
             infoPage.UseVisualStyleBackColor = true;
@@ -679,7 +679,7 @@
             unkInfoPage.Location = new System.Drawing.Point(4, 24);
             unkInfoPage.Name = "unkInfoPage";
             unkInfoPage.Padding = new System.Windows.Forms.Padding(3);
-            unkInfoPage.Size = new System.Drawing.Size(553, 299);
+            unkInfoPage.Size = new System.Drawing.Size(553, 309);
             unkInfoPage.TabIndex = 1;
             unkInfoPage.Text = "Unknown Info";
             unkInfoPage.UseVisualStyleBackColor = true;
@@ -702,7 +702,7 @@
             tabPage1.Location = new System.Drawing.Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            tabPage1.Size = new System.Drawing.Size(813, 327);
+            tabPage1.Size = new System.Drawing.Size(903, 340);
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Cut Info";
             tabPage1.UseVisualStyleBackColor = true;
@@ -771,7 +771,7 @@
             resTab.Location = new System.Drawing.Point(4, 24);
             resTab.Name = "resTab";
             resTab.Padding = new System.Windows.Forms.Padding(3);
-            resTab.Size = new System.Drawing.Size(813, 327);
+            resTab.Size = new System.Drawing.Size(903, 340);
             resTab.TabIndex = 1;
             resTab.Text = "RES";
             resTab.UseVisualStyleBackColor = true;
@@ -917,7 +917,7 @@
             csvTab.Location = new System.Drawing.Point(4, 24);
             csvTab.Name = "csvTab";
             csvTab.Padding = new System.Windows.Forms.Padding(3);
-            csvTab.Size = new System.Drawing.Size(813, 327);
+            csvTab.Size = new System.Drawing.Size(903, 340);
             csvTab.TabIndex = 3;
             csvTab.Text = "CSV";
             // 
@@ -1000,7 +1000,7 @@
             // 
             // hactStartBox
             // 
-            hactStartBox.Location = new System.Drawing.Point(3, 25);
+            hactStartBox.Location = new System.Drawing.Point(3, 30);
             hactStartBox.Name = "hactStartBox";
             hactStartBox.Size = new System.Drawing.Size(85, 23);
             hactStartBox.TabIndex = 6;
@@ -1009,7 +1009,7 @@
             // 
             // hactEndBox
             // 
-            hactEndBox.Location = new System.Drawing.Point(98, 25);
+            hactEndBox.Location = new System.Drawing.Point(98, 30);
             hactEndBox.Name = "hactEndBox";
             hactEndBox.Size = new System.Drawing.Size(85, 23);
             hactEndBox.TabIndex = 8;
@@ -1022,7 +1022,7 @@
             hactDurationPanel.Controls.Add(hactStartBox);
             hactDurationPanel.Controls.Add(label6);
             hactDurationPanel.Controls.Add(hactEndBox);
-            hactDurationPanel.Location = new System.Drawing.Point(164, 390);
+            hactDurationPanel.Location = new System.Drawing.Point(163, 399);
             hactDurationPanel.Name = "hactDurationPanel";
             hactDurationPanel.Size = new System.Drawing.Size(193, 57);
             hactDurationPanel.TabIndex = 10;
@@ -1030,7 +1030,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new System.Drawing.Point(458, 395);
+            checkBox1.Location = new System.Drawing.Point(375, 405);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new System.Drawing.Size(165, 19);
             checkBox1.TabIndex = 11;
@@ -1110,7 +1110,7 @@
             // 
             langOverrideLbl.AutoSize = true;
             langOverrideLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            langOverrideLbl.Location = new System.Drawing.Point(629, 390);
+            langOverrideLbl.Location = new System.Drawing.Point(768, 405);
             langOverrideLbl.Name = "langOverrideLbl";
             langOverrideLbl.Size = new System.Drawing.Size(155, 21);
             langOverrideLbl.TabIndex = 11;
@@ -1118,7 +1118,7 @@
             // 
             // langOverrideBox
             // 
-            langOverrideBox.Location = new System.Drawing.Point(631, 414);
+            langOverrideBox.Location = new System.Drawing.Point(770, 429);
             langOverrideBox.Name = "langOverrideBox";
             langOverrideBox.Size = new System.Drawing.Size(85, 23);
             langOverrideBox.TabIndex = 10;
@@ -1127,7 +1127,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(882, 450);
+            ClientSize = new System.Drawing.Size(967, 469);
             Controls.Add(langOverrideLbl);
             Controls.Add(langOverrideBox);
             Controls.Add(checkBox1);

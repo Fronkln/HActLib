@@ -5,6 +5,7 @@ namespace CMNEdit
 {
     internal class TreeNodeYActCameraMotion : TreeNode
     {
+        public YActCamera OrigCamera;
         public YActFile File;
 
         public TreeNodeYActCameraMotion()

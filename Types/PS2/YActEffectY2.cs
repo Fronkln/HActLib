@@ -7,10 +7,13 @@ using Yarhl.IO;
 
 namespace HActLib.YAct
 {
+    //obsolete
     public class YActEffectY2 : YActEffect
     {
         internal override void ReadData(DataReader reader)
         {
+            long end = reader.Stream.Position + 100;
+
             Unknown2 = reader.ReadInt32();
 
             Start = reader.ReadSingle();

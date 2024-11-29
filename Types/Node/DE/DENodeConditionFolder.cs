@@ -98,23 +98,35 @@ namespace HActLib
             TagUID = reader.ReadUInt64();
             PuidID = reader.ReadUInt32();
             Unknown2 = reader.ReadUInt32();
-            reader.Stream.Position += 32;
 
+            /*
+            if (version >= GameVersion.DE2)
+                reader.Stream.Position += 32;
+            else
+                reader.Stream.Position += 28;
+            */
         }
 
         internal override void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
         {
             base.WriteNodeData(writer, version, hactVer);
+
             writer.Write((uint)Condition);
             writer.Write(Index);
             writer.Write(TagValue);
             writer.Write(DataFlag);
-            writer.Write(TagGUID.ToByteArray());
-            writer.Write(PuidID);
             writer.Write(ConditionTag.ToLength(64));
+            writer.Write(TagGUID.ToByteArray());
             writer.Write(TagUID);
             writer.Write(PuidID);
             writer.Write(Unknown2);
+
+            /*
+            if(version >= GameVersion.DE2)
+                writer.WriteTimes(0, 32);
+            else
+                writer.WriteTimes(0, 28);
+           */
         }
     }
 }

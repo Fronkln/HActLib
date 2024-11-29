@@ -12,6 +12,7 @@ namespace HActLib
         public BinaryFormat format;
         public uint version;
         public int expectedSize;
+        public long endAddress;
         public GameVersion gameVersion;
         public AuthFile file;
     }

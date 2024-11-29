@@ -25,7 +25,7 @@ namespace HActLib
 
         public static implicit operator RGBA32(System.Drawing.Color col)
         {
-            return new RGBA32() { R = col.G, G = col.G, B = col.B, A = col.A };
+            return new RGBA32() { R = col.R, G = col.G, B = col.B, A = col.A };
         }
     }
 

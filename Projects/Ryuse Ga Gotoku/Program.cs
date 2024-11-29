@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using HActLib;
-using HActLib.Types.DE.Enum;
 
 
 namespace RyuseGaGotoku

@@ -475,12 +475,13 @@ namespace HActLib
                     return GameVersion.OOE;
                 case Game.Y4:
                     return GameVersion.OOE;
+                case Game.Y5:
+                    return GameVersion.Y0_K1;
+                case Game.Ishin:
+                    return GameVersion.Y0_K1;
                 case Game.Y0:
                     return GameVersion.Y0_K1;
                 case Game.YK1:
-                    return GameVersion.Y0_K1;
-
-                case Game.Y5:
                     return GameVersion.Y0_K1;
                 case Game.Y6Demo:
                     return GameVersion.Yakuza6Demo;

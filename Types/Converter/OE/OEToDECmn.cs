@@ -461,7 +461,6 @@ namespace HActLib
 
                     case OEFighterSound.LightHit2:
                         return DEFighterSound.damage_head_s;
-
                     case OEFighterSound.HeavyHit:
                         return DEFighterSound.damage_xl;
                     case OEFighterSound.LargeHeadHit:
@@ -487,8 +486,7 @@ namespace HActLib
             {
                 se.SoundIndex = (byte)GetFighterSoundCategory(oeSE.Sound);
                 se.Unk = 128;
-
-                se.CueSheet = (ushort)(CMN.GetVersionForGame(game) >= GameVersion.DE2 ? 49 : 36);
+                se.CueSheet = (ushort)(Enum.Parse(DEElementSE.GetSpecialSoundTypeForGame(CMN.LastHActDEGame), "gv_fighter"));
             }
             else
             {

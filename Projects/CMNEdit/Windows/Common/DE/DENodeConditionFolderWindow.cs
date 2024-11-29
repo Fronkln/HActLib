@@ -19,6 +19,7 @@ namespace CMNEdit
 
                 form.CreateComboBox("Condition", (int)folder.Condition, Enum.GetNames(typeof(ConditionTable)), delegate (int index) { folder.Condition = (ConditionTable)index; });
                 form.CreateInput("Tag Value", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
+                form.CreateInput("PUID ID", folder.PuidID.ToString(), delegate (string val) { folder.PuidID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
             }
             else
             {

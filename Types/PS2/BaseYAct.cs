@@ -91,9 +91,14 @@ namespace HActLib.YAct
 
             for(int i = 0; i < unk2Chunk.Size; i++)
             {
+                int ptr = yactReader.ReadInt32();
+
                 YActUnkStructure2 str2 = new YActUnkStructure2();
-                str2.Data = new float[8]
+
+                yactReader.Stream.RunInPosition(delegate
                 {
+                    str2.Data = new float[8]
+{
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
@@ -102,7 +107,8 @@ namespace HActLib.YAct
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
-                };
+};
+                }, ptr, SeekMode.Start);
 
                 Unks2.Add(str2);
             }
@@ -119,9 +125,14 @@ namespace HActLib.YAct
 
             for (int i = 0; i < unk3Chunk.Size; i++)
             {
+                int ptr = yactReader.ReadInt32();
+
                 YActUnkStructure2 str3 = new YActUnkStructure2();
-                str3.Data = new float[8]
+
+                yactReader.Stream.RunInPosition(delegate
                 {
+                    str3.Data = new float[8]
+                    {
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
@@ -130,7 +141,8 @@ namespace HActLib.YAct
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
                     yactReader.ReadSingle(),
-                };
+                    };
+                }, ptr, SeekMode.Start);
 
                 Unks3.Add(str3);
             }
