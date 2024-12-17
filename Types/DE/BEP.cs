@@ -10,6 +10,7 @@ namespace HActLib
     public class BEP
     {
         public List<Node> Nodes = new List<Node>();
+        public Game Game;
 
         public Node FindByGUID(Guid guid)
         {
@@ -58,6 +59,7 @@ namespace HActLib
             CMN.LastHActDEGame = game;
 
             BEP bep = new BEP();
+            bep.Game = game;
 
             if (bepReader.ReadString(4) != "_PEB")
                 throw new Exception("Not a BEP file");
@@ -100,6 +102,15 @@ namespace HActLib
         public static void Write(BEP bep, string path, Game game)
         {
             CMN.LastHActDEGame = game;
+
+            if(bep.Game != game)
+            {
+                BEP oldBep = bep;
+                bep = new BEP();
+                bep.Nodes = RyuseModule.ConvertNodes(oldBep.Nodes.ToArray(), oldBep.Game, game).OutputNodes.ToList();
+                bep.Game = game;
+            }
+
             Write(bep, path, CMN.GetVersionForGame(game));
         }
 

@@ -77,10 +77,26 @@ namespace HActLib
                     break;
 
                 case AuthNodeCategory.Element:
+                    //Does the current ID have a element linked to it
                     if (Reflection.ElementNodes[CMN.LastHActDEGame].ContainsKey(elementKind))
                         node = (NodeElement)Activator.CreateInstance(Reflection.ElementNodes[CMN.LastHActDEGame][elementKind]);
                     else
-                        node = new NodeElement();// new NodeElement();
+                    {
+                        if (Reflection.UserNodes[CMN.LastHActDEGame].ContainsKey(elementKind))
+                        {
+                            NodeElementUser userNode = new NodeElementUser();
+                            userNode.UserData = Reflection.UserNodes[CMN.LastHActDEGame][elementKind];
+
+                            foreach (var field in userNode.UserData.Fields)
+                            {
+                                userNode.Fields.Add(field.Copy());
+                            }
+
+                            node = userNode;
+                        }
+                        else
+                            node = new NodeElement();
+                    }
                     break;
                 case AuthNodeCategory.ModelMotion:
                     node = new NodeMotionBase();

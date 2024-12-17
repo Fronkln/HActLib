@@ -16,6 +16,9 @@
         ByteArray,
         RGB32,
         RGBA32,
+        BRG32,
+        RGBF32,
+        BRGF32,
         FAnimationCurve,
         AnimationCurve
     }

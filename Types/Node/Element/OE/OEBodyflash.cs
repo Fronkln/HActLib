@@ -7,8 +7,8 @@ using Yarhl.IO;
 
 namespace HActLib
 {
-    [ElementID(Game.Y5, 28)]
-    [ElementID(Game.Ishin, 28)]
+   // [ElementID(Game.Y5, 28)]
+   // [ElementID(Game.Ishin, 28)]
     public class OEBodyflash : NodeElement
     {
         public int Y5_Unknown1;

@@ -10,8 +10,8 @@ namespace HActLib
     [Yarhl.IO.Serialization.Attributes.Serializable]
     public class RimflashParamsV3 : RimflashParamsV2
     {
-        public float ColorIntensityPower { get; set; }
-        public float ChromaPower { get; set; }
+        public float ColorIntensityPower { get; set; } = 0.5f;
+        public float ChromaPower { get; set; } = 1f;
 
         internal override void Read(DataReader reader)
         {

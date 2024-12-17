@@ -1,4 +1,5 @@
 ﻿using HActLib.Internal;
+using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,7 +190,9 @@ namespace HActLib
 
         private static void ProcessSpecialNode(NodeElement element, Game input, Game output)
         {
-            switch (Reflection.GetElementNameByID(element.ElementKind, output))
+            string elementName = Reflection.GetElementNameByID(element.ElementKind, output);
+
+            switch (elementName)
             {
                 case "e_auth_element_se":
                     DEElementSE seElem = element as DEElementSE;
@@ -233,6 +236,59 @@ namespace HActLib
                     if (input <= Game.LJ && output >= Game.LAD7Gaiden)
                         dof2Elem.Unknown2 = 2;
                         break;
+                case "e_auth_element_directional_light":
+                    if(input <= Game.YLAD && output >= Game.YLAD)
+                    {
+                        DEElementDirectionalLight dirLight = element as DEElementDirectionalLight;
+                        dirLight.Animation = new float[256];
+
+                        for (int i = 0; i < dirLight.Animation.Length; i++)
+                            dirLight.Animation[i] = 1f;
+                    }
+                    break;
+
+                case "e_auth_element_expression_target":
+                    DEElementExpressionTarget expTarget = element as DEElementExpressionTarget;
+
+                    if (input >= Game.YLAD && output <= Game.YLAD)
+                        expTarget.Version = 0;
+                    else if (input <= Game.YLAD && output >= Game.YLAD)
+                        expTarget.Version = 1;
+                    break;
+
+                case "e_auth_element_rim_flash":
+                    DEElementRimflash rimflash = element as DEElementRimflash;
+
+                    if(input <= Game.YK2 && output > Game.YK2)
+                    {
+                        if (output > Game.JE)
+                            rimflash.Version = 5;
+
+                        switch(output)
+                        {
+                            case Game.JE:
+                                RimflashParamsV2 paramsV2 = new RimflashParamsV2();
+                                rimflash.RimflashParams.CopyProperties(paramsV2);
+                                paramsV2.Version = 2;
+                                rimflash.RimflashParams = paramsV2;
+                                break;
+                            case Game.YLAD:
+                                RimflashParamsV3 paramsV3 = new RimflashParamsV3();
+                                rimflash.RimflashParams.CopyProperties(paramsV3);
+                                paramsV3.Version = 3;
+                                rimflash.RimflashParams = paramsV3;
+                                break;
+                            default:
+                            case Game.LJ:
+                                RimflashParamsV4 paramsV4 = new RimflashParamsV4();
+                                rimflash.RimflashParams.CopyProperties(paramsV4);
+                                paramsV4.Version = 4;
+                                rimflash.RimflashParams = paramsV4;
+                                break;
+
+                        }
+                    }
+                    break;
                        
             }
         }

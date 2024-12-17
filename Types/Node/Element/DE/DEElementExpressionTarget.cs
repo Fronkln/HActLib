@@ -36,9 +36,6 @@ namespace HActLib
             if (Version > 0)
                 Unk2 = reader.ReadInt32();
 
-            //int dataCount2 = reader.ReadInt32();
-
-
             for (int i = 0; i < dataCount; i++)
             {
                 ExpressionTargetData dat = new ExpressionTargetData();
@@ -58,7 +55,7 @@ namespace HActLib
             if(version > GameVersion.Yakuza6)
                 writer.Write(Unk1);
 
-            if (CMN.VersionEqualsLess(version, GameVersion.DE1))
+            if (version <= GameVersion.DE1)
                 Version = 0;
 
             if (Version > 0)

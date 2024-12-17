@@ -162,7 +162,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             label5.Location = new System.Drawing.Point(3, 6);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(87, 21);
@@ -172,7 +172,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             label6.Location = new System.Drawing.Point(96, 6);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(80, 21);
@@ -182,7 +182,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label7.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             label7.Location = new System.Drawing.Point(0, 2);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(67, 25);
@@ -192,7 +192,7 @@
             // targetGameLbl
             // 
             targetGameLbl.AutoSize = true;
-            targetGameLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            targetGameLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             targetGameLbl.Location = new System.Drawing.Point(12, 404);
             targetGameLbl.Name = "targetGameLbl";
             targetGameLbl.Size = new System.Drawing.Size(106, 21);
@@ -577,7 +577,7 @@
             // 
             // targetGameCombo
             // 
-            targetGameCombo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            targetGameCombo.Font = new System.Drawing.Font("Segoe UI", 9F);
             targetGameCombo.FormattingEnabled = true;
             targetGameCombo.Location = new System.Drawing.Point(12, 428);
             targetGameCombo.Name = "targetGameCombo";
@@ -596,7 +596,7 @@
             // 
             label2.Anchor = System.Windows.Forms.AnchorStyles.None;
             label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             label2.Location = new System.Drawing.Point(23, 6);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(195, 30);
@@ -686,7 +686,7 @@
             // 
             // unkBytesBox
             // 
-            unkBytesBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            unkBytesBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             unkBytesBox.Location = new System.Drawing.Point(6, 6);
             unkBytesBox.Name = "unkBytesBox";
             unkBytesBox.ShadowSelectionColor = System.Drawing.Color.FromArgb(100, 60, 188, 255);
@@ -805,7 +805,7 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             label13.Location = new System.Drawing.Point(90, 64);
             label13.Name = "label13";
             label13.Size = new System.Drawing.Size(46, 25);
@@ -822,7 +822,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label12.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             label12.Location = new System.Drawing.Point(12, 64);
             label12.Name = "label12";
             label12.Size = new System.Drawing.Size(56, 25);
@@ -847,7 +847,7 @@
             // targetNodeLbl
             // 
             targetNodeLbl.AutoSize = true;
-            targetNodeLbl.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            targetNodeLbl.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             targetNodeLbl.Location = new System.Drawing.Point(410, 10);
             targetNodeLbl.Name = "targetNodeLbl";
             targetNodeLbl.Size = new System.Drawing.Size(122, 25);
@@ -865,7 +865,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             label1.Location = new System.Drawing.Point(265, 10);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(140, 25);
@@ -885,7 +885,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label4.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             label4.Location = new System.Drawing.Point(13, 10);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(93, 25);
@@ -966,7 +966,7 @@
             // 
             label10.Anchor = System.Windows.Forms.AnchorStyles.None;
             label10.AutoSize = true;
-            label10.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label10.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             label10.Location = new System.Drawing.Point(22, 5);
             label10.Name = "label10";
             label10.Size = new System.Drawing.Size(195, 30);
@@ -1042,7 +1042,7 @@
             // 
             label8.Anchor = System.Windows.Forms.AnchorStyles.None;
             label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             label8.Location = new System.Drawing.Point(22, 35);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(195, 30);
@@ -1109,7 +1109,7 @@
             // langOverrideLbl
             // 
             langOverrideLbl.AutoSize = true;
-            langOverrideLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            langOverrideLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             langOverrideLbl.Location = new System.Drawing.Point(768, 405);
             langOverrideLbl.Name = "langOverrideLbl";
             langOverrideLbl.Size = new System.Drawing.Size(155, 21);

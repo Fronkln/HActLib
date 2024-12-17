@@ -8,6 +8,9 @@ using Yarhl.IO;
 
 namespace HActLib
 {
+    //Version 6: Y6
+    //Version 4: YK2 and above
+    //Version 5: YLAD and above
     
     [ElementID(Game.Y6, 0x1F)]
     [ElementID(Game.YK2, 0x1F)]
@@ -144,16 +147,24 @@ namespace HActLib
 
             switch(paramsVer)
             {
-                //DE 1.0
+                //Y6/YK2
                 default:
                     return false;
                 case 0:
+                    if(RimflashVersion < 5)
+                    {
+                        RimflashParams paramy = new RimflashParams();
+                        paramy.Read(reader);
+                        RimflashParams = paramy;
+                    }
                     return false;
+                //Judgment
                 case 2:
                     RimflashParamsV2 paramsV2 = new RimflashParamsV2();
                     paramsV2.Read(reader);
                     RimflashParams = paramsV2;
                     break;
+                //YLAD
                 case 3:
                     RimflashParamsV3 paramsV3 = new RimflashParamsV3();
                     paramsV3.Read(reader);

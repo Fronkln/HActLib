@@ -143,11 +143,6 @@ namespace CMNEdit
 
             Instance = this;
 
-            if (!File.Exists("config.ini"))
-                SaveINIFile();
-            else
-                ReadINIFile();
-
             _convertMepButton = advancedButton.DropDownItems[0];
 
             ClearEverything();
@@ -164,23 +159,6 @@ namespace CMNEdit
             {
 
             }
-        }
-
-        private void ReadINIFile()
-        {
-            Ini ini = new Ini("config.ini");
-            ini.Load();
-
-            INISettings.Y3CsvPath = ini.GetValue("Y3_CSV_PATH", "OOE");
-            INISettings.Y4CsvPath = ini.GetValue("Y4_CSV_PATH", "OOE");
-        }
-
-        private void SaveINIFile()
-        {
-            Ini ini = new Ini("config.ini");
-            ini.WriteValue("Y3_CSV_PATH", "OOE", INISettings.Y3CsvPath.Replace(@"\\", ""));
-            ini.WriteValue("Y4_CSV_PATH", "OOE", INISettings.Y4CsvPath);
-            ini.Save();
         }
 
         private void ClearEverything()
@@ -333,7 +311,7 @@ namespace CMNEdit
 
                         csvPath = dialog.FileName;
 
-                        SaveINIFile();
+                        Program.SaveINIFile();
                     }
                     catch (Exception ex)
                     {
@@ -1505,7 +1483,7 @@ namespace CMNEdit
             cmn.Version = OECMN.GetCMNVersionForGame(curGame);
             cmn.HActStart = Utils.InvariantParse(hactStartBox.Text);
             cmn.HActEnd = Utils.InvariantParse(hactEndBox.Text);
-            cmn.CutInfo = CutInfos.ToArray();
+            cmn.CutInfo = CutInfos.OrderBy(x => x).ToArray();
             cmn.DisableFrameInfo = DisableFrameInfos;
             cmn.SetChainCameraIn(ChainCameraIn);
             cmn.SetChainCameraOut(ChainCameraOut);
@@ -1555,6 +1533,7 @@ namespace CMNEdit
         public BEP GenerateBep()
         {
             BEP bep = new BEP();
+            bep.Game = curGame;
             bep.Nodes.AddRange(GetAllNodes());
 
 

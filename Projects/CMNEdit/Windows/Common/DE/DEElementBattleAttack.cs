@@ -24,9 +24,10 @@ namespace CMNEdit.Windows.Common.DE
             if (Form1.curVer == GameVersion.DE2)
                 form.CreateInput("Attack ID", inf.Data.AttackID.ToString(), delegate (string val) { inf.Data.AttackID = int.Parse(val); }, NumberBox.NumberMode.Int);
 
-
             form.CreateInput("Attributes", inf.Data.Attributes.ToString(), delegate (string val) { inf.Data.Attributes = ulong.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Long);
 
+            if (Form1.curGame == Game.LAD7Gaiden || Form1.curGame >= Game.LADPYIH)
+                form.CreateInput("Unknown", inf.Data.Unknown.ToString(), delegate (string val) { inf.Data.Unknown = int.Parse(val); }, NumberBox.NumberMode.Int);
 
             string[] options = null;
 

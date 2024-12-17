@@ -140,5 +140,44 @@ namespace HActLib
 
             return buf;
         }
+
+
+    }
+}
+
+namespace System.Reflection
+{
+    internal static class ReflectionExtensions
+    {
+        //make this better, too much argumentexception
+        public static void CopyFields(this object source, Object destination)
+        {
+            // copy base class properties.
+
+            foreach (FieldInfo prop in source.GetType().GetFields())
+            {
+                try
+                {
+                    FieldInfo prop2 = source.GetType().GetField(prop.Name);
+                    prop2.SetValue(destination, prop.GetValue(source));
+                }
+                catch { continue; }
+            }
+        }
+
+        public static void CopyProperties(this object source, Object destination)
+        {
+            // copy base class properties.
+
+            foreach (PropertyInfo prop in source.GetType().GetProperties())
+            {
+                try
+                {
+                    PropertyInfo prop2 = source.GetType().GetProperty(prop.Name);
+                    prop2.SetValue(destination, prop.GetValue(source));
+                }
+                catch { continue; }
+            }
+        }
     }
 }

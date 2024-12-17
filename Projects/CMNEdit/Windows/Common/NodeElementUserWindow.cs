@@ -25,6 +25,8 @@ namespace CMNEdit
                 default:
                     form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { }, NumberBox.NumberMode.Text, true);
                     break;
+                case UserElementFieldType.ByteArray:
+                    break;
                 case UserElementFieldType.Byte:
                     form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = byte.Parse(val); }, NumberBox.NumberMode.Byte);
                     break;
@@ -57,6 +59,17 @@ namespace CMNEdit
                         });
                     break;
 
+                case UserElementFieldType.BRG32:
+                    Panel brg32Panel = null;
+
+                    brg32Panel = form.CreatePanel(fieldName, (RGB32)field.Value,
+                        delegate (Color col)
+                        {
+                            field.Value = (RGB32)col;
+                            brg32Panel.BackColor = col;
+                        });
+                    break;
+
                 case UserElementFieldType.RGBA32:
                     Panel rgba32Panel = null;
 
@@ -81,6 +94,19 @@ namespace CMNEdit
                             delegate (float[] outCurve)
                             {
                                field.Value = outCurve;
+                            });
+                    });
+                    break;
+
+                case UserElementFieldType.AnimationCurve:
+                    form.CreateButton(fieldName, delegate
+                    {
+                        CurveView myNewForm = new CurveView();
+                        myNewForm.Visible = true;
+                        myNewForm.Init((byte[])field.Value,
+                            delegate (byte[] outCurve)
+                            {
+                                field.Value = outCurve;
                             });
                     });
                     break;

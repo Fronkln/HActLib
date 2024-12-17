@@ -17,6 +17,7 @@ namespace HActLib
         public uint Parts;
         public ulong Attributes; // battle_reaction_attr.bin
         public int AttackID;
+        public int Unknown; //Introduced in Gaiden
     };
 
     [ElementID(Game.Y6, 0x4D)]
@@ -48,6 +49,9 @@ namespace HActLib
 
             if (isNewDE)
                 Data.AttackID = reader.ReadInt32();
+
+            if (CMN.LastHActDEGame == Game.LAD7Gaiden || CMN.LastHActDEGame >= Game.LADPYIH)
+                Data.Unknown = reader.ReadInt32();
         }
 
 
@@ -66,6 +70,9 @@ namespace HActLib
 
             if (version >= GameVersion.DE2)
                 writer.Write(Data.AttackID);
+
+            if (CMN.LastHActDEGame == Game.LAD7Gaiden || CMN.LastHActDEGame >= Game.LADPYIH)
+                writer.Write(Data.Unknown);
         }
 
         public override Node TryConvert(Game input, Game output)

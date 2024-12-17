@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +43,24 @@ namespace HActLib
                 case UserElementFieldType.RGB32:
                     writer.Write((RGB32)Value);
                     break;
+                case UserElementFieldType.BRG32:
+                    RGB32 brg = (RGB32)Value;
+                    writer.Write(brg.B);
+                    writer.Write(brg.R);
+                    writer.Write(brg.G);
+                    break;
+                case UserElementFieldType.RGBF32:
+                    RGB rgbf = (RGB)Value;
+                    writer.Write(rgbf.R);
+                    writer.Write(rgbf.G);
+                    writer.Write(rgbf.B);
+                    break;
+                case UserElementFieldType.BRGF32:
+                    RGB brgf = (RGB)Value;
+                    writer.Write(brgf.B);
+                    writer.Write(brgf.R);
+                    writer.Write(brgf.G);
+                    break;
                 case UserElementFieldType.RGBA32:
                     writer.Write((RGBA32)Value);
                     break;
@@ -51,6 +70,14 @@ namespace HActLib
                 case UserElementFieldType.FAnimationCurve:
                     foreach (float f in (float[])Value)
                         writer.Write(f);
+                    break;
+                case UserElementFieldType.AnimationCurve:
+                    foreach (byte b in (byte[])Value)
+                        writer.Write(b);
+                    break;
+                case UserElementFieldType.ByteArray:
+                    foreach (byte b in (byte[])Value)
+                        writer.Write(b);
                     break;
             }
         }
@@ -86,6 +113,22 @@ namespace HActLib
                 case UserElementFieldType.RGBA32:
                     Value = new RGBA32(reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
                     break;
+                case UserElementFieldType.BRG32:
+                    uint bb = reader.ReadUInt32();
+                    uint br = reader.ReadUInt32();
+                    uint bg = reader.ReadUInt32();
+                    Value = new RGB32(br, bg, bb);
+                    break;
+                case UserElementFieldType.RGBF32:
+                    Value = new RGB(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    break;
+                case UserElementFieldType.BRGF32:
+                    float bbf = reader.ReadSingle();
+                    float brf = reader.ReadSingle();
+                    float bgf = reader.ReadSingle();
+                    Value = new RGB(brf, bgf, bbf);
+                    break;
+
                 case UserElementFieldType.Float:
                     Value = reader.ReadSingle();
                     break;
@@ -94,6 +137,24 @@ namespace HActLib
 
                     for (int i = 0; i < fcurveval.Length; i++)
                         fcurveval[i] = reader.ReadSingle();
+
+                    Value = fcurveval;
+                    break;
+
+                case UserElementFieldType.AnimationCurve:
+                    byte[] curveval = new byte[int.Parse(Args[0])];
+
+                    for (int i = 0; i < curveval.Length; i++)
+                        curveval[i] = reader.ReadByte();
+                    Value = curveval;
+                    break;
+                case UserElementFieldType.ByteArray:
+                    byte[] barray = new byte[int.Parse(Args[0])];
+
+                    for (int i = 0; i < barray.Length; i++)
+                        barray[i] = reader.ReadByte();
+
+                    Value = barray;
                     break;
 
             }

@@ -10,7 +10,7 @@ namespace HActLib
     [Yarhl.IO.Serialization.Attributes.Serializable]
     public class RimflashParamsV4 : RimflashParamsV3
     {
-        public float UnknownV4_1 { get; set; }
+        public float UnknownV4_1 { get; set; } = 1f;
 
 
         internal override void Read(DataReader reader)
