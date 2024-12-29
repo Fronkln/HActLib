@@ -61,8 +61,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="MotionLib">
-      <HintPath>..\..\..\..\..\Documents\GitHub\MotionLibrary\MotionLib\bin\x64\Debug\net6.0\MotionLib.dll</HintPath>
+    <Reference Include="MotionLibrary">
+      <HintPath>..\..\Dependencies\MotionLib.dll</HintPath>
     </Reference>
     <Reference Include="MWTreeView">
       <HintPath>..\..\..\..\..\Downloads\mwtreeview\bin\Debug\MWTreeView.dll</HintPath>

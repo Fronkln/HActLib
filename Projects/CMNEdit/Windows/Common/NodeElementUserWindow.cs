@@ -70,6 +70,28 @@ namespace CMNEdit
                         });
                     break;
 
+                case UserElementFieldType.RGBF32:
+                    Panel rgbf32Panel = null;
+
+                    rgbf32Panel = form.CreatePanelFI2(fieldName, ((RGB)field.Value).Clamp(), (RGB)field.Value,
+                        delegate (RGB col)
+                        {
+                            field.Value = (RGB)col;
+                            rgbf32Panel.BackColor = col.Clamp();
+                        });
+                    break;
+
+                case UserElementFieldType.BRGF32:
+                    Panel brgf32Panel = null;
+
+                    brg32Panel = form.CreatePanel(fieldName, (RGB)field.Value,
+                        delegate (Color col)
+                        {
+                            field.Value = (RGB)col;
+                            brgf32Panel.BackColor = col;
+                        });
+                    break;
+
                 case UserElementFieldType.RGBA32:
                     Panel rgba32Panel = null;
 

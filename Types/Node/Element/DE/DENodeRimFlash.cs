@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Yarhl.IO;
 
 namespace HActLib
@@ -42,6 +39,7 @@ namespace HActLib
         public List<float> Curve = null;
 
         public byte[] CommandData = null;
+        public byte[] PulseData = null;
 
         private byte[] Unk1 = new byte[8];
 
@@ -78,6 +76,8 @@ namespace HActLib
             Unk1 = reader.ReadBytes(8);
 
             pulseOffset = reader.ReadUInt32();
+
+            long pulseAddr = headerStart + (pulseOffset * 4);
 
             ParamID = reader.ReadUInt32();
             AttachmentSlot = (AttachmentSlot)reader.ReadUInt32();
@@ -121,6 +121,12 @@ namespace HActLib
                         numBytes = (int)(nodeEnd - commandAddr);
 
                     CommandData = reader.ReadBytes(numBytes);
+                }
+
+                if (pulseOffset > 0)
+                {
+                    reader.Stream.Seek(pulseAddr);
+                    PulseData = reader.ReadBytes(80);
                 }
 
                 if (RimflashVersion >= 4)
@@ -206,17 +212,12 @@ namespace HActLib
 
             writer.Write(Unk1);
 
+            long pulseAddrOffset = writer.Stream.Position;
+
             writer.Write(pulseOffset);
 
             writer.Write(ParamID);
             writer.Write((uint)AttachmentSlot);
-
-            if (CommandData != null)
-            {
-                uint commandAddr = (uint)writer.Stream.Position;
-                commandOffset = commandAddr - (uint)headerStart;
-                writer.Write(CommandData);
-            }
 
             if (Curve != null && Curve.Count > 0)
             {
@@ -228,6 +229,13 @@ namespace HActLib
                     writer.Write(f);
             }
 
+            if (CommandData != null)
+            {
+                uint commandAddr = (uint)writer.Stream.Position;
+                commandOffset = commandAddr - (uint)headerStart;
+                writer.Write(CommandData);
+            }
+
             if (unreadSections != null && unreadSections.Length > 0)
                 writer.Write(unreadSections);
 
@@ -235,6 +243,12 @@ namespace HActLib
             {
                 parametersOffset = (uint)(writer.Stream.Position - headerStart);
                 RimflashParams.Write(writer);
+            }
+
+            if(PulseData != null && PulseData.Length > 0)
+            {
+                pulseOffset = (uint)(writer.Stream.Position - headerStart);
+                writer.Write(PulseData);
             }
 
             long end = writer.Stream.Position;
@@ -246,6 +260,10 @@ namespace HActLib
                 writer.Write(parametersOffset / 4);
                 writer.Write(curveOffset / 4);
                 writer.Write(commandOffset / 4);
+
+                writer.Stream.Seek(pulseAddrOffset);
+                writer.Write(pulseOffset / 4);
+
                 writer.Stream.Position = end;
             }
         }

@@ -18,7 +18,6 @@ using System.Drawing.Text;
 using Frame_Progression_GUI;
 using System.Collections;
 using MWControlSuite;
-using MotionLibrary;
 using MotionLib;
 using HActLib.Internal;
 using HActLib.OOE;
@@ -401,7 +400,7 @@ namespace CMNEdit
                 }
 
                 Version = HAct.Version;
-                DisableFrameInfos = HAct.DisableFrameInfo;
+                DisableFrameInfos = HAct.DisableFrameInfo.ToArray();
                 ResourceCutInfos = HAct.ResourceCutInfo;
                 CutInfos = HAct.CutInfo.ToList();
                 ChainCameraIn = HAct.GetChainCameraIn();
@@ -808,6 +807,35 @@ namespace CMNEdit
                 myNewForm.Init(input.BackColor, finished);
             };
             input.BackColor = color;
+
+            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
+
+            return input;
+        }
+
+        public Panel CreatePanelFI2(string label, Color panelColor, HActLib.RGB color, Action<HActLib.RGB> finished, bool isCsvTree = false)
+        {
+            TableLayoutPanel varPanel = null;
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
+            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
+            varPanel.RowCount++;
+
+            Panel input = new Panel();
+            input.BorderStyle = BorderStyle.Fixed3D;
+            input.Size = new Size(200, 50);
+            input.Click += delegate
+            {
+                CMNEdit.Windows.ColorViewFI myNewForm = new CMNEdit.Windows.ColorViewFI();
+                myNewForm.Visible = true;
+                myNewForm.Init(color, finished);
+            };
+            input.BackColor = panelColor;
 
             varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
             varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
@@ -1327,6 +1355,15 @@ namespace CMNEdit
                 return;
             }
 
+            if(IsYAct)
+            {
+                foreach (System.Windows.Forms.TreeNode node in pastingNode)
+                {
+                    System.Windows.Forms.TreeNode newNode = (System.Windows.Forms.TreeNode)node.Clone();
+                    nodesTree.Nodes.Add(newNode);
+                }
+            }
+
             if (!IsMep)
             {
                 void PasteNode(TreeViewItemNode node)
@@ -1484,7 +1521,7 @@ namespace CMNEdit
             cmn.HActStart = Utils.InvariantParse(hactStartBox.Text);
             cmn.HActEnd = Utils.InvariantParse(hactEndBox.Text);
             cmn.CutInfo = CutInfos.OrderBy(x => x).ToArray();
-            cmn.DisableFrameInfo = DisableFrameInfos;
+            cmn.DisableFrameInfo = DisableFrameInfos.ToList();
             cmn.SetChainCameraIn(ChainCameraIn);
             cmn.SetChainCameraOut(ChainCameraOut);
             cmn.ResourceCutInfo = ResourceCutInfos;
@@ -1673,6 +1710,8 @@ namespace CMNEdit
             }
             else if(IsYAct)
             {
+                YActEffect[] effects = GetAllTreeNodes().Where(x => x is TreeNodeYActEffect).Cast<TreeNodeYActEffect>().Select(x => x.Effect).ToArray();
+                yact.Effects = effects.ToList();
                 YActY1.Write(FilePath, yact);
             }
 
@@ -2870,27 +2909,6 @@ namespace CMNEdit
                                 condition.ConditionID = newID;
                             }
                     }
-
-                    if (targetVer <= GameVersion.Yakuza6)
-                        page.Format = 0;
-                    else if (targetVer == GameVersion.DE1)
-                        page.Format = 1;
-                    else
-                        page.Format = 2;
-
-                    if (page.IsTalkPage())
-                    {
-                        if (curVer <= GameVersion.DE1 && targetVer >= GameVersion.DE2)
-                        {
-                            if ((page.Flag & 0x40) == 0)
-                                page.Flag |= 0x40;
-                        }
-                    }
-                    else
-                    {
-                        if (curVer <= GameVersion.DE1)
-                            page.Flag = 0;
-                    }
                 }
 
             }
@@ -2995,114 +3013,13 @@ namespace CMNEdit
 
             foreach (OEAnimProperty property in entry.Properties)
             {
-                Node convertedNode = ConvertPropertyToNode(property, 16, Game.YK1, curGame);
+                Node convertedNode = OEToDEProperty.ConvertPropertyToNode(property, Game.YK1, curGame);
 
                 if (convertedNode != null)
                     bep.Nodes.Add(convertedNode);
             }
 
             return bep;
-        }
-
-        private static Node ConvertPropertyToNode(OEAnimProperty property, uint version, Game oeGame, Game game)
-        {
-            NodeElement deNode = null;
-
-            switch (property.Type)
-            {
-                case OEPropertyType.VoiceAudio:
-                    ushort voiceCuesheet = 0;
-
-                    voiceCuesheet = RyuseModule.GetGVFighterIDForGame(game);
-
-                    OEAnimPropertyVoiceSE oePropertyVoiceSE = property as OEAnimPropertyVoiceSE;
-                    DEElementSE voiceSE = new DEElementSE();
-
-                    voiceSE.ElementKind = Reflection.GetElementIDByName("e_auth_element_se", game);
-                    voiceSE.CueSheet = voiceCuesheet;
-                    voiceSE.SoundIndex = (byte)oePropertyVoiceSE.ID;
-                    voiceSE.Unk = 128;
-
-                    deNode = voiceSE;
-                    break;
-
-                case OEPropertyType.SEAudio:
-                    OEAnimPropertySE oePropertySE = property as OEAnimPropertySE;
-                    DEElementSE seNode = new DEElementSE();
-
-                    seNode.ElementKind = Reflection.GetElementIDByName("e_auth_element_se", game);
-                    seNode.CueSheet = oePropertySE.Cuesheet;
-                    seNode.SoundIndex = (byte)(oePropertySE.ID + 1);
-
-                    deNode = seNode;
-                    break;
-
-                case OEPropertyType.FollowupWindow:
-                    DEElementFollowupWindow deFollowup = new DEElementFollowupWindow();
-                    deFollowup.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_followup_window", game);
-
-                    deNode = deFollowup;
-                    break;
-
-                case OEPropertyType.ControlLock:
-                    DEElementControlLock deControl = new DEElementControlLock();
-                    deControl.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_control_window", game);
-
-                    deNode = deControl;
-                    break;
-
-                case OEPropertyType.Hitbox:
-                    OEAnimPropertyHitbox oeHitbox = property as OEAnimPropertyHitbox;
-                    DETimingInfoAttack attack = new DETimingInfoAttack();
-
-                    attack.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_attack", game);
-
-                    attack.Data.Damage = oeHitbox.Damage;
-
-                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftHand))
-                        attack.Data.Parts |= 4104;
-
-                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightHand))
-                        attack.Data.Parts |= 2052;
-
-                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftElbow))
-                        attack.Data.Parts |= 5128;
-
-                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightElbow))
-                        attack.Data.Parts |= 2564;
-
-                    if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftKnee))
-                        attack.Data.Parts |= 81952;
-
-                    //Placeholder
-                    attack.Data.Attributes = 1;
-                    attack.Data.Power = 1;
-
-
-                    deNode = attack;
-
-                    break;
-
-                case OEPropertyType.Muteki:
-                    DETimingInfoMuteki invincibility = new DETimingInfoMuteki();
-                    invincibility.ElementKind = Reflection.GetElementIDByName("e_auth_element_battle_muteki", game);
-
-                    deNode = invincibility;
-
-                    break;
-
-            }
-
-            if (deNode != null)
-            {
-                deNode.Start = property.Start;
-                deNode.End = property.End;
-                deNode.BEPDat.Guid2 = Guid.NewGuid();
-                deNode.PlayType = ElementPlayType.Normal;
-                deNode.UpdateTimingMode = 1;
-            }
-
-            return deNode;
         }
 
         private void ımportBEPDEToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3533,8 +3450,8 @@ namespace CMNEdit
                 {
                     BEP bepfile = BEP.Read(bepFile, igame);
 
-                    var inf = RyuseModule.ConvertNodes(bepfile.Nodes.ToArray(), igame, prefixGame);
-                    bepfile.Nodes = inf.OutputNodes.ToList();
+                    //var inf = RyuseModule.ConvertNodes(bepfile.Nodes.ToArray(), igame, prefixGame);
+                   // bepfile.Nodes = inf.OutputNodes.ToList();
 
                     BEP.Write(bepfile, bepFile, prefixGame);
                 }

@@ -39,7 +39,7 @@ namespace HActLib
 
             #region Disable Frame Info
 
-            writer.Write(cmn.DisableFrameInfo.Length);
+            writer.Write(cmn.DisableFrameInfo.Count);
             writer.WriteTimes(0, 12);
 
             foreach (DisableFrameInfo inf in cmn.DisableFrameInfo)

@@ -177,7 +177,8 @@ namespace HActLib
         public bool IsTalkPage()
         {
             if (Format <= 1)
-                return Flag > 0;
+                return false; //29.12.2024 i dont think they exist k_playspot_batting YK2 and LADIW
+            //return Flag > 0;
             else
                 return (Flag & 0x40) > 0;
         }

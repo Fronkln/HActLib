@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="MotionLib">
+      <HintPath>Projects\CMNEdit\Dependencies\MotionLib.dll</HintPath>
+    </Reference>
     <Reference Include="ParLibrary">
       <HintPath>Dependencies\ParLibrary.dll</HintPath>
     </Reference>

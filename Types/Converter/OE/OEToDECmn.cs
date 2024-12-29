@@ -141,9 +141,10 @@ namespace HActLib
                     break;
                 case AuthNodeCategory.Asset:
                     NodeAsset deAsset = new NodeAsset();
-                    oeNode.Category = AuthNodeCategory.Asset;
+                    deAsset.Category = AuthNodeCategory.Asset;
                     deAsset.AssetID = 1;
                     deNode = deAsset;
+                    deNode.unkBytes = null;
                     break;
 
                 case AuthNodeCategory.ModelCustom:
@@ -493,10 +494,6 @@ namespace HActLib
                 se.CueSheet = 0;
                 se.SoundIndex += 1;
             }
-
-            Console.WriteLine("converted se");
-           
-
             return se;
         }
 

@@ -380,6 +380,15 @@ namespace HActLib
                     }
                 }
 
+            List<DisableFrameInfo> disableFramesToRemove = new List<DisableFrameInfo>();
+
+            foreach (DisableFrameInfo inf in convertedOE.DisableFrameInfo)
+                if (inf.Start == cmn.HActEnd && inf.End == 0)
+                    disableFramesToRemove.Add(inf);
+
+            foreach(var frame in disableFramesToRemove)
+                cmn.DisableFrameInfo.Remove(frame);
+
             CMN.Write(convertedOE, Path.Combine(outputCMNDir, "cmn.bin"));
             RES.Write(res, Path.Combine(outputCMNDir, "res.bin"), true);
             TEX.Write(tex, Path.Combine(outputCMNDir, "tex.bin"), true);
@@ -628,7 +637,7 @@ namespace HActLib
             if (!gmtExporterExists)
             {
                 Console.WriteLine("GMT Converter does not exist. The tool will not convert GMTs.\n Please put GMT_Converter.exe in the directory of this exe.");
-                System.Threading.Thread.Sleep(1500);
+                System.Threading.Thread.Sleep(500);
             }
 
             //Process res.bin
@@ -677,12 +686,26 @@ namespace HActLib
                         string outputPath = $"{'\u0022'}{dir}{'\u0022'}";
 
                         var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig {inputGame} -og {outputGame} -i {path} -o {outputPath}");
-                      //  proc.WaitForExit();
+                        proc.WaitForExit();
                     }
                     else if (resInf.Type == ResourceType.CameraMotion)
                     {
                         string inp = Path.Combine(inputDir, resInf.Name + ".cmt");
                         string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".cmt");
+
+                        File.Copy(inp, dir, true);
+                    }
+                    else if(resInf.Type == ResourceType.AssetMotion)
+                    {
+                        string inp = Path.Combine(inputDir, resInf.Name + ".gmt");
+                        string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".gmt");
+
+                        File.Copy(inp, dir, true);
+                    }
+                    else if(resInf.Type == ResourceType.PathMotion)
+                    {
+                        string inp = Path.Combine(inputDir, resInf.Name + ".gmt");
+                        string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".gmt");
 
                         File.Copy(inp, dir, true);
                     }

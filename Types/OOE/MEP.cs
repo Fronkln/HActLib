@@ -1,15 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Yarhl.FileFormat;
 using Yarhl.IO;
 using HActLib.OOE;
-using System.Security;
-using System.Reflection.PortableExecutable;
-using System.Formats.Asn1;
 using HActLib.Internal;
 
 

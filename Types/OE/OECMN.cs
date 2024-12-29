@@ -158,7 +158,7 @@ namespace HActLib
                     int count = cmnReader.ReadInt32();
                     cmnReader.ReadBytes(12);
 
-                    cmn.DisableFrameInfo = new DisableFrameInfo[count];
+                    cmn.DisableFrameInfo = new List<DisableFrameInfo>(new DisableFrameInfo[count]);
 
                     for (int i = 0; i < count; i++)
                     {

@@ -77,6 +77,30 @@ namespace HActLib
 
             #endregion
 
+            foreach(var page in cmn.AuthPages)
+            {
+                if (page.IsTalkPage())
+                {
+                    if (page.Format <= 1 && CMN.LastGameVersion >= GameVersion.DE2)
+                    {
+                        if ((page.Flag & 0x40) == 0)
+                            page.Flag |= 0x40;
+                    }
+                }
+                else
+                {
+                    if (page.Format <= 1)
+                        page.Flag = 0;
+                }
+
+                if (CMN.LastGameVersion <= GameVersion.Yakuza6)
+                    page.Format = 0;
+                else if (CMN.LastGameVersion == GameVersion.DE1)
+                    page.Format = 1;
+                else
+                    page.Format = 2;
+            }
+
             //Second write: auth page info
             uint authPagePointer = (uint)writer.Stream.Position;
 
@@ -180,7 +204,7 @@ namespace HActLib
 
             #region Disable Frame Info
 
-            writer.Write(cmn.DisableFrameInfo.Length);
+            writer.Write(cmn.DisableFrameInfo.Count);
             writer.WriteTimes(0, 12);
 
             foreach (DisableFrameInfo inf in cmn.DisableFrameInfo)
@@ -575,7 +599,7 @@ namespace HActLib
                 int count = cmnReader.ReadInt32();
                 cmnReader.ReadBytes(12);
 
-                cmn.DisableFrameInfo = new DisableFrameInfo[count];
+                cmn.DisableFrameInfo = new List<DisableFrameInfo>(new DisableFrameInfo[count]);
 
                 for (int i = 0; i < count; i++)
                     cmn.DisableFrameInfo[i] = cmnReader.Read<DisableFrameInfo>();

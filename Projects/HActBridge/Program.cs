@@ -15,6 +15,7 @@ namespace HActBridge
         public static Game InputGame = Game.YK2;
         public static Game OutputGame = Game.YK2;
         public static string HActCsvPath = null;
+        public static bool ConvertPib = true;
 
         static Ini Ini = null;
 
@@ -23,6 +24,9 @@ namespace HActBridge
         {
             Console.WriteLine("HActBridge by Jhrino");
             Ini = new Ini(Path.Combine(AppContext.BaseDirectory, "hactbridge_config.ini"));
+
+            if (args.Contains("-nopibs"))
+                ConvertPib = false;
 
             if (args.Length <= 0)
             {
@@ -296,6 +300,9 @@ namespace HActBridge
 
         private static void ConvertPibs(string[] pibFiles, Game game, string outputDir)
         {
+            if (!ConvertPib)
+                return;
+
             if(!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
 

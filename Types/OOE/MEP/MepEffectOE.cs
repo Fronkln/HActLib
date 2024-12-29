@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
@@ -36,7 +37,22 @@ namespace HActLib
             if (Reflection.ElementNodes[CMN.LastHActDEGame].ContainsKey(propertyType))
                 Effect = (NodeElement)Activator.CreateInstance(Reflection.ElementNodes[CMN.LastHActDEGame][propertyType]);
             else
-                Effect = new NodeElement();// new NodeElement();
+            {
+                if (Reflection.UserNodes[CMN.LastHActDEGame].ContainsKey(propertyType))
+                {
+                    NodeElementUser userNode = new NodeElementUser();
+                    userNode.UserData = Reflection.UserNodes[CMN.LastHActDEGame][propertyType];
+
+                    foreach (var field in userNode.UserData.Fields)
+                    {
+                        userNode.Fields.Add(field.Copy());
+                    }
+
+                    Effect = userNode;
+                }
+                else
+                    Effect = new NodeElement();
+            }
 
             //We will be reading and writing the *CORE* node data for the element
             Effect.Guid = new Guid(reader.ReadBytes(16));
@@ -72,7 +88,7 @@ namespace HActLib
             if (current > target) //Overread
                 reader.Stream.Position = target;
             else if (current < target)
-                Effect.unkBytes = reader.ReadBytes((int)(target -  current));
+                Effect.unkBytes = reader.ReadBytes((int)(target - current));
 
         }
 
@@ -88,7 +104,7 @@ namespace HActLib
             long sizeOffset = writer.Stream.Position;
 
             writer.Write(0xDEADBEEF); //Size, return later after write
-                writer.Write(BoneID);
+            writer.Write(BoneID);
 
             writer.Write(Unknown1);
 

@@ -17,7 +17,7 @@ namespace HActLib
 
         public virtual Node[] GetNodes() { throw new NotImplementedException(); }
 
-        public DisableFrameInfo[] DisableFrameInfo = new DisableFrameInfo[0];
+        public List<DisableFrameInfo> DisableFrameInfo = new List<DisableFrameInfo>();
         public float[] CutInfo = new float[0];
         public float[] ResourceCutInfo = new float[0];
 

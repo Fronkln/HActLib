@@ -23,6 +23,14 @@ namespace CMNEdit
             SelectedImageIndex = ImageIndex;
         }
 
+        public override object Clone()
+        {
+            TreeNodeYActEffect cloned = (TreeNodeYActEffect)base.Clone();
+            cloned.Effect = Effect.Copy();
+
+            return cloned;
+        }
+
         public void Refresh()
         {
             var effect = Effect;
