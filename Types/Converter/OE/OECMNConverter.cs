@@ -34,20 +34,24 @@ namespace HActLib
 
             #endregion
 
+
             //Third write: disable frame info
             uint disableFramePointer = (uint)writer.Stream.Position;
 
-            #region Disable Frame Info
-
-            writer.Write(cmn.DisableFrameInfo.Count);
-            writer.WriteTimes(0, 12);
-
-            foreach (DisableFrameInfo inf in cmn.DisableFrameInfo)
+            if (cmn.Version > 10)
             {
-                if (cmn.Version > 10)
-                    writer.WriteOfType(inf);
-                else
-                    writer.Write(inf.Start);
+                #region Disable Frame Info
+
+                writer.Write(cmn.DisableFrameInfo.Count);
+                writer.WriteTimes(0, 12);
+
+                foreach (DisableFrameInfo inf in cmn.DisableFrameInfo)
+                {
+                    if (cmn.Version > 10)
+                        writer.WriteOfType(inf);
+                    else
+                        writer.Write(inf.Start);
+                }
             }
 
             #endregion
@@ -108,14 +112,21 @@ namespace HActLib
             writer.Write(cmn.CMNHeader.End);
             writer.Write(cmn.CMNHeader.NodeDrawNum);
 
-            writer.Write(cutInfoPointer);
-            writer.Write(disableFramePointer);
-
-            if (resourceCutInfo > 0)
+            if(cmn.Version <= 10)
+            {
+                writer.Write(cutInfoPointer);
                 writer.Write(resourceCutInfo);
-
-            writer.Write(soundInfo);
-            writer.Write(nodeInfoPointer);
+                writer.Write(soundInfo);
+                writer.Write(nodeInfoPointer);
+            }
+            else
+            {
+                writer.Write(cutInfoPointer);
+                writer.Write(disableFramePointer);
+                writer.Write(resourceCutInfo);
+                writer.Write(soundInfo);
+                writer.Write(nodeInfoPointer);
+            }
 
             writer.Write(cmn.CMNHeader.ChainCameraIn);
             writer.Write(cmn.CMNHeader.ChainCameraOut);

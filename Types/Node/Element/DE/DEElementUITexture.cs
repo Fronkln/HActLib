@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Yarhl.IO;
 
 namespace HActLib
@@ -65,18 +62,14 @@ namespace HActLib
             writer.Write(InFrame);
             writer.Write(OutFrame);
 
-            writer.Write(BeforeCenter.X);
-            writer.Write(BeforeCenter.Y);
+            writer.Write(BeforeCenter);
            
-            writer.Write(BeforeScale.X);
-            writer.Write(BeforeScale.Y);
+            writer.Write(BeforeScale);
             writer.Write(BeforeAlpha);
             
-            writer.Write(AfterCenter.X);
-            writer.Write(AfterCenter.Y);
+            writer.Write(AfterCenter);
             
-            writer.Write(AfterScale.X);
-            writer.Write(AfterScale.Y);
+            writer.Write(AfterScale);
             writer.Write(AfterAlpha);
             
             writer.Write(TextureID);

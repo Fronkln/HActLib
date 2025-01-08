@@ -686,7 +686,7 @@ namespace HActLib
                         string outputPath = $"{'\u0022'}{dir}{'\u0022'}";
 
                         var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig {inputGame} -og {outputGame} -i {path} -o {outputPath}");
-                        proc.WaitForExit();
+                        //proc.WaitForExit();
                     }
                     else if (resInf.Type == ResourceType.CameraMotion)
                     {

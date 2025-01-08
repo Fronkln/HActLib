@@ -16,6 +16,8 @@ namespace CMNEdit.Windows
             form.CreateHeader("DOF2");
             form.CreateInput("Disable", Convert.ToInt32(dof2.DisableDof).ToString(), delegate(string val) { dof2.DisableDof = int.Parse(val)> 0 ; });
 
+            form.CreateInput("Flag", dof2.DOFFlag.ToString(), delegate (string val) { dof2.DOFFlag = int.Parse(val); }, NumberBox.NumberMode.Int);
+
             form.CreateInput("Focus Dist Before", dof2.FocusDistBefore.ToString(), delegate (string val) { dof2.FocusDistBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Focus Dist After", dof2.FocusDistAfter.ToString(), delegate (string val) { dof2.FocusDistAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
@@ -63,6 +65,12 @@ namespace CMNEdit.Windows
             form.CreateInput("Ring Count", dof2.RingCount.ToString(), delegate (string val) { dof2.RingCount = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("TAA Quality", dof2.TAAQuality.ToString(), delegate (string val) { dof2.TAAQuality = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Recombine Quality", dof2.RecombineQuality.ToString(), delegate (string val) { dof2.RecombineQuality = int.Parse(val); }, NumberBox.NumberMode.Int);
+
+            if(Form1.curGame > Game.LJ)
+            {
+                form.CreateInput("Unknown", dof2.Unknown1.ToString(), delegate (string val) { dof2.Unknown1 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                form.CreateInput("Unknown", dof2.Unknown2.ToString(), delegate (string val) { dof2.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            }
         }
     }
 }

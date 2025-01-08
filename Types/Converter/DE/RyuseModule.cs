@@ -259,8 +259,9 @@ namespace HActLib
                 case "e_auth_element_rim_flash":
                     DEElementRimflash rimflash = element as DEElementRimflash;
 
-                    if(input <= Game.YK2 && output > Game.YK2)
+                    if((input <= Game.YK2 && output > Game.YK2) && rimflash.RimflashParams != null)
                     {
+
                         if (output > Game.JE)
                             rimflash.Version = 5;
 

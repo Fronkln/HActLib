@@ -74,14 +74,21 @@ namespace HActLib
             int soundInfoPtr = 0;
             int nodeInfoPtr = 0;
 
-            cutInfoPtr = cmnReader.ReadInt32();
-            disableFrameInfoPtr = cmnReader.ReadInt32();
-
-            if(cmn.CMNHeader.Version > 10)
+            if(cmn.CMNHeader.Version <= 10)
+            {
+                cutInfoPtr = cmnReader.ReadInt32();
                 resourceCutInfoPtr = cmnReader.ReadInt32();
-
-            soundInfoPtr = cmnReader.ReadInt32();
-            nodeInfoPtr = cmnReader.ReadInt32();
+                soundInfoPtr = cmnReader.ReadInt32();
+                nodeInfoPtr = cmnReader.ReadInt32();
+            }
+            else
+            {
+                cutInfoPtr = cmnReader.ReadInt32();
+                disableFrameInfoPtr = cmnReader.ReadInt32();
+                resourceCutInfoPtr = cmnReader.ReadInt32();
+                soundInfoPtr = cmnReader.ReadInt32();
+                nodeInfoPtr = cmnReader.ReadInt32();
+            }
 
             cmn.CMNHeader.ChainCameraIn = cmnReader.ReadSingle();
             cmn.CMNHeader.ChainCameraOut = cmnReader.ReadSingle();

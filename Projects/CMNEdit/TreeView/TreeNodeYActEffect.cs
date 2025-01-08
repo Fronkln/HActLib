@@ -52,14 +52,23 @@ namespace CMNEdit
                 case YActEffectType.Sound:
                     var yactSound = effect as YActEffectSound;
 
-                    Text = "Sound (" + yactSound.CuesheetID + " - " + yactSound.SoundID + ")";
+                    if (yactSound != null)
+                        Text = "Sound (" + yactSound.CuesheetID + " - " + yactSound.SoundID + ")";
+                    else
+                        Text = "Particle";
                     break;
                 case YActEffectType.Particle:
                     var yactPtc = effect as YActEffectParticle;
-                    if (Form1.curGame == Game.Y1)
-                        Text = "Particle (" + (ParticleIDY1)yactPtc.Particle + ")";
+
+                    if (yactPtc != null)
+                    {
+                        if (Form1.curGame == Game.Y1)
+                            Text = "Particle (" + (ParticleIDY1)yactPtc.Particle + ")";
+                        else
+                            Text = "Particle (" + yactPtc.Particle + ")";
+                    }
                     else
-                        Text = "Particle (" + yactPtc.Particle + ")";
+                        Text = "Particle";
                     break;
 
             }

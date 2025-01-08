@@ -113,7 +113,7 @@ namespace HActLib.YAct
                 yact.Effects[i].WriteData(writer);
 
                 if (writer.Stream.Position != end)
-                    throw new Exception($"Write position mismatch on effect {i} ({(YActEffectType)yact.Effects[i].Type}), expected {end}, got {writer.Stream.Position}");
+                    throw new Exception($"Write position mismatch on effect IDX {i} ({(YActEffectType)yact.Effects[i].Type}), expected {end}, got {writer.Stream.Position}");
             }
 
             long unk2DataStart = writer.Stream.Position;

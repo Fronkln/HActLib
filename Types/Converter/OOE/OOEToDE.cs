@@ -477,14 +477,14 @@ namespace HActLib
             {
                 case EffectID.Special:
                     Set2Element1019 set2Special = set2Obj as Set2Element1019;
-                    CSVHActEvent specialData = csvData.TryGetHActEventData(set2Special.Type1019);
+                    CSVHActEvent specialData = csvData.TryGetHActEventData(set2Special.Type1019.Split(new[] { '\0' }, 2)[0]);
 
                     string[] typeSplit = set2Special.Type1019.Split('_');
 
                     switch (typeSplit[1])
                     {
                         case "DAMAGE":
-                            if (typeSplit[2] != "99")
+                            if (typeSplit[2].Split(new[] { '\0' }, 2)[0] != "99")
                             {
                                 CSVHActEventDamage specialDataDamage = specialData as CSVHActEventDamage;
 
@@ -513,6 +513,7 @@ namespace HActLib
 
                             //Try to adjust heat change to be more in line with OE standards
                             //OE has things like -150 while OOE has -8000 on waking wrath which consumes 75% of gauge.
+                            
                             heat.HeatChange = (int)(specialDataGauge.Change * 0.015f);
 
                             convertedNode = heat;
@@ -561,7 +562,7 @@ namespace HActLib
                     if (pibFile != null)
                         ptc.Name = pibFile.Name.Replace(".pib", "");
                     else
-                        ptc.Name = "PIB " + pibFile.ParticleID;
+                        ptc.Name = "PIB " + ooePtc.ParticleID;
 
                     createdNode = ptc;
                     break;

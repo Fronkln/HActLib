@@ -414,10 +414,10 @@ namespace HActLib
             DEElementUITexture dePic = new DEElementUITexture();
             dePic.ElementKind = Reflection.GetElementIDByName("e_auth_element_ui_texture", game);
             dePic.TextureName = pic.PictureName;
-            dePic.BeforeCenter.X = pic.BeforeCenterX;
-            dePic.BeforeCenter.Y = pic.BeforeCenterY;
-            dePic.AfterCenter.X = pic.AfterCenterX;
-            dePic.AfterCenter.Y = pic.AfterCenterY;
+            dePic.BeforeCenter.x = pic.BeforeCenterX;
+            dePic.BeforeCenter.y = pic.BeforeCenterY;
+            dePic.AfterCenter.x = pic.AfterCenterX;
+            dePic.AfterCenter.y = pic.AfterCenterY;
            // dePic.BeforeScale.X = pic.BeforeSizeX;
            // dePic.BeforeScale.Y = pic.BeforeSizeY;
            // dePic.AfterScale.X = pic.AfterSizeX;

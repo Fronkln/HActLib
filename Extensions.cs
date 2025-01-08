@@ -34,6 +34,11 @@ namespace HActLib
             return neededBytes;
         }
 
+        public static Vector2 ReadVector2(this DataReader reader)
+        {
+            return new Vector2(reader.ReadSingle(), reader.ReadSingle());
+        }
+
         public static Vector3 ReadVector3(this DataReader reader)
         {
             return new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
@@ -81,6 +86,12 @@ namespace HActLib
 
                 return str;
             }
+        }
+
+        public static void Write(this DataWriter writer, Vector2 vec)
+        {
+            writer.Write(vec.x);
+            writer.Write(vec.y);
         }
 
         public static void Write(this DataWriter writer, Vector3 vec)

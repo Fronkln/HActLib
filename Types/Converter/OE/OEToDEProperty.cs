@@ -10,6 +10,31 @@ namespace HActLib
 {
     public class OEToDEProperty
     {
+        public static BEP ConvertPropertyEntryToDE(string propertyBinPath, string propertyName, Game oeGame, Game game)
+        {
+            OldEngineFormat oeProperty = OldEngineFormat.Read(propertyBinPath);
+            BEP bep = new BEP();
+            bep.Game = game;
+
+            foreach (var entry in oeProperty.Moves)
+            {
+                if(entry.Name == propertyName)
+                {
+                    foreach (OEAnimProperty property in entry.Properties)
+                    {
+                        Node convertedNode = ConvertPropertyToNode(property, oeGame, Game.LADIW);
+
+                        if (convertedNode != null)
+                            bep.Nodes.Add(convertedNode);
+                    }
+
+                    return bep;
+                }
+            }
+
+            return null;
+        }
+
         public static Node ConvertPropertyToNode(OEAnimProperty property, Game oeGame, Game game)
         {
             NodeElement deNode = null;

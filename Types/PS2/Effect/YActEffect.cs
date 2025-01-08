@@ -50,6 +50,7 @@ namespace HActLib.YAct
             writer.Write(Start);
             writer.Write(End);
             writer.Write(Unknown3);
+            writer.Write(BoneID);
 
             writer.Write(UnknownDataPre);
             writer.Write(Type);

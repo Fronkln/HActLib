@@ -1252,8 +1252,73 @@ namespace CMNEdit
                         myNewForm.Init(itemExpDat.Data.Animation,
                             delegate (byte[] outCurve)
                             {
+                                if(outCurve.Length < 256)
+                                    outCurve = ConvertTo256PointCurve(outCurve);
+
                                 itemExpDat.Data.Animation = outCurve;
                             });
+                    });
+
+                    static byte[] ConvertTo32PointCurve(byte[] originalCurve)
+                    {
+                        int originalCount = originalCurve.Length;
+                        int reducedCount = 32;
+                        byte[] reducedCurve = new byte[reducedCount];
+
+                        for (int i = 0; i < reducedCount; i++)
+                        {
+                            // Calculate the corresponding position in the original curve
+                            double ratio = (double)i / (reducedCount - 1) * (originalCount - 1);
+                            int index = (int)Math.Round(ratio);  // Round to get an index from the original curve
+
+                            // Ensure that the index is within the valid range
+                            index = Math.Clamp(index, 0, originalCount - 1);
+
+                            // Assign the value from the original curve to the reduced curve
+                            reducedCurve[i] = originalCurve[index];
+                        }
+
+                        return reducedCurve;
+                    }
+
+                    static byte[] ConvertTo256PointCurve(byte[] originalCurve)
+                    {
+                        int originalCount = originalCurve.Length;
+                        int expandedCount = 256;
+                        byte[] expandedCurve = new byte[expandedCount];
+
+                        for (int i = 0; i < expandedCount - 1; i++)
+                        {
+                            // Find the corresponding position in the original curve
+                            double ratio = (double)i / (expandedCount - 1) * (originalCount - 1);
+                            int index1 = (int)Math.Floor(ratio);   // Index of the first original point
+                            int index2 = (int)Math.Ceiling(ratio); // Index of the second original point
+
+                            // If the indices are the same, just copy the value
+                            if (index1 == index2)
+                            {
+                                expandedCurve[i] = originalCurve[index1];
+                            }
+                            else
+                            {
+                                // Perform linear interpolation
+                                double fraction = ratio - index1;
+                                int interpolatedValue = (int)(originalCurve[index1] + fraction * (originalCurve[index2] - originalCurve[index1]));
+
+                                // Ensure the result is within the byte range (0-255)
+                                expandedCurve[i] = (byte)Math.Clamp(interpolatedValue, 0, 255);
+                            }
+                        }
+
+                        // Assign the last point to the last original curve value
+                        expandedCurve[expandedCount - 1] = originalCurve[originalCount - 1];
+
+                        return expandedCurve;
+                    }
+
+                    CreateButton("Simplify Curve to 32 Points", delegate
+                    {
+                        itemExpDat.Data.Animation = ConvertTo32PointCurve(itemExpDat.Data.Animation);
                     });
 
                     break;
@@ -1710,6 +1775,7 @@ namespace CMNEdit
             }
             else if(IsYAct)
             {
+                var treeNodes = GetAllTreeNodes();
                 YActEffect[] effects = GetAllTreeNodes().Where(x => x is TreeNodeYActEffect).Cast<TreeNodeYActEffect>().Select(x => x.Effect).ToArray();
                 yact.Effects = effects.ToList();
                 YActY1.Write(FilePath, yact);
@@ -1859,7 +1925,7 @@ namespace CMNEdit
                         Process(child);
                 }
 
-                if (!IsBep)
+                if (!IsBep && !IsYAct)
                     Process(nodesTree.Nodes[0]);
                 else
                 {

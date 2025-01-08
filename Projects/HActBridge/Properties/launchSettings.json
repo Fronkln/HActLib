@@ -2,7 +2,7 @@
   "profiles": {
     "HActBridge": {
       "commandName": "Project",
-      "commandLineArgs": "\"E:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\hact\\h11297_zouensoshi.par.unpack\\h11297_zouensoshi\" y5 yk2"
+      "commandLineArgs": "\"E:\\SteamLibrary\\steamapps\\common\\Yakuza 3\\data\\hact\\hact_all.par.unpack\\3220.par.unpack\\tmp\" y3 y8"
     }
   }
 }

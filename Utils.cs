@@ -83,5 +83,40 @@ namespace HActLib
                 }
             }
         }
+
+        public static byte[] ConvertTo256PointCurve(byte[] originalCurve)
+        {
+            int originalCount = originalCurve.Length;
+            int expandedCount = 256;
+            byte[] expandedCurve = new byte[expandedCount];
+
+            for (int i = 0; i < expandedCount - 1; i++)
+            {
+                // Find the corresponding position in the original curve
+                double ratio = (double)i / (expandedCount - 1) * (originalCount - 1);
+                int index1 = (int)Math.Floor(ratio);   // Index of the first original point
+                int index2 = (int)Math.Ceiling(ratio); // Index of the second original point
+
+                // If the indices are the same, just copy the value
+                if (index1 == index2)
+                {
+                    expandedCurve[i] = originalCurve[index1];
+                }
+                else
+                {
+                    // Perform linear interpolation
+                    double fraction = ratio - index1;
+                    int interpolatedValue = (int)(originalCurve[index1] + fraction * (originalCurve[index2] - originalCurve[index1]));
+
+                    // Ensure the result is within the byte range (0-255)
+                    expandedCurve[i] = (byte)Math.Clamp(interpolatedValue, 0, 255);
+                }
+            }
+
+            // Assign the last point to the last original curve value
+            expandedCurve[expandedCount - 1] = originalCurve[originalCount - 1];
+
+            return expandedCurve;
+        }
     }
 }

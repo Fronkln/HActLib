@@ -1,1 +1,8 @@
-{}
+{
+  "profiles": {
+    "HActLib": {
+      "commandName": "Project",
+      "commandLineArgs": "\"E:\\SteamLibrary\\steamapps\\common\\Yakuza 3\\data\\hact\\hact_all.par.unpack\\3220.par.unpack\\tmp\" y3 y8"
+    }
+  }
+}

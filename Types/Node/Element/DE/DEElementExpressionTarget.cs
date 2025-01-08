@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Yarhl.IO;
 
 namespace HActLib
@@ -63,8 +63,12 @@ namespace HActLib
 
             // writer.Write(Data.Count);
 
+
             foreach (ExpressionTargetData dat in Data)
             {
+                if (dat.Animation != null && dat.Animation.Length > 0 && dat.Animation.Length < 256)
+                    dat.Animation = Utils.ConvertTo256PointCurve(dat.Animation);
+
                 writer.Write((uint)dat.FaceTargetID);
                 writer.Write(dat.Animation);
             }
