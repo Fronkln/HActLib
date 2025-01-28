@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.Ishin, 0x2C)]
     [ElementID(Game.Y0, 0x2C)]
     [ElementID(Game.YK1, 0x2C)]
+    [ElementID(Game.FOTNS, 0x2D)]
     public class OEHActInputBarrage : NodeElement
     {
         public uint Presses;

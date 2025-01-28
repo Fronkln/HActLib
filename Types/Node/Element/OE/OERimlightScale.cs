@@ -8,6 +8,7 @@ using Yarhl.IO;
 namespace HActLib
 {
     [ElementID(Game.Y0, 67)]
+    [ElementID(Game.FOTNS, 68)]
     public class OERimlightScale : NodeElement
     {
         public float Scale;

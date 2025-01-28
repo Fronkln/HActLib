@@ -11,6 +11,8 @@ namespace CMNEdit.Windows.Common.DE
 {
     internal static class DEElementRimflashWindow
     {
+        public static RimflashParams CopiedParam;
+
         public static void Draw(Form1 form, Node node)
         {
             DEElementRimflash inf = node as DEElementRimflash;
@@ -40,12 +42,33 @@ namespace CMNEdit.Windows.Common.DE
 
                     inf.ExportParams(wind.FileName);
                 });
+
+                form.CreateButton("Copy Param", delegate
+                {
+                    CopiedParam = inf.RimflashParams;
+                });
             }
+
+            form.CreateButton("Paste Param", delegate
+            {
+                if (CopiedParam != null)
+                    inf.RimflashParams = CopiedParam;
+                if (inf.ParamID != 0)
+                    inf.ParamID = 0;
+            });
 
             form.CreateInput("Rimflash Version", inf.RimflashVersion.ToString(), null, readOnly: true);
             form.CreateInput("Parameter Version", inf.ParamVersion.ToString(), null, readOnly: true);
             form.CreateInput("Fade Time", inf.FadeOutTime.ToString(), delegate (string val) { inf.FadeOutTime = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Root Value", inf.RootValue.ToString(), delegate (string val) { inf.RootValue = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            
+            if(inf.CommandData != null)
+            {
+                form.CreateButton("Clear Command", delegate
+                {
+                    inf.CommandData = null;
+                });
+            }
 
             if (inf.Curve != null)
             {

@@ -13,6 +13,7 @@ namespace HActLib
     [ElementID(Game.Ishin, 0x22)]
     [ElementID(Game.Y0, 0x22)]
     [ElementID(Game.YK1, 0x22)]
+    [ElementID(Game.FOTNS, 0x23)]
     public class OEHActInput : NodeElement
     {
         public ushort Unk1 = 1; //1 between 10 and 16

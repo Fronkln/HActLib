@@ -46,7 +46,7 @@ namespace HActLib
             return Read(File.ReadAllBytes(path));
         }
 
-        public static OECMN Read(byte[] buffer)
+        public static OECMN Read(byte[] buffer, bool isFOTNS = false)
         {
             if (buffer == null || buffer.Length < 0)
                 return null;
@@ -109,6 +109,9 @@ namespace HActLib
                     CMN.LastHActDEGame = Game.Y0;
                     break;
             }
+
+            if (isFOTNS)
+                CMN.LastHActDEGame = Game.FOTNS;
 
 
             if (soundInfoPtr > 0)

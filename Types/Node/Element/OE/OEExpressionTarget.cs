@@ -9,6 +9,7 @@ namespace HActLib
 {
     [ElementID(Game.Y0, 22)]
     [ElementID(Game.YK1, 22)]
+    [ElementID(Game.FOTNS, 23)]
     public class OEExpressionTarget : NodeElement
     {
         public class ExpressionData

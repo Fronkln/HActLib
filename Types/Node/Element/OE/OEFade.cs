@@ -12,6 +12,7 @@ namespace HActLib
     [ElementID(Game.Y5, 6)]
     [ElementID(Game.Ishin, 6)]
     [ElementID(Game.Y0, 6)]
+    [ElementID(Game.FOTNS, 7)]
     public class OEFade : OEBaseEffect
     {
         public RGBA32 Color = new RGBA32();

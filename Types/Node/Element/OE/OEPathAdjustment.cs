@@ -12,6 +12,7 @@ namespace HActLib
     // [ElementID(Game.Y5, 0x3E)]
     [ElementID(Game.Y0, 0x3E)]
     [ElementID(Game.YK1, 0x3E)]
+    [ElementID(Game.FOTNS, 0x3F)]
     public class OEPathAdjustment : NodeElement
     {
         public Matrix4x4 Adjustment;

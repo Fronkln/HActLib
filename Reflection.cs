@@ -46,6 +46,8 @@ namespace HActLib.Internal
                     return typeof(Y0NodeIDs);
                 case Game.YK1:
                     return typeof(Y0NodeIDs);
+                case Game.FOTNS:
+                    return typeof(FOTNSNodeIDs);
             }
         }
 
@@ -86,7 +88,7 @@ namespace HActLib.Internal
         public static string GetElementNameByID(uint id, Game game)
         {
             if(id >= 1337)
-            {
+            {   
                 switch(id)
                 {
                     default:

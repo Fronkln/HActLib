@@ -393,7 +393,7 @@ namespace CMNEdit
                 }
                 else
                 {
-                    HAct = OECMN.Read(buf);
+                    HAct = OECMN.Read(buf, (Game)targetGameCombo.SelectedIndex == Game.FOTNS);
                     curVer = GameVersion.Y0_K1;
                     curGame = (Game)targetGameCombo.SelectedIndex;
                     IsOE = true;

@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.Y5, 37)]
     [ElementID(Game.Y0, 37)]
     [ElementID(Game.YK1, 37)]
+    [ElementID(Game.FOTNS, 38)]
 
     public class OEHActEnd : NodeElement
     {

@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.Ishin, 97)]
     [ElementID(Game.Y0, 95)]
     [ElementID(Game.YK1, 95)]
+    [ElementID(Game.FOTNS, 96)]
     public class OESubtitle : NodeElement
     {
         public class SubtitleEntry

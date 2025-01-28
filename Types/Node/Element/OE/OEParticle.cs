@@ -13,6 +13,7 @@ namespace HActLib
     [ElementID(Game.Y5, 2)]
     [ElementID(Game.Ishin, 2)]
     [ElementID(Game.Y0, 2)]
+    [ElementID(Game.FOTNS, 2)]
     public class OEParticle : NodeElement
     {
         public uint ParticleID = 0;

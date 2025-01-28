@@ -60,18 +60,14 @@ namespace HActLib
             uint resourceCutInfo = 0;
 
             #region Resource Cut Info
-            if (cmn.CMNHeader.Version > 10)
-            {
-                resourceCutInfo = (uint)writer.Stream.Position;
+            resourceCutInfo = (uint)writer.Stream.Position;
 
-                writer.Write(cmn.ResourceCutInfo.Length);
-                writer.WriteTimes(0, 12);
+            writer.Write(cmn.ResourceCutInfo.Length);
+            writer.WriteTimes(0, 12);
 
-                //start end probably not single
-                foreach (float f in cmn.ResourceCutInfo)
-                    writer.Write(f);
-            }
-
+            //start end probably not single
+            foreach (float f in cmn.ResourceCutInfo)
+                writer.Write(f);
             #endregion
 
             uint soundInfo = (uint)writer.Stream.Position;

@@ -7,6 +7,7 @@ namespace HActLib
     [ElementID(Game.Ishin, 0x20)]
     [ElementID(Game.Y0, 0x20)]
     [ElementID(Game.YK1, 0x20)]
+    [ElementID(Game.FOTNS, 0x21)]
     public class OEDamage : NodeElement
     {
         public ushort Unk1 = 1;

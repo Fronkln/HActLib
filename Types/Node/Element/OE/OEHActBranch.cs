@@ -12,6 +12,7 @@ namespace HActLib
     [ElementID(Game.Y5, 38)]
     [ElementID(Game.Y0, 38)]
     [ElementID(Game.YK1, 38)]
+    [ElementID(Game.FOTNS, 39)]
     public class OEHActBranch : NodeElement
     {
         public short Unk1 = 1;

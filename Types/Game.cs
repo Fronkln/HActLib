@@ -17,6 +17,7 @@ namespace HActLib
         Ishin,
         Y0,
         YK1,
+        FOTNS,
         Y6Demo,
         Y6,
         YK2,

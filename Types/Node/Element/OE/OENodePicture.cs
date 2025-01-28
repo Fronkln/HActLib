@@ -10,6 +10,7 @@ namespace HActLib
     [ElementID(Game.Y5, 11)]
     [ElementID(Game.Ishin, 11)]
     [ElementID(Game.Y0, 11)]
+    [ElementID(Game.FOTNS, 12)]
     public class OENodePicture : NodeElement
     {
         public int Unknown;

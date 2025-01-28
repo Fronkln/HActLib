@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.Ishin, 0x21)]
     [ElementID(Game.Y0, 0x21)]
     [ElementID(Game.YK1, 0x21)]
+    [ElementID(Game.FOTNS, 0x22)]
     public class OEElementSE : NodeElement
     {
         public ushort Cuesheet;

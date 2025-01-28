@@ -7,6 +7,7 @@ namespace HActLib
     [ElementID(Game.Y0, 81)]
     [ElementID(Game.Y5, 83)]
     [ElementID(Game.Ishin, 83)]
+    [ElementID(Game.FOTNS, 84)]
     public class OEPersonCaption : NodeElement
     {
         public string Texture;

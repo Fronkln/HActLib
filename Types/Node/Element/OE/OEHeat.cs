@@ -10,6 +10,7 @@ namespace HActLib
     [ElementID(Game.Y5, 50)]
     [ElementID(Game.Ishin, 49)]
     [ElementID(Game.Y0, 49)]
+    [ElementID(Game.FOTNS, 50)]
 
     public class OEHeat : NodeElement
     {

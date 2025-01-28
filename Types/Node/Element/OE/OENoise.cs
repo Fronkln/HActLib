@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.Y5, 12)]
     [ElementID(Game.Ishin, 12)]
     [ElementID(Game.Y0, 12)]
+    [ElementID(Game.FOTNS, 13)]
     public class OENoise : OEBaseEffect
     {
         public float Power = 1;

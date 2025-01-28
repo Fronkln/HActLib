@@ -8,6 +8,7 @@ namespace HActLib
     [ElementID(Game.Ishin, 73)]
     [ElementID(Game.Y0, 71)]
     [ElementID(Game.YK1, 71)]
+    [ElementID(Game.FOTNS, 72)]
     public class OEHActStopEnd : NodeElement
     {
         public short Unknown = 1;
