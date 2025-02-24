@@ -67,6 +67,9 @@ namespace HActLib
                 case AuthNodeCategory.CharacterMotion:
                     node = new NodeMotionBase();
                     break;
+                case AuthNodeCategory.PathMotion:
+                    node = new NodeMotionBase();
+                    break;
 
                 case AuthNodeCategory.CameraMotion:
                         node = new NodeCameraMotion();

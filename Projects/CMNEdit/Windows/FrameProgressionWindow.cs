@@ -265,7 +265,9 @@ namespace Frame_Progression_GUI
 
             for (int i = 0; i < frameCount; i++)
             {
-                frameProgression.Items[curIdx].Text = (CMNEdit.Utils.InvariantParse(frameProgression.Items[curIdx].Text) + val).ToString(CultureInfo.InvariantCulture);
+                float curVal = CMNEdit.Utils.InvariantParse(frameProgression.Items[i].Text);
+                float newVal = curVal + val;
+                frameProgression.Items[i].Text = newVal.ToString(CultureInfo.InvariantCulture);
             }
         }
     }

@@ -61,7 +61,54 @@ namespace HActLib
             var writer = new DataWriter(binary.Stream);
 
             //we will return to this later
-            writer.WriteOfType(cmn.Header);
+            writer.Write(cmn.Header.Version);
+            writer.Write(cmn.Header.Flags);
+           
+            if(cmn.Header.Version < 19)
+            {
+                writer.Write(cmn.Header.Start);
+                writer.Write(cmn.Header.End);
+            }
+            else
+            {
+                writer.Write(new GameTick2(cmn.Header.Start).Tick);
+                writer.Write(new GameTick2(cmn.Header.End).Tick);
+            }
+
+            writer.Write(cmn.Header.NodeDrawNum);
+
+            long pointersStart = writer.Stream.Position;
+
+            writer.Write(0);
+            writer.Write(0);
+            writer.Write(0);
+            writer.Write(0);
+            writer.Write(0);
+            writer.Write(0);
+
+            if (cmn.Header.Version < 19)
+            {
+                writer.Write(cmn.Header.ChainCameraIn);
+                writer.Write(cmn.Header.ChainCameraOut);
+            }
+            else
+            {
+                writer.Write((int)cmn.Header.ChainCameraIn);
+                writer.Write((int)cmn.Header.ChainCameraOut);
+            }
+
+            writer.Write(cmn.Header.Type);
+
+            if (cmn.Header.Version < 19)
+            {
+                writer.Write(cmn.Header.SkipPointTick);
+                writer.Write(cmn.Header.Padding, true);
+            }
+            else
+            {
+                writer.Write(0);
+                writer.Write(cmn.Framerate);
+            }
 
             //First write: cut info
             uint cutInfoPointer = (uint)writer.Stream.Position;
@@ -73,7 +120,12 @@ namespace HActLib
             writer.WriteTimes(0, 12);
 
             for (int i = 0; i < cmn.CutInfo.Length; i++)
-                writer.Write(cmn.CutInfo[i]);
+            {
+                if (cmn.Version < 19)
+                    writer.Write(cmn.CutInfo[i]);
+                else
+                    writer.Write(new GameTick2(cmn.CutInfo[i]).Tick);
+            }
 
             #endregion
 
@@ -124,17 +176,30 @@ namespace HActLib
                         writer.Write(page.Flag);
                     }
 
-                    writer.Write(page.Start.Tick);
-                    writer.Write(page.End.Tick);
+                    if(cmn.GameVersion >= GameVersion.DE3)
+                    {
+                        writer.Write(new GameTick2(page.Start.Frame));
+                        writer.Write(new GameTick2(page.End.Frame));
+                    }
+                    else
+                    {
+
+                        writer.Write(page.Start.Tick);
+                        writer.Write(page.End.Tick);
+                    }
 
                     if (format < 1)
                         writer.Write(page.Unk);
 
                     writer.Write(page.Transitions.Count);
                     writer.Write(page.GetTransitionSize());
-                    writer.Write(page.SkipTick.Tick);
 
-                    if(format > 0)
+                    if(cmn.GameVersion >= GameVersion.DE3)
+                        writer.Write(page.SkipTick.Tick);
+                    else
+                        writer.Write(new GameTick2(page.SkipTick.Frame));
+
+                    if (format > 0)
                         writer.Write(page.PageIndex);
 
                     writer.Write(page.SkipLinkIndexNum);
@@ -208,7 +273,18 @@ namespace HActLib
             writer.WriteTimes(0, 12);
 
             foreach (DisableFrameInfo inf in cmn.DisableFrameInfo)
-                writer.WriteOfType(inf);
+            {
+                if(cmn.Version < 19)
+                {
+                    writer.Write(inf.Start);
+                    writer.Write(inf.End);
+                }
+                else
+                {
+                    writer.Write(new GameTick2(inf.Start).Tick);
+                    writer.Write(new GameTick2(inf.End).Tick);
+                }
+            }
 
             #endregion
 
@@ -222,7 +298,12 @@ namespace HActLib
 
             //start end probably not single
             foreach (float f in cmn.ResourceCutInfo)
-                writer.Write(f);
+            {
+                if (cmn.Version < 19)
+                    writer.Write(f);
+                else
+                    writer.Write(new GameTick2(f).Tick);
+            }
 
             #endregion
 
@@ -259,8 +340,16 @@ namespace HActLib
 
             newHeader.Padding = "JHR";
 
-            writer.Stream.Seek(0, SeekMode.Start);
-            writer.WriteOfType(newHeader);
+            writer.Stream.Position = pointersStart;
+            writer.Write(cutInfoPointer);
+            writer.Write(authPagePointer);
+            writer.Write(disableFramePointer);
+            writer.Write(resourceCutInfo);
+            writer.Write(soundInfo);
+            writer.Write(nodeInfoPointer);
+
+           // writer.Stream.Seek(0, SeekMode.Start);
+           // writer.WriteOfType(newHeader);
 
             return binary;
         }
@@ -277,6 +366,9 @@ namespace HActLib
         public byte[] AuthPageUnk = new byte[0]; //Yakuza 6 only
 
         public float[] SoundInfo = new float[0];
+
+
+        public uint Framerate = 30; //DE3
 
         //messy but it is what it is
         internal static AuthFile LastFile;
@@ -386,6 +478,14 @@ namespace HActLib
 
         public static bool IsDEGame(Game game)
         {
+            GameVersion ver = CMN.GetVersionForGame(game);
+
+            if (ver == GameVersion.Yakuza6 || ver == GameVersion.Yakuza6Demo || ver == GameVersion.DE1 || ver == GameVersion.DE2 || ver == GameVersion.DE3)
+                return true;
+
+            return false;
+
+            /*
             if (game == Game.Y6Demo ||
                 game == Game.Y6 ||
                 game == Game.YK2 ||
@@ -393,10 +493,12 @@ namespace HActLib
                 game == Game.YLAD ||
                 game == Game.LJ ||
                 game == Game.LADIW ||
-                game == Game.LAD7Gaiden)
+                game == Game.LAD7Gaiden ||
+                game == )
                 return true;
             else
                 return false;
+            */
         }
 
         public static Game[] GetOEGames()
@@ -482,6 +584,8 @@ namespace HActLib
 
                 case "y8":
                     return Game.LADIW;
+                case "ladpyih":
+                    return Game.LADPYIH;
             }
 
 
@@ -494,7 +598,12 @@ namespace HActLib
             {
                 default:
                     return GameVersion.DE2;
-
+                case Game.Y1:
+                    return GameVersion.PS2;
+                case Game.Y2:
+                    return GameVersion.PS2;
+                case Game.Kenzan:
+                    return GameVersion.OOE_KENZAN;
                 case Game.Y3:
                     return GameVersion.OOE;
                 case Game.Y4:
@@ -506,6 +615,8 @@ namespace HActLib
                 case Game.Y0:
                     return GameVersion.Y0_K1;
                 case Game.YK1:
+                    return GameVersion.Y0_K1;
+                case Game.FOTNS:
                     return GameVersion.Y0_K1;
                 case Game.Y6Demo:
                     return GameVersion.Yakuza6Demo;
@@ -523,6 +634,8 @@ namespace HActLib
                     return GameVersion.DE2;
                 case Game.LADIW:
                     return GameVersion.DE2;
+                case Game.LADPYIH:
+                    return GameVersion.DE3;
             }
         }
 
@@ -550,8 +663,54 @@ namespace HActLib
             cmn.GameVersion = LastGameVersion;
 
             //Reader header
-            cmn.Header = cmnReader.Read<CMNHeader>();
+            cmn.Header = new CMNHeader();
+            cmn.Header.Version = cmnReader.ReadUInt32();
+            cmn.Header.Flags = cmnReader.ReadUInt32();
+
+            if(cmn.Header.Version < 19)
+            {
+                cmn.Header.Start = cmnReader.ReadSingle();
+                cmn.Header.End = cmnReader.ReadSingle();
+            }
+            else
+            {
+                cmn.Header.Start = new GameTick2(cmnReader.ReadUInt32()).Frame;
+                cmn.Header.End = new GameTick2(cmnReader.ReadUInt32()).Frame;
+            }
+
+            cmn.Header.NodeDrawNum = cmnReader.ReadInt32();
+            cmn.Header.CutInfoPointer = cmnReader.ReadUInt32();
+            cmn.Header.AuthPagePointer = cmnReader.ReadUInt32();
+            cmn.Header.DisableFrameInfoPointer = cmnReader.ReadUInt32();
+            cmn.Header.ResourceCutInfoPointer = cmnReader.ReadUInt32();
+            cmn.Header.SoundInfoPointer = cmnReader.ReadUInt32();
+            cmn.Header.NodeInfoPointer = cmnReader.ReadUInt32();
+            
+            if(cmn.Header.Version < 19)
+            {
+                cmn.Header.ChainCameraIn = cmnReader.ReadSingle();
+                cmn.Header.ChainCameraOut = cmnReader.ReadSingle();
+            }
+            else
+            {
+                cmn.Header.ChainCameraIn = cmnReader.ReadInt32();
+                cmn.Header.ChainCameraOut = cmnReader.ReadInt32();
+            }
+
+            cmn.Header.Type = cmnReader.ReadInt32();
+
+            if (cmn.Header.Version < 19)
+                cmn.Header.SkipPointTick = new GameTick(cmnReader.ReadUInt32());
+            else
+                cmnReader.Stream.Position += 4;
+
+            if (cmn.Version >= 19)
+                cmn.Framerate = cmnReader.ReadUInt32();
+
+
+            //cmn.Header = cmnReader.Read<CMNHeader>();
             long HeaderEndPosition = cmnReader.Stream.Position;
+
 
             if (cmn.Header.Version < 18)
                 throw new Exception("Not a Dragon Engine HAct");
@@ -578,7 +737,12 @@ namespace HActLib
                 cmn.CutInfo = new float[count];
 
                 for (int i = 0; i < count; i++)
-                    cmn.CutInfo[i] = cmnReader.ReadSingle();
+                {
+                    if(cmn.Version < 19)
+                        cmn.CutInfo[i] = cmnReader.ReadSingle();
+                    else
+                        cmn.CutInfo[i] = new GameTick2(cmnReader.ReadUInt32()).Frame;
+                }
 
             }, cmn.Header.CutInfoPointer, SeekMode.Start);
 
@@ -590,7 +754,12 @@ namespace HActLib
                 cmn.ResourceCutInfo = new float[count];
 
                 for (int i = 0; i < count; i++)
-                    cmn.ResourceCutInfo[i] = cmnReader.ReadSingle();
+                {
+                    if(cmn.Version < 19)
+                        cmn.ResourceCutInfo[i] = cmnReader.ReadSingle();
+                    else
+                        cmn.ResourceCutInfo[i] = new GameTick2(cmnReader.ReadUInt32());
+                }
 
             }, cmn.Header.ResourceCutInfoPointer, SeekMode.Start);
 
@@ -602,7 +771,21 @@ namespace HActLib
                 cmn.DisableFrameInfo = new List<DisableFrameInfo>(new DisableFrameInfo[count]);
 
                 for (int i = 0; i < count; i++)
-                    cmn.DisableFrameInfo[i] = cmnReader.Read<DisableFrameInfo>();
+                {
+                    DisableFrameInfo inf = new DisableFrameInfo();
+
+                    if (cmn.Version < 19)
+                    {
+                        inf.Start = cmnReader.ReadSingle();
+                        inf.End = cmnReader.ReadSingle();
+                    }
+                    else
+                    {
+                        inf.Start = new GameTick2(cmnReader.ReadUInt32()).Frame;
+                        inf.End = new GameTick2(cmnReader.ReadUInt32()).Frame;
+                    }
+                    cmn.DisableFrameInfo[i] = inf;
+                }
 
             }, cmn.Header.DisableFrameInfoPointer, SeekMode.Start);
 

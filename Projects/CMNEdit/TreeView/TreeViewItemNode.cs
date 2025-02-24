@@ -92,6 +92,8 @@ namespace CMNEdit
                     return 5;
                 case AuthNodeCategory.ModelMotion:
                     return 5;
+                case AuthNodeCategory.PathMotion:
+                    return 5;
                 case AuthNodeCategory.Model_node:
                     return 10;
                 case AuthNodeCategory.FolderCondition:

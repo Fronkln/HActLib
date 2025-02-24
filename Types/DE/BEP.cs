@@ -90,7 +90,7 @@ namespace HActLib
                 bep.Nodes.Add((Node)ConvertFormat.With<DENodeConverter>(new NodeConvInf()
                 {
                     format = new BinaryFormat(bepReader.Stream),
-                    version = 18,
+                    version = OECMN.GetCMNVersionForGame(game),
                     gameVersion = CMN.LastGameVersion,
                     file = CMN.LastFile
                 }));
@@ -135,7 +135,7 @@ namespace HActLib
             writer.Write(0);
 
             foreach (Node node in bep.Nodes)
-                node.Write(writer, ver, 18);
+                node.Write(writer, ver, OECMN.GetCMNVersionForGame(CMN.LastHActDEGame));
 
             writer.WriteTimes(0, 80);
 

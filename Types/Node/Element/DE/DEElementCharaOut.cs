@@ -26,11 +26,16 @@ namespace HActLib
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             ReturnType = (AuthReturnType)reader.ReadUInt32();
-            PlayRange = new GameTick(reader.ReadUInt32());
+ 
+            if(inf.version < 19)
+                PlayRange = new GameTick(reader.ReadUInt32());
+            else
+                PlayRange = new GameTick2(reader.ReadUInt32());
+
             TickLength = reader.ReadUInt32();
             RagdollInfoExists = reader.ReadInt32() == 1;
             Hash = reader.Read<PXDHash>();
-            RagdollInfo = new TimingInfoRagdoll();
+            //RagdollInfo = new TimingInfoRagdoll();
             
            // if (RagdollInfoExists)
                // RagdollInfo.Read(reader);
@@ -39,7 +44,12 @@ namespace HActLib
         internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write((uint)ReturnType);
-            writer.Write(PlayRange.Tick);
+
+            if (hactVer < 10)
+                writer.Write(PlayRange.Tick);
+            else
+                writer.Write(new GameTick2(PlayRange.Frame).Tick);
+
             writer.Write(TickLength);
             writer.Write(RagdollInfoExists == true ? 1 : 0);
             writer.WriteOfType(Hash);

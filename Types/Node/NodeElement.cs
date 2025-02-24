@@ -36,8 +36,16 @@ namespace HActLib
             //Why does bep have this twice? brug
             ElementKind = reader.ReadUInt32();
 
-            Start = reader.ReadSingle();
-            End = reader.ReadSingle();
+            if (inf.version <= 18)
+            {
+                Start = reader.ReadSingle();
+                End = reader.ReadSingle();
+            }
+            else
+            {
+                Start = new GameTick2(reader.ReadUInt32()).Frame;
+                End = new GameTick2(reader.ReadUInt32()).Frame;
+            }
             Version = reader.ReadInt32();
 
             if (inf.version > 10)
@@ -87,8 +95,17 @@ namespace HActLib
             base.WriteNodeData(writer, version, hactVer);
 
             writer.Write(ElementKind);
-            writer.Write(Start);
-            writer.Write(End);
+
+            if (hactVer < 19)
+            {
+                writer.Write(Start);
+                writer.Write(End);
+            }
+            else
+            {
+                writer.Write(new GameTick2(Start).Tick);
+                writer.Write(new GameTick2(End).Tick);
+            }
             writer.Write(Version);
 
             if (hactVer > 10)

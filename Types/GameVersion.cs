@@ -11,6 +11,7 @@ namespace HActLib
     /// </summary>
     public enum GameVersion
     {
+        PS2,
         OOE_KENZAN,
         OOE,
         /// <summary> Y5, Y0, K1 </summary>
@@ -22,7 +23,11 @@ namespace HActLib
         /// <summary> Kiwami 2, Judgment </summary>
         DE1,
         /// <summary> Yakuza 7, Lost Judgment, Yakuza 8 </summary>
-        DE2
+        DE2,
+        /// <summary>
+        /// Pirate
+        /// </summary>
+        DE3,
     }
 
 }

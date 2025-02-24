@@ -29,7 +29,7 @@ namespace CMNEdit.Windows.Common.DE
             form.CreateInput("Target Sync", inf.TargetSync.ToString(), delegate (string val) { inf.TargetSync = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Attacker", inf.Attacker.ToString(), delegate (string val) { inf.Attacker = uint.Parse(val); }, NumberBox.NumberMode.UInt);
 
-            if (Form1.curVer == GameVersion.DE2)
+            if (Form1.curVer >= GameVersion.DE2)
             {
                 form.CreateInput("Direct Damage", inf.DirectDamage.ToString(), delegate (string val) { inf.DirectDamage = int.Parse(val); }, NumberBox.NumberMode.Int);
                 form.CreateInput("Direct Damage Is HP Ratio", inf.DirectDamageIsHpRatio.ToString(), delegate (string val) { inf.DirectDamageIsHpRatio = int.Parse(val); }, NumberBox.NumberMode.Int);

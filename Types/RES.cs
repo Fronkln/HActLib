@@ -56,6 +56,10 @@ namespace HActLib
 
     public class RES
     {
+
+        //0 is pre pirate game, 1 is after. not in header calculated by us
+        public int Version = 0;
+
         public List<Resource> Resources = new List<Resource>();
 
 
@@ -102,6 +106,8 @@ namespace HActLib
         {
             reader.Endianness = endian;
 
+            int detectedVersion = 0;
+
             //empty res = little endian (DE) assumed       
             RES res = new RES();
 
@@ -116,15 +122,36 @@ namespace HActLib
                 resInf.Unk1 = reader.ReadInt32();
                 resInf.Unk2 = reader.ReadInt32();
                 resInf.Name = reader.ReadString(192).Split(new[] { '\0' }, 2)[0];
-                resInf.StartFrame = reader.ReadSingle();
-                resInf.EndFrame = reader.ReadSingle();
+
+
+                if (detectedVersion == 0)
+                {
+                    resInf.StartFrame = reader.ReadSingle();
+                    if (resInf.StartFrame < 10000000 || resInf.StartFrame > 100000000)
+                    {
+                        //Auto detection of pirate game RES which uses a new timing format
+                        reader.Stream.Position -= 4;
+                        resInf.StartFrame = new GameTick2(reader.ReadUInt32());
+                        resInf.EndFrame = new GameTick2(reader.ReadUInt32());
+                        detectedVersion = 1;
+                    }
+                    else
+                    {
+                        resInf.EndFrame = reader.ReadSingle();
+                    }
+                }
+                else
+                {
+                    resInf.StartFrame = new GameTick2(reader.ReadUInt32()).Frame;
+                    resInf.EndFrame = new GameTick2(reader.ReadUInt32()).Frame;
+                }
 
                 reader.ReadBytes(12);
 
                 res.Resources.Add(resInf);
             }
 
-
+            res.Version = detectedVersion;
             return res;
         }
 
@@ -142,8 +169,17 @@ namespace HActLib
                 writer.Write(resInf.Unk1);
                 writer.Write(resInf.Unk2);
                 writer.Write(resInf.Name.ToLength(192), fixedSize: 192, nullTerminator: false);
-                writer.Write(resInf.StartFrame);
-                writer.Write(resInf.EndFrame);
+
+                if (res.Version <= 0)
+                {
+                    writer.Write(resInf.StartFrame);
+                    writer.Write(resInf.EndFrame);
+                }
+                else
+                {
+                    writer.Write(new GameTick2(resInf.StartFrame).Tick);
+                    writer.Write(new GameTick2(resInf.EndFrame).Tick);
+                }
                 writer.WriteTimes(0, 12);
             }
 

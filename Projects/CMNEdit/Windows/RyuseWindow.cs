@@ -35,7 +35,14 @@ namespace CMNEdit.Windows
             Form1.Instance.Enabled = false;
 
             foreach (Game game in CMN.GetDEGames())
-                targetGameBox.Items.Add(HActLib.Internal.Reflection.GetGamePrefixes(game)[0]);
+            {
+                string[] prefs = HActLib.Internal.Reflection.GetGamePrefixes(game);
+
+                if (prefs.Length <= 0)
+                    continue;
+
+                targetGameBox.Items.Add(prefs[0]);
+            }
 
             targetGameBox.SelectedIndex = 0;
         }
@@ -62,6 +69,8 @@ namespace CMNEdit.Windows
                 case Game.LAD7Gaiden:
                     return PibVersion.LJ;
                 case Game.LADIW:
+                    return PibVersion.LJ;
+                case Game.LADPYIH:
                     return PibVersion.LJ;
             }
 
@@ -215,7 +224,7 @@ namespace CMNEdit.Windows
                                         {
                                             foreach (var emitter in pibFile.Emitters)
                                             {
-                                                if (prefixGame == Game.LAD7Gaiden)
+                                                if (prefixGame == Game.LAD7Gaiden || prefixGame == Game.LADPYIH)
                                                     (emitter as PibEmitterv58).ToGaidenRevision();
                                                 else
                                                     (emitter as PibEmitterv58).ToLJRevision();

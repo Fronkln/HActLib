@@ -117,7 +117,7 @@ namespace HActLib
 
                     writer.Write(EnableAssetPositionUse);
                     writer.Write(IsReplaceDisposeOnly);
-                    if (version == GameVersion.DE2 || unk_LJ != null)
+                    if (version >= GameVersion.DE2 || unk_LJ != null)
                     {
                         writer.Write(ReplacePosX);
                         writer.Write(ReplacePosY);
@@ -167,7 +167,7 @@ namespace HActLib
 
         internal override int GetSize(GameVersion version, uint hactVer)
         {
-            if (version == GameVersion.DE2)
+            if (version >= GameVersion.DE2)
             {
                 if (unk_LJ != null)
                     return 120 / 4;

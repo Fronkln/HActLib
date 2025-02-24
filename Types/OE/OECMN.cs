@@ -228,8 +228,22 @@ namespace HActLib
             return converted;
         }
 
+        public static uint GetCMNVersionForGameVersion(GameVersion gameVer)
+        {
+            if (gameVer == GameVersion.Yakuza6 || gameVer == GameVersion.Yakuza6Demo || gameVer == GameVersion.DE1 || gameVer == GameVersion.DE2)
+                return 18;
+
+            if (gameVer == GameVersion.DE3)
+                return 19;
+
+            return 16;
+        }
+
         public static uint GetCMNVersionForGame(Game game)
         {
+            if (game >= Game.LADPYIH)
+                return 19;
+
             switch (game)
             {
                 default:

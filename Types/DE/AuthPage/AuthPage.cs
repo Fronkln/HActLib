@@ -50,8 +50,16 @@ namespace HActLib
                 page.Flag = reader.ReadUInt32();
             }
 
-            page.Start = new GameTick(reader.ReadUInt32());
-            page.End = new GameTick(reader.ReadUInt32());
+            if(ver >= GameVersion.DE3)
+            {
+                page.Start = new GameTick2(reader.ReadUInt32());
+                page.End = new GameTick2(reader.ReadUInt32());
+            }
+            else
+            {
+                page.Start = new GameTick(reader.ReadUInt32());
+                page.End = new GameTick(reader.ReadUInt32());
+            }
 
             if (page.Format < 1)
                 page.Unk = reader.ReadInt32();
@@ -59,7 +67,10 @@ namespace HActLib
             page.TransitionCount = reader.ReadInt32();
             page.TransitionSize = reader.ReadInt32();
 
-            page.SkipTick = new GameTick(reader.ReadUInt32());
+            if (ver >= GameVersion.DE3)
+                page.SkipTick = new GameTick2(reader.ReadUInt32());
+            else
+                page.SkipTick = new GameTick(reader.ReadUInt32());
 
             if (page.Format > 0)
                 page.PageIndex = reader.ReadInt32();
@@ -255,7 +266,7 @@ namespace HActLib
             if (ver == GameVersion.DE1)
                 return 1;
 
-            if (ver == GameVersion.DE2)
+            if (ver >= GameVersion.DE2)
                 return 2;
 
             return 2;

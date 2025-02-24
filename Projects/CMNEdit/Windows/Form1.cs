@@ -364,7 +364,7 @@ namespace CMNEdit
 
                 //OE/DE HAct
                 uint ver = BitConverter.ToUInt32(buf, 0);
-                bool isDE = ver == 18;
+                bool isDE = ver >= 18 && ver < 25;
 
                 RES Res = null;
 
@@ -1024,6 +1024,10 @@ namespace CMNEdit
                     break;
 
                 case AuthNodeCategory.ModelMotion:
+                    NodeMotionBaseWindow.Draw(this, node);
+                    break;
+
+                case AuthNodeCategory.PathMotion:
                     NodeMotionBaseWindow.Draw(this, node);
                     break;
 
@@ -1719,7 +1723,7 @@ namespace CMNEdit
                     BaseCMN cmn = (IsOE ? GenerateOEHAct() : GenerateHAct());
                     GenerateBaseInfo(cmn);
                     if (IsOE)
-                        OECMN.Write(cmn as OECMN, Path.Combine(folderDir, $"cmn.bin"));
+                        OECMN.Write(cmn as OECMN, FilePath);
                     else
                         CMN.Write(cmn as CMN, FilePath);
 
@@ -1727,6 +1731,7 @@ namespace CMNEdit
                     if (hactInf.GetResources().Length > 0)
                     {
                         RES newRes = new RES();
+                        newRes.Version = curGame >= Game.LADPYIH ? 1 : 0;
 
                         foreach (TreeViewItemResource res in resTree.Nodes)
                             newRes.Resources.Add(res.Resource);
@@ -2316,7 +2321,7 @@ namespace CMNEdit
         {
             NodeElement dmg = AddElementOfType(typeof(NodeBattleDamage), "Battle Damage", "e_auth_element_battle_damage");
 
-            if (curVer != GameVersion.DE2)
+            if (curVer < GameVersion.DE2)
                 dmg.Version = 0;
             else
                 dmg.Version = 1;

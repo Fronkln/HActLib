@@ -18,6 +18,7 @@ namespace HActLib
         public ulong Attributes; // battle_reaction_attr.bin
         public int AttackID;
         public int Unknown; //Introduced in Gaiden
+        public int Unknown2; //Introduced in Pirate Gaiden
     };
 
     [ElementID(Game.Y6, 0x4D)]
@@ -34,7 +35,7 @@ namespace HActLib
 
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
-            bool isNewDE = version == GameVersion.DE2;
+            bool isNewDE = version >= GameVersion.DE2;
 
             Data.Damage = reader.ReadUInt32();
             Data.Power = reader.ReadUInt16();
@@ -52,6 +53,9 @@ namespace HActLib
 
             if (CMN.LastHActDEGame == Game.LAD7Gaiden || CMN.LastHActDEGame >= Game.LADPYIH)
                 Data.Unknown = reader.ReadInt32();
+
+            if(CMN.LastHActDEGame >= Game.LADPYIH)
+                Data.Unknown2 = reader.ReadInt32();
         }
 
 
@@ -61,7 +65,6 @@ namespace HActLib
             writer.Write(Data.Power);
             writer.Write(Data.Flag);
             writer.Write(Data.Parts);
-
 
             if (version >= GameVersion.DE2)
                 writer.Write(Data.Attributes);
@@ -73,6 +76,9 @@ namespace HActLib
 
             if (CMN.LastHActDEGame == Game.LAD7Gaiden || CMN.LastHActDEGame >= Game.LADPYIH)
                 writer.Write(Data.Unknown);
+
+            if (CMN.LastHActDEGame >= Game.LADPYIH)
+                writer.Write(Data.Unknown2);
         }
 
         public override Node TryConvert(Game input, Game output)

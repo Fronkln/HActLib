@@ -22,9 +22,19 @@ namespace HActLib
         internal override void ReadNodeData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             Flags = reader.ReadUInt32();
-            Start.Tick = reader.ReadUInt32();
-            End.Tick = reader.ReadUInt32();
-            MotionTick.Tick = reader.ReadUInt32();
+
+            if (inf.version < 19)
+            {
+                Start.Tick = reader.ReadUInt32();
+                End.Tick = reader.ReadUInt32();
+                MotionTick.Tick = reader.ReadUInt32();
+            }
+            else
+            {
+                Start = new GameTick(new GameTick2(reader.ReadUInt32()).Frame);
+                End = new GameTick(new GameTick2(reader.ReadUInt32()).Frame);
+                MotionTick = new GameTick(new GameTick2(reader.ReadUInt32()).Frame);
+            }
             PreviousMotionMatrix =  (Matrix4x4)ConvertFormat.With<Matrix4x4Convert>(
                 new ConversionInf(new BinaryFormat(reader.Stream), CMN.IsDE(version) ? EndiannessMode.LittleEndian : EndiannessMode.BigEndian));
         }
@@ -34,9 +44,18 @@ namespace HActLib
             WriteCoreData(writer, version, hactVer);
 
             writer.Write(Flags);
-            writer.Write(Start.Tick);
-            writer.Write(End.Tick);
-            writer.Write(MotionTick.Tick);
+            if (hactVer < 19)
+            {
+                writer.Write(Start.Tick);
+                writer.Write(End.Tick);
+                writer.Write(MotionTick.Tick);
+            }
+            else
+            {
+                writer.Write(new GameTick2(Start.Frame).Tick);
+                writer.Write(new GameTick2(End.Frame).Tick);
+                writer.Write(new GameTick2(MotionTick.Frame).Tick);
+            }
             writer.Write(PreviousMotionMatrix);
         }
 

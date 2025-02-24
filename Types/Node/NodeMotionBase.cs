@@ -27,8 +27,16 @@ namespace HActLib
             }
             else
             {
-                Start = new GameTick(reader.ReadSingle());
-                End = new GameTick(reader.ReadSingle());
+                if (inf.version < 19)
+                {
+                    Start = new GameTick(reader.ReadSingle());
+                    End = new GameTick(reader.ReadSingle());
+                }
+                else
+                {
+                    Start = new GameTick(new GameTick2(reader.ReadUInt32()).Frame);
+                    End = new GameTick(new GameTick2(reader.ReadUInt32()).Frame);
+                }
             }
 
             reader.ReadBytes(isDE ? 4 : 8);
@@ -43,8 +51,16 @@ namespace HActLib
             if (isDE)
                 writer.Write(Flags);
 
-            writer.Write(Start.Frame);
-            writer.Write(End.Frame);
+            if (hactVer < 19)
+            {
+                writer.Write(Start.Frame);
+                writer.Write(End.Frame);
+            }
+            else
+            {
+                writer.Write(new GameTick2(Start.Frame).Tick);
+                writer.Write(new GameTick2(End.Frame).Tick);
+            }
 
             writer.WriteTimes(0, isDE ? 4 : 8);
         }

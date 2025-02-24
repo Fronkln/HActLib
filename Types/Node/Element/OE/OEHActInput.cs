@@ -65,7 +65,7 @@ namespace HActLib
             if (CMN.LastHActDEGame != Game.Y5)
                 writer.Write(Timing);
             else
-                writer.Write(new GameTick(Timing).Frame);
+                writer.Write((uint)new GameTick(Timing).Frame);
 
             if (CMN.LastHActDEGame >= Game.Ishin)
                 writer.Write(Unknown);

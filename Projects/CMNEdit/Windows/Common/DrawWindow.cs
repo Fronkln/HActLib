@@ -45,6 +45,9 @@ namespace CMNEdit
                     case "e_auth_element_hact_input_barrage":
                         OEHActInputBarrageWindow.Draw(Form1.Instance, element);
                         break;
+                    case "e_auth_element_body_flash":
+                        OEBodyflashWindow.Draw(Form1.Instance, element);
+                        break;
                     case "e_auth_element_face_expression":
                         OEFaceExpressionWindow.Draw(Form1.Instance, element);
                         break;

@@ -394,7 +394,7 @@ namespace HActLib
             TEX.Write(tex, Path.Combine(outputCMNDir, "tex.bin"), true);
 
             //also write VO and res
-            if (CMN.LastGameVersion == GameVersion.DE2)
+            if (CMN.LastGameVersion >= GameVersion.DE2)
                 CMN.Write(convertedOE, Path.Combine(outputCMNDir, "cmn_vo.bin"));
 
 

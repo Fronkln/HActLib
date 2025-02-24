@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Xml;
 using Yarhl.IO;
 
 namespace HActLib
@@ -135,6 +135,8 @@ namespace HActLib
                     return typeof(CuesheetsTMWEHI);
                 case Game.LADIW:
                     return typeof(CuesheetsIW);
+                case Game.LADPYIH:
+                    return typeof(CuesheetsPYIH);
             }
         }
 
@@ -149,8 +151,9 @@ namespace HActLib
             if (game == Game.LAD7Gaiden)
                 return typeof(SpecialSoundsTMWEHI);
 
-            if (game == Game.LADIW)
+            if (game == Game.LADIW || game == Game.LADPYIH)
                 return typeof(SpecialSoundsIW);
+
 
             return typeof(SpecialSoundsTMWEHI);
         }
