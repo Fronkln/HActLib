@@ -92,8 +92,10 @@ namespace HActLib
             }
 
             //Reads one entry
-            AuthNodeOOE EntryProcedure(uint child, uint next)
+            AuthNodeOOE EntryProcedure(uint child, uint next, AuthNodeOOE parent)
             {
+                bool isChild = false;
+
                 uint entryStart = child;
 
                 if (child == 0)
@@ -101,11 +103,19 @@ namespace HActLib
                     entryStart = next;
                     next = 0;
                 }
+                else
+                    isChild = true;
 
                 authReader.Stream.Position = entryStart;
 
                 AuthNodeOOE node = new AuthNodeOOE();
-                auth.Nodes.Add(node);
+                node.Parent = parent;
+
+                if(node.Parent != null)
+                    node.Parent.Children.Add(node);
+
+                if(!isChild)
+                    auth.Nodes.Add(node);
 
                 node.Type = (AuthNodeTypeOOE)authReader.ReadInt32();
                 node.Unknown1 = authReader.ReadInt32();
@@ -168,19 +178,38 @@ namespace HActLib
                 }
 
 
+                bool addingChild = false;
+
                 child = childNodeOffset;
 
                 if (nextNodeOffset != 0)
                     next = nextNodeOffset;
 
                 if (child != 0 || next != 0)
-                    EntryProcedure(child, next);
+                {
+                    if (child != 0)
+                        addingChild = true;
+
+                    var result = EntryProcedure(child, next, node.Parent);
+
+                    if (addingChild)
+                    {
+                        result.Parent = node;
+                        node.Children.Add(result);
+                    }
+
+                    if(isChild)
+                    {
+                        if (result.Parent != null)
+                            result.Parent.Children.Add(result);
+                    }
+                }
 
                 return node;
             }
 
             authReader.Stream.Position = entriesStart;
-            EntryProcedure(0, entriesStart);
+            EntryProcedure(0, entriesStart, null);
 
             return auth;
         }
@@ -330,15 +359,49 @@ namespace HActLib
                 writer.Write(effectDataLocs[node]);
 
 
-                if (node.Children.Count > 0)
-                    writer.Write(nodeLocs[node.Children[0]]);
-                else
-                    writer.Write(0);
+                uint childPtr = 0;
+                uint nextPtr = 0;
 
-                if (i == nodes.Length - 1)
-                    writer.Write(0);
+                if (node.Children.Count > 0)
+                    childPtr = nodeLocs[node.Children[0]];
                 else
-                    writer.Write(nodeLocs[nodes[i + 1]]);
+                    childPtr = 0;
+
+                if (i == 0)
+                {
+                    if (nodes.Length > 1)
+                        nextPtr = nodeLocs[nodes[2]];
+                    else
+                        nextPtr = 0;
+                }
+                else
+                {
+
+                    if(node.Parent != null)
+                    {
+                        int myIdx = node.Parent.Children.IndexOf(node);
+
+                        if(myIdx == node.Parent.Children.Count - 1)
+                        {
+                            nextPtr = 0;
+                        }
+                        else
+                        {
+                            nextPtr = nodeLocs[node.Parent.Children[myIdx + 1]];
+                        }
+                    }
+                    /*
+
+                    if (i == nodes.Length - 1)
+                        writer.Write(0);
+                    else
+                        writer.Write(nodeLocs[nodes[i + 1]]);
+                    ü*/
+                }
+
+
+                writer.Write(childPtr);
+                writer.Write(nextPtr);
             }
 
 
