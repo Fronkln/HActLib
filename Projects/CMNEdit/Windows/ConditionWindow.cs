@@ -53,6 +53,15 @@ namespace CMNEdit
                     }, NumberBox.NumberMode.UInt);
                     break;
 
+                case "select_menu":
+                    ConditionSelectMenu selMenu = cond.Condition as ConditionSelectMenu;
+
+                    form.CreateInput("Choice: ", selMenu.Choice.ToString(), delegate (string val)
+                    {
+                        selMenu.Choice = uint.Parse(val);
+
+                    }, NumberBox.NumberMode.UInt);
+                    break;
 
                 case "hact_condition_flag":
 

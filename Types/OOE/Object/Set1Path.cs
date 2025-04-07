@@ -13,6 +13,8 @@ namespace HActLib.OOE
         public string UnkStr1 = "";
         public string UnkStr2 = "";
 
+        public byte[] PathDat = new byte[292];
+
         public ObjectPath() : base()
         {
             Type = ObjectNodeCategory.Path;
@@ -46,14 +48,14 @@ namespace HActLib.OOE
         {
             base.ReadObjectData(reader);
 
-            reader.ReadBytes(292);
+             PathDat = reader.ReadBytes(292);
         }
 
         internal override void WriteObjectData(DataWriter writer)
         {
             base.WriteObjectData(writer);
 
-            writer.WriteTimes(0, 292);
+            writer.Write(PathDat);
         }
     }
 }

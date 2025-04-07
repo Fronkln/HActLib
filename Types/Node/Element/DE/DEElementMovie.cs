@@ -25,7 +25,10 @@ namespace HActLib
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             MovieVersion = reader.ReadInt32();
-            FadeFrame = reader.ReadSingle();
+            if (version < GameVersion.DE3)
+                FadeFrame = reader.ReadSingle();
+            else
+                FadeFrame = new GameTick2(reader.ReadUInt32()).Frame;
             DontFade = reader.ReadInt32() == 1;
             Movie = reader.ReadString();
         }
@@ -33,7 +36,11 @@ namespace HActLib
         internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
             writer.Write(MovieVersion);
-            writer.Write(FadeFrame);
+            if (version < GameVersion.DE3)
+                writer.Write(FadeFrame);
+            else
+                writer.Write(new GameTick2(FadeFrame).Tick);
+
             writer.Write(Convert.ToInt32(DontFade));
             writer.Write(Movie);
         }

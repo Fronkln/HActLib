@@ -48,7 +48,12 @@ namespace HActLib
             if (hactVer < 10)
                 writer.Write(PlayRange.Tick);
             else
-                writer.Write(new GameTick2(PlayRange.Frame).Tick);
+            {
+                if(hactVer >= 19)
+                    writer.Write(new GameTick2(PlayRange.Frame).Tick);
+                else
+                    writer.Write(PlayRange.Tick);
+            }
 
             writer.Write(TickLength);
             writer.Write(RagdollInfoExists == true ? 1 : 0);

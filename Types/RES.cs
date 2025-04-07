@@ -127,7 +127,7 @@ namespace HActLib
                 if (detectedVersion == 0)
                 {
                     resInf.StartFrame = reader.ReadSingle();
-                    if (resInf.StartFrame < 10000000 || resInf.StartFrame > 100000000)
+                    if (resInf.StartFrame < -10000000 || resInf.StartFrame > 100000000)
                     {
                         //Auto detection of pirate game RES which uses a new timing format
                         reader.Stream.Position -= 4;

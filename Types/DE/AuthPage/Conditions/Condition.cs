@@ -48,6 +48,8 @@ namespace HActLib
                     return new ConditionEnemyNum();
                 case "program_param":
                     return new ConditionProgramParam();
+                case "select_menu":
+                    return new ConditionSelectMenu(game);
             }
         }
 

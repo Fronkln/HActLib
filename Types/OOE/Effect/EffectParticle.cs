@@ -23,6 +23,8 @@ namespace HActLib.OOE
         //99% of it are zeroes
         public float[] UnknownFloats = new float[132 / 4];
 
+        public byte[] UnkRegion1 = new byte[132];
+
         public EffectParticle() : base()
         {
             ElementKind = EffectID.Particle;
@@ -47,7 +49,7 @@ namespace HActLib.OOE
             Unknown7 = reader.ReadInt32();
             Unknown8 = reader.ReadInt32();
 
-            reader.Stream.Position += 132;
+            UnkRegion1 = reader.ReadBytes(132);
         }
 
         internal override void WriteEffectData(DataWriter writer, bool alt)
@@ -68,7 +70,7 @@ namespace HActLib.OOE
             writer.Write(Unknown7);
             writer.Write(Unknown8);
 
-            writer.WriteTimes(0, 132);
+            writer.Write(UnkRegion1);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace HActLib
 
         public int SEVer;
        
-        public byte SoundIndex;
+        public ushort SoundIndex;
         public byte Unk; //128 on fighter sounds
         public ushort CueSheet;
 
@@ -60,9 +60,11 @@ namespace HActLib
         {
             if(CMN.VersionGreater(version, GameVersion.Yakuza6Demo))
                 SEVer = reader.ReadInt32();
-           
-            SoundIndex = reader.ReadByte();
-            Unk = reader.ReadByte();
+
+            ushort soundIndexUnfiltered = reader.ReadUInt16();
+            SoundIndex = soundIndexUnfiltered = (ushort)(soundIndexUnfiltered & ~(1 << 15));
+
+            Unk = (byte)((soundIndexUnfiltered >> 15) & 1);
             CueSheet = reader.ReadUInt16();
 
             Flags = reader.ReadUInt32();
@@ -91,9 +93,13 @@ namespace HActLib
                 else
                     writer.Write(2);
             }
-            
-            writer.Write(SoundIndex);
-            writer.Write(Unk);
+
+            ushort soundIndexVal = SoundIndex;
+
+            if (Unk > 0)
+                soundIndexVal |= 1 << 15;
+
+            writer.Write(soundIndexVal);
             writer.Write(CueSheet);
             
             writer.Write(Flags);

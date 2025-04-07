@@ -37,11 +37,13 @@ namespace CMNEdit
         public static bool IsOE;
         public static bool IsYAct;
         public static bool IsPS2Prop;
+        public static bool IsOOEAuth;
 
         private static MEP Mep;
 
         private static TEV Tev;
         public static CSV Csv;
+        public static Auth Auth;
         public uint TevHActID;
         public static CSVHAct TevCsvEntry;
 
@@ -265,6 +267,7 @@ namespace CMNEdit
             IsOE = false;
             IsYAct = false;
             IsPS2Prop = false;
+            IsOOEAuth = false;
 
             hactTabs.TabPages.Remove(csvTab);
             addNodeTab.DropDownItems.Remove(nodeAddTabDE);
@@ -275,9 +278,25 @@ namespace CMNEdit
 
             FilePath = hactInf.FindFile("hact_tev.bin").Path;
 
+            //OOE auth
+            if(magic == "AUTH")
+            {
+                Auth authFile = Auth.Read(FilePath);
+                hactTabs.TabPages[0].Text = "AUTH";
+                hactTabs.TabPages.Remove(resPage);
+                hactTabs.TabPages.Remove(cutPage);
+                hactDurationPanel.Visible = true;
 
+                Auth = authFile;
+                IsOOEAuth = true;
+
+                foreach(var node in authFile.Nodes)
+                {
+                    nodesTree.Nodes.Add(new TreeNodeOOEAuthNode(node));
+                }
+            }
             //OOE HAct TEV
-            if (magic == "TCAH")
+            else if (magic == "TCAH")
             {
                 string csvPath = "";
 
@@ -953,7 +972,7 @@ namespace CMNEdit
                 return;
             }
 
-            if (IsTev)
+            if (IsTev || IsOOEAuth)
             {
                 ProcessSelectedNodeTEV();
                 return;
@@ -1162,6 +1181,7 @@ namespace CMNEdit
             else if (node is TreeNodeEffect)
             {
                 DrawTEVEffectWindow((node as TreeNodeEffect).Effect);
+                CreateHeader("");
                 varPanel.ResumeLayout();
                 return;
             }
@@ -1784,6 +1804,10 @@ namespace CMNEdit
                 YActEffect[] effects = GetAllTreeNodes().Where(x => x is TreeNodeYActEffect).Cast<TreeNodeYActEffect>().Select(x => x.Effect).ToArray();
                 yact.Effects = effects.ToList();
                 YActY1.Write(FilePath, yact);
+            }
+            else if(IsOOEAuth)
+            {
+                Auth.Write(Auth, FilePath);
             }
 
         }
@@ -3162,7 +3186,6 @@ namespace CMNEdit
 
             unkBytesBox.ByteProvider = provider;
         }
-
 
         TreeNode m_csvCharactersRoot;
         TreeNode m_csvHActEventsRoot;

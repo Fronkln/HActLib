@@ -195,9 +195,9 @@ namespace HActLib
                     writer.Write(page.GetTransitionSize());
 
                     if(cmn.GameVersion >= GameVersion.DE3)
-                        writer.Write(page.SkipTick.Tick);
-                    else
                         writer.Write(new GameTick2(page.SkipTick.Frame));
+                    else
+                        writer.Write(page.SkipTick.Tick);
 
                     if (format > 0)
                         writer.Write(page.PageIndex);
