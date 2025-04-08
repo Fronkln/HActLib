@@ -2,6 +2,7 @@
 using HActLib.OOE;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging.Effects;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace CMNEdit
                 Nodes.Add(childNode);
             }
 
-            foreach(EffectBase effect in Node.Effects)
+            foreach (EffectBase effect in Node.Effects)
                 Nodes.Add(new TreeNodeEffect(effect));
 
             int icon = SetIcon();
@@ -42,12 +43,24 @@ namespace CMNEdit
                 Text = "Unknown Node Type " + Node.Type.ToString();
         }
 
+        public override object Clone()
+        {
+            TreeNodeOOEAuthNode cloned = (TreeNodeOOEAuthNode)base.Clone();
+            cloned.Node = Node.Copy();
+
+            return cloned;
+        }
+
         private int SetIcon()
         {
-            switch(Node.Type)
+            switch (Node.Type)
             {
+                case AuthNodeTypeOOE.Camera:
+                    return 4;
                 case AuthNodeTypeOOE.Character:
                     return 6;
+                case AuthNodeTypeOOE.Model:
+                    return 8;
             }
 
             return 1;

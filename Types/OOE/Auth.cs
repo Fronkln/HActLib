@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Yarhl.IO;
 using HActLib.OOE;
+using System.Linq;
 
 namespace HActLib
 {
@@ -16,6 +17,9 @@ namespace HActLib
         public List<AuthResourceCut> ResourceCuts = new List<AuthResourceCut>();
         public List<AuthResourceCut> CameraCuts = new List<AuthResourceCut>();
         public List<AuthReference> References = new List<AuthReference>();
+
+        public string ResCmn = null;
+        public string Res000 = null;
 
         public AuthNodeOOE[] AllNodes
         {
@@ -43,7 +47,32 @@ namespace HActLib
             if (!File.Exists(path))
                 return null;
 
-            return Read(File.ReadAllBytes(path));
+            var result = Read(File.ReadAllBytes(path));
+
+
+            DirectoryInfo dir = new DirectoryInfo(path);
+
+            var dirs = dir.Parent.Parent.Parent.GetDirectories();
+            var resCmnDir = dirs.FirstOrDefault(x => x.Name.Contains("res_cmn"));
+            var res000Dir = dirs.FirstOrDefault(x => x.Name.Contains("000"));
+
+            if (resCmnDir != null)
+            {
+                var resFile = resCmnDir.GetFiles("Resource.bin", SearchOption.AllDirectories).FirstOrDefault();
+
+                if (resFile != null)
+                    result.ResCmn = resFile.FullName;
+            }
+
+            if (res000Dir != null)
+            {
+                var resFile = res000Dir.GetFiles("Resource.bin", SearchOption.AllDirectories).FirstOrDefault();
+
+                if (resFile != null)
+                    result.Res000 = resFile.FullName;
+            }
+
+            return result;
         }
 
         public static Auth Read(byte[] buffer)
@@ -87,34 +116,22 @@ namespace HActLib
 
             for (int i = 0; i < referencesPtr.Size; i++)
             {
-                auth.References.Add(new AuthReference() { Unknown = authReader.ReadInt32(), Guid = new Guid(authReader.ReadBytes(16)) });
+                auth.References.Add(new AuthReference() { Type = (AuthReferenceType)authReader.ReadInt32(), Guid = new Guid(authReader.ReadBytes(16)) });
                 authReader.Stream.Position += 12;
             }
 
             //Reads one entry
-            AuthNodeOOE EntryProcedure(uint child, uint next, AuthNodeOOE parent)
+            AuthNodeOOE EntryProcedure(AuthNodeOOE parent)
             {
-                bool isChild = false;
-
-                uint entryStart = child;
-
-                if (child == 0)
-                {
-                    entryStart = next;
-                    next = 0;
-                }
-                else
-                    isChild = true;
-
-                authReader.Stream.Position = entryStart;
-
                 AuthNodeOOE node = new AuthNodeOOE();
+
                 node.Parent = parent;
 
-                if(node.Parent != null)
+                if (node.Parent != null)
+                {
                     node.Parent.Children.Add(node);
-
-                if(!isChild)
+                }
+                else
                     auth.Nodes.Add(node);
 
                 node.Type = (AuthNodeTypeOOE)authReader.ReadInt32();
@@ -146,7 +163,7 @@ namespace HActLib
                     node.AnimationData = new AuthNodeOOEAnimationData();
                     authReader.Stream.RunInPosition(delegate
                     {
-                        node.AnimationData.Unknown1 = authReader.ReadInt32();
+                        node.AnimationData.Type = authReader.ReadInt32();
                         node.AnimationData.Unknown2 = authReader.ReadInt32();
                         node.AnimationData.Guid = new Guid(authReader.ReadBytes(16));
 
@@ -178,38 +195,35 @@ namespace HActLib
                 }
 
 
-                bool addingChild = false;
-
-                child = childNodeOffset;
+                if(childNodeOffset != 0)
+                {
+                    authReader.Stream.RunInPosition(delegate
+                    {
+                        var child = EntryProcedure(node);
+                        //child.Parent = node;
+                        //node.Children.Add(child);
+                    }, childNodeOffset);
+                }
 
                 if (nextNodeOffset != 0)
-                    next = nextNodeOffset;
-
-                if (child != 0 || next != 0)
                 {
-                    if (child != 0)
-                        addingChild = true;
-
-                    var result = EntryProcedure(child, next, node.Parent);
-
-                    if (addingChild)
+                    authReader.Stream.RunInPosition(delegate
                     {
-                        result.Parent = node;
-                        node.Children.Add(result);
-                    }
-
-                    if(isChild)
-                    {
-                        if (result.Parent != null)
+                        var result = EntryProcedure(node.Parent);
+                        /*
+                        result.Parent = node.Parent;
+                        
+                        if(result.Parent != null)
                             result.Parent.Children.Add(result);
-                    }
+                        */
+                    }, nextNodeOffset);
                 }
 
                 return node;
             }
 
             authReader.Stream.Position = entriesStart;
-            EntryProcedure(0, entriesStart, null);
+            EntryProcedure(null);
 
             return auth;
         }
@@ -263,7 +277,8 @@ namespace HActLib
                 foreach (float f in node.Unknown5)
                     writer.Write(f);
 
-                writer.Write(node.Children.Count);
+
+                writer.Write(node.Children.Count > 0 ? 1: 0);
 
                 foreach (float f in node.Unknown6)
                     writer.Write(f);
@@ -278,9 +293,6 @@ namespace HActLib
                 writer.WriteTimes(0, 12);
 
                 long diff = writer.Stream.Position - start;
-
-                if (diff != 128)
-                    throw new Exception("you fucked up my face");
             }
 
             long resourceCutStart = writer.Stream.Position;
@@ -307,7 +319,7 @@ namespace HActLib
 
             foreach (AuthReference reference in file.References)
             {
-                writer.Write(reference.Unknown);
+                writer.Write((int)reference.Type);
                 writer.Write(reference.Guid.ToByteArray());
                 writer.WriteTimes(0, 12);
             }
@@ -323,7 +335,7 @@ namespace HActLib
                     }
 
                     animDataLocs[node.AnimationData.Guid] = (uint)writer.Stream.Position;
-                    writer.Write(node.AnimationData.Unknown1);
+                    writer.Write(node.AnimationData.Type);
                     writer.Write(node.AnimationData.Unknown2);
                     writer.Write(node.AnimationData.Guid.ToByteArray());
 
@@ -406,7 +418,7 @@ namespace HActLib
 
 
             writer.Stream.Position = headerStart;
-            writer.Write((uint)writer.Stream.Length);
+            writer.Write((uint)writer.Stream.Length - 16);
 
             writer.Write((uint)resourceCutStart);
             writer.Write(file.ResourceCuts.Count);

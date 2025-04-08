@@ -4,7 +4,7 @@ namespace HActLib
 {
     public class AuthNodeOOEAnimationData
     {
-        public int Unknown1;
+        public int Type;
         public int Unknown2;
         public Guid Guid;
 
@@ -12,5 +12,22 @@ namespace HActLib
         public float EndFrame;
 
         public byte[] UnknownData = new byte[96];
+
+        public static int GetTypeForNodeCategory(AuthNodeTypeOOE type)
+        {
+            switch(type)
+            {
+                default:
+                    return 0;
+                case AuthNodeTypeOOE.Path:
+                    return 0;
+                case AuthNodeTypeOOE.Character:
+                    return 2;
+                case AuthNodeTypeOOE.Model:
+                    return 3;
+                case AuthNodeTypeOOE.Camera:
+                    return 0;
+            }
+        }
     }
 }

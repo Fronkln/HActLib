@@ -8,6 +8,9 @@ namespace HActLib
 {
     public enum AuthNodeTypeOOE : int
     {
-        Character = 3
+        Camera = 1,
+        Path = 2,
+        Character = 3,
+        Model = 4
     }
 }

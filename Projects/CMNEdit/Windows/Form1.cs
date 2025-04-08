@@ -51,10 +51,10 @@ namespace CMNEdit
         public static Game curGame = Game.YLAD; //only used for DE
 
         public static TreeNode[] CopiedNode = null;
-        public static TreeViewItemResource CopiedResource = null;
+        public static TreeNode CopiedResource = null;
 
         public static TreeViewItemNode EditingNode = null;
-        public static TreeViewItemResource EditingResource = null;
+        public static TreeNode EditingResource = null;
         public static TreeViewItemCutInfo EditingCutInfo = null;
 
         //Hact stuff
@@ -99,6 +99,7 @@ namespace CMNEdit
 
         private static string folderDir = "";
         private static HActDir hactInf;
+        public string ResPath = "";
 
         public static bool TranslateNames = false;
 
@@ -113,7 +114,6 @@ namespace CMNEdit
 
             targetGameCombo.Items.AddRange(Enum.GetNames(typeof(Game)));
             targetGameCombo.SelectedIndex = 6;
-            resourceTypeBox.Items.AddRange(Enum.GetNames(typeof(ResourceType)));
             System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
             cutPage = hactTabs.TabPages[1];
@@ -184,6 +184,8 @@ namespace CMNEdit
             IsHact = false;
             IsOE = false;
             IsBep = false;
+
+            ResPath = "";
 
 
             addNodeTab.DropDownItems.Remove(nodeAddTabOOE);
@@ -279,18 +281,25 @@ namespace CMNEdit
             FilePath = hactInf.FindFile("hact_tev.bin").Path;
 
             //OOE auth
-            if(magic == "AUTH")
+            if (magic == "AUTH")
             {
                 Auth authFile = Auth.Read(FilePath);
                 hactTabs.TabPages[0].Text = "AUTH";
-                hactTabs.TabPages.Remove(resPage);
+
+                if (!hactTabs.TabPages.Contains(resPage))
+                    hactTabs.TabPages.Add(resPage);
+
                 hactTabs.TabPages.Remove(cutPage);
                 hactDurationPanel.Visible = true;
 
                 Auth = authFile;
                 IsOOEAuth = true;
 
-                foreach(var node in authFile.Nodes)
+
+                if (!string.IsNullOrEmpty(authFile.Res000))
+                    OnImportResFile(authFile.Res000);
+
+                foreach (var node in authFile.Nodes)
                 {
                     nodesTree.Nodes.Add(new TreeNodeOOEAuthNode(node));
                 }
@@ -450,8 +459,6 @@ namespace CMNEdit
                 if (!hactTabs.TabPages.Contains(cutPage))
                     hactTabs.TabPages.Add(cutPage);
 
-                resTree.Nodes.Clear();
-
                 if (Res != null)
                     foreach (Resource resource in Res.Resources)
                         resTree.Nodes.Add(new TreeViewItemResource(resource));
@@ -487,19 +494,19 @@ namespace CMNEdit
 
             HashSet<YActEffect> parentedEffects = new HashSet<YActEffect>();
 
-            if(yact is YActY2)
+            if (yact is YActY2)
             {
                 for (int i = 0; i < yact.Characters.Count; i++)
                 {
                     YActY2Character yactChara = yact.Characters[i] as YActY2Character;
                     TreeNodeYActCharacter charaNode = new TreeNodeYActCharacter(yactChara);
 
-                    foreach(var anim in yactChara.AnimationData)
+                    foreach (var anim in yactChara.AnimationData)
                     {
                         charaNode.Nodes.Add(new TreeNodeYActY2Animation(anim));
                     }
 
-                    for(int k = yactChara.UnknownY2[0]; k < yactChara.UnknownY2[0] + yactChara.UnknownY2[1]; k++)
+                    for (int k = yactChara.UnknownY2[0]; k < yactChara.UnknownY2[0] + yactChara.UnknownY2[1]; k++)
                     {
                         YActEffect yactEffect = yact.Effects[k];
                         parentedEffects.Add(yactEffect);
@@ -516,7 +523,7 @@ namespace CMNEdit
                     YActY2Camera yactCam = yact.Cameras[i] as YActY2Camera;
                     TreeNodeYActCamera camNode = new TreeNodeYActCamera(yactCam);
 
-                    foreach(var anim in yactCam.AnimationData)
+                    foreach (var anim in yactCam.AnimationData)
                     {
                         camNode.Nodes.Add(new TreeNodeYActY2Animation(anim));
                     }
@@ -579,7 +586,7 @@ namespace CMNEdit
             hactTabs.TabPages[0].Text = "Property";
 
 
-            foreach(var dat1 in prop.MoveProperties)
+            foreach (var dat1 in prop.MoveProperties)
             {
                 TreeNodePS2PropertyData1 propNode = new TreeNodePS2PropertyData1(dat1);
                 nodesTree.Nodes.Add(propNode);
@@ -960,7 +967,7 @@ namespace CMNEdit
             System.Diagnostics.Debug.Print(varPanel.RowStyles.Count.ToString());
 
 
-            if(IsPS2Prop)
+            if (IsPS2Prop)
             {
                 ProcessSelectedNodePS2Prop();
                 return;
@@ -1133,7 +1140,24 @@ namespace CMNEdit
 
             Be.Windows.Forms.DynamicByteProvider provider = null;
 
-            if (node is TreeNodeSet1)
+            if (node is TreeNodeOOEAuthNode)
+            {
+                TreeNodeOOEAuthNode authNode = (TreeNodeOOEAuthNode)node;
+
+                CreateHeader("Auth Node");
+
+                CreateInput("GUID", authNode.Node.Guid.ToString(), delegate (string val) { authNode.Node.Guid = new Guid(val); });
+                CreateInput("Type", authNode.Node.Type.ToString(), null, readOnly: true);
+
+                CreateHeader("Animation Data");
+                CreateInput("Type", authNode.Node.AnimationData.Type.ToString(), delegate (string val) { authNode.Node.AnimationData.Type = int.Parse(val); }, NumberBox.NumberMode.Int);
+                CreateInput("Unknown", authNode.Node.AnimationData.Unknown2.ToString(), delegate (string val) { authNode.Node.AnimationData.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                CreateInput("GUID", authNode.Node.AnimationData.Guid.ToString(), delegate (string val) { authNode.Node.AnimationData.Guid = new Guid(val); });
+                CreateInput("Start", authNode.Node.AnimationData.StartFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.StartFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                CreateInput("End", authNode.Node.AnimationData.EndFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.EndFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            }
+
+            else if (node is TreeNodeSet1)
             {
                 TreeNodeSet1 set1Node = (node as TreeNodeSet1);
 
@@ -1189,6 +1213,9 @@ namespace CMNEdit
 
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
+
+
+            CreateHeader("");
         }
 
         private void DrawElement1019(Set2Element1019 element, bool isCSVTree = false)
@@ -1276,7 +1303,7 @@ namespace CMNEdit
                         myNewForm.Init(itemExpDat.Data.Animation,
                             delegate (byte[] outCurve)
                             {
-                                if(outCurve.Length < 256)
+                                if (outCurve.Length < 256)
                                     outCurve = ConvertTo256PointCurve(outCurve);
 
                                 itemExpDat.Data.Animation = outCurve;
@@ -1434,9 +1461,25 @@ namespace CMNEdit
             if (pastingNode == null || pastingNode.Length == 0)
                 return;
 
-            if(IsPS2Prop)
+            if (IsOOEAuth)
             {
-                foreach(var node in pastingNode)
+                foreach (var node in pastingNode)
+                {
+                    if (node is TreeNodeOOEAuthNode || node is TreeNodeEffect)
+                    {
+                        if (nodesTree.SelectedNode is TreeNodeOOEAuthNode)
+                        {
+                            TreeNode newNode = (TreeNode)node.Clone();
+                            nodesTree.SelectedNode.Nodes.Add(newNode);
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (IsPS2Prop)
+            {
+                foreach (var node in pastingNode)
                 {
                     TreeNode newNode = (TreeNode)node.Clone();
                     nodesTree.Nodes.Add(newNode);
@@ -1444,7 +1487,7 @@ namespace CMNEdit
                 return;
             }
 
-            if(IsYAct)
+            if (IsYAct)
             {
                 foreach (System.Windows.Forms.TreeNode node in pastingNode)
                 {
@@ -1719,6 +1762,50 @@ namespace CMNEdit
             return (nodesTree.Nodes[0] as TreeNodeSet1).Set;
         }
 
+        private List<AuthNodeOOE> GenerateOOEAuthHierarchy()
+        {
+            void ChildLoop(TreeNode node)
+            {
+                TreeNodeOOEAuthNode authNode = node as TreeNodeOOEAuthNode;
+
+                if (authNode == null)
+                    return;
+
+                if (authNode.Parent != null)
+                {
+                    authNode.Node.Parent = (authNode.Parent as TreeNodeOOEAuthNode).Node;
+                    authNode.Node.Parent.Children.Add(authNode.Node);
+                }
+
+                authNode.Node.Children.Clear();
+                authNode.Node.Effects.Clear();
+
+                foreach (TreeNode treeChild in node.Nodes.Cast<TreeNode>())
+                {
+                    if (treeChild is TreeNodeEffect)
+                    {
+                        authNode.Node.Effects.Add((treeChild as TreeNodeEffect).Effect);
+                    }
+                    ChildLoop(treeChild);
+                }
+            }
+
+            List<AuthNodeOOE> rootNodes = new List<AuthNodeOOE>();
+
+            foreach (TreeNode node in nodesTree.Nodes)
+            {
+                TreeNodeOOEAuthNode authNode = node as TreeNodeOOEAuthNode;
+
+                if (authNode == null)
+                    continue;
+
+                ChildLoop(node);
+                rootNodes.Add(authNode.Node);
+            }
+
+            return rootNodes;
+        }
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Yarhl.IO.DataStream stream = null;
@@ -1798,16 +1885,54 @@ namespace CMNEdit
 
                 OMTProperty.Write(propFile, FilePath);
             }
-            else if(IsYAct)
+            else if (IsYAct)
             {
                 var treeNodes = GetAllTreeNodes();
                 YActEffect[] effects = GetAllTreeNodes().Where(x => x is TreeNodeYActEffect).Cast<TreeNodeYActEffect>().Select(x => x.Effect).ToArray();
                 yact.Effects = effects.ToList();
                 YActY1.Write(FilePath, yact);
             }
-            else if(IsOOEAuth)
+            else if (IsOOEAuth)
             {
+                var nodesHierarchy = GenerateOOEAuthHierarchy();
+                Auth.Nodes = nodesHierarchy;
+
+                foreach (AuthNodeOOE node in Auth.AllNodes)
+                {
+                    if (node.Type == AuthNodeTypeOOE.Character || node.Type == AuthNodeTypeOOE.Model)
+                    {
+                        if (node.Type == AuthNodeTypeOOE.Character)
+                        {
+                            if (!Auth.References.Any(x => x.Guid == node.AnimationData.Guid))
+                            {
+                                AuthReference reference = new AuthReference();
+                                reference.Guid = node.AnimationData.Guid;
+
+                                Auth.References.Add(reference);
+                            }
+                        }
+
+                        if (!Auth.References.Any(x => x.Guid == node.Guid))
+                        {
+                            AuthReference reference = new AuthReference();
+                            reference.Guid = node.Guid;
+
+                            Auth.References.Add(reference);
+                        }
+                    }
+                }
+
                 Auth.Write(Auth, FilePath);
+
+                if(!string.IsNullOrEmpty(ResPath))
+                {
+                    AuthResOOE newRes = new AuthResOOE();
+
+                    foreach (TreeViewItemResourceOOE resource in resTree.Nodes)
+                        newRes.Resources.Add(resource.Resource);
+
+                    AuthResOOE.Write(newRes, ResPath);
+                }
             }
 
         }
@@ -1885,6 +2010,9 @@ namespace CMNEdit
 
         public Node[] GetAllNodes()
         {
+            if (nodesTree.Nodes.Count <= 0)
+                return new Node[0];
+
 
             if (!IsMep)
             {
@@ -2039,6 +2167,9 @@ namespace CMNEdit
 
                 case ResourceType.CameraMotion:
                     return nodesToFind.Where(x => x.Category == AuthNodeCategory.CameraMotion).ToArray();
+
+                case ResourceType.PathMotion:
+                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.PathMotion).ToArray();
             }
 
         }
@@ -2048,31 +2179,58 @@ namespace CMNEdit
             if (EditingResource == null)
                 return;
 
-            if (EditingResourceCurrentLinkedNodes == null || EditingResourceCurrentLinkedNodes.Length <= 0)
-                return;
+            var editingResourceModern = EditingResource as TreeViewItemResource;
 
-            EditingResource.Text = resourceNameTextbox.Text;
-            EditingResource.Resource.Name = resourceNameTextbox.Text;
-            EditingResource.Resource.Type = (ResourceType)resourceTypeBox.SelectedIndex;
-            EditingResource.Resource.NodeGUID = EditingResourceCurrentLinkedNodes[linkedNodeBox.SelectedIndex].Guid;
-            EditingResource.Resource.StartFrame = Utils.InvariantParse(resStartBox.Text);
-            EditingResource.Resource.EndFrame = Utils.InvariantParse(resEndBox.Text);
+            if(editingResourceModern != null)
+            {
+                EditingResource.Text = resourceNameTextbox.Text;
+                editingResourceModern.Name = resourceNameTextbox.Text;
+                editingResourceModern.Resource.Type = (ResourceType)resourceTypeBox.SelectedIndex;
+
+                if(!((EditingResourceCurrentLinkedNodes == null || EditingResourceCurrentLinkedNodes.Length <= 0)))
+                    editingResourceModern.Resource.NodeGUID = EditingResourceCurrentLinkedNodes[linkedNodeBox.SelectedIndex].Guid;
+
+                editingResourceModern.Resource.StartFrame = Utils.InvariantParse(resStartBox.Text);
+                editingResourceModern.Resource.EndFrame = Utils.InvariantParse(resEndBox.Text);
+            }
+            else
+            {
+                var editingResourceOoe = EditingResource as TreeViewItemResourceOOE;
+                EditingResource.Text = resourceNameTextbox.Text;
+                editingResourceOoe.Resource.Resource = resourceNameTextbox.Text;
+                editingResourceOoe.Resource.Type = (AuthResourceOOEType)resourceTypeBox.SelectedIndex;
+            }
         }
 
         private void resTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            EditingResource = e.Node as TreeViewItemResource;
-            resourceNameTextbox.Text = EditingResource.Resource.Name;
-            resourceTypeBox.SelectedIndex = (int)EditingResource.Resource.Type;
-            resStartBox.Text = EditingResource.Resource.StartFrame.ToString(CultureInfo.InvariantCulture);
-            resEndBox.Text = EditingResource.Resource.EndFrame.ToString(CultureInfo.InvariantCulture);
+            EditingResource = e.Node;
+            
+            Node foundNode = null;
 
-            EditingResourceCurrentLinkedNodes = FilterNodesBasedOnResource(EditingResource.Resource.Type);
+            var editingResourceModern = EditingResource as TreeViewItemResource;
 
-            linkedNodeBox.Items.Clear();
-            linkedNodeBox.Items.AddRange(EditingResourceCurrentLinkedNodes.Select(x => x.Name).ToArray());
+            if(editingResourceModern != null)
+            {
+                resourceNameTextbox.Text = editingResourceModern.Resource.Name;
+                resourceTypeBox.SelectedIndex = (int)editingResourceModern.Resource.Type;
+                resStartBox.Text = editingResourceModern.Resource.StartFrame.ToString(CultureInfo.InvariantCulture);
+                resEndBox.Text = editingResourceModern.Resource.EndFrame.ToString(CultureInfo.InvariantCulture);
 
-            Node foundNode = EditingResourceCurrentLinkedNodes.FirstOrDefault(x => x.Guid == EditingResource.Resource.NodeGUID);
+                EditingResourceCurrentLinkedNodes = FilterNodesBasedOnResource(editingResourceModern.Resource.Type);
+
+                linkedNodeBox.Items.Clear();
+                linkedNodeBox.Items.AddRange(EditingResourceCurrentLinkedNodes.Select(x => x.Name).ToArray());
+
+                foundNode = EditingResourceCurrentLinkedNodes.FirstOrDefault(x => x.Guid == editingResourceModern.Resource.NodeGUID);
+            }
+            else
+            {
+                TreeViewItemResourceOOE editingResourceOoe = EditingResource as TreeViewItemResourceOOE;
+
+                resourceNameTextbox.Text = editingResourceOoe.Resource.Resource;
+                resourceTypeBox.SelectedIndex = (int)editingResourceOoe.Resource.Type;
+            }
 
             linkedNodeBox.Text = "";
 
@@ -2146,14 +2304,14 @@ namespace CMNEdit
 
             nodesTree.SuspendLayout();
 
-            if(curGame == Game.Y1 || curGame == Game.Y2)
+            if (curGame == Game.Y1 || curGame == Game.Y2)
             {
                 FilePath = dialog.FileName;
                 OMTProperty property = OMTProperty.Read(dialog.FileName);
 
                 ProcessPS2Prop(property);
             }
-            else if(curGame > Game.Y3 && curGame < Game.Y6Demo)
+            else if (curGame > Game.Y3 && curGame < Game.Y6Demo)
             {
                 Mep = MEP.Read(dialog.FileName);
                 InitMEP(Mep);
@@ -2384,18 +2542,26 @@ namespace CMNEdit
                 //Copy/Paste
                 if (e.KeyCode == Keys.C || e.KeyCode == Keys.V)
                 {
-                    if (currentTab == 2 && resTree.SelectedNode != null)
+                    if (hactTabs.SelectedTab == resTab && resTree.SelectedNode != null)
                     {
                         if (e.KeyCode == Keys.C)
-                            CopiedResource = resTree.SelectedNode as TreeViewItemResource;
+                            CopiedResource = resTree.SelectedNode;
                         else
                         {
                             if (CopiedResource == null)
                                 return;
 
 
-                            Resource newRes = CopiedResource.Resource.Clone();
-                            resTree.Nodes.Add(new TreeViewItemResource(newRes));
+                            if(CopiedResource is TreeViewItemResource)
+                            {
+                                Resource newRes = (CopiedResource as TreeViewItemResource).Resource.Clone();
+                                resTree.Nodes.Add(new TreeViewItemResource(newRes));
+                            }
+                            else
+                            {
+                                AuthResourceOOE newRes = (CopiedResource as TreeViewItemResourceOOE).Resource;
+                                resTree.Nodes.Add(new TreeViewItemResourceOOE(newRes));
+                            }
                         }
                     }
                 }
@@ -3326,7 +3492,7 @@ namespace CMNEdit
 
             Be.Windows.Forms.DynamicByteProvider provider = null;
 
-            if(node is TreeNodeYActY2Animation)
+            if (node is TreeNodeYActY2Animation)
             {
                 var y2Anim = node as TreeNodeYActY2Animation;
                 CreateHeader($"Animation ({y2Anim.Animation.Format})");
@@ -3413,7 +3579,7 @@ namespace CMNEdit
                 var effectNode = node as TreeNodeYActEffect;
                 CreateHeader("YAct Effect");
 
-                if(!string.IsNullOrEmpty(effectNode.Effect.Name))
+                if (!string.IsNullOrEmpty(effectNode.Effect.Name))
                     CreateInput("Name", effectNode.Effect.Name.ToString(), delegate (string val) { effectNode.Effect.Name = val; });
 
                 CreateInput("Start", effectNode.Effect.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
@@ -3431,7 +3597,7 @@ namespace CMNEdit
                     case YActEffectType.Sound:
                         var soundEffect = effectNode.Effect as YActEffectSound;
                         CreateHeader("Sound");
-                        CreateInput("Cuesheet ID", soundEffect.CuesheetID.ToString(), delegate (string val) { soundEffect.CuesheetID = ushort.Parse(val) ; effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
+                        CreateInput("Cuesheet ID", soundEffect.CuesheetID.ToString(), delegate (string val) { soundEffect.CuesheetID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
                         CreateInput("Sound ID", soundEffect.SoundID.ToString(), delegate (string val) { soundEffect.SoundID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
                         break;
                 }
@@ -3451,7 +3617,7 @@ namespace CMNEdit
 
             Be.Windows.Forms.DynamicByteProvider provider = null;
 
-            if(node is TreeNodePS2PropertyData1)
+            if (node is TreeNodePS2PropertyData1)
             {
                 var dat1Node = node as TreeNodePS2PropertyData1;
                 CreateHeader("Property (Data1)");
@@ -3469,11 +3635,11 @@ namespace CMNEdit
                     };
                 }
             }
-            else if(node is TreeNodePS2PropertyData2)
+            else if (node is TreeNodePS2PropertyData2)
             {
                 var dat2Node = node as TreeNodePS2PropertyData2;
                 CreateHeader("Property (Data2)");
-                CreateInput("Type?", dat2Node.Data2.Type.ToString(), delegate (string val) {  }, NumberBox.NumberMode.Int, true);
+                CreateInput("Type?", dat2Node.Data2.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
                 CreateInput("Start", dat2Node.Data2.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
                 CreateInput("End", dat2Node.Data2.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
@@ -3545,7 +3711,7 @@ namespace CMNEdit
                     BEP bepfile = BEP.Read(bepFile, igame);
 
                     //var inf = RyuseModule.ConvertNodes(bepfile.Nodes.ToArray(), igame, prefixGame);
-                   // bepfile.Nodes = inf.OutputNodes.ToList();
+                    // bepfile.Nodes = inf.OutputNodes.ToList();
 
                     BEP.Write(bepfile, bepFile, prefixGame);
                 }
@@ -3592,6 +3758,53 @@ namespace CMNEdit
             OMTProperty property = OMTProperty.Read(dialog.FileName);
 
             ProcessPS2Prop(property);
+        }
+
+        private void openResButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Resource .bin file|*.bin";
+
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            OnImportResFile(dialog.FileName);
+        }
+
+        private void OnImportResFile(string fileName)
+        {
+            resTree.Nodes.Clear();
+
+            ResPath = fileName;
+
+            byte[] fileBuf = File.ReadAllBytes(fileName);
+            bool isOOERes = fileBuf[0] == 0x41 && fileBuf[1] == 0x55;
+
+
+            if(isOOERes)
+            {
+                AuthResOOE ooeRes = AuthResOOE.Read(fileBuf);
+
+                foreach(var resource in ooeRes.Resources)
+                    resTree.Nodes.Add(new TreeViewItemResourceOOE(resource));
+
+                resourceTypeBox.Items.Clear();
+                resourceTypeBox.Items.AddRange(Enum.GetNames(typeof(AuthResourceOOEType)));
+
+                resTimingsPanel.Visible = false;
+            }
+            else
+            {
+                RES res = RES.Read(fileBuf, !IsOE);
+
+                foreach (var resource in res.Resources)
+                    resTree.Nodes.Add(new TreeViewItemResource(resource));
+
+                resourceTypeBox.Items.Clear();
+                resourceTypeBox.Items.AddRange(Enum.GetNames(typeof(ResourceType)));
+
+                resTimingsPanel.Visible = true;
+            }
         }
     }
 }

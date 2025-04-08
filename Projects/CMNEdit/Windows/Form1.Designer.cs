@@ -100,11 +100,13 @@
             cutInfoFrameBox = new System.Windows.Forms.TextBox();
             cutInfoTree = new System.Windows.Forms.TreeView();
             resTab = new System.Windows.Forms.TabPage();
+            openResButton = new System.Windows.Forms.Button();
             panel2 = new System.Windows.Forms.Panel();
             panel3 = new System.Windows.Forms.Panel();
-            label13 = new System.Windows.Forms.Label();
-            resEndBox = new System.Windows.Forms.TextBox();
+            resTimingsPanel = new System.Windows.Forms.Panel();
             label12 = new System.Windows.Forms.Label();
+            resEndBox = new System.Windows.Forms.TextBox();
+            label13 = new System.Windows.Forms.Label();
             resStartBox = new System.Windows.Forms.TextBox();
             linkedNodeBox = new System.Windows.Forms.ComboBox();
             targetNodeLbl = new System.Windows.Forms.Label();
@@ -151,6 +153,7 @@
             resTab.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
+            resTimingsPanel.SuspendLayout();
             csvTab.SuspendLayout();
             csvVarPanel.SuspendLayout();
             hactDurationPanel.SuspendLayout();
@@ -766,6 +769,7 @@
             // 
             // resTab
             // 
+            resTab.Controls.Add(openResButton);
             resTab.Controls.Add(panel2);
             resTab.Controls.Add(resTree);
             resTab.Location = new System.Drawing.Point(4, 24);
@@ -775,6 +779,16 @@
             resTab.TabIndex = 1;
             resTab.Text = "RES";
             resTab.UseVisualStyleBackColor = true;
+            // 
+            // openResButton
+            // 
+            openResButton.Location = new System.Drawing.Point(819, 3);
+            openResButton.Name = "openResButton";
+            openResButton.Size = new System.Drawing.Size(75, 23);
+            openResButton.TabIndex = 4;
+            openResButton.Text = "Open";
+            openResButton.UseVisualStyleBackColor = true;
+            openResButton.Click += openResButton_Click;
             // 
             // panel2
             // 
@@ -786,10 +800,7 @@
             // 
             // panel3
             // 
-            panel3.Controls.Add(label13);
-            panel3.Controls.Add(resEndBox);
-            panel3.Controls.Add(label12);
-            panel3.Controls.Add(resStartBox);
+            panel3.Controls.Add(resTimingsPanel);
             panel3.Controls.Add(linkedNodeBox);
             panel3.Controls.Add(targetNodeLbl);
             panel3.Controls.Add(resourceTypeBox);
@@ -802,36 +813,47 @@
             panel3.Size = new System.Drawing.Size(554, 321);
             panel3.TabIndex = 0;
             // 
-            // label13
+            // resTimingsPanel
             // 
-            label13.AutoSize = true;
-            label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label13.Location = new System.Drawing.Point(90, 64);
-            label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(46, 25);
-            label13.TabIndex = 10;
-            label13.Text = "End";
-            // 
-            // resEndBox
-            // 
-            resEndBox.Location = new System.Drawing.Point(90, 92);
-            resEndBox.Name = "resEndBox";
-            resEndBox.Size = new System.Drawing.Size(62, 23);
-            resEndBox.TabIndex = 9;
+            resTimingsPanel.Controls.Add(label12);
+            resTimingsPanel.Controls.Add(resEndBox);
+            resTimingsPanel.Controls.Add(label13);
+            resTimingsPanel.Controls.Add(resStartBox);
+            resTimingsPanel.Location = new System.Drawing.Point(13, 67);
+            resTimingsPanel.Name = "resTimingsPanel";
+            resTimingsPanel.Size = new System.Drawing.Size(144, 63);
+            resTimingsPanel.TabIndex = 11;
             // 
             // label12
             // 
             label12.AutoSize = true;
             label12.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label12.Location = new System.Drawing.Point(12, 64);
+            label12.Location = new System.Drawing.Point(2, 0);
             label12.Name = "label12";
             label12.Size = new System.Drawing.Size(56, 25);
             label12.TabIndex = 8;
             label12.Text = "Start";
             // 
+            // resEndBox
+            // 
+            resEndBox.Location = new System.Drawing.Point(75, 28);
+            resEndBox.Name = "resEndBox";
+            resEndBox.Size = new System.Drawing.Size(62, 23);
+            resEndBox.TabIndex = 9;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            label13.Location = new System.Drawing.Point(82, 0);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(46, 25);
+            label13.TabIndex = 10;
+            label13.Text = "End";
+            // 
             // resStartBox
             // 
-            resStartBox.Location = new System.Drawing.Point(12, 92);
+            resStartBox.Location = new System.Drawing.Point(2, 28);
             resStartBox.Name = "resStartBox";
             resStartBox.Size = new System.Drawing.Size(62, 23);
             resStartBox.TabIndex = 7;
@@ -1155,6 +1177,8 @@
             panel2.ResumeLayout(false);
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            resTimingsPanel.ResumeLayout(false);
+            resTimingsPanel.PerformLayout();
             csvTab.ResumeLayout(false);
             csvVarPanel.ResumeLayout(false);
             csvVarPanel.PerformLayout();
@@ -1273,5 +1297,7 @@
         private System.Windows.Forms.ToolStripMenuItem bulkConvertBEPToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem convertOEPropertybinToBEPToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem convertMEPWithPibsToolStripMenuItem1;
+        private System.Windows.Forms.Button openResButton;
+        private System.Windows.Forms.Panel resTimingsPanel;
     }
 }

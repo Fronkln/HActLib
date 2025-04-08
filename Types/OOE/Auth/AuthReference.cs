@@ -2,9 +2,17 @@
 
 namespace HActLib
 {
+    public enum AuthReferenceType
+    {
+        Character = 4
+    }
+
     public struct AuthReference
     {
-        public int Unknown;
+        /// <summary>
+        /// Determines how the resource is loaded/accessed
+        /// </summary>
+        public AuthReferenceType Type;
         public Guid Guid;
     }
 }
