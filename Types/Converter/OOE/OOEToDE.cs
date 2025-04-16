@@ -369,7 +369,6 @@ namespace HActLib
 
         public Node Convert(TEV tev, ObjectBase set, float hactLen)
         {
-
             Node deNode = null;
 
             switch (set.Type)
@@ -415,7 +414,7 @@ namespace HActLib
 
                     else if (setChild is EffectBase)
                     {
-                        Node childConv = ConvertElementEffect(tev, setChild as EffectBase);
+                        Node childConv = ConvertElementEffect(setChild as EffectBase, inf);
 
                         if (childConv != null)
                             deNode.Children.Add(childConv);
@@ -540,7 +539,7 @@ namespace HActLib
             return convertedNode;
         }
 
-        public NodeElement ConvertElementEffect(TEV tev, EffectBase effect)
+        public static NodeElement ConvertElementEffect(EffectBase effect, OOEToDEConversionInfo optionalInfo = null)
         {
             NodeElement createdNode = null;
 
@@ -557,10 +556,15 @@ namespace HActLib
                     ptc.Matrix = ooePtc.Matrix;
                     ptc.ParticleID = ooePtc.ParticleID;
 
-                    BasePib pibFile = inf.Pibs.FirstOrDefault(x => x.ParticleID == ptc.ParticleID);
+                    if(optionalInfo != null)
+                    {
+                        BasePib pibFile = optionalInfo.Pibs.FirstOrDefault(x => x.ParticleID == ptc.ParticleID);
 
-                    if (pibFile != null)
-                        ptc.Name = pibFile.Name.Replace(".pib", "");
+                        if (pibFile != null)
+                            ptc.Name = pibFile.Name.Replace(".pib", "");
+                        else
+                            ptc.Name = "PIB " + ooePtc.ParticleID;
+                    }
                     else
                         ptc.Name = "PIB " + ooePtc.ParticleID;
 
@@ -628,7 +632,7 @@ namespace HActLib
             return createdNode;
         }
 
-        public void CopyEffectElementData(EffectElement effect, NodeElement target)
+        public static void CopyEffectElementData(EffectElement effect, NodeElement target)
         {
             target.Start = effect.Start;
             target.End = effect.End;

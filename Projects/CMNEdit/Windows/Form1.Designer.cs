@@ -65,6 +65,7 @@
             toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             adjustTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             moveTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
             frameProgressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             disableFrameInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,6 +139,7 @@
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             langOverrideLbl = new System.Windows.Forms.Label();
             langOverrideBox = new System.Windows.Forms.TextBox();
+            test2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -408,7 +410,7 @@
             // toolStripSplitButton1
             // 
             toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { adjustTimingToolStripMenuItem, moveTimingToolStripMenuItem });
+            toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { adjustTimingToolStripMenuItem, moveTimingToolStripMenuItem, testToolStripMenuItem, test2ToolStripMenuItem });
             toolStripSplitButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripSplitButton1.Image");
             toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripSplitButton1.Name = "toolStripSplitButton1";
@@ -419,16 +421,23 @@
             // adjustTimingToolStripMenuItem
             // 
             adjustTimingToolStripMenuItem.Name = "adjustTimingToolStripMenuItem";
-            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             adjustTimingToolStripMenuItem.Text = "Adjust Timing";
             adjustTimingToolStripMenuItem.Click += adjustTimingToolStripMenuItem_Click;
             // 
             // moveTimingToolStripMenuItem
             // 
             moveTimingToolStripMenuItem.Name = "moveTimingToolStripMenuItem";
-            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             moveTimingToolStripMenuItem.Text = "Move Timing";
             moveTimingToolStripMenuItem.Click += moveTimingToolStripMenuItem_Click;
+            // 
+            // testToolStripMenuItem
+            // 
+            testToolStripMenuItem.Name = "testToolStripMenuItem";
+            testToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            testToolStripMenuItem.Text = "Test";
+            testToolStripMenuItem.Click += testToolStripMenuItem_Click;
             // 
             // advancedButton
             // 
@@ -1145,6 +1154,13 @@
             langOverrideBox.Size = new System.Drawing.Size(85, 23);
             langOverrideBox.TabIndex = 10;
             // 
+            // test2ToolStripMenuItem
+            // 
+            test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
+            test2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            test2ToolStripMenuItem.Text = "Test2";
+            test2ToolStripMenuItem.Click += test2ToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1299,5 +1315,7 @@
         private System.Windows.Forms.ToolStripMenuItem convertMEPWithPibsToolStripMenuItem1;
         private System.Windows.Forms.Button openResButton;
         private System.Windows.Forms.Panel resTimingsPanel;
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem test2ToolStripMenuItem;
     }
 }

@@ -293,11 +293,9 @@ namespace HActLib
 
             foreach (Resource resInf in res.Resources)
             {
-
                 if (gmtExporterExists && resInf.Type == ResourceType.CharacterMotion)
                 {
                    
-
                     string inp = Path.Combine(tevPath, resInf.Name.Replace("\0", "") + ".gmt");
                     string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".gmt");
 

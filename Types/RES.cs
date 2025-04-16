@@ -37,6 +37,11 @@ namespace HActLib
         {
             return (Resource)MemberwiseClone();
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public enum ResourceType
