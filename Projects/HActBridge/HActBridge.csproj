@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Reference Include="PIBLib">
-      <HintPath>..\..\..\PIBLib\bin\x64\Release\net6.0\PIBLib.dll</HintPath>
+      <HintPath>..\..\Dependencies\PIBLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
