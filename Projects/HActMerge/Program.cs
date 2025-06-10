@@ -173,13 +173,13 @@ namespace HActMerge
             for (int i = 0; i < hact.CutInfo.Length; i++)
                 hact.CutInfo[i] += start;
 
-            for (int i = 0; i < hact.DisableFrameInfo.Length; i++)
+            for (int i = 0; i < hact.DisableFrameInfo.Count; i++)
             {
                 hact.DisableFrameInfo[i].Start += start;
                 hact.DisableFrameInfo[i].End += start;
             }
 
-            hact.DisableFrameInfo = new DisableFrameInfo[0]; //hact.DisableFrameInfo.Where(x => x.Start < start + startLimit).ToArray();
+            hact.DisableFrameInfo = new List<DisableFrameInfo>(); //hact.DisableFrameInfo.Where(x => x.Start < start + startLimit).ToArray();
         }
 
         private static void MergeHAct(CMN hact1, CMN hact2, bool nofilter)

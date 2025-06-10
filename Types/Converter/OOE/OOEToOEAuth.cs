@@ -26,7 +26,7 @@ namespace HActLib
             OECMN cmnFile = new OECMN();
             cmnFile.HActEnd = authFile.Length;
             cmnFile.Version = OECMN.GetCMNVersionForGame(oeGame);
-            cmnFile.SetFlags(5);
+            cmnFile.SetFlags(4);
             cmnFile.SetChainCameraIn(-1);
             cmnFile.SetChainCameraOut(-1);
 

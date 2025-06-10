@@ -2,7 +2,7 @@
   "profiles": {
     "HActScout": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\SteamLibrary\\steamapps\\common\\LikeADragon8\\runtime\\media\\data\\motion.par.unpack\\bep\" 80 ylad bep"
+      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\LikeADragonPirates\\runtime\\media\\data\\hact_spr\" -1 ladpyih"
     }
   }
 }

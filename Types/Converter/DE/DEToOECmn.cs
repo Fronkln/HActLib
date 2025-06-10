@@ -47,16 +47,20 @@ namespace HActLib
             {
                 NodeCamera cam = converted.AllCameras[0];
 
-                if (cam.FrameProgression[cam.FrameProgression.Length - 1] < converted.HActEnd)
+
+                if (cam.FrameProgression != null && cam.FrameProgression.Length > 0)
                 {
-                    float end = cam.FrameProgression[cam.FrameProgression.Length - 1];
-                    OEHActEnd hactEnd = new OEHActEnd();
-                    hactEnd.Start = end - 1;
-                    hactEnd.End = end;
+                    if (cam.FrameProgression[cam.FrameProgression.Length - 1] < converted.HActEnd)
+                    {
+                        float end = cam.FrameProgression[cam.FrameProgression.Length - 1];
+                        OEHActEnd hactEnd = new OEHActEnd();
+                        hactEnd.Start = end - 1;
+                        hactEnd.End = end;
 
-                    hactEnd.ElementKind = Reflection.GetElementIDByName("e_auth_element_hact_end", oeGame);
+                        hactEnd.ElementKind = Reflection.GetElementIDByName("e_auth_element_hact_end", oeGame);
 
-                    converted.Root.Children.Add(hactEnd);
+                        converted.Root.Children.Add(hactEnd);
+                    }
                 }
             }
 
@@ -115,6 +119,11 @@ namespace HActLib
 
                 case AuthNodeCategory.CameraMotion:
                     oeNode = deNode; //No conversion needed
+                    break;
+
+                case AuthNodeCategory.Asset:
+                    OENodeAsset oeAsset = new OENodeAsset();
+                    oeNode = oeAsset;
                     break;
 
                 case AuthNodeCategory.CharacterMotion:
@@ -216,6 +225,12 @@ namespace HActLib
                     oeInputBarrage.Presses = deInputBarrage.BarrageCount;
                     oeInputBarrage.ElementKind = Reflection.GetElementIDByName("e_auth_element_hact_input_barrage", oeGame);
                     return oeInputBarrage;
+
+                case "e_auth_element_play_draw_off":
+                    NodeElement doff = new NodeElement();
+                    doff.ElementKind = Reflection.GetElementIDByName("e_auth_element_draw_off", oeGame);
+                    break;
+
                 case "e_auth_element_se":
                     DEElementSE deSE = node as DEElementSE;
                     OEElementSE oeSE = new OEElementSE();

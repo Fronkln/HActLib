@@ -95,40 +95,40 @@ namespace HActLib
 
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftElbow))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.ude2_l);
+                        attack.Data.Parts |= ((int)BattleColliball.ude2_l);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftHand))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.ude3_l);
+                        attack.Data.Parts |= ((int)BattleColliball.ude3_l);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightArm))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.ude1_r);
+                        attack.Data.Parts |= ((int)BattleColliball.ude1_r);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightElbow))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.ude2_r);
+                        attack.Data.Parts |= ((int)BattleColliball.ude2_r);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightHand))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.ude3_r);
+                        attack.Data.Parts |= ((int)BattleColliball.ude3_r);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightThigh))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.asi1_r);
+                        attack.Data.Parts |= ((int)BattleColliball.asi1_r);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightKnee))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.asi2_r);
+                        attack.Data.Parts |= ((int)BattleColliball.asi2_r);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.RightFoot))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.asi3_r);
+                        attack.Data.Parts |= ((int)BattleColliball.asi3_r);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftThigh))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.asi1_l);
+                        attack.Data.Parts |= ((int)BattleColliball.asi1_l);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftKnee))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.asi2_l);
+                        attack.Data.Parts |= ((int)BattleColliball.asi2_l);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.LeftFoot))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.asi3_l);
+                        attack.Data.Parts |= ((int)BattleColliball.asi3_l);
 
                     if (oeHitbox.HitboxLocation1.HasFlag(HitboxLocation1Flag.Head))
-                        attack.Data.Parts |= (1 << (int)BattleColliball.face);
+                        attack.Data.Parts |= ((int)BattleColliball.face);
 
                     //not too sure how to detect these but these have been consistent-ish enough
                     if (oeHitbox.HitboxLocation2 == 32768 || oeHitbox.Flags == 255)

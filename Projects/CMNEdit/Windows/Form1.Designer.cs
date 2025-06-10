@@ -32,7 +32,9 @@
             System.Windows.Forms.Label label5;
             System.Windows.Forms.Label label6;
             System.Windows.Forms.Label label7;
+            System.Windows.Forms.Label label14;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            hactTypeLabel = new System.Windows.Forms.Label();
             targetGameLbl = new System.Windows.Forms.Label();
             appTools = new System.Windows.Forms.ToolStrip();
             toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
@@ -66,6 +68,7 @@
             adjustTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             moveTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            test2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
             frameProgressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             disableFrameInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -139,10 +142,13 @@
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             langOverrideLbl = new System.Windows.Forms.Label();
             langOverrideBox = new System.Windows.Forms.TextBox();
-            test2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            hactFlagsHolder = new System.Windows.Forms.Panel();
+            flagsBox = new System.Windows.Forms.TextBox();
+            typeBox = new System.Windows.Forms.TextBox();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
+            label14 = new System.Windows.Forms.Label();
             appTools.SuspendLayout();
             nodeContext.SuspendLayout();
             hactTabs.SuspendLayout();
@@ -162,6 +168,7 @@
             tableLayoutPanel1.SuspendLayout();
             csvContextHEvent.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
+            hactFlagsHolder.SuspendLayout();
             SuspendLayout();
             // 
             // label5
@@ -193,6 +200,26 @@
             label7.Size = new System.Drawing.Size(67, 25);
             label7.TabIndex = 11;
             label7.Text = "Frame";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            label14.Location = new System.Drawing.Point(3, 2);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(49, 21);
+            label14.TabIndex = 7;
+            label14.Text = "Flags";
+            // 
+            // hactTypeLabel
+            // 
+            hactTypeLabel.AutoSize = true;
+            hactTypeLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            hactTypeLabel.Location = new System.Drawing.Point(96, 2);
+            hactTypeLabel.Name = "hactTypeLabel";
+            hactTypeLabel.Size = new System.Drawing.Size(46, 21);
+            hactTypeLabel.TabIndex = 9;
+            hactTypeLabel.Text = "Type";
             // 
             // targetGameLbl
             // 
@@ -421,23 +448,30 @@
             // adjustTimingToolStripMenuItem
             // 
             adjustTimingToolStripMenuItem.Name = "adjustTimingToolStripMenuItem";
-            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             adjustTimingToolStripMenuItem.Text = "Adjust Timing";
             adjustTimingToolStripMenuItem.Click += adjustTimingToolStripMenuItem_Click;
             // 
             // moveTimingToolStripMenuItem
             // 
             moveTimingToolStripMenuItem.Name = "moveTimingToolStripMenuItem";
-            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             moveTimingToolStripMenuItem.Text = "Move Timing";
             moveTimingToolStripMenuItem.Click += moveTimingToolStripMenuItem_Click;
             // 
             // testToolStripMenuItem
             // 
             testToolStripMenuItem.Name = "testToolStripMenuItem";
-            testToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            testToolStripMenuItem.Text = "Test";
+            testToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            testToolStripMenuItem.Text = "OOE to DE Auth Test";
             testToolStripMenuItem.Click += testToolStripMenuItem_Click;
+            // 
+            // test2ToolStripMenuItem
+            // 
+            test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
+            test2ToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            test2ToolStripMenuItem.Text = "OOE to OE Auth Test";
+            test2ToolStripMenuItem.Click += test2ToolStripMenuItem_Click;
             // 
             // advancedButton
             // 
@@ -1154,18 +1188,37 @@
             langOverrideBox.Size = new System.Drawing.Size(85, 23);
             langOverrideBox.TabIndex = 10;
             // 
-            // test2ToolStripMenuItem
+            // hactFlagsHolder
             // 
-            test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
-            test2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            test2ToolStripMenuItem.Text = "Test2";
-            test2ToolStripMenuItem.Click += test2ToolStripMenuItem_Click;
+            hactFlagsHolder.Controls.Add(label14);
+            hactFlagsHolder.Controls.Add(flagsBox);
+            hactFlagsHolder.Controls.Add(hactTypeLabel);
+            hactFlagsHolder.Controls.Add(typeBox);
+            hactFlagsHolder.Location = new System.Drawing.Point(546, 402);
+            hactFlagsHolder.Name = "hactFlagsHolder";
+            hactFlagsHolder.Size = new System.Drawing.Size(193, 53);
+            hactFlagsHolder.TabIndex = 11;
+            // 
+            // flagsBox
+            // 
+            flagsBox.Location = new System.Drawing.Point(3, 26);
+            flagsBox.Name = "flagsBox";
+            flagsBox.Size = new System.Drawing.Size(85, 23);
+            flagsBox.TabIndex = 6;
+            // 
+            // typeBox
+            // 
+            typeBox.Location = new System.Drawing.Point(98, 26);
+            typeBox.Name = "typeBox";
+            typeBox.Size = new System.Drawing.Size(85, 23);
+            typeBox.TabIndex = 8;
             // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(967, 469);
+            Controls.Add(hactFlagsHolder);
             Controls.Add(langOverrideLbl);
             Controls.Add(langOverrideBox);
             Controls.Add(checkBox1);
@@ -1204,6 +1257,8 @@
             tableLayoutPanel1.PerformLayout();
             csvContextHEvent.ResumeLayout(false);
             contextMenuStrip1.ResumeLayout(false);
+            hactFlagsHolder.ResumeLayout(false);
+            hactFlagsHolder.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1317,5 +1372,9 @@
         private System.Windows.Forms.Panel resTimingsPanel;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem test2ToolStripMenuItem;
+        private System.Windows.Forms.Panel hactFlagsHolder;
+        private System.Windows.Forms.TextBox flagsBox;
+        private System.Windows.Forms.TextBox typeBox;
+        private System.Windows.Forms.Label hactTypeLabel;
     }
 }

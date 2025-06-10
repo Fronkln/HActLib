@@ -490,6 +490,15 @@ namespace HActLib
         e_auth_element_color_grading = 0x22A,
         e_auth_element_shadow_stripe_supression = 0x22E,
         e_auth_element_draw_wire = 0x23E,
+        e_auth_element_ship_sway = 578,
+        e_auth_element_ubik_collision = 584,
+        e_auth_element_draw_wire_gadget = 588,
+        e_auth_element_image_based_lighting = 589,
+        e_auth_element_affect_character_by_light_size = 590,
+        e_auth_element_SPARROW_disable_ship_rendering = 605,
+        e_auth_element_treasure_catalog_ui = 616,
+        e_auth_element_hide_grass = 635,
+        e_auth_element_fft_wave_length = 650,
         e_auth_element_kind_num = 575, //Atleast this amount, could be more
     }
 }

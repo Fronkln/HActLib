@@ -32,5 +32,7 @@ namespace HActLib
 
         public virtual int GetNodeDrawNum() { throw new NotImplementedException(); }
         public virtual void SetNodeDrawNum(int val) { throw new NotImplementedException(); }
+
+        public Node FindNodeByGUID(Guid guid) { return GetNodes().FirstOrDefault(x => x.Guid == guid); }
     }
 }

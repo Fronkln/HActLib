@@ -66,9 +66,7 @@ namespace CMNEdit
         public uint[] SoundInfoOE;
         public float ChainCameraIn;
         public float ChainCameraOut;
-        public uint Flags;
         public int NodeDrawNum;
-        public int TypeDE;
         public GameTick SkipPointTickDE;
         public AuthPage[] AuthPagesDE;
         public byte[] AuthPagesDEUnk;
@@ -194,6 +192,10 @@ namespace CMNEdit
             advancedTab.DropDownItems.Remove(advancedFrameProgressionButton);
             advancedTab.DropDownItems.Remove(disableFrameInfoButton);
             advancedTab.DropDownItems.Remove(authPagesButton);
+
+            hactFlagsHolder.Visible = false;
+            hactTypeLabel.Visible = false;
+            typeBox.Visible = false;
         }
 
         private void toolStripLabel1_Click(object sender, EventArgs e)
@@ -387,6 +389,8 @@ namespace CMNEdit
                 hactEndBox.Visible = true;
                 IsHact = true;
 
+                hactFlagsHolder.Visible = true;
+
                 //OE/DE HAct
                 uint ver = BitConverter.ToUInt32(buf, 0);
                 bool isDE = ver >= 18 && ver < 25;
@@ -408,6 +412,10 @@ namespace CMNEdit
                     curGame = (Game)targetGameCombo.SelectedIndex;
                     curVer = CMN.GetVersionForGame(curGame);
                     HAct = CMN.Read(buf, curGame);
+
+                    hactTypeLabel.Visible = true;
+                    typeBox.Visible = true;
+
                     OnOpenDEFormat();
                 }
                 else
@@ -424,13 +432,13 @@ namespace CMNEdit
                 CutInfos = HAct.CutInfo.ToList();
                 ChainCameraIn = HAct.GetChainCameraIn();
                 ChainCameraOut = HAct.GetChainCameraOut();
-                Flags = HAct.GetFlags();
+                flagsBox.Text = HAct.GetFlags().ToString();
                 NodeDrawNum = HAct.GetNodeDrawNum();
 
                 if (isDE)
                 {
                     CMN hactDE = (HAct as CMN);
-                    TypeDE = hactDE.Header.Type;
+                    typeBox.Text = hactDE.Header.Type.ToString();
                     SkipPointTickDE = hactDE.Header.SkipPointTick;
                     SoundInfoDE = hactDE.SoundInfo;
                     AuthPagesDE = hactDE.AuthPages.ToArray();
@@ -1034,6 +1042,17 @@ namespace CMNEdit
                 case AuthNodeCategory.Asset:
                     if (CMN.IsDE(curVer))
                         DENodeAssetWindow.Draw(this, node);
+                    else
+                    {
+                        OENodeAsset assetOE = node as OENodeAsset;
+
+                        CreateHeader("Asset");
+                        CreateInput("Unknown", assetOE.Unknown1.ToString(), delegate (string val) { assetOE.Unknown1 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                        CreateInput("Unknown", assetOE.Unknown2.ToString(), delegate (string val) { assetOE.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                        CreateInput("Unknown", assetOE.Unknown3.ToString(), delegate (string val) { assetOE.Unknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                        CreateInput("Unknown", assetOE.Unknown4.ToString(), delegate (string val) { assetOE.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
+
+                    }
                     break;
 
                 case AuthNodeCategory.CameraMotion:
@@ -1648,7 +1667,7 @@ namespace CMNEdit
             cmn.SetChainCameraIn(ChainCameraIn);
             cmn.SetChainCameraOut(ChainCameraOut);
             cmn.ResourceCutInfo = ResourceCutInfos;
-            cmn.SetFlags(Flags);
+            cmn.SetFlags(uint.Parse(flagsBox.Text));
             cmn.SetNodeDrawNum(NodeDrawNum);
 
             TreeViewItemNode[] nodes = GetAllNodesTreeView();
@@ -1674,7 +1693,7 @@ namespace CMNEdit
             CMN cmn = new CMN();
             cmn.GameVersion = CMN.GetVersionForGame(curGame);
             cmn.SoundInfo = SoundInfoDE;
-            cmn.Header.Type = TypeDE;
+            cmn.Header.Type = int.Parse(typeBox.Text.ToString());
             cmn.AuthPages = AuthPagesDE.ToList();
             cmn.AuthPageUnk = AuthPagesDEUnk;
             cmn.Header.SkipPointTick = SkipPointTickDE;
@@ -2218,7 +2237,7 @@ namespace CMNEdit
             if (editingResourceModern != null)
             {
                 EditingResource.Text = resourceNameTextbox.Text;
-                editingResourceModern.Name = resourceNameTextbox.Text;
+                editingResourceModern.Resource.Name = resourceNameTextbox.Text;
                 editingResourceModern.Resource.Type = (ResourceType)resourceTypeBox.SelectedIndex;
 
                 var array = (Node[])(EditingResourceCurrentLinkedNodes);

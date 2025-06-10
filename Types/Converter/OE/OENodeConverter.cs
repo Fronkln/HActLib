@@ -79,6 +79,10 @@ namespace HActLib
                     node = new NodeModel();
                     break;
 
+                case AuthNodeCategory.Asset:
+                    node = new OENodeAsset();
+                    break;
+
                 case AuthNodeCategory.Element:
                     //Does the current ID have a element linked to it
                     if (Reflection.ElementNodes[CMN.LastHActDEGame].ContainsKey(elementKind))

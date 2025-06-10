@@ -205,6 +205,24 @@ namespace HActLib
                         convertedResource.Unk1 = 2;
                         convertedResource.Unk2 = 1;
 
+                        DENodeCharacter characterNode = (DENodeCharacter)cmn.FindNodeByGUID(guid);
+
+                        if(characterNode != null)
+                        {
+                            string scaleLookup = "height_" + ooeResource.UnknownData[3].ToString();
+                            DECharacterScaleID scale;
+                            try
+                            {
+                                scale = (DECharacterScaleID)Enum.Parse(typeof(DECharacterScaleID), Enum.GetNames<DECharacterScaleID>().FirstOrDefault(x => x == scaleLookup));
+                            }
+                            catch
+                            {
+                                scale = DECharacterScaleID.invalid;
+                            }
+
+                            characterNode.ScaleID = (uint)scale;
+                        }
+
                         //Height is also stored on OOE res. do that later
                         break;
                     case AuthResourceOOEType.CameraMotion:

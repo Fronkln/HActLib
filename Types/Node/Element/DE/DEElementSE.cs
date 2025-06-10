@@ -62,7 +62,7 @@ namespace HActLib
                 SEVer = reader.ReadInt32();
 
             ushort soundIndexUnfiltered = reader.ReadUInt16();
-            SoundIndex = soundIndexUnfiltered = (ushort)(soundIndexUnfiltered & ~(1 << 15));
+            SoundIndex = (ushort)(soundIndexUnfiltered & ~(1 << 15));
 
             Unk = (byte)((soundIndexUnfiltered >> 15) & 1);
             CueSheet = reader.ReadUInt16();
@@ -121,6 +121,15 @@ namespace HActLib
             return 48;
         }
 
+        public static bool IsSpecialCuesheet(ushort cuesheet, Game game)
+        {
+            Type type = GetSpecialSoundTypeForGame(game);
+
+            if (type == null)
+                return false;
+
+            return Enum.IsDefined(type, cuesheet);
+        }
         public static Type GetSoundCuesheetTypeForGame(Game game)
         {
             switch(game)

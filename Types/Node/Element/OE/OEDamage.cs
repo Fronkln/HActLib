@@ -12,20 +12,21 @@ namespace HActLib
     {
         public ushort Unk1 = 1;
         public ushort Unk2 = 3;
+        public int ForceDead = 0;
+        public int Vanish = 0;
 
         public int Damage = 200;
         public bool NoDead = false;
-
-        private byte[] unkDat1 = new byte[8];
 
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             Unk1 = reader.ReadUInt16();
             Unk2 = reader.ReadUInt16();
             Damage = reader.ReadInt32();
-            unkDat1 = reader.ReadBytes(8);
+            ForceDead = reader.ReadInt32();
+            Vanish = reader.ReadInt32();
             NoDead = reader.ReadUInt32() > 0;
-            reader.ReadBytes(12);
+            //reader.ReadBytes(12);
         }
 
         internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
@@ -33,9 +34,10 @@ namespace HActLib
             writer.Write(Unk1);
             writer.Write(Unk2);
             writer.Write(Damage);
-            writer.Write(unkDat1);
+            writer.Write(ForceDead);
+            writer.Write(Vanish);
             writer.Write(Convert.ToInt32(NoDead));
-            writer.WriteTimes(0, 12);
+           // writer.WriteTimes(0, 12);
         }
     }
 }
