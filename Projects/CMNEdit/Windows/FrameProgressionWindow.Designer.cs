@@ -137,7 +137,7 @@ namespace Frame_Progression_GUI
             button7.Name = "button7";
             button7.Size = new System.Drawing.Size(138, 23);
             button7.TabIndex = 12;
-            button7.Text = "Export QC Events";
+            button7.Text = "Export Progression";
             button7.UseVisualStyleBackColor = true;
             button7.Click += button7_Click;
             // 
@@ -147,7 +147,7 @@ namespace Frame_Progression_GUI
             button8.Name = "button8";
             button8.Size = new System.Drawing.Size(138, 23);
             button8.TabIndex = 13;
-            button8.Text = "Export Lua Events";
+            button8.Text = "Clipboard All";
             button8.UseVisualStyleBackColor = true;
             button8.Click += button8_Click;
             // 
