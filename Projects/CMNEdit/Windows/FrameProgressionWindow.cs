@@ -11,6 +11,7 @@ using HActLib;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using CMNEdit;
+using System.IO;
 
 namespace Frame_Progression_GUI
 {
@@ -268,6 +269,57 @@ namespace Frame_Progression_GUI
                 float curVal = CMNEdit.Utils.InvariantParse(frameProgression.Items[i].Text);
                 float newVal = curVal + val;
                 frameProgression.Items[i].Text = newVal.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.Title = "Export Frame Progression";
+            
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("Frame | Speed Change");
+                    sb.AppendLine("-------------------");
+                    
+                    foreach (ListViewItem item in frameProgression.Items)
+                    {
+                        sb.AppendLine($"{item.Text} | {item.SubItems[1].Text}");
+                    }
+                    
+                    File.WriteAllText(saveFileDialog.FileName, sb.ToString());
+                    MessageBox.Show("Frame progression exported successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error exporting frame progression: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Frame | Speed Change");
+                sb.AppendLine("-------------------");
+                
+                foreach (ListViewItem item in frameProgression.Items)
+                {
+                    sb.AppendLine($"{item.Text} | {item.SubItems[1].Text}");
+                }
+                
+                Clipboard.SetText(sb.ToString());
+                MessageBox.Show("Frame progression copied to clipboard!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error copying to clipboard: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

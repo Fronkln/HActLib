@@ -1,4 +1,6 @@
-﻿namespace Frame_Progression_GUI
+﻿using System.Windows.Forms;
+
+namespace Frame_Progression_GUI
 {
     partial class FrameProgressionWindow
     {
@@ -28,126 +30,147 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cameraList = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.frameProgression = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.button6 = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            cameraList = new ListBox();
+            button1 = new Button();
+            button2 = new Button();
+            button3 = new Button();
+            button4 = new Button();
+            button5 = new Button();
+            frameProgression = new ListView();
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
+            button6 = new Button();
+            button7 = new Button();
+            button8 = new Button();
+            SuspendLayout();
             // 
             // cameraList
             // 
-            this.cameraList.FormattingEnabled = true;
-            this.cameraList.ItemHeight = 15;
-            this.cameraList.Location = new System.Drawing.Point(12, 12);
-            this.cameraList.Name = "cameraList";
-            this.cameraList.Size = new System.Drawing.Size(211, 79);
-            this.cameraList.TabIndex = 4;
+            cameraList.FormattingEnabled = true;
+            cameraList.Location = new System.Drawing.Point(12, 12);
+            cameraList.Name = "cameraList";
+            cameraList.Size = new System.Drawing.Size(211, 79);
+            cameraList.TabIndex = 4;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(242, 89);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(138, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Delete Selected";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Location = new System.Drawing.Point(242, 89);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(138, 23);
+            button1.TabIndex = 5;
+            button1.Text = "Delete Selected";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(242, 60);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(138, 23);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "Insert After Selected";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            button2.Location = new System.Drawing.Point(242, 60);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(138, 23);
+            button2.TabIndex = 6;
+            button2.Text = "Insert After Selected";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(242, 28);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(138, 26);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Overwrite Selected";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            button3.Location = new System.Drawing.Point(242, 28);
+            button3.Name = "button3";
+            button3.Size = new System.Drawing.Size(138, 26);
+            button3.TabIndex = 7;
+            button3.Text = "Overwrite Selected";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(242, 194);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(138, 23);
-            this.button4.TabIndex = 8;
-            this.button4.Text = "Copy Progression";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            button4.Location = new System.Drawing.Point(242, 194);
+            button4.Name = "button4";
+            button4.Size = new System.Drawing.Size(138, 23);
+            button4.TabIndex = 8;
+            button4.Text = "Copy Progression";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(242, 223);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(138, 23);
-            this.button5.TabIndex = 9;
-            this.button5.Text = "Paste Progression";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            button5.Location = new System.Drawing.Point(242, 223);
+            button5.Name = "button5";
+            button5.Size = new System.Drawing.Size(138, 23);
+            button5.TabIndex = 9;
+            button5.Text = "Paste Progression";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // frameProgression
             // 
-            this.frameProgression.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.frameProgression.Location = new System.Drawing.Point(14, 97);
-            this.frameProgression.Name = "frameProgression";
-            this.frameProgression.Size = new System.Drawing.Size(209, 311);
-            this.frameProgression.TabIndex = 10;
-            this.frameProgression.UseCompatibleStateImageBehavior = false;
-            this.frameProgression.View = System.Windows.Forms.View.Details;
+            frameProgression.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2 });
+            frameProgression.Location = new System.Drawing.Point(14, 97);
+            frameProgression.Name = "frameProgression";
+            frameProgression.Size = new System.Drawing.Size(209, 311);
+            frameProgression.TabIndex = 10;
+            frameProgression.UseCompatibleStateImageBehavior = false;
+            frameProgression.View = View.Details;
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Frame";
+            columnHeader1.Text = "Frame";
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Speed Change";
-            this.columnHeader2.Width = 100;
+            columnHeader2.Text = "Speed Change";
+            columnHeader2.Width = 100;
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(242, 141);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(138, 23);
-            this.button6.TabIndex = 11;
-            this.button6.Text = "Adjust Selected";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            button6.Location = new System.Drawing.Point(242, 141);
+            button6.Name = "button6";
+            button6.Size = new System.Drawing.Size(138, 23);
+            button6.TabIndex = 11;
+            button6.Text = "Adjust Selected";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
+            // 
+            // button7
+            // 
+            button7.Location = new System.Drawing.Point(242, 252);
+            button7.Name = "button7";
+            button7.Size = new System.Drawing.Size(138, 23);
+            button7.TabIndex = 12;
+            button7.Text = "Export Progression";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
+            // button8
+            // 
+            button8.Location = new System.Drawing.Point(242, 281);
+            button8.Name = "button8";
+            button8.Size = new System.Drawing.Size(138, 23);
+            button8.TabIndex = 13;
+            button8.Text = "Clipboard All";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // FrameProgressionWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(392, 431);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.frameProgression);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.cameraList);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "FrameProgressionWindow";
-            this.Text = "Frame Progression";
-            this.TopMost = true;
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(392, 431);
+            Controls.Add(button8);
+            Controls.Add(button7);
+            Controls.Add(button6);
+            Controls.Add(frameProgression);
+            Controls.Add(button5);
+            Controls.Add(button4);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(cameraList);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Name = "FrameProgressionWindow";
+            Text = "Frame Progression";
+            TopMost = true;
+            ResumeLayout(false);
 
         }
 
@@ -162,5 +185,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
