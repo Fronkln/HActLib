@@ -133,7 +133,7 @@ namespace Frame_Progression_GUI
             // 
             // button7
             // 
-            button7.Location = new System.Drawing.Point(242, 252);
+            button7.Location = new System.Drawing.Point(242, 355);
             button7.Name = "button7";
             button7.Size = new System.Drawing.Size(138, 23);
             button7.TabIndex = 12;
@@ -143,7 +143,7 @@ namespace Frame_Progression_GUI
             // 
             // button8
             // 
-            button8.Location = new System.Drawing.Point(242, 281);
+            button8.Location = new System.Drawing.Point(242, 384);
             button8.Name = "button8";
             button8.Size = new System.Drawing.Size(138, 23);
             button8.TabIndex = 13;
@@ -171,7 +171,6 @@ namespace Frame_Progression_GUI
             Text = "Frame Progression";
             TopMost = true;
             ResumeLayout(false);
-
         }
 
         #endregion

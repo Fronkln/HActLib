@@ -28,6 +28,9 @@ namespace HActLib
 
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
+            if (inf.version > 15)
+                return;
+
             uint count = reader.ReadUInt32();
             UnkNum = reader.ReadInt32();
 
@@ -51,6 +54,9 @@ namespace HActLib
 
         internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
+            if (hactVer > 15)
+                return;
+
             writer.Write(Subtitles.Count);
             writer.Write(UnkNum);
 

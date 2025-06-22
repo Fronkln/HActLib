@@ -33,7 +33,10 @@
             System.Windows.Forms.Label label6;
             System.Windows.Forms.Label label7;
             System.Windows.Forms.Label label14;
+            System.Windows.Forms.Label label15;
+            System.Windows.Forms.Label label16;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            framesInNameBox = new System.Windows.Forms.CheckBox();
             hactTypeLabel = new System.Windows.Forms.Label();
             targetGameLbl = new System.Windows.Forms.Label();
             appTools = new System.Windows.Forms.ToolStrip();
@@ -67,6 +70,7 @@
             toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             adjustTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             moveTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            reorderBasedOnTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             test2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
@@ -145,10 +149,17 @@
             hactFlagsHolder = new System.Windows.Forms.Panel();
             flagsBox = new System.Windows.Forms.TextBox();
             typeBox = new System.Windows.Forms.TextBox();
+            cameraInPanel = new System.Windows.Forms.Panel();
+            cameraOutBox = new System.Windows.Forms.TextBox();
+            cameraInBox = new System.Windows.Forms.TextBox();
+            authToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            segmentAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
             label14 = new System.Windows.Forms.Label();
+            label15 = new System.Windows.Forms.Label();
+            label16 = new System.Windows.Forms.Label();
             appTools.SuspendLayout();
             nodeContext.SuspendLayout();
             hactTabs.SuspendLayout();
@@ -169,6 +180,7 @@
             csvContextHEvent.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
             hactFlagsHolder.SuspendLayout();
+            cameraInPanel.SuspendLayout();
             SuspendLayout();
             // 
             // label5
@@ -211,6 +223,37 @@
             label14.TabIndex = 7;
             label14.Text = "Flags";
             // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            label15.Location = new System.Drawing.Point(3, 0);
+            label15.Name = "label15";
+            label15.Size = new System.Drawing.Size(87, 21);
+            label15.TabIndex = 8;
+            label15.Text = "Camera In";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            label16.Location = new System.Drawing.Point(105, 0);
+            label16.Name = "label16";
+            label16.Size = new System.Drawing.Size(100, 21);
+            label16.TabIndex = 9;
+            label16.Text = "Camera Out";
+            // 
+            // framesInNameBox
+            // 
+            framesInNameBox.AutoSize = true;
+            framesInNameBox.Location = new System.Drawing.Point(375, 428);
+            framesInNameBox.Name = "framesInNameBox";
+            framesInNameBox.Size = new System.Drawing.Size(155, 19);
+            framesInNameBox.TabIndex = 12;
+            framesInNameBox.Text = "Start/End in Node Name";
+            framesInNameBox.UseVisualStyleBackColor = true;
+            framesInNameBox.CheckedChanged += framesInNameBox_CheckedChanged;
+            // 
             // hactTypeLabel
             // 
             hactTypeLabel.AutoSize = true;
@@ -239,6 +282,7 @@
             appTools.Size = new System.Drawing.Size(967, 25);
             appTools.TabIndex = 0;
             appTools.Text = "Tools";
+            appTools.ItemClicked += appTools_ItemClicked;
             // 
             // toolStripDropDownButton1
             // 
@@ -437,7 +481,7 @@
             // toolStripSplitButton1
             // 
             toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { adjustTimingToolStripMenuItem, moveTimingToolStripMenuItem, testToolStripMenuItem, test2ToolStripMenuItem });
+            toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { adjustTimingToolStripMenuItem, moveTimingToolStripMenuItem, reorderBasedOnTimingToolStripMenuItem, testToolStripMenuItem, test2ToolStripMenuItem });
             toolStripSplitButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripSplitButton1.Image");
             toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripSplitButton1.Name = "toolStripSplitButton1";
@@ -448,35 +492,42 @@
             // adjustTimingToolStripMenuItem
             // 
             adjustTimingToolStripMenuItem.Name = "adjustTimingToolStripMenuItem";
-            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             adjustTimingToolStripMenuItem.Text = "Adjust Timing";
             adjustTimingToolStripMenuItem.Click += adjustTimingToolStripMenuItem_Click;
             // 
             // moveTimingToolStripMenuItem
             // 
             moveTimingToolStripMenuItem.Name = "moveTimingToolStripMenuItem";
-            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             moveTimingToolStripMenuItem.Text = "Move Timing";
             moveTimingToolStripMenuItem.Click += moveTimingToolStripMenuItem_Click;
+            // 
+            // reorderBasedOnTimingToolStripMenuItem
+            // 
+            reorderBasedOnTimingToolStripMenuItem.Name = "reorderBasedOnTimingToolStripMenuItem";
+            reorderBasedOnTimingToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            reorderBasedOnTimingToolStripMenuItem.Text = "Reorder Based On Timing";
+            reorderBasedOnTimingToolStripMenuItem.Click += reorderBasedOnTimingToolStripMenuItem_Click;
             // 
             // testToolStripMenuItem
             // 
             testToolStripMenuItem.Name = "testToolStripMenuItem";
-            testToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            testToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             testToolStripMenuItem.Text = "OOE to DE Auth Test";
             testToolStripMenuItem.Click += testToolStripMenuItem_Click;
             // 
             // test2ToolStripMenuItem
             // 
             test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
-            test2ToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            test2ToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             test2ToolStripMenuItem.Text = "OOE to OE Auth Test";
             test2ToolStripMenuItem.Click += test2ToolStripMenuItem_Click;
             // 
             // advancedButton
             // 
             advancedButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, authPagesDEToolStripMenuItem, convertToolStripMenuItem });
+            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, authPagesDEToolStripMenuItem, convertToolStripMenuItem, authToolStripMenuItem });
             advancedButton.Image = (System.Drawing.Image)resources.GetObject("advancedButton.Image");
             advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             advancedButton.Name = "advancedButton";
@@ -486,21 +537,21 @@
             // frameProgressionToolStripMenuItem
             // 
             frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
-            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             frameProgressionToolStripMenuItem.Text = "Frame Progression";
             frameProgressionToolStripMenuItem.Click += frameProgressionToolStripMenuItem_Click;
             // 
             // disableFrameInfoToolStripMenuItem
             // 
             disableFrameInfoToolStripMenuItem.Name = "disableFrameInfoToolStripMenuItem";
-            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             disableFrameInfoToolStripMenuItem.Text = "Disable Frame Info";
             disableFrameInfoToolStripMenuItem.Click += disableFrameInfoToolStripMenuItem_Click;
             // 
             // authPagesDEToolStripMenuItem
             // 
             authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
-            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
             authPagesDEToolStripMenuItem.Click += authPagesDEToolStripMenuItem_Click;
             // 
@@ -508,7 +559,7 @@
             // 
             convertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertToOtherDEToolStripMenuItem, bulkConvertBEPToolStripMenuItem, convertOEPropertybinToBEPToolStripMenuItem, convertMEPWithPibsToolStripMenuItem1 });
             convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            convertToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            convertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             convertToolStripMenuItem.Text = "Convert";
             // 
             // convertToOtherDEToolStripMenuItem
@@ -1213,11 +1264,52 @@
             typeBox.Size = new System.Drawing.Size(85, 23);
             typeBox.TabIndex = 8;
             // 
+            // cameraInPanel
+            // 
+            cameraInPanel.Controls.Add(cameraOutBox);
+            cameraInPanel.Controls.Add(cameraInBox);
+            cameraInPanel.Controls.Add(label16);
+            cameraInPanel.Controls.Add(label15);
+            cameraInPanel.Location = new System.Drawing.Point(623, 12);
+            cameraInPanel.Name = "cameraInPanel";
+            cameraInPanel.Size = new System.Drawing.Size(276, 42);
+            cameraInPanel.TabIndex = 13;
+            // 
+            // cameraOutBox
+            // 
+            cameraOutBox.Location = new System.Drawing.Point(109, 19);
+            cameraOutBox.Name = "cameraOutBox";
+            cameraOutBox.Size = new System.Drawing.Size(85, 23);
+            cameraOutBox.TabIndex = 11;
+            // 
+            // cameraInBox
+            // 
+            cameraInBox.Location = new System.Drawing.Point(5, 19);
+            cameraInBox.Name = "cameraInBox";
+            cameraInBox.Size = new System.Drawing.Size(85, 23);
+            cameraInBox.TabIndex = 10;
+            // 
+            // authToolStripMenuItem
+            // 
+            authToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { segmentAuthToolStripMenuItem });
+            authToolStripMenuItem.Name = "authToolStripMenuItem";
+            authToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            authToolStripMenuItem.Text = "Auth";
+            // 
+            // segmentAuthToolStripMenuItem
+            // 
+            segmentAuthToolStripMenuItem.Name = "segmentAuthToolStripMenuItem";
+            segmentAuthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            segmentAuthToolStripMenuItem.Text = "Segment Auth";
+            segmentAuthToolStripMenuItem.Click += segmentAuthToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(967, 469);
+            Controls.Add(cameraInPanel);
+            Controls.Add(framesInNameBox);
             Controls.Add(hactFlagsHolder);
             Controls.Add(langOverrideLbl);
             Controls.Add(langOverrideBox);
@@ -1259,6 +1351,8 @@
             contextMenuStrip1.ResumeLayout(false);
             hactFlagsHolder.ResumeLayout(false);
             hactFlagsHolder.PerformLayout();
+            cameraInPanel.ResumeLayout(false);
+            cameraInPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1376,5 +1470,12 @@
         private System.Windows.Forms.TextBox flagsBox;
         private System.Windows.Forms.TextBox typeBox;
         private System.Windows.Forms.Label hactTypeLabel;
+        private System.Windows.Forms.ToolStripMenuItem reorderBasedOnTimingToolStripMenuItem;
+        private System.Windows.Forms.CheckBox framesInNameBox;
+        private System.Windows.Forms.Panel cameraInPanel;
+        private System.Windows.Forms.TextBox cameraInBox;
+        private System.Windows.Forms.TextBox cameraOutBox;
+        private System.Windows.Forms.ToolStripMenuItem authToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem segmentAuthToolStripMenuItem;
     }
 }

@@ -64,8 +64,6 @@ namespace CMNEdit
         public float[] ResourceCutInfos;
         public float[] SoundInfoDE;
         public uint[] SoundInfoOE;
-        public float ChainCameraIn;
-        public float ChainCameraOut;
         public int NodeDrawNum;
         public GameTick SkipPointTickDE;
         public AuthPage[] AuthPagesDE;
@@ -99,6 +97,7 @@ namespace CMNEdit
         private static HActDir hactInf;
         public string ResPath = "";
 
+        public static bool TimingInName = false;
         public static bool TranslateNames = false;
 
         private ToolStripItem _convertMepButton;
@@ -169,6 +168,7 @@ namespace CMNEdit
             EditingNode = null;
             EditingResource = null;
 
+            cameraInPanel.Visible = false;
             nodesTree.SelNodes.Clear();
             nodesTree.Nodes.Clear();
             resTree.Nodes.Clear();
@@ -403,7 +403,7 @@ namespace CMNEdit
                     hactTabs.TabPages.Add(resPage);
 
                 if (res.Length > 0)
-                   OnImportResFile(res[0].FindResourceFile().Path);;
+                    OnImportResFile(res[0].FindResourceFile().Path); ;
 
                 BaseCMN HAct = null;
 
@@ -424,14 +424,16 @@ namespace CMNEdit
                     curVer = GameVersion.Y0_K1;
                     curGame = (Game)targetGameCombo.SelectedIndex;
                     IsOE = true;
+
+                    cameraInPanel.Visible = true;
                 }
 
                 Version = HAct.Version;
                 DisableFrameInfos = HAct.DisableFrameInfo.ToArray();
                 ResourceCutInfos = HAct.ResourceCutInfo;
                 CutInfos = HAct.CutInfo.ToList();
-                ChainCameraIn = HAct.GetChainCameraIn();
-                ChainCameraOut = HAct.GetChainCameraOut();
+                cameraInBox.Text = HAct.GetChainCameraIn().ToString(CultureInfo.InvariantCulture);
+                cameraOutBox.Text = HAct.GetChainCameraOut().ToString(CultureInfo.InvariantCulture);
                 flagsBox.Text = HAct.GetFlags().ToString();
                 NodeDrawNum = HAct.GetNodeDrawNum();
 
@@ -1664,8 +1666,8 @@ namespace CMNEdit
             cmn.HActEnd = Utils.InvariantParse(hactEndBox.Text);
             cmn.CutInfo = CutInfos.OrderBy(x => x).ToArray();
             cmn.DisableFrameInfo = DisableFrameInfos.ToList();
-            cmn.SetChainCameraIn(ChainCameraIn);
-            cmn.SetChainCameraOut(ChainCameraOut);
+            cmn.SetChainCameraIn(Utils.InvariantParse(cameraInBox.Text));
+            cmn.SetChainCameraOut(Utils.InvariantParse(cameraOutBox.Text));
             cmn.ResourceCutInfo = ResourceCutInfos;
             cmn.SetFlags(uint.Parse(flagsBox.Text));
             cmn.SetNodeDrawNum(NodeDrawNum);
@@ -3122,10 +3124,7 @@ namespace CMNEdit
             {
                 foreach (TreeViewItemNode node in GetAllHActNodesRecursive(rootNode))
                 {
-                    if (Form1.TranslateNames)
-                        node.Text = TreeViewItemNode.TranslateName(node.HActNode);
-                    else
-                        node.Text = node.HActNode.Name;
+                    node.Text = TreeViewItemNode.GetName(node.HActNode);
                 }
             }
 
@@ -3923,6 +3922,76 @@ namespace CMNEdit
                 return;
 
             OOEToOEAuth.Convert(dialog.SelectedPath, Game.Y5);
+        }
+
+        private void reorderBasedOnTimingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Sorting.SortTreeViewByStart(nodesTree);
+        }
+
+        private void framesInNameBox_CheckedChanged(object sender, EventArgs e)
+        {
+            TimingInName = framesInNameBox.Checked;
+        }
+
+        private void appTools_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void segmentAuthToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Form1.Instance.ResourceCutInfos.Length <= 1)
+                MessageBox.Show("Your HAct does not have more than one resource cut");
+
+            FolderBrowserDialog browser = new FolderBrowserDialog();
+
+            if (browser.ShowDialog() != DialogResult.OK)
+                return;
+
+            string outputPath = browser.SelectedPath;
+
+            if (!Directory.Exists(outputPath))
+                Directory.CreateDirectory(outputPath);
+
+
+
+            float currentStart = 0;
+            float lastCut = -1;
+
+            for (int i = 0; i < ResourceCutInfos.Length; i++)
+            {
+                string folderDir = Path.Combine(outputPath, i.ToString("D3"));
+
+                if (!Directory.Exists(folderDir))
+                    Directory.CreateDirectory(folderDir);
+
+                float end = ResourceCutInfos[i];
+                float length = end - currentStart;
+
+                //create segmented CMN
+                BaseCMN segmented = null;
+
+                if (IsOE)
+                    segmented = new OECMN();
+                else
+                    segmented = new CMN();
+
+                //create segmented CMN
+                segmented.Version = Version;
+
+
+                if (i > 0)
+                    lastCut = currentStart;
+
+                TreeViewItemNode result = (TreeViewItemNode)Sorting.FilterNodesByRange(Form1.Instance.nodesTree, lastCut, currentStart, end);
+                segmented.Root = result.HActNode;
+
+                if (i != ResourceCutInfos.Length - 1)
+                    currentStart = end;
+
+                OECMN.Write(segmented as OECMN, Path.Combine(folderDir, "cmn.bin"));
+            }
         }
     }
 }

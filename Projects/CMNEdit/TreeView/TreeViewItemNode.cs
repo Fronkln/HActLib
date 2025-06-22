@@ -35,16 +35,35 @@ namespace CMNEdit
             Text = TranslateName(HActNode);
         }
 
+
+        public static string GetName(Node HActNode)
+        {
+            string name = HActNode.Name;
+
+            if (Form1.TranslateNames || Form1.IsBep)
+            {
+                name = TranslateName(HActNode);
+            }
+
+
+            if(Form1.TimingInName)
+            {
+
+                NodeElement elem = HActNode as NodeElement;
+
+                if(elem != null)
+                {
+                    name += $" ({MathF.Round(elem.Start, 2)}-{MathF.Round(elem.End, 2)})";
+                }
+            }
+
+            return name;
+        }
+
         public TreeViewItemNode(Node node) : base()
         {
             HActNode = node;
-
-            if(Form1.TranslateNames || Form1.IsBep)
-            {
-                Text = TranslateName(node);
-            }
-            else
-                Text = node.Name;
+            Text = GetName(node);
 
             foreach (Node children in node.Children)
             {
@@ -207,12 +226,12 @@ namespace CMNEdit
                 bool isOE = Form1.IsOE;
                 string nodeName = Reflection.GetElementNameByID((node as NodeElement).ElementKind, Form1.curGame);
 
+                if (node is NodeElementUser)
+                    return (node as NodeElementUser).UserData.NodeName.Replace("_", " ");
+
 
                 if (!isOE)
                 {
-                    if (node is NodeElementUser)
-                        return (node as NodeElementUser).UserData.NodeName.Replace("_", " ");
-
                     switch (nodeName)
                     {
                         case "e_auth_element_particle":
@@ -267,9 +286,6 @@ namespace CMNEdit
                             OEElementSE seElem = node as OEElementSE;
                             return $"Sound Cue {seElem.Cuesheet.ToString("x")} ID {seElem.Sound}";
                     }
-
-                    if (node is NodeElementUser)
-                        return (node as NodeElementUser).UserData.NodeName;
                 }
 
                 return nodeName.Replace("e_auth_element_", "").Replace("_", " ").ToTitleCase();

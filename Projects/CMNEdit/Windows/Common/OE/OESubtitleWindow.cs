@@ -13,6 +13,9 @@ namespace CMNEdit
         {
             OESubtitle subtitle = node as OESubtitle;
 
+            if (subtitle == null)
+                return;
+
             form.CreateHeader("Subtitle");
 
             form.CreateInput("Unknown", subtitle.UnkNum.ToString(), delegate (string val) { subtitle.UnkNum = int.Parse(val); }, NumberBox.NumberMode.Int);

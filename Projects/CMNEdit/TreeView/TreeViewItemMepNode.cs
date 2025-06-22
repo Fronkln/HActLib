@@ -21,7 +21,7 @@ namespace CMNEdit
             else
             {
                 MepEffectOE oeMep = (node as MepEffectOE);
-                Text = TreeViewItemNode.TranslateName(oeMep.Effect);
+                Text = TreeViewItemNode.GetName(oeMep.Effect);
                 int icon = TreeViewItemNode.SetIcon(oeMep.Effect.Category, oeMep.Effect.Category == AuthNodeCategory.Element ? (oeMep.Effect as NodeElement).ElementKind : 0);
 
                 ImageIndex = icon;

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using System.Drawing;
+using System.Text;
 
 namespace CMNEdit
 {
@@ -15,6 +16,27 @@ namespace CMNEdit
         public static float InvariantParse(string val)
         {
             return float.Parse(val, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public static string ToLength(this string self, int length)
+        {
+            if (self == null)
+                return null;
+
+            if (self.Length == length)
+                return self;
+
+            if (self.Length > length)
+                return self.Substring(0, length);
+
+
+            StringBuilder str = new StringBuilder();
+            str.Append(self);
+
+            while (str.Length != length)
+                str.Append('\0');
+
+            return str.ToString();
         }
 
         public static byte[] BitmapToByteArray(this Bitmap bitmap)

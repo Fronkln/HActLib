@@ -20,6 +20,6 @@
         RGBF32,
         BRGF32,
         FAnimationCurve,
-        AnimationCurve
+        AnimationCurve,
     }
 }

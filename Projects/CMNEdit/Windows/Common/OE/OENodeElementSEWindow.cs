@@ -16,8 +16,8 @@ namespace CMNEdit
             form.CreateSpace(25);
             form.CreateHeader("Sound Effect");
 
-            form.CreateInput("Cuesheet ID", inf.Cuesheet.ToString(), delegate (string val) { inf.Cuesheet = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
-            form.CreateInput("Sound ID", inf.Sound.ToString(), delegate (string val) { inf.Sound = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
+            form.CreateInput("Cuesheet ID", inf.Cuesheet.ToString(), delegate (string val) { inf.Cuesheet = ushort.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
+            form.CreateInput("Sound ID", inf.Sound.ToString(), delegate (string val) { inf.Sound = ushort.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
             form.CreateInput("Flag?", inf.Flags.ToString(), delegate (string val) { inf.Flags = uint.Parse(val); }, NumberBox.NumberMode.UInt);
 
 

@@ -12,6 +12,7 @@ namespace HActLib
     {
         public string Name;
         public object Value;
+        public int Length;
         public UserElementFieldType FieldType;
         public List<string> Args = new List<string>();
 
@@ -78,6 +79,9 @@ namespace HActLib
                 case UserElementFieldType.ByteArray:
                     foreach (byte b in (byte[])Value)
                         writer.Write(b);
+                    break;
+                case UserElementFieldType.FixedString:
+                    writer.Write(Value.ToString().ToLength(Length));
                     break;
             }
         }
@@ -157,6 +161,11 @@ namespace HActLib
                     Value = barray;
                     break;
 
+                case UserElementFieldType.FixedString:
+                    Length = int.Parse(Args[0]);
+
+                    Value = reader.ReadString(Length);
+                    break;
             }
         }
     }

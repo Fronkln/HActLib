@@ -27,6 +27,9 @@ namespace CMNEdit
                     break;
                 case UserElementFieldType.ByteArray:
                     break;
+                case UserElementFieldType.FixedString:
+                    form.CreateInput(fieldName, field.Value.ToString(), delegate(string val) { field.Value = val; });
+                    break;
                 case UserElementFieldType.Byte:
                     form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = byte.Parse(val); }, NumberBox.NumberMode.Byte);
                     break;
