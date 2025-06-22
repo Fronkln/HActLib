@@ -889,49 +889,6 @@ namespace HActLib
                 Root = value[0];
             }
         }
-
-        public NodeElement[] AllElements
-        {
-            get
-            {
-                List<NodeElement> elements = new List<NodeElement>();
-
-                void Process(Node node)
-                {
-                    if (node.Category == AuthNodeCategory.Element)
-                        elements.Add(node as NodeElement);
-
-                    foreach (Node child in node.Children)
-                        Process(child);
-                }
-
-                Process(Root);
-
-                return elements.ToArray();
-            }
-        }
-
-        public NodeCamera[] AllCameras
-        {
-            get
-            {
-                List<NodeCamera> cameras = new List<NodeCamera>();
-
-                void Process(Node node)
-                {
-                    if (node.Category == AuthNodeCategory.Camera)
-                        cameras.Add(node as NodeCamera);
-
-                    foreach (Node child in node.Children)
-                        Process(child);
-                }
-
-                Process(Root);
-
-                return cameras.ToArray();
-            }
-        }
-
         public DENodeCharacter[] AllCharacters
         {
             get

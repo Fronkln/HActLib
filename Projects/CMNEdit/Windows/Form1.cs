@@ -22,6 +22,7 @@ using MotionLib;
 using HActLib.Internal;
 using HActLib.OOE;
 using HActLib.YAct;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace CMNEdit
 {
@@ -3941,8 +3942,14 @@ namespace CMNEdit
 
         private void segmentAuthToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (Form1.Instance.ResourceCutInfos == null)
+                return;
+
             if (Form1.Instance.ResourceCutInfos.Length <= 1)
+            {
                 MessageBox.Show("Your HAct does not have more than one resource cut");
+                return;
+            }
 
             FolderBrowserDialog browser = new FolderBrowserDialog();
 
@@ -3961,7 +3968,7 @@ namespace CMNEdit
 
             for (int i = 0; i < ResourceCutInfos.Length; i++)
             {
-                string folderDir = Path.Combine(outputPath, i.ToString("D3"));
+                string folderDir = Path.Combine(outputPath, i.ToString("D3") + "_segment");
 
                 if (!Directory.Exists(folderDir))
                     Directory.CreateDirectory(folderDir);
@@ -3979,11 +3986,29 @@ namespace CMNEdit
 
                 //create segmented CMN
                 segmented.Version = Version;
+                segmented.SetFlags(uint.Parse(flagsBox.Text));
+                segmented.HActEnd = length;
+                segmented.SetChainCameraIn(Utils.InvariantParse(cameraInBox.Text));
+                segmented.SetChainCameraOut(Utils.InvariantParse(cameraOutBox.Text));
+                segmented.ResourceCutInfo = new float[] { length };
+                segmented.SetNodeDrawNum(NodeDrawNum);
 
+
+                //filter cut info
+                List<float> cutInfoSegment = new List<float>();
+
+                foreach (float cutInfo in CutInfos)
+                {
+                    if (cutInfo >= currentStart && cutInfo <= end)
+                        cutInfoSegment.Add(Utils.ConvertRange(cutInfo, currentStart, end, 0, length));
+                }
+
+                segmented.CutInfo = cutInfoSegment.ToArray();
 
                 if (i > 0)
                     lastCut = currentStart;
 
+                //filter nodes
                 TreeViewItemNode result = (TreeViewItemNode)Sorting.FilterNodesByRange(Form1.Instance.nodesTree, lastCut, currentStart, end);
                 segmented.Root = result.HActNode;
 
@@ -3992,6 +4017,101 @@ namespace CMNEdit
 
                 OECMN.Write(segmented as OECMN, Path.Combine(folderDir, "cmn.bin"));
             }
+        }
+
+        private void reassembleAuthToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog browser = new FolderBrowserDialog();
+
+            if (browser.ShowDialog() != DialogResult.OK)
+                return;
+
+            string inputPath = browser.SelectedPath;
+            string outputPath = Path.Combine(browser.SelectedPath, "..", new DirectoryInfo(browser.SelectedPath).Name + "_reassembled");
+            string outputCmnDir = Path.Combine(outputPath, "cmn");
+            string outputCmnPath = Path.Combine(outputCmnDir, "cmn.bin");
+
+            if(!Directory.Exists(outputPath))
+                Directory.CreateDirectory(outputPath);
+
+            if (!Directory.Exists(outputCmnDir))
+                Directory.CreateDirectory(outputCmnDir);
+
+            var game = (Game)targetGameCombo.SelectedIndex;
+
+            BaseCMN cmn = null;
+            int curSegment = 0;
+
+
+            List<float> resourceCuts = new List<float>();
+            List<float> cutInfos = new List<float>();
+
+
+            List<NodeElement> multiPartNodes = new List<NodeElement>();
+
+
+            while (true)
+            {
+                string segmentPath = Path.Combine(inputPath, curSegment.ToString("D3") + "_segment");
+
+                if (!Directory.Exists(segmentPath))
+                    break;
+
+                string cmnFile = Path.Combine(segmentPath, "cmn.bin");
+
+                if (!File.Exists(cmnFile))
+                    break;
+
+                BaseCMN segment = BaseCMN.ReadGeneric(cmnFile, game);
+
+
+
+                //we will add on this segment to get the full thing
+                if (cmn == null)
+                {
+                    resourceCuts = new List<float>(segment.ResourceCutInfo);
+                    cutInfos = new List<float>(segment.CutInfo);
+                    cmn = segment;
+                }
+                else
+                {
+                    foreach (float cutinfo in segment.CutInfo)
+                    {
+                        cutInfos.Add(cutinfo + cmn.HActEnd);
+                    }
+
+                    resourceCuts.Add(segment.ResourceCutInfo[0] + cmn.HActEnd);
+
+
+                    float oldEnd = cmn.HActEnd;
+                    cmn.HActEnd += segment.HActEnd;
+                    foreach(NodeElement element in segment.AllElements)
+                    {
+                        NodeElement originalNode = (NodeElement)cmn.FindNodeByGUID(element.Guid);
+
+                        if (originalNode != null)
+                        {
+                            originalNode.End += element.Start;
+                            originalNode.End += element.End;
+                        }
+                        else
+                        {
+                            Node originalParent = cmn.FindNodeByGUID(element.Parent.Guid);
+                            originalParent.Children.Add(element);
+
+                            element.Start += oldEnd;
+                            element.End += oldEnd;
+                        }
+                    }
+                }
+
+                curSegment++;
+            }
+
+            cmn.CutInfo = cutInfos.Distinct().ToArray();
+            cmn.ResourceCutInfo = resourceCuts.ToArray();
+
+            BaseCMN.WriteGeneric(outputCmnPath, cmn);
         }
     }
 }

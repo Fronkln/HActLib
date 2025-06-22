@@ -59,10 +59,13 @@ namespace CMNEdit
             return 0;
         }
 
+        //sometimes there are bogus cuts (aka order, 0, 282, 488, 680, 953, 952 (???)
+        //resource cuts are -1 frame (hact end is 952, resource cut says 953)
         //returns a copy with filtered ones
         //for the auth segmetnter
         public static TreeNode FilterNodesByRange(TreeView treeView, float lastCut, float start, float end, bool adjustRelative = true)
         {
+
             float length = end - start;
 
             TreeNode Iterate(TreeNode node)
@@ -72,35 +75,60 @@ namespace CMNEdit
                 if (nodeH == null)
                     return null;
 
-                if(nodeH.HActNode as NodeElement != null)
+
+                bool globalNode = false;
+                bool inrange = false;
+
+
+                if (nodeH.HActNode as NodeElement != null)
                 {
                     NodeElement nodeHElement = nodeH.HActNode as NodeElement;
 
                     //heuteristic
                     float multiPartLimit = 30;
 
+
+                    globalNode = nodeHElement.Start == 0 && nodeHElement.End >= end - 1;
+                    inrange = nodeHElement.Start + multiPartLimit <= nodeHElement.Start && nodeHElement.Start < start && nodeHElement.End < end;
+
                     //multi-cut node
-                    if (lastCut > -1 && nodeHElement.Start + multiPartLimit <= nodeHElement.Start && nodeHElement.Start < start && nodeHElement.End < end)
+                    if (lastCut > -1 && (globalNode || inrange))
                     {
                         ;
                     }
                     else if (nodeHElement.Start < start || nodeHElement.Start > end)
                         return null;
-
-                    if (adjustRelative)
-                    {
-                        nodeHElement.Start = nodeHElement.Start - start;
-
-                        if (nodeHElement.End > end)
-                            nodeHElement.End = end;
-                    }
                 }
 
                 TreeViewItemNode nodeNew = (TreeViewItemNode)node.Clone();
                 nodeNew.HActNode.Guid = nodeH.HActNode.Guid;
                 nodeNew.Nodes.Clear();
 
-                foreach(TreeNode child in node.Nodes)
+
+                NodeElement newElem = nodeNew.HActNode as NodeElement;
+
+                if(newElem != null)
+                {
+                    if (adjustRelative)
+                    {
+
+                        if (newElem.End > end)
+                            newElem.End = end;
+
+                        if (lastCut > -1)
+                        {
+                            float newEnd = Utils.ConvertRange(newElem.End, start, end, 0, length);
+                            newElem.End = newEnd;
+                        }
+
+                        if(!globalNode)
+                            newElem.Start = newElem.Start - start;
+                    }
+
+                }
+
+
+                foreach (TreeNode child in node.Nodes)
                 {
                     if (child as TreeViewItemNode == null)
                         continue;

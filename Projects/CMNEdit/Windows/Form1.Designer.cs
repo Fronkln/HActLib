@@ -82,6 +82,8 @@
             bulkConvertBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             convertOEPropertybinToBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             convertMEPWithPibsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            authToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            segmentAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             nodesTree = new MWControlSuite.MWTreeView();
             nodeIcons = new System.Windows.Forms.ImageList(components);
             nodeContext = new System.Windows.Forms.ContextMenuStrip(components);
@@ -152,8 +154,7 @@
             cameraInPanel = new System.Windows.Forms.Panel();
             cameraOutBox = new System.Windows.Forms.TextBox();
             cameraInBox = new System.Windows.Forms.TextBox();
-            authToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            segmentAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            reassembleAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -589,6 +590,20 @@
             convertMEPWithPibsToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
             convertMEPWithPibsToolStripMenuItem1.Text = "Convert MEP (With Pibs)";
             convertMEPWithPibsToolStripMenuItem1.Click += convertMEPWithPibsToolStripMenuItem_Click;
+            // 
+            // authToolStripMenuItem
+            // 
+            authToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { segmentAuthToolStripMenuItem, reassembleAuthToolStripMenuItem });
+            authToolStripMenuItem.Name = "authToolStripMenuItem";
+            authToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            authToolStripMenuItem.Text = "Auth";
+            // 
+            // segmentAuthToolStripMenuItem
+            // 
+            segmentAuthToolStripMenuItem.Name = "segmentAuthToolStripMenuItem";
+            segmentAuthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            segmentAuthToolStripMenuItem.Text = "Segment Auth";
+            segmentAuthToolStripMenuItem.Click += segmentAuthToolStripMenuItem_Click;
             // 
             // nodesTree
             // 
@@ -1289,19 +1304,12 @@
             cameraInBox.Size = new System.Drawing.Size(85, 23);
             cameraInBox.TabIndex = 10;
             // 
-            // authToolStripMenuItem
+            // reassembleAuthToolStripMenuItem
             // 
-            authToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { segmentAuthToolStripMenuItem });
-            authToolStripMenuItem.Name = "authToolStripMenuItem";
-            authToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            authToolStripMenuItem.Text = "Auth";
-            // 
-            // segmentAuthToolStripMenuItem
-            // 
-            segmentAuthToolStripMenuItem.Name = "segmentAuthToolStripMenuItem";
-            segmentAuthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            segmentAuthToolStripMenuItem.Text = "Segment Auth";
-            segmentAuthToolStripMenuItem.Click += segmentAuthToolStripMenuItem_Click;
+            reassembleAuthToolStripMenuItem.Name = "reassembleAuthToolStripMenuItem";
+            reassembleAuthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            reassembleAuthToolStripMenuItem.Text = "Reassemble Auth";
+            reassembleAuthToolStripMenuItem.Click += reassembleAuthToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -1477,5 +1485,6 @@
         private System.Windows.Forms.TextBox cameraOutBox;
         private System.Windows.Forms.ToolStripMenuItem authToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem segmentAuthToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reassembleAuthToolStripMenuItem;
     }
 }

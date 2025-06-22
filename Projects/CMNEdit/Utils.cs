@@ -13,6 +13,10 @@ namespace CMNEdit
 {
     public static class Utils
     {
+        public static float ConvertRange(float value, float oldMin, float oldMax, float newMin, float newMax)
+        {
+            return ((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin;
+        }
         public static float InvariantParse(string val)
         {
             return float.Parse(val, System.Globalization.CultureInfo.InvariantCulture);
