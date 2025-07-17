@@ -23,6 +23,7 @@ using HActLib.Internal;
 using HActLib.OOE;
 using HActLib.YAct;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing.Drawing2D;
 
 namespace CMNEdit
 {
@@ -215,9 +216,6 @@ namespace CMNEdit
             HActDir inf = new HActDir();
             inf.Open(dialog.SelectedPath, langOverrideBox.Text);
 
-            if (inf.FindFile("hact_tev.bin").Valid())
-                throw new NotImplementedException("TEV unimplemented");
-
             hactInf = inf;
             folderDir = dialog.SelectedPath;
 
@@ -315,7 +313,7 @@ namespace CMNEdit
                 else if (curGame == Game.Y4)
                     csvPath = INISettings.Y4CsvPath;
 
-                if (string.IsNullOrEmpty(csvPath))
+                if (string.IsNullOrEmpty(csvPath) || !File.Exists(csvPath))
                 {
                     HammerTime();
 
@@ -363,6 +361,9 @@ namespace CMNEdit
                 Tev = TEV.Read(buf);
                 Csv = CSV.Read(csvPath);
 
+                if (Csv == null)
+                    throw new Exception("CSV returned null, the file does not exist.");
+
                 FileInfo inf = new FileInfo(FilePath);
 
                 try
@@ -378,6 +379,9 @@ namespace CMNEdit
                 }
 
                 TevCsvEntry = Csv.TryGetEntry(TevHActID);
+
+                if (TevCsvEntry == null)
+                    throw new Exception("Couldn't find hact_csv entry for " + TevHActID);
 
                 TreeNodeSet1 root = DrawTEVSet1(Tev.Root);
                 nodesTree.Nodes.Add(root);
@@ -1244,9 +1248,9 @@ namespace CMNEdit
                 return;
 
             CreateHeader("HAct Event (CSV)", isCsvTree: isCSVTree);
-            CreateInput("Type", hevent.Type, delegate (string val) { hevent.Type = val; }, isCsvTree: isCSVTree);
+            CreateInput("Name", hevent.Name, delegate (string val) { hevent.Name = val; }, isCsvTree: isCSVTree);
 
-            CreateInput("Unknown", hevent.HEUnknown1.ToString(), delegate (string val) { hevent.HEUnknown1 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Type", hevent.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true, isCsvTree: isCSVTree);
             CreateInput("Unknown", hevent.HEUnknown2.ToString(), delegate (string val) { hevent.HEUnknown2 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
             CreateInput("Unknown", hevent.HEUnknown3.ToString(), delegate (string val) { hevent.HEUnknown3 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
             CreateInput("Unknown", hevent.HEUnknown4.ToString(), delegate (string val) { hevent.HEUnknown4 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
@@ -1254,10 +1258,10 @@ namespace CMNEdit
             CreateInput("Unknown", hevent.HEUnknown6.ToString(), delegate (string val) { hevent.HEUnknown6 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
             CreateInput("Unknown", hevent.HEUnknown7.ToString(), delegate (string val) { hevent.HEUnknown7 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
 
-            if (string.IsNullOrEmpty(hevent.Type))
+            if (string.IsNullOrEmpty(hevent.Name))
                 return;
 
-            string[] split = hevent.Type.Split('_');
+            string[] split = hevent.Name.Split('_');
 
             if (split.Length < 3)
                 return;
@@ -1882,7 +1886,7 @@ namespace CMNEdit
                     else if (curGame == Game.Y4)
                         csvPath = INISettings.Y4CsvPath;
 
-                    if (MessageBox.Show("Save CSV too?", "Save", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Save CSV data too? Experimental feature!", "Save", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         CSV.Write(Csv, csvPath);
                 }
             }
@@ -3452,20 +3456,36 @@ namespace CMNEdit
             unkBytesBox.ByteProvider = provider;
         }
 
+        TreeNode m_csvHActRoot;
         TreeNode m_csvCharactersRoot;
         TreeNode m_csvHActEventsRoot;
-        private void DrawCSV()
+        private void DrawCSV(bool currentHactOnly = false)
         {
-            UpdateCSV();
+            //UpdateCSV();
+
+            csvTree.SuspendLayout();
+            csvHactsView.SuspendLayout();
 
             csvTree.Nodes.Clear();
 
+            if (!currentHactOnly)
+            {
+                csvHactsView.Nodes.Clear();
+
+                foreach (var hact in Csv.Entries)
+                {
+                    csvHactsView.Nodes.Add(new TreeNodeCSVHAct(hact));
+                }
+            }
+
+            m_csvHActRoot = new TreeNode("HAct General Data");
             m_csvCharactersRoot = new TreeNode("Characters");
             m_csvHActEventsRoot = new TreeNode("HAct Events");
 
             m_csvCharactersRoot.ContextMenuStrip = csvContextHEvent;
             m_csvHActEventsRoot.ContextMenuStrip = csvContextHEvent;
 
+            csvTree.Nodes.Add(m_csvHActRoot);
             csvTree.Nodes.Add(m_csvCharactersRoot);
             csvTree.Nodes.Add(m_csvHActEventsRoot);
 
@@ -3478,17 +3498,27 @@ namespace CMNEdit
             {
                 m_csvHActEventsRoot.Nodes.Add(new TreeNodeCSVHActEvent(hevent));
             }
+
+            csvTree.ResumeLayout();
+            csvHactsView.ResumeLayout();
         }
 
 
         private TreeNode m_selectedNodeCsvTree;
         private void csvTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            csvVarPanel.SuspendLayout();
+
             csvVarPanel.Controls.Clear();
             csvVarPanel.RowCount = 0;
             csvVarPanel.RowStyles.Clear();
 
             TreeNode selectedNode = e.Node;
+
+            if (selectedNode == m_csvHActRoot)
+            {
+                CSVRootWindow.Draw(this);
+            }
 
             if (selectedNode is TreeNodeCSVCharacter)
             {
@@ -3499,6 +3529,10 @@ namespace CMNEdit
                 CSVHActEvent hevent = (selectedNode as TreeNodeCSVHActEvent).Event;
                 DrawHActEvent(hevent, true);
             }
+
+            CreateHeader("", 0, true);
+
+            csvVarPanel.ResumeLayout();
         }
 
         private TreeNodeSet2[] GetAllHActEvents()
@@ -3515,7 +3549,7 @@ namespace CMNEdit
             if (Csv == null || TevCsvEntry == null)
                 return 0;
 
-            return TevCsvEntry.SpecialNodes.Where(x => x.Type.StartsWith(type)).Count();
+            return TevCsvEntry.SpecialNodes.Where(x => x.Name.StartsWith(type)).Count();
         }
 
         private void UpdateCSV()
@@ -3531,7 +3565,7 @@ namespace CMNEdit
             foreach (TreeNodeSet2 set2 in events)
             {
                 Set2Element1019 elem = set2.Set as Set2Element1019;
-                eventsCsv.Add(TevCsvEntry.TryGetHActEventData(elem.Type1019));
+                eventsCsv.Add(TevCsvEntry.TryGetHActEventData(elem.Type1019.Split(new[] { '\0' }, 2)[0]));
             }
 
             TevCsvEntry.SpecialNodes = eventsCsv.ToList();
@@ -3546,7 +3580,6 @@ namespace CMNEdit
         private void addCharacterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CSVCharacter chara = new CSVCharacter();
-            chara.UnknownExtraData.Add(new CSVCharacterExtraData());
             TevCsvEntry.Characters.Add(chara);
 
             m_csvCharactersRoot.Nodes.Add(new TreeNodeCSVCharacter(chara));
@@ -3576,10 +3609,10 @@ namespace CMNEdit
             TreeNode parent = nodesTree.SelectedNode == null ? nodesTree.Nodes[0] : nodesTree.SelectedNode;
 
             Set2Element1019 elem = new Set2Element1019();
-            elem.Type1019 = "HE_DAMAGE_" + (TevCsvEntry.SpecialNodes.Where(x => x.Type.StartsWith("HE_DAMAGE_") && !x.Type.EndsWith("99")).Count()).ToString("D2");
+            elem.Type1019 = "HE_DAMAGE_" + (TevCsvEntry.SpecialNodes.Where(x => x.Name.StartsWith("HE_DAMAGE_") && !x.Name.EndsWith("99")).Count()).ToString("D2");
 
             CSVHActEventDamage dmg = new CSVHActEventDamage();
-            dmg.Type = elem.Type1019;
+            dmg.Name = elem.Type1019;
 
             TevCsvEntry.SpecialNodes.Add(dmg);
             parent.Nodes.Add(new TreeNodeSet2(elem));
@@ -3968,7 +4001,8 @@ namespace CMNEdit
 
             for (int i = 0; i < ResourceCutInfos.Length; i++)
             {
-                string folderDir = Path.Combine(outputPath, i.ToString("D3") + "_segment");
+                string resPrefix = i.ToString("D3");
+                string folderDir = Path.Combine(outputPath, resPrefix + "_segment");
 
                 if (!Directory.Exists(folderDir))
                     Directory.CreateDirectory(folderDir);
@@ -3983,6 +4017,25 @@ namespace CMNEdit
                     segmented = new OECMN();
                 else
                     segmented = new CMN();
+
+                string resFile = null;
+
+
+                if (!string.IsNullOrEmpty(FilePath))
+                {
+                    string hactDir = new FileInfo(FilePath).Directory.Parent.FullName;
+
+                    if (Directory.Exists(Path.Combine(hactDir, resPrefix)))
+                    {
+                        resFile = Path.Combine(hactDir, resPrefix, "res.bin");
+
+                        if (File.Exists(resFile))
+                        {
+                            File.Copy(resFile, Path.Combine(folderDir, "res.bin"));
+                        }
+                    }
+
+                }
 
                 //create segmented CMN
                 segmented.Version = Version;
@@ -4031,7 +4084,7 @@ namespace CMNEdit
             string outputCmnDir = Path.Combine(outputPath, "cmn");
             string outputCmnPath = Path.Combine(outputCmnDir, "cmn.bin");
 
-            if(!Directory.Exists(outputPath))
+            if (!Directory.Exists(outputPath))
                 Directory.CreateDirectory(outputPath);
 
             if (!Directory.Exists(outputCmnDir))
@@ -4042,6 +4095,7 @@ namespace CMNEdit
             BaseCMN cmn = null;
             int curSegment = 0;
 
+            float oldEnd = 0;
 
             List<float> resourceCuts = new List<float>();
             List<float> cutInfos = new List<float>();
@@ -4058,13 +4112,16 @@ namespace CMNEdit
                     break;
 
                 string cmnFile = Path.Combine(segmentPath, "cmn.bin");
+                string resFile = Path.Combine(segmentPath, "res.bin");
 
                 if (!File.Exists(cmnFile))
                     break;
 
                 BaseCMN segment = BaseCMN.ReadGeneric(cmnFile, game);
+                RES segmentedRes = null;
 
-
+                if (File.Exists(resFile))
+                    segmentedRes = RES.Read(resFile, CMN.IsDEGame(game)); ;
 
                 //we will add on this segment to get the full thing
                 if (cmn == null)
@@ -4083,9 +4140,10 @@ namespace CMNEdit
                     resourceCuts.Add(segment.ResourceCutInfo[0] + cmn.HActEnd);
 
 
-                    float oldEnd = cmn.HActEnd;
+                    oldEnd = cmn.HActEnd;
                     cmn.HActEnd += segment.HActEnd;
-                    foreach(NodeElement element in segment.AllElements)
+
+                    foreach (NodeElement element in segment.AllElements)
                     {
                         NodeElement originalNode = (NodeElement)cmn.FindNodeByGUID(element.Guid);
 
@@ -4105,13 +4163,75 @@ namespace CMNEdit
                     }
                 }
 
+
+                if (segmentedRes != null)
+                {
+                    foreach (Resource res in segmentedRes.Resources)
+                    {
+                        if (res.Type == ResourceType.CharacterMotion
+                            || res.Type == ResourceType.PathMotion
+                            || res.Type == ResourceType.CameraMotion || res.Type == ResourceType.AssetMotion)
+                        {
+                            res.StartFrame = oldEnd;
+                            res.EndFrame = cmn.HActEnd;
+                        }
+                    }
+
+                    string resDir = Path.Combine(new DirectoryInfo(outputCmnDir).Parent.FullName, curSegment.ToString("D3"));
+
+                    if (!Directory.Exists(resDir))
+                        Directory.CreateDirectory(resDir);
+
+                    RES.Write(segmentedRes, Path.Combine(resDir, "res.bin"), CMN.IsDEGame(game));
+                }
+
                 curSegment++;
             }
+
 
             cmn.CutInfo = cutInfos.Distinct().ToArray();
             cmn.ResourceCutInfo = resourceCuts.ToArray();
 
             BaseCMN.WriteGeneric(outputCmnPath, cmn);
+        }
+
+        private void correctSoundIDsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            MessageBox.Show("Converts sound IDs from other game to the current game");
+
+
+            List<string> options = new List<string>();
+
+            if (!IsOE)
+            {
+                Game[] deGames = CMN.GetDEGames();
+
+                foreach (Game game in deGames)
+                    options.Add(HActLib.Internal.Reflection.GetGamePrefixes(game)[0]);
+            }
+
+            string messageString = "Please enter the name of game you want to convert from. \nAvailable:\n";
+
+            foreach (string str in options)
+                messageString += str + "\n";
+
+            string input = Microsoft.VisualBasic.Interaction.InputBox(messageString,
+           "Game",
+           "",
+           0,
+           0);
+        }
+
+        private void viewSelectedCSVHActButton_Click(object sender, EventArgs e)
+        {
+            if(csvHactsView.SelectedNode != null && csvHactsView.SelectedNode is TreeNodeCSVHAct)
+            {
+                CSVHAct hact = (csvHactsView.SelectedNode as TreeNodeCSVHAct).HAct;
+                Form1.TevCsvEntry = hact;
+
+                DrawCSV(true);
+            }
         }
     }
 }

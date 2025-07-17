@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Folder Include="Types\DE\Flowdust\" />
+    <Folder Include="Types\OOE\CSV\Condition\" />
   </ItemGroup>
 
 </Project>

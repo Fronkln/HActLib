@@ -12,8 +12,6 @@ namespace HActLib
         private DataReader reader = null;
         private CSV csv = null;
 
-        private Dictionary<CSVCharacter, int> m_extraDatPtr = new Dictionary<CSVCharacter, int>();
-
         public CSV Convert(BinaryFormat format)
         {
             reader = new DataReader(format.Stream) { Endianness = EndiannessMode.BigEndian, DefaultEncoding = Encoding.GetEncoding(932) };
@@ -80,12 +78,55 @@ namespace HActLib
                 {
                     CSVCharacter character = new CSVCharacter();
                     character.Read(reader);
-                    int unkDatPointer = reader.ReadInt32();
-                    int unkDatCount = reader.ReadInt32();
 
-                    character.UnknownNum = unkDatCount;
+                    int conditionPointer = reader.ReadInt32();
+                    int conditionCount = reader.ReadInt32();
 
-                    m_extraDatPtr[character] = unkDatPointer;
+                    reader.Stream.RunInPosition(delegate
+                    {
+                        for(int k = 0; k < conditionCount; k++)
+                        {
+                            CSVCondition condition = null;
+
+                            int type = reader.ReadInt32();
+
+                            switch(type)
+                            {
+                                default:
+                                    condition = new CSVCondition();
+                                    break;
+                            }
+
+                            condition.Type = (CSVConditionType)type;
+
+                            for(int resIdx = 0; resIdx < condition.Resources.Length; resIdx++)
+                            {
+                                int resPtr = reader.ReadInt32();
+                                condition.Resources[resIdx] = reader.ReadStringPointer(resPtr);
+                            }
+
+
+                            long condStart = reader.Stream.Position;
+                            long condEnd = reader.Stream.Position + 32;
+
+                            condition.Read(reader);
+
+                            long condPostRead = reader.Stream.Position;
+
+                            if(condPostRead < condEnd)
+                            {
+                                int bytesToRead = (int)(condEnd - condPostRead);
+                                condition.UnreadData = reader.ReadBytes(bytesToRead);
+                            }
+
+                            character.Conditions.Add(condition);
+
+                            if (condPostRead > condEnd)
+                                throw new System.Exception("CSV condition overread at position " + condStart + " type: " + type);
+                        }
+
+                    }, conditionPointer);
+
 
                     hactEntry.Characters.Add(character);
                 }
@@ -116,8 +157,8 @@ namespace HActLib
                         hactEvent = new CSVHActEvent();
 
                     //Then read the data...
-                    hactEvent.Type = type;
-                    hactEvent.HEUnknown1 = reader.ReadInt32();
+                    hactEvent.Name = type;
+                    hactEvent.Type = (CSVHActEventType)reader.ReadInt32();
 
                     hactEvent.HEUnknown2 = reader.ReadInt32();
                     hactEvent.HEUnknown3 = reader.ReadInt32();
@@ -200,19 +241,6 @@ namespace HActLib
                             Debug.Fail("Uh oh, this should never happen, tell Jhrino!");
 
                         start++;
-                    }
-
-
-                    int bytesToRead = m_extraDatPtr[nextHAct.Characters[0]] - m_extraDatPtr[hact.Characters[0]];
-                    int numExtraDatas = bytesToRead / 48;
-                    reader.Stream.Seek(m_extraDatPtr[hact.Characters[0]]);
-
-                    for (int k = 0; k < numExtraDatas; k++)
-                    {
-                        CSVCharacterExtraData dat = new CSVCharacterExtraData();
-                        dat.Read(reader);
-
-                        hact.Characters[0].UnknownExtraData.Add(dat);
                     }
                 }
             }

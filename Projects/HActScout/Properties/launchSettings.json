@@ -2,7 +2,7 @@
   "profiles": {
     "HActScout": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\LikeADragonPirates\\runtime\\media\\data\\hact_spr\" -1 ladpyih"
+      "commandLineArgs": "\"E:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami\\media\\data\\auth_w64_e\" 64 yk1"
     }
   }
 }

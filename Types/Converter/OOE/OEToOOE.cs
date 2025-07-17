@@ -47,7 +47,7 @@ namespace HActLib
                 res = RES.Read(ress[0].FindFile("res.bin").Read(), false);
 
             TEV tev = new TEV();
-            tev.CuesheetID = 0;
+            tev.CuesheetIDs = new List<uint>();
 
             tev.Root = (ObjectBase)Convert(inf.Cmn, inf.Cmn.AllNodes[0])[0];
 

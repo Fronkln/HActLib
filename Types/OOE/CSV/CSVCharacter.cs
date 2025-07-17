@@ -29,8 +29,7 @@ namespace HActLib
         public int Unknown14;
         public int ExitHActMode = 0;
 
-        public int UnknownNum;
-        public List<CSVCharacterExtraData> UnknownExtraData = new List<CSVCharacterExtraData>();
+        public List<CSVCondition> Conditions = new List<CSVCondition>();
 
         internal void Read(DataReader reader)
         {

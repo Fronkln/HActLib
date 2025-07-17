@@ -256,6 +256,17 @@ namespace HActLib
                         expTarget.Version = 1;
                     break;
 
+                case "e_auth_element_speech":
+                    
+                    DEElementSpeech speech = element as DEElementSpeech;
+
+                        if(output <= Game.YLAD && input >= Game.YLAD)
+                        {
+                        if (speech.SpeechVersion == 12)
+                            speech.SpeechVersion = 10;
+                        }
+                    break;
+
                 case "e_auth_element_rim_flash":
                     DEElementRimflash rimflash = element as DEElementRimflash;
 

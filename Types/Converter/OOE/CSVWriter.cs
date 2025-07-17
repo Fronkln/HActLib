@@ -31,8 +31,9 @@ namespace HActLib
         private Dictionary<CSVHAct, int> m_csvSection4Start = new Dictionary<CSVHAct, int>();
         private Dictionary<CSVSection4, int> m_csvSection4 = new Dictionary<CSVSection4, int>();
 
-        private Dictionary<CSVHAct, int> m_csvCharacterExtraDataStart = new Dictionary<CSVHAct, int>();
-        private Dictionary<CSVCharacterExtraData, int> m_csvCharacterExtraDatas = new Dictionary<CSVCharacterExtraData, int>();
+#warning RENAME TO CONDITIONS
+        private Dictionary<CSVCharacter, int> m_csvCharacterExtraDataStart = new Dictionary<CSVCharacter, int>();
+        private Dictionary<CSVCondition, int> m_csvCharacterExtraDatas = new Dictionary<CSVCondition, int>();
         
 
         public BinaryFormat Convert(CSV csv)
@@ -123,14 +124,24 @@ namespace HActLib
             {
                 CSVHAct entry = csv.Entries[i];
 
-                m_csvCharacterExtraDataStart[entry] = (int)writer.Stream.Position;
-
                 foreach (var chara in entry.Characters)
-                    foreach (var extraDat in chara.UnknownExtraData)
+                {
+                    m_csvCharacterExtraDataStart[chara] = (int)writer.Stream.Position;
+                    foreach (var cond in chara.Conditions)
                     {
-                        m_csvCharacterExtraDatas[extraDat] = (int)writer.Stream.Position;
-                        extraDat.Write(writer);
+                        m_csvCharacterExtraDatas[cond] = (int)writer.Stream.Position;
+
+                        writer.Write((int)cond.Type);
+
+                        for (int k = 0; k < 3; k++)
+                            writer.Write(0xDEADC0DE);
+
+                        cond.Write(writer);
+
+                        if (cond.UnreadData != null)
+                            writer.Write(cond.UnreadData);
                     }
+                }
             }
 
             long m_stringTableRegion = writer.Stream.Position;
@@ -161,8 +172,8 @@ namespace HActLib
                     writer.Write(WriteToStringTable(chara.Name));
                     writer.Write(WriteToStringTable(chara.ModelOverride));
                     writer.Stream.Position += 64;
-                    writer.Write(m_csvCharacterExtraDataStart[entry]);
-                    writer.Write(chara.UnknownNum);
+                    writer.Write(m_csvCharacterExtraDataStart[chara]);
+                    writer.Write(chara.Conditions.Count);
                 }
 
                 //Go back to special nodes. link things.
@@ -173,7 +184,7 @@ namespace HActLib
 
                     specialNode.WriteData(writer);
                     writer.Stream.Seek(start);
-                    writer.Write(WriteToStringTable(specialNode.Type));
+                    writer.Write(WriteToStringTable(specialNode.Name));
                     writer.Stream.Seek(start + 32);
 
                     foreach (string str in specialNode.Resources)

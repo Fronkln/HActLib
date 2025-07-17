@@ -10,9 +10,9 @@ namespace HActLib
     //HE_ prefix = HAct Event?
     public class CSVHActEvent
     {
-        public string Type;
+        public string Name;
 
-        public int HEUnknown1;
+        public CSVHActEventType Type;
 
         public int HEUnknown2 = 0;
         public int HEUnknown3 = 0;
@@ -34,7 +34,7 @@ namespace HActLib
         internal virtual void WriteData(DataWriter writer)
         {
             writer.Write(0xDEADC0DE);
-            writer.Write(HEUnknown1);
+            writer.Write((uint)Type);
 
             writer.Write(HEUnknown2);
             writer.Write(HEUnknown3);

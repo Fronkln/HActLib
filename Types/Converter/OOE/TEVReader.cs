@@ -53,7 +53,7 @@ namespace HActLib
             tev.TEVHeader.CameraCount3 = reader.ReadInt32();
             tev.TEVHeader.UnkPtr2 = reader.ReadUInt32();
 
-            tev.TEVHeader.UseSoundACB = reader.ReadUInt32() > 0;
+            tev.TEVHeader.UseSoundACB = (int)reader.ReadUInt32();
             tev.TEVHeader.UnkPtr3 = reader.ReadUInt32();
 
             tev.TEVHeader.CameraCount = reader.ReadInt32();
@@ -74,7 +74,10 @@ namespace HActLib
                 delegate 
                 {
                     reader.Endianness = EndiannessMode.LittleEndian;
-                    tev.CuesheetID = reader.ReadUInt32();
+
+                    for (int i = 0; i < tev.TEVHeader.UseSoundACB; i++)
+                        tev.CuesheetIDs.Add(reader.ReadUInt32());
+
                     reader.Endianness = EndiannessMode.BigEndian;
                 }, tev.TEVHeader.UnkPtr2, SeekMode.Start);
 

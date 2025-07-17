@@ -33,7 +33,7 @@ namespace HActLib
             public uint UnkPtr2; //seems to be the 4 bytes right before the string table
 
             ///<summary>Offset: 0x38</summary>
-            public bool UseSoundACB;
+            public int UseSoundACB;
             ///<summary>Offset: 0x3C</summary>
             public uint UnkPtr3; //Unknown blank area, 44 bytes,  not constantly 44 
 
@@ -77,7 +77,7 @@ namespace HActLib
         /// <summary>
         /// ID of the cuesheet the HAct uses.
         /// </summary>
-        public uint CuesheetID;
+        public List<uint> CuesheetIDs = new List<uint>();
 
         public ObjectBase Root;
 

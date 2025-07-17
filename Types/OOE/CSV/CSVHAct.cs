@@ -27,7 +27,7 @@ namespace HActLib
 
         public CSVHActEvent TryGetHActEventData(string type)
         {
-            return SpecialNodes.FirstOrDefault(x => x.Type == type);
+            return SpecialNodes.FirstOrDefault(x => x.Name == type);
         }
 
         public CSVCharacter TryGetHActCharacter(string name)

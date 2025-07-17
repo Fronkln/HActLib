@@ -21,7 +21,7 @@ namespace CMNEdit
         public TreeNodeCSVHActEvent(CSVHActEvent hevent)
         {
             Event = hevent;
-            Text = hevent.Type;
+            Text = hevent.Name;
         }
 
         public override object Clone()

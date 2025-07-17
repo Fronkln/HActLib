@@ -22,6 +22,11 @@ namespace CMNEdit
         {
             Character = chara;
             Text = Character.Name;
+
+            foreach(var condition in Character.Conditions)
+            {
+                Nodes.Add(new TreeNodeCSVCondition(condition));
+            }
         }
 
         public override object Clone()

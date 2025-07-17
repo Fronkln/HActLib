@@ -21,7 +21,7 @@ namespace HActLib
 
         public CSVHActEventDamage() : base()
         {
-            Type = "HE_DAMAGE_00";
+            Name = "HE_DAMAGE_00";
         }
 
         internal override void ReadData(DataReader reader)

@@ -156,7 +156,13 @@ namespace HActLib
             int stringsStart = (int)writer.Stream.Position;
 
             writer.Endianness = EndiannessMode.LittleEndian;
-            writer.Write(tev.CuesheetID);
+
+            if (tev.CuesheetIDs.Count < 0)
+                writer.Write(0);
+            else
+                foreach (int cuesheet in tev.CuesheetIDs)
+                    writer.Write(cuesheet);
+
             writer.Endianness = EndiannessMode.BigEndian;
 
             //Adjust pointers after everything was written
@@ -328,6 +334,7 @@ namespace HActLib
             tev.TEVHeader.CharacterCount2 = tev.TEVHeader.CharacterCount;
 
             tev.TEVHeader.SpecialElementCount = tev.AllSet2.Where(x => x is Set2Element1019).Count();
+            tev.TEVHeader.UseSoundACB = tev.CuesheetIDs.Count;
 
             //Dont know what these do yet
             if (tev.TEVHeader.UnkVal2 == 0)
@@ -362,7 +369,7 @@ namespace HActLib
             writer.Write(tev.TEVHeader.CameraCount3);
             writer.Write(stringsStart);
 
-            writer.Write(System.Convert.ToInt32(tev.TEVHeader.UseSoundACB));
+            writer.Write(tev.TEVHeader.UseSoundACB);
             writer.Write(weirdSpaceStart);
 
             writer.Write(tev.TEVHeader.CameraCount);
