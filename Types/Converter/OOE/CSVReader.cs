@@ -136,20 +136,28 @@ namespace HActLib
                 for (int j = 0; j < hactSpecialElementCount; j++)
                 {
                     //HE_GAUGE_00, HE_DAMAGE_99 etc...
-                    string type = ReadStringPointer(reader.ReadInt32());
-                    string[] typeSplit = type.Split('_');
-
+                    string name = ReadStringPointer(reader.ReadInt32());
+                    CSVHActEventType type = (CSVHActEventType)reader.ReadInt32();
+       
                     //Execute creation and read code here...
                     CSVHActEvent hactEvent = null;
 
-                    switch(typeSplit[1])
+                    switch(type)
                     {
-                        case "DAMAGE":
-                            if (typeSplit[2] != "99")
-                                hactEvent = new CSVHActEventDamage();
+                        case CSVHActEventType.Damage:
+                            hactEvent = new CSVHActEventDamage();
                             break;
-                        case "GAUGE":
+                        case CSVHActEventType.HeatChange:
                             hactEvent = new CSVHActEventHeatGauge();
+                            break;
+                        case CSVHActEventType.Branch:
+                            hactEvent = new CSVHActEventBranch();
+                            break;
+                        case CSVHActEventType.Human:
+                            hactEvent = new CSVHActEventHuman();
+                            break;
+                        case CSVHActEventType.Button:
+                            hactEvent = new CSVHActEventButton();
                             break;
                     }
 
@@ -157,8 +165,8 @@ namespace HActLib
                         hactEvent = new CSVHActEvent();
 
                     //Then read the data...
-                    hactEvent.Name = type;
-                    hactEvent.Type = (CSVHActEventType)reader.ReadInt32();
+                    hactEvent.Name = name;
+                    hactEvent.Type = type;
 
                     hactEvent.HEUnknown2 = reader.ReadInt32();
                     hactEvent.HEUnknown3 = reader.ReadInt32();

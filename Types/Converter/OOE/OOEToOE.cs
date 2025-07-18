@@ -343,7 +343,7 @@ namespace HActLib
 
                 case EffectID.Special:
                     Set2Element1019 set2Special = set2Obj as Set2Element1019;
-                    CSVHActEvent specialData = csvData.TryGetHActEventData(set2Special.Type1019);
+                    CSVHActEvent specialData = csvData.TryGetHActEventData(set2Special.Type1019.Split(new[] { '\0' }, 2)[0]);
 
                     string[] typeSplit = set2Special.Type1019.Split('_');
 

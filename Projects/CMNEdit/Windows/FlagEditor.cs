@@ -10,24 +10,24 @@ using System.Windows.Forms;
 
 namespace CMNEdit.Windows
 {
-    public partial class FlagEditor64 : Form
+    public partial class FlagEditor : Form
     {
-        private Action<ulong> m_complete;
+        private Action<uint> m_complete;
 
-        public FlagEditor64()
+        public FlagEditor()
         {
             InitializeComponent();
         }
 
-        public void Init(string[] list, ulong val, Action<ulong> onApply)
+        public void Init(string[] list, uint val, Action<uint> onApply)
         {
             checkedListBox1.Items.Clear();
 
-            if(list == null)
+            if (list == null)
             {
-                list = new string[64];
+                list = new string[32];
 
-                for(int i = 0; i < list.Length; i++)
+                for (int i = 0; i < list.Length; i++)
                 {
                     list[i] = "Flag " + i;
                 }
@@ -38,22 +38,22 @@ namespace CMNEdit.Windows
 
             m_complete = onApply;
 
-                for (int i = 0; i < list.Length && i < 64; i++)
-                {
-                    if (((ulong)val & (ulong)((ulong)1 << i)) > 0)
-                        checkedListBox1.SetItemChecked(i, true);
-                }
- 
+            for (int i = 0; i < list.Length && i < 32; i++)
+            {
+                if (((ulong)val & (ulong)((ulong)1 << i)) > 0)
+                    checkedListBox1.SetItemChecked(i, true);
+            }
+
         }
 
         public void Apply()
         {
-            ulong val = 0;
+            uint val = 0;
 
-            for(int i = 0; i < 64 && i < checkedListBox1.Items.Count; i++)
+            for (int i = 0; i < 32 && i < checkedListBox1.Items.Count; i++)
             {
                 if (checkedListBox1.GetItemChecked(i))
-                    val |= (ulong)((ulong)1 << i);
+                    val |= (uint)((uint)1 << i);
             }
 
             m_complete?.Invoke(val);

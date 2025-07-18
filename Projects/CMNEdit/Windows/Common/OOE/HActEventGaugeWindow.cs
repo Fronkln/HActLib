@@ -10,14 +10,14 @@ namespace CMNEdit
 {
     internal static class HActEventGaugeWindow
     {
-        public static void Draw(Form1 form, CSVHActEventHeatGauge gauge, bool isCsvTree = false)
+        public static void Draw(Form1 form, CSVHActEventHeatGauge gauge)
         {
             if (gauge == null)
                 return;
 
-            form.CreateHeader("Heat Change (CSV)", isCsvTree:isCsvTree);
+            form.CreateHeader("Heat Change (CSV)");
 
-            form.CreateInput("Change", gauge.Change.ToString(), delegate (string val) { gauge.Change = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCsvTree);
+            form.CreateInput("Change", gauge.Change.ToString(), delegate (string val) { gauge.Change = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

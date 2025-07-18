@@ -84,6 +84,9 @@
     <Compile Update="Windows\ColorViewFI.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Windows\FlagEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Windows\FrameProgressionWindow.cs">
       <SubType>Form</SubType>
     </Compile>

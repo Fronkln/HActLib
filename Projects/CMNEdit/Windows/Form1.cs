@@ -661,9 +661,10 @@ namespace CMNEdit
             return expanded.ToArray();
         }
 
-        public void CreateHeader(string label, float spacing = 0, bool isCsvTree = false)
+        public void CreateHeader(string label, float spacing = 0)
         {
             TableLayoutPanel varPanel = null;
+            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
 
             if (!isCsvTree)
                 varPanel = this.varPanel;
@@ -726,9 +727,11 @@ namespace CMNEdit
             varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 1);
         }
 
-        public void CreateSpace(bool big, bool isCsvTree = false)
+        public void CreateSpace(bool big)
         {
             TableLayoutPanel varPanel = null;
+
+            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
 
             if (!isCsvTree)
                 varPanel = this.varPanel;
@@ -736,12 +739,14 @@ namespace CMNEdit
                 varPanel = csvVarPanel;
 
             if (big)
-                CreateHeader("", 0, isCsvTree);
+                CreateHeader("", 0);
         }
 
-        public TextBox CreateInput(string label, string defaultValue, Action<string> editedCallback, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false, bool isCsvTree = false)
+        public TextBox CreateInput(string label, string defaultValue, Action<string> editedCallback, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false)
         {
             TableLayoutPanel varPanel = null;
+
+            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
 
             if (!isCsvTree)
                 varPanel = this.varPanel;
@@ -768,6 +773,8 @@ namespace CMNEdit
         public Button CreateButton(string text, Action clicked, bool isCsvTree = false)
         {
             TableLayoutPanel varPanel = null;
+
+            isCsvTree = hactTabs.SelectedTab.Text == "CSV";
 
             if (!isCsvTree)
                 varPanel = this.varPanel;
@@ -1238,42 +1245,39 @@ namespace CMNEdit
         private void DrawElement1019(Set2Element1019 element, bool isCSVTree = false)
         {
             Set2Element1019Window.Draw(this, element);
-            DrawHActEvent(TevCsvEntry.TryGetHActEventData(element.Type1019), isCSVTree);
+            DrawHActEvent(TevCsvEntry.TryGetHActEventData(element.Type1019.Split(new[] { '\0' }, 2)[0]));
         }
 
 
-        private void DrawHActEvent(CSVHActEvent hevent, bool isCSVTree)
+        private void DrawHActEvent(CSVHActEvent hevent)
         {
             if (hevent == null)
                 return;
 
-            CreateHeader("HAct Event (CSV)", isCsvTree: isCSVTree);
-            CreateInput("Name", hevent.Name, delegate (string val) { hevent.Name = val; }, isCsvTree: isCSVTree);
+            CreateHeader("HAct Event (CSV)");
+            CreateInput("Name", hevent.Name, delegate (string val) { hevent.Name = val; SelectedNodeCsvTree.Text = val; });
 
-            CreateInput("Type", hevent.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true, isCsvTree: isCSVTree);
-            CreateInput("Unknown", hevent.HEUnknown2.ToString(), delegate (string val) { hevent.HEUnknown2 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
-            CreateInput("Unknown", hevent.HEUnknown3.ToString(), delegate (string val) { hevent.HEUnknown3 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
-            CreateInput("Unknown", hevent.HEUnknown4.ToString(), delegate (string val) { hevent.HEUnknown4 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
-            CreateInput("Unknown", hevent.HEUnknown5.ToString(), delegate (string val) { hevent.HEUnknown5 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
-            CreateInput("Unknown", hevent.HEUnknown6.ToString(), delegate (string val) { hevent.HEUnknown6 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
-            CreateInput("Unknown", hevent.HEUnknown7.ToString(), delegate (string val) { hevent.HEUnknown7 = int.Parse(val); }, NumberBox.NumberMode.Int, isCsvTree: isCSVTree);
+            CreateInput("Type", hevent.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
+            CreateInput("Unknown", hevent.HEUnknown2.ToString(), delegate (string val) { hevent.HEUnknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            CreateInput("Unknown", hevent.HEUnknown3.ToString(), delegate (string val) { hevent.HEUnknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            CreateInput("Unknown", hevent.HEUnknown4.ToString(), delegate (string val) { hevent.HEUnknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            CreateInput("Unknown", hevent.HEUnknown5.ToString(), delegate (string val) { hevent.HEUnknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            CreateInput("Unknown", hevent.HEUnknown6.ToString(), delegate (string val) { hevent.HEUnknown6 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            CreateInput("Unknown", hevent.HEUnknown7.ToString(), delegate (string val) { hevent.HEUnknown7 = int.Parse(val); }, NumberBox.NumberMode.Int);
 
-            if (string.IsNullOrEmpty(hevent.Name))
-                return;
-
-            string[] split = hevent.Name.Split('_');
-
-            if (split.Length < 3)
-                return;
-
-            switch (split[1])
+            switch (hevent.Type)
             {
-                case "GAUGE":
-                    HActEventGaugeWindow.Draw(this, (CSVHActEventHeatGauge)hevent, isCSVTree);
+                case CSVHActEventType.HeatChange:
+                    HActEventGaugeWindow.Draw(this, (CSVHActEventHeatGauge)hevent);
                     break;
-                case "DAMAGE":
-                    if (split[2] != "99")
-                        HActEventDamageWindow.Draw(this, (CSVHActEventDamage)hevent, isCSVTree);
+                case CSVHActEventType.Damage:
+                    HActEventDamageWindow.Draw(this, (CSVHActEventDamage)hevent);
+                    break;
+                case CSVHActEventType.Human:
+                    HActEventHumanWindow.Draw(this, (CSVHActEventHuman)hevent);
+                    break;
+                case CSVHActEventType.Button:
+                    HActEventButtonWindow.Draw(this, (CSVHActEventButton)hevent);
                     break;
             }
         }
@@ -3504,7 +3508,7 @@ namespace CMNEdit
         }
 
 
-        private TreeNode m_selectedNodeCsvTree;
+        public TreeNode SelectedNodeCsvTree;
         private void csvTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             csvVarPanel.SuspendLayout();
@@ -3514,6 +3518,7 @@ namespace CMNEdit
             csvVarPanel.RowStyles.Clear();
 
             TreeNode selectedNode = e.Node;
+            SelectedNodeCsvTree = selectedNode;
 
             if (selectedNode == m_csvHActRoot)
             {
@@ -3527,10 +3532,10 @@ namespace CMNEdit
             else if (selectedNode is TreeNodeCSVHActEvent)
             {
                 CSVHActEvent hevent = (selectedNode as TreeNodeCSVHActEvent).Event;
-                DrawHActEvent(hevent, true);
+                DrawHActEvent(hevent);
             }
 
-            CreateHeader("", 0, true);
+            CreateHeader("", 0);
 
             csvVarPanel.ResumeLayout();
         }
@@ -3574,7 +3579,7 @@ namespace CMNEdit
         private void csvTree_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                m_selectedNodeCsvTree = (TreeNode)csvTree.GetNodeAt(e.X, e.Y);
+               SelectedNodeCsvTree = (TreeNode)csvTree.GetNodeAt(e.X, e.Y);
         }
 
         private void addCharacterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3599,6 +3604,14 @@ namespace CMNEdit
             TevCsvEntry.SpecialNodes.Add(gauge);
 
             m_csvHActEventsRoot.Nodes.Add(new TreeNodeCSVHActEvent(gauge));
+        }
+
+        private void addBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSVHActEventBranch branch = new CSVHActEventBranch();
+            TevCsvEntry.SpecialNodes.Add(branch);
+
+            m_csvHActEventsRoot.Nodes.Add(new TreeNodeCSVHActEvent(branch));
         }
 
         private void damageHActEventToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4225,7 +4238,7 @@ namespace CMNEdit
 
         private void viewSelectedCSVHActButton_Click(object sender, EventArgs e)
         {
-            if(csvHactsView.SelectedNode != null && csvHactsView.SelectedNode is TreeNodeCSVHAct)
+            if (csvHactsView.SelectedNode != null && csvHactsView.SelectedNode is TreeNodeCSVHAct)
             {
                 CSVHAct hact = (csvHactsView.SelectedNode as TreeNodeCSVHAct).HAct;
                 Form1.TevCsvEntry = hact;

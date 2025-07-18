@@ -11,7 +11,7 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, ObjectBase set)
         {   
-            form.CreateHeader("Set 1");
+            form.CreateHeader("Object");
 
             form.CreateInput("Unknown", set._InternalInfo.UnkNum1.ToString(), delegate(string val) { set._InternalInfo.UnkNum1 = uint.Parse(val); }, NumberBox.NumberMode.UInt)
 ;

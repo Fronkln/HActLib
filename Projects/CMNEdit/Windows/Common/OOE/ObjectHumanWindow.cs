@@ -24,7 +24,6 @@ namespace CMNEdit
 
             if (csvEntry != null)
             {
-                form.CreateHeader("Human (CSV)");
                 CSVCharacterWindow.Draw(form, csvEntry, false);
             }
 

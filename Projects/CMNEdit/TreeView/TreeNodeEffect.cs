@@ -23,6 +23,17 @@ namespace CMNEdit
             Effect = effect;
             Text = Effect.ElementKind.ToString();
 
+            switch(Effect.ElementKind)
+            {
+                case EffectID.Particle:
+                    Text = "PIB " + (Effect as EffectParticle).ParticleID.ToString();
+                    break;
+                case EffectID.Sound:
+                    var soundEffect = effect as EffectSound;
+                    Text = "Sound Cuesheet " + soundEffect.CuesheetID + " ID " + soundEffect.SoundID;
+                    break;
+            }
+
             SetIcon();
         }
 

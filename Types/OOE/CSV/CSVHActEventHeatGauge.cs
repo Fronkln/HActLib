@@ -8,6 +8,11 @@ namespace HActLib
     {
         public int Change = 0;
 
+        public CSVHActEventHeatGauge()
+        {
+            Type = CSVHActEventType.HeatChange;
+        }
+
         internal override void ReadData(DataReader reader)
         {
             Change = reader.ReadInt32();

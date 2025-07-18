@@ -85,7 +85,6 @@
             convertMEPWithPibsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             authToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             segmentAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            nodesTree = new MWControlSuite.MWTreeView();
             reassembleAuthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             nodeIcons = new System.Windows.Forms.ImageList(components);
             nodeContext = new System.Windows.Forms.ContextMenuStrip(components);
@@ -148,6 +147,8 @@
             csvContextHEvent = new System.Windows.Forms.ContextMenuStrip(components);
             addDamageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             addHeatChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            addBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            addHumanFlagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             langOverrideLbl = new System.Windows.Forms.Label();
@@ -614,11 +615,18 @@
             segmentAuthToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             segmentAuthToolStripMenuItem.Text = "Segment Auth";
             segmentAuthToolStripMenuItem.Click += segmentAuthToolStripMenuItem_Click;
-
+            // 
+            // reassembleAuthToolStripMenuItem
+            // 
+            reassembleAuthToolStripMenuItem.Name = "reassembleAuthToolStripMenuItem";
+            reassembleAuthToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            reassembleAuthToolStripMenuItem.Text = "Reassemble Auth";
+            reassembleAuthToolStripMenuItem.Click += reassembleAuthToolStripMenuItem_Click;
 
             // 
             // nodesTree
             // 
+            nodesTree = new MWControlSuite.MWTreeView();
             nodesTree.AllowDrop = true;
             nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
             nodesTree.ImageIndex = 0;
@@ -637,13 +645,6 @@
             nodesTree.KeyUp += nodesTree_KeyUp;
             nodesTree.MouseUp += nodesTree_MouseUp;
 
-            // 
-            // reassembleAuthToolStripMenuItem
-            // 
-            reassembleAuthToolStripMenuItem.Name = "reassembleAuthToolStripMenuItem";
-            reassembleAuthToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            reassembleAuthToolStripMenuItem.Text = "Reassemble Auth";
-            reassembleAuthToolStripMenuItem.Click += reassembleAuthToolStripMenuItem_Click;
             // 
             // nodeIcons
             // 
@@ -1245,9 +1246,9 @@
             // 
             // csvContextHEvent
             // 
-            csvContextHEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { addDamageToolStripMenuItem, addHeatChangeToolStripMenuItem });
+            csvContextHEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { addDamageToolStripMenuItem, addHeatChangeToolStripMenuItem, addBranchToolStripMenuItem, addHumanFlagToolStripMenuItem });
             csvContextHEvent.Name = "contextMenuStrip1";
-            csvContextHEvent.Size = new System.Drawing.Size(169, 48);
+            csvContextHEvent.Size = new System.Drawing.Size(169, 92);
             // 
             // addDamageToolStripMenuItem
             // 
@@ -1262,6 +1263,19 @@
             addHeatChangeToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             addHeatChangeToolStripMenuItem.Text = "Add Heat Change";
             addHeatChangeToolStripMenuItem.Click += addHeatChangeToolStripMenuItem_Click;
+            // 
+            // addBranchToolStripMenuItem
+            // 
+            addBranchToolStripMenuItem.Name = "addBranchToolStripMenuItem";
+            addBranchToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            addBranchToolStripMenuItem.Text = "Add Branch";
+            addBranchToolStripMenuItem.Click += addBranchToolStripMenuItem_Click;
+            // 
+            // addHumanFlagToolStripMenuItem
+            // 
+            addHumanFlagToolStripMenuItem.Name = "addHumanFlagToolStripMenuItem";
+            addHumanFlagToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            addHumanFlagToolStripMenuItem.Text = "Add Human Flag";
             // 
             // contextMenuStrip1
             // 
@@ -1341,6 +1355,9 @@
             cameraInBox.Name = "cameraInBox";
             cameraInBox.Size = new System.Drawing.Size(85, 23);
             cameraInBox.TabIndex = 10;
+
+            cmnTevTab.Controls.Add(nodesTree);
+
             // 
             // Form1
             // 
@@ -1358,7 +1375,6 @@
             Controls.Add(targetGameLbl);
             Controls.Add(targetGameCombo);
             Controls.Add(appTools);
-            cmnTevTab.Controls.Add(nodesTree);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "Form1";
@@ -1521,5 +1537,7 @@
         private System.Windows.Forms.ToolStripMenuItem correctSoundIDsToolStripMenuItem;
         private System.Windows.Forms.TreeView csvHactsView;
         private System.Windows.Forms.Button viewSelectedCSVHActButton;
+        private System.Windows.Forms.ToolStripMenuItem addBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addHumanFlagToolStripMenuItem;
     }
 }
