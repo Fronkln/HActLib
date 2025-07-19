@@ -27,7 +27,18 @@ namespace CMNEdit
                 DrawEntry(form, entry, i);
             }
 
-            form.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
+            if(subtitle.SubtitlesJP.Count > 0)
+            {
+                form.CreateHeader("Subtitles(JP)");
+
+                for (int i = 0; i < subtitle.SubtitlesJP.Count; i++)
+                {
+                    OESubtitle.SubtitleEntry entry = subtitle.SubtitlesJP[i];
+                    DrawEntry(form, entry, i);
+                }
+            }
+
+           form.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
         }
 
         private static void DrawEntry(Form1 form, OESubtitle.SubtitleEntry entry, int idx)
