@@ -22,6 +22,7 @@ using MotionLib;
 using HActLib.Internal;
 using HActLib.OOE;
 using HActLib.YAct;
+using MsgLib;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing.Drawing2D;
 
@@ -40,6 +41,7 @@ namespace CMNEdit
         public static bool IsYAct;
         public static bool IsPS2Prop;
         public static bool IsOOEAuth;
+        public static bool IsMsg;
 
         private static MEP Mep;
 
@@ -48,6 +50,8 @@ namespace CMNEdit
         public static Auth Auth;
         public uint TevHActID;
         public static CSVHAct TevCsvEntry;
+
+        public static Msg Msg;
 
         public static GameVersion curVer;
         public static Game curGame = Game.YLAD; //only used for DE
@@ -271,6 +275,7 @@ namespace CMNEdit
             IsYAct = false;
             IsPS2Prop = false;
             IsOOEAuth = false;
+            IsMsg = false;
 
             hactTabs.TabPages.Remove(csvTab);
             addNodeTab.DropDownItems.Remove(nodeAddTabDE);
@@ -491,6 +496,7 @@ namespace CMNEdit
             IsOE = false;
             IsPS2Prop = false;
             IsYAct = true;
+            IsMsg = false;
 
             hactTabs.TabPages.Remove(csvTab);
             hactTabs.TabPages.Remove(resPage);
@@ -602,6 +608,33 @@ namespace CMNEdit
             {
                 TreeNodePS2PropertyData2 propNode = new TreeNodePS2PropertyData2(dat2);
                 nodesTree.Nodes.Add(propNode);
+            }
+        }
+        private void ProcessMSG(Msg msg)
+        {
+            Msg = msg;
+
+            IsBep = false;
+            IsMep = false;
+            IsHact = false;
+            IsTev = false;
+            IsOE = false;
+            IsPS2Prop = false;
+            IsYAct = false;
+            IsMsg = true;
+
+            ClearEverything();
+
+            hactTabs.TabPages.Remove(csvTab);
+            hactTabs.TabPages.Remove(resPage);
+            hactTabs.TabPages.Remove(cutPage);
+
+            hactTabs.TabPages[0].Text = "MSG";
+
+
+            foreach (var group in msg.Groups)
+            {
+                nodesTree.Nodes.Add(new TreeNodeMsgGroup(group));
             }
         }
 
@@ -998,6 +1031,12 @@ namespace CMNEdit
                 return;
             }
 
+            if (IsMsg)
+            {
+                ProcessSelectedNodeMSG();
+                return;
+            }
+
             if (treeNode as TreeViewItemNode == null && treeNode as TreeViewItemMepNode == null)
             {
                 ProcessSpecialSelectedNode();
@@ -1238,6 +1277,40 @@ namespace CMNEdit
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
 
+            CreateHeader("");
+        }
+
+        public void ProcessSelectedNodeMSG()
+        {
+            TreeNode node = nodesTree.SelectedNode;
+
+            Be.Windows.Forms.DynamicByteProvider provider = null;
+
+            if (node is TreeNodeMsgEvent)
+            {
+                DrawMSG.DrawEvent(this, node as TreeNodeMsgEvent);
+            }
+            else if (node is TreeNodeMsgProperty)
+            {
+                TreeNodeMsgProperty msgProp = (TreeNodeMsgProperty)node;
+
+                DrawMSG.DrawProperty(this, msgProp);
+
+                if (msgProp.Property.UnreadData != null)
+                {
+                    provider = new Be.Windows.Forms.DynamicByteProvider(msgProp.Property.UnreadData);
+
+                    provider.Changed += delegate
+                    {
+                        if (provider.Bytes.Count == msgProp.Property.UnreadData.Length)
+                            msgProp.Property.UnreadData = provider.Bytes.ToArray();
+                    };
+                }
+            }
+
+
+            unkBytesBox.ByteProvider = provider;
+            varPanel.ResumeLayout();
 
             CreateHeader("");
         }
@@ -1482,6 +1555,8 @@ namespace CMNEdit
             if (pastingNode == null || pastingNode.Length == 0)
                 return;
 
+            pastingNode = SortNodesByVisualOrder(pastingNode, nodesTree);
+
             if (IsOOEAuth)
             {
                 foreach (var node in pastingNode)
@@ -1496,6 +1571,18 @@ namespace CMNEdit
                     }
                 }
                 return;
+            }
+
+            if (IsMsg)
+            {
+                foreach (var node in pastingNode)
+                {
+                   // if (node is TreeNodeMsgProperty && nodesTree.SelectedNode is TreeNodeMsgEvent)
+                   // {
+                        TreeNode newNode = (TreeNode)node.Clone();
+                        nodesTree.SelectedNode.Nodes.Add(newNode);
+                   // }
+                }
             }
 
             if (IsPS2Prop)
@@ -1674,7 +1761,7 @@ namespace CMNEdit
             cmn.HActStart = Utils.InvariantParse(hactStartBox.Text);
             cmn.HActEnd = Utils.InvariantParse(hactEndBox.Text);
             cmn.CutInfo = CutInfos.OrderBy(x => x).ToArray();
-            cmn.DisableFrameInfo = DisableFrameInfos.ToList();
+            cmn.DisableFrameInfo = DisableFrameInfos.OrderBy(x => x.Start).ToList();
             cmn.SetChainCameraIn(Utils.InvariantParse(cameraInBox.Text));
             cmn.SetChainCameraOut(Utils.InvariantParse(cameraOutBox.Text));
             cmn.ResourceCutInfo = ResourceCutInfos;
@@ -1943,6 +2030,7 @@ namespace CMNEdit
                     }
                 }
 
+
                 Auth.Write(Auth, FilePath);
 
                 if (!string.IsNullOrEmpty(ResPath))
@@ -1954,6 +2042,32 @@ namespace CMNEdit
 
                     AuthResOOE.Write(newRes, ResPath);
                 }
+            }
+            else if (IsMsg)
+            {
+
+                List<TreeNodeMsgGroup> groups = nodesTree.Nodes.Cast<TreeNodeMsgGroup>().ToList();
+
+                foreach (var gNode in groups)
+                {
+                    gNode.Group.Events.Clear();
+
+                    List<TreeNodeMsgEvent> events = gNode.Nodes.Cast<TreeNodeMsgEvent>().ToList();
+
+                    foreach (var eNode in events)
+                    {
+                        eNode.Event.Properties.Clear();
+                        List<TreeNodeMsgProperty> properties = eNode.Nodes.Cast<TreeNodeMsgProperty>().ToList();
+
+                        foreach (var prop in properties)
+                            eNode.Event.Properties.Add(prop.Property);
+
+                        gNode.Group.Events.Add(eNode.Event);
+                    }
+                }
+
+                Msg.Groups = groups.Select(x => x.Group).ToList();
+                Msg.Write(Msg, FilePath);
             }
 
         }
@@ -3579,7 +3693,7 @@ namespace CMNEdit
         private void csvTree_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-               SelectedNodeCsvTree = (TreeNode)csvTree.GetNodeAt(e.X, e.Y);
+                SelectedNodeCsvTree = (TreeNode)csvTree.GetNodeAt(e.X, e.Y);
         }
 
         private void addCharacterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3903,6 +4017,24 @@ namespace CMNEdit
             OMTProperty property = OMTProperty.Read(dialog.FileName);
 
             ProcessPS2Prop(property);
+        }
+
+        private void openMSGToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.InitialDirectory = AppRegistry.GetFileOpenPath();
+            dialog.CheckFileExists = true;
+            dialog.Filter = "OOE/OE Msg (*.msg)|*.msg";
+
+            DialogResult res = dialog.ShowDialog();
+
+            if (res != DialogResult.OK)
+                return;
+
+            FilePath = dialog.FileName;
+            Msg msg = Msg.Read(FilePath);
+
+            ProcessMSG(msg);
         }
 
         private void openResButton_Click(object sender, EventArgs e)
@@ -4245,6 +4377,42 @@ namespace CMNEdit
 
                 DrawCSV(true);
             }
+        }
+
+        List<TreeNode> GetTreeInOrder(TreeView treeView)
+        {
+            List<TreeNode> ordered = new List<TreeNode>();
+
+            void Traverse(TreeNodeCollection nodes)
+            {
+                foreach (TreeNode node in nodes)
+                {
+                    ordered.Add(node);
+                    if (node.Nodes.Count > 0)
+                        Traverse(node.Nodes);
+                }
+            }
+
+            Traverse(treeView.Nodes);
+            return ordered;
+        }
+
+        TreeNode[] SortNodesByVisualOrder(TreeNode[] inputNodes, TreeView treeView)
+        {
+            var fullOrder = GetTreeInOrder(treeView);
+            return inputNodes
+                .OrderBy(node => fullOrder.IndexOf(node))
+                .ToArray();
+        }
+
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_rightClickedNode.MoveUp();
+        }
+
+        private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_rightClickedNode.MoveDown();
         }
     }
 }

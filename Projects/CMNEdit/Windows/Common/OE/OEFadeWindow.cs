@@ -15,7 +15,6 @@ namespace CMNEdit
         public static void Draw(Form1 form, Node node)
         {
             OEFade fade = node as OEFade;
-            OEBaseEffectWindow.Draw(form, node);
 
             Panel colorPanel = null;
 

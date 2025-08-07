@@ -64,6 +64,9 @@
     <Reference Include="MotionLibrary">
       <HintPath>..\..\Dependencies\MotionLib.dll</HintPath>
     </Reference>
+    <Reference Include="MsgLib">
+      <HintPath>..\..\..\Yakuza Stuff\MsgLib\bin\x64\Debug\net6.0\MsgLib.dll</HintPath>
+    </Reference>
     <Reference Include="MWTreeView">
       <HintPath>..\..\..\..\..\Downloads\mwtreeview\bin\Debug\MWTreeView.dll</HintPath>
     </Reference>

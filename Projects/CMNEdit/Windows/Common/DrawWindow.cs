@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using Yarhl.FileSystem;
 
 namespace CMNEdit
 {
@@ -22,6 +24,9 @@ namespace CMNEdit
 
             if (Form1.curVer == GameVersion.Y0_K1)
             {
+                if(element as OEBaseEffect != null)
+                    OEBaseEffectWindow.Draw(Form1.Instance, (OEBaseEffect)element);
+
                 switch (elemName)
                 {
                     case "e_auth_element_particle":

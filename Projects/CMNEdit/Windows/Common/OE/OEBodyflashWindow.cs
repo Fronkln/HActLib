@@ -10,6 +10,9 @@ namespace CMNEdit
         {
             OEBodyflash flash = node as OEBodyflash;
 
+            if (flash == null)
+                return;
+
             form.CreateHeader("Bodyflash");
             form.CreateInput("Bone ID 1", flash.BoneID.ToString(), delegate (string val) { flash.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Bone ID 2", flash.BoneID2.ToString(), delegate (string val) { flash.BoneID2 = int.Parse(val); }, NumberBox.NumberMode.Int);

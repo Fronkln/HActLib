@@ -45,6 +45,7 @@
             openHActCMNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openYActToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            openMSGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             nodeTooltip = new System.Windows.Forms.ToolStripSplitButton();
@@ -103,6 +104,7 @@
             infoPage = new System.Windows.Forms.TabPage();
             unkInfoPage = new System.Windows.Forms.TabPage();
             unkBytesBox = new Be.Windows.Forms.HexBox();
+            nodesTree = new MWControlSuite.MWTreeView();
             tabPage1 = new System.Windows.Forms.TabPage();
             deleteCutInfoButton = new System.Windows.Forms.Button();
             newCutInfoButton = new System.Windows.Forms.Button();
@@ -159,6 +161,12 @@
             cameraInPanel = new System.Windows.Forms.Panel();
             cameraOutBox = new System.Windows.Forms.TextBox();
             cameraInBox = new System.Windows.Forms.TextBox();
+            msgContextEvent = new System.Windows.Forms.ContextMenuStrip(components);
+            moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            msgContextProperty = new System.Windows.Forms.ContextMenuStrip(components);
+            moveUpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            moveDownToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -186,6 +194,8 @@
             contextMenuStrip1.SuspendLayout();
             hactFlagsHolder.SuspendLayout();
             cameraInPanel.SuspendLayout();
+            msgContextEvent.SuspendLayout();
+            msgContextProperty.SuspendLayout();
             SuspendLayout();
             // 
             // label5
@@ -292,7 +302,7 @@
             // toolStripDropDownButton1
             // 
             toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { openCtrlOToolStripMenuItem, openHActCMNToolStripMenuItem, openYActToolStripMenuItem, openBEPToolStripMenuItem, saveToolStripMenuItem, saveAsToolStripMenuItem });
+            toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { openCtrlOToolStripMenuItem, openHActCMNToolStripMenuItem, openYActToolStripMenuItem, openBEPToolStripMenuItem, openMSGToolStripMenuItem, saveToolStripMenuItem, saveAsToolStripMenuItem });
             toolStripDropDownButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripDropDownButton1.Image");
             toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -326,6 +336,13 @@
             openBEPToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             openBEPToolStripMenuItem.Text = "Open BEP/MEP/PS2 Property";
             openBEPToolStripMenuItem.Click += openBEPToolStripMenuItem_Click;
+            // 
+            // openMSGToolStripMenuItem
+            // 
+            openMSGToolStripMenuItem.Name = "openMSGToolStripMenuItem";
+            openMSGToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            openMSGToolStripMenuItem.Text = "Open MSG";
+            openMSGToolStripMenuItem.Click += openMSGToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
@@ -622,29 +639,6 @@
             reassembleAuthToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             reassembleAuthToolStripMenuItem.Text = "Reassemble Auth";
             reassembleAuthToolStripMenuItem.Click += reassembleAuthToolStripMenuItem_Click;
-
-            // 
-            // nodesTree
-            // 
-            nodesTree = new MWControlSuite.MWTreeView();
-            nodesTree.AllowDrop = true;
-            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
-            nodesTree.ImageIndex = 0;
-            nodesTree.ImageList = nodeIcons;
-            nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
-            nodesTree.Location = new System.Drawing.Point(-4, 0);
-            nodesTree.Name = "nodesTree";
-            nodesTree.SelectedImageIndex = 0;
-            nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
-            nodesTree.Size = new System.Drawing.Size(342, 341);
-            nodesTree.TabIndex = 1;
-            nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
-            nodesTree.AfterSelect += nodesTree_AfterSelect;
-            nodesTree.KeyDown += nodesTree_KeyDown;
-            nodesTree.KeyPress += nodesTree_KeyPress;
-            nodesTree.KeyUp += nodesTree_KeyUp;
-            nodesTree.MouseUp += nodesTree_MouseUp;
-
             // 
             // nodeIcons
             // 
@@ -776,6 +770,7 @@
             // cmnTevTab
             // 
             cmnTevTab.Controls.Add(tabControl1);
+            cmnTevTab.Controls.Add(nodesTree);
             cmnTevTab.Location = new System.Drawing.Point(4, 24);
             cmnTevTab.Name = "cmnTevTab";
             cmnTevTab.Padding = new System.Windows.Forms.Padding(3);
@@ -824,6 +819,26 @@
             unkBytesBox.ShadowSelectionColor = System.Drawing.Color.FromArgb(100, 60, 188, 255);
             unkBytesBox.Size = new System.Drawing.Size(541, 287);
             unkBytesBox.TabIndex = 0;
+            // 
+            // nodesTree
+            // 
+            nodesTree.AllowDrop = true;
+            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
+            nodesTree.ImageIndex = 0;
+            nodesTree.ImageList = nodeIcons;
+            nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
+            nodesTree.Location = new System.Drawing.Point(-4, 0);
+            nodesTree.Name = "nodesTree";
+            nodesTree.SelectedImageIndex = 0;
+            nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
+            nodesTree.Size = new System.Drawing.Size(342, 341);
+            nodesTree.TabIndex = 1;
+            nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
+            nodesTree.AfterSelect += nodesTree_AfterSelect;
+            nodesTree.KeyDown += nodesTree_KeyDown;
+            nodesTree.KeyPress += nodesTree_KeyPress;
+            nodesTree.KeyUp += nodesTree_KeyUp;
+            nodesTree.MouseUp += nodesTree_MouseUp;
             // 
             // tabPage1
             // 
@@ -1355,9 +1370,46 @@
             cameraInBox.Name = "cameraInBox";
             cameraInBox.Size = new System.Drawing.Size(85, 23);
             cameraInBox.TabIndex = 10;
-
-            cmnTevTab.Controls.Add(nodesTree);
-
+            // 
+            // msgContextEvent
+            // 
+            msgContextEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem, moveDownToolStripMenuItem });
+            msgContextEvent.Name = "contextMenuStrip2";
+            msgContextEvent.Size = new System.Drawing.Size(139, 48);
+            // 
+            // moveUpToolStripMenuItem
+            // 
+            moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
+            moveUpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            moveUpToolStripMenuItem.Text = "Move Up";
+            moveUpToolStripMenuItem.Click += moveUpToolStripMenuItem_Click;
+            // 
+            // moveDownToolStripMenuItem
+            // 
+            moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
+            moveDownToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            moveDownToolStripMenuItem.Text = "Move Down";
+            moveDownToolStripMenuItem.Click += moveDownToolStripMenuItem_Click;
+            // 
+            // msgContextProperty
+            // 
+            msgContextProperty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem1, moveDownToolStripMenuItem1 });
+            msgContextProperty.Name = "msgContextProperty";
+            msgContextProperty.Size = new System.Drawing.Size(181, 70);
+            // 
+            // moveUpToolStripMenuItem1
+            // 
+            moveUpToolStripMenuItem1.Name = "moveUpToolStripMenuItem1";
+            moveUpToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            moveUpToolStripMenuItem1.Text = "Move Up";
+            moveUpToolStripMenuItem1.Click += moveUpToolStripMenuItem_Click;
+            // 
+            // moveDownToolStripMenuItem1
+            // 
+            moveDownToolStripMenuItem1.Name = "moveDownToolStripMenuItem1";
+            moveDownToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            moveDownToolStripMenuItem1.Text = "Move Down";
+            moveDownToolStripMenuItem1.Click += moveDownToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -1409,6 +1461,8 @@
             hactFlagsHolder.PerformLayout();
             cameraInPanel.ResumeLayout(false);
             cameraInPanel.PerformLayout();
+            msgContextEvent.ResumeLayout(false);
+            msgContextProperty.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1539,5 +1593,12 @@
         private System.Windows.Forms.Button viewSelectedCSVHActButton;
         private System.Windows.Forms.ToolStripMenuItem addBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addHumanFlagToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openMSGToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
+        public System.Windows.Forms.ContextMenuStrip msgContextEvent;
+        private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem1;
+        public System.Windows.Forms.ContextMenuStrip msgContextProperty;
     }
 }

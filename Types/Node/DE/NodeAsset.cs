@@ -94,7 +94,7 @@ namespace HActLib
         internal override void WriteNodeData(DataWriter writer, GameVersion version, uint hactVer)
         {
             base.WriteNodeData(writer, version, hactVer);
-            bool isNewDE = version == GameVersion.DE2 || version == GameVersion.DE1;
+            bool isNewDE = version >= GameVersion.DE2 || version == GameVersion.DE1;
 
             
             if (CMN.IsDE(version))
