@@ -33,6 +33,24 @@ namespace CMNEdit.Windows
                 }
 
             }
+            else
+            {
+                if (list.Length < 64)
+                {
+                    List<string> listExtended = new List<string>(list);
+
+                    int toAddCount = 64 - list.Length;
+
+                    for (int i = list.Length; i < 64; i++)
+                    {
+                        listExtended.Add($"Unused/Empty Flag ({i})");
+                    }
+
+                    list = listExtended.ToArray();
+                }
+            }
+
+
 
             checkedListBox1.Items.AddRange(list);
 

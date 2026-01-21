@@ -26,6 +26,7 @@ namespace HActLib
         LJ,
         LAD7Gaiden,
         LADIW,
-        LADPYIH
+        LADPYIH,
+        YK3
     }
 }

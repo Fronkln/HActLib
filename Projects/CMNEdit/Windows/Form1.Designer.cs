@@ -164,9 +164,15 @@
             msgContextEvent = new System.Windows.Forms.ContextMenuStrip(components);
             moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            moveUpBy10ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            moveDownBy10ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            pasteAfterSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             msgContextProperty = new System.Windows.Forms.ContextMenuStrip(components);
             moveUpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             moveDownToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            moveUpBy10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            moveDownBy10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -1373,43 +1379,85 @@
             // 
             // msgContextEvent
             // 
-            msgContextEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem, moveDownToolStripMenuItem });
+            msgContextEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem, moveDownToolStripMenuItem, moveUpBy10ToolStripMenuItem1, moveDownBy10ToolStripMenuItem1, moveToTopToolStripMenuItem, pasteAfterSelectedToolStripMenuItem });
             msgContextEvent.Name = "contextMenuStrip2";
-            msgContextEvent.Size = new System.Drawing.Size(139, 48);
+            msgContextEvent.Size = new System.Drawing.Size(179, 136);
             // 
             // moveUpToolStripMenuItem
             // 
             moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-            moveUpToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            moveUpToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             moveUpToolStripMenuItem.Text = "Move Up";
             moveUpToolStripMenuItem.Click += moveUpToolStripMenuItem_Click;
             // 
             // moveDownToolStripMenuItem
             // 
             moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-            moveDownToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            moveDownToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             moveDownToolStripMenuItem.Text = "Move Down";
             moveDownToolStripMenuItem.Click += moveDownToolStripMenuItem_Click;
             // 
+            // moveUpBy10ToolStripMenuItem1
+            // 
+            moveUpBy10ToolStripMenuItem1.Name = "moveUpBy10ToolStripMenuItem1";
+            moveUpBy10ToolStripMenuItem1.Size = new System.Drawing.Size(178, 22);
+            moveUpBy10ToolStripMenuItem1.Text = "Move Up By 10";
+            moveUpBy10ToolStripMenuItem1.Click += moveUpBy10ToolStripMenuItem_Click;
+            // 
+            // moveDownBy10ToolStripMenuItem1
+            // 
+            moveDownBy10ToolStripMenuItem1.Name = "moveDownBy10ToolStripMenuItem1";
+            moveDownBy10ToolStripMenuItem1.Size = new System.Drawing.Size(178, 22);
+            moveDownBy10ToolStripMenuItem1.Text = "Move Down By 10";
+            moveDownBy10ToolStripMenuItem1.Click += moveDownBy10ToolStripMenuItem_Click;
+            // 
+            // moveToTopToolStripMenuItem
+            // 
+            moveToTopToolStripMenuItem.Name = "moveToTopToolStripMenuItem";
+            moveToTopToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            moveToTopToolStripMenuItem.Text = "Move To Top";
+            moveToTopToolStripMenuItem.Click += moveToTopToolStripMenuItem_Click;
+            // 
+            // pasteAfterSelectedToolStripMenuItem
+            // 
+            pasteAfterSelectedToolStripMenuItem.Name = "pasteAfterSelectedToolStripMenuItem";
+            pasteAfterSelectedToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            pasteAfterSelectedToolStripMenuItem.Text = "Paste After Selected";
+            pasteAfterSelectedToolStripMenuItem.Click += pasteAfterSelectedToolStripMenuItem_Click;
+            // 
             // msgContextProperty
             // 
-            msgContextProperty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem1, moveDownToolStripMenuItem1 });
+            msgContextProperty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem1, moveDownToolStripMenuItem1, moveUpBy10ToolStripMenuItem, moveDownBy10ToolStripMenuItem });
             msgContextProperty.Name = "msgContextProperty";
-            msgContextProperty.Size = new System.Drawing.Size(181, 70);
+            msgContextProperty.Size = new System.Drawing.Size(170, 92);
             // 
             // moveUpToolStripMenuItem1
             // 
             moveUpToolStripMenuItem1.Name = "moveUpToolStripMenuItem1";
-            moveUpToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            moveUpToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
             moveUpToolStripMenuItem1.Text = "Move Up";
             moveUpToolStripMenuItem1.Click += moveUpToolStripMenuItem_Click;
             // 
             // moveDownToolStripMenuItem1
             // 
             moveDownToolStripMenuItem1.Name = "moveDownToolStripMenuItem1";
-            moveDownToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            moveDownToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
             moveDownToolStripMenuItem1.Text = "Move Down";
             moveDownToolStripMenuItem1.Click += moveDownToolStripMenuItem_Click;
+            // 
+            // moveUpBy10ToolStripMenuItem
+            // 
+            moveUpBy10ToolStripMenuItem.Name = "moveUpBy10ToolStripMenuItem";
+            moveUpBy10ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            moveUpBy10ToolStripMenuItem.Text = "Move Up By 10";
+            moveUpBy10ToolStripMenuItem.Click += moveUpBy10ToolStripMenuItem_Click;
+            // 
+            // moveDownBy10ToolStripMenuItem
+            // 
+            moveDownBy10ToolStripMenuItem.Name = "moveDownBy10ToolStripMenuItem";
+            moveDownBy10ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            moveDownBy10ToolStripMenuItem.Text = "Move Down By 10";
+            moveDownBy10ToolStripMenuItem.Click += moveDownBy10ToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -1600,5 +1648,11 @@
         private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem1;
         public System.Windows.Forms.ContextMenuStrip msgContextProperty;
+        private System.Windows.Forms.ToolStripMenuItem moveUpBy10ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveDownBy10ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveUpBy10ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem moveDownBy10ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem moveToTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteAfterSelectedToolStripMenuItem;
     }
 }

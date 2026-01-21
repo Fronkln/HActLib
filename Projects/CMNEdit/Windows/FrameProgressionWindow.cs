@@ -122,7 +122,7 @@ namespace Frame_Progression_GUI
                 frameProgressionSpeed[i] = SelectedCamera.FrameProgression[i + 1] - SelectedCamera.FrameProgression[i];
 
             if (frameProgressionSpeed.Length > 1)
-                frameProgressionSpeed[frameProgressionSpeed.Length - 1] = frameProgressionSpeed[frameProgressionSpeed.Length - 2];
+                frameProgressionSpeed[frameProgressionSpeed.Length - 1] = 1;
 
             SelectedCamera.FrameProgressionSpeed = frameProgressionSpeed;
         }

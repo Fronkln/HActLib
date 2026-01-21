@@ -76,6 +76,9 @@
     <Reference Include="PIBLib">
       <HintPath>..\..\Dependencies\PIBLib.dll</HintPath>
     </Reference>
+    <Reference Include="YakuzaDataTypes">
+      <HintPath>Dependencies\YakuzaDataTypes.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

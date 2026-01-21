@@ -561,7 +561,10 @@ namespace HActLib
                         BasePib pibFile = optionalInfo.Pibs.FirstOrDefault(x => x.ParticleID == ptc.ParticleID);
 
                         if (pibFile != null)
+                        {
                             ptc.Name = pibFile.Name.Replace(".pib", "");
+                            ptc.ParticleName = ptc.Name;
+                        }
                         else
                             ptc.Name = "PIB " + ooePtc.ParticleID;
                     }

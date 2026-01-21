@@ -38,14 +38,15 @@ namespace CMNEdit
                 }
             }
 
-           form.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
+           form.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); subtitle.SubtitlesJP.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
+           form.CreateButton("Clear All", delegate { subtitle.Subtitles.Clear(); subtitle.SubtitlesJP.Clear(); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
         }
 
         private static void DrawEntry(Form1 form, OESubtitle.SubtitleEntry entry, int idx)
         {
             form.CreateInput($"Subtitle {idx} Start", entry.Start.ToString(), delegate (string val) { entry.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput($"Subtitle {idx} End", entry.End.ToString(), delegate (string val) { entry.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput($"Subtitle {idx} Text", entry.Text.ToString(), delegate (string val) { entry.Text = val; });
+            form.CreateMultilineInput($"Subtitle {idx} Text", entry.Text.ToString(), delegate (string val) { entry.Text = val; }, 50);
 
             form.CreateSpace(25);
         }

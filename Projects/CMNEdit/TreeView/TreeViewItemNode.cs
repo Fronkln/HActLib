@@ -40,7 +40,7 @@ namespace CMNEdit
         {
             string name = HActNode.Name;
 
-            if (Form1.TranslateNames || Form1.IsBep)
+            if (Form1.TranslateNames || Form1.IsBep || Form1.IsMep)
             {
                 name = TranslateName(HActNode);
             }

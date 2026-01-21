@@ -10,11 +10,13 @@ namespace HActLib
    // [ElementID(Game.Y6, 0x24)]
     //[ElementID(Game.YK2, 0x24)]
     //[ElementID(Game.JE, 0x24)]
+    /*
     [ElementID(Game.YLAD, 0x22)]
     [ElementID(Game.LJ, 0x22)]
     [ElementID(Game.LAD7Gaiden, 0x22)]
     [ElementID(Game.LADIW, 0x22)]
     [ElementID(Game.LADPYIH, 0x22)]
+    */
     public class DEElementDirectionalLight : DEElementBaseLight
     {
         public float Luminance;

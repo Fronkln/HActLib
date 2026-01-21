@@ -48,8 +48,6 @@ namespace HActLib
         e_auth_element_point_light_source = 43,
         e_auth_element_hact_input_barrage = 44,
         e_auth_element_pseudo_point_light_source_cone = 45,
-        //Matches up to this point on all OE games
-        //somewhere between 47-69, they killed off two nodes
         e_auth_element_hact2d = 46,
         e_auth_element_hact_scenario_flag = 47,
         e_auth_element_hact_end_state_change = 48,
@@ -93,7 +91,7 @@ namespace HActLib
         e_auth_element_subtitles = 95,
         e_auth_element_texture_change = 98,
         e_auth_element_2d_fade = 99,
-        e_auth_element_body_flash = 100,
+        e_auth_element_body_flash_v2 = 100,
         e_auth_element_reactor_fade_disable = 102,
         e_auth_element_subtractive_point_light = 105,
         e_auth_element_stage_parallel_light_animation = 106,

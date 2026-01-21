@@ -74,13 +74,10 @@ namespace HActLib.Internal
 
             Type elementEnum = GetElementEnumFromGame(game);
 
-            string[] names = Enum.GetNames(elementEnum);
-            Array values = Enum.GetValues(elementEnum);
+            uint value;
 
-            int idx = Array.IndexOf(names, name);
-
-            if (idx > -1)
-                return (uint)values.GetValue(idx);
+            if (Enum.TryParse(name, true, out value))
+                return value;
             else
                 return 0;
         }

@@ -212,6 +212,8 @@ namespace HActBridge
             }
             else
             {
+                success = HActFactory.ConvertOOEToOE(new FileInfo(inf.MainPath).Directory.FullName, outputDir, (uint)(OutputGame >= Game.Y0 ? 16 : 10), HActCsvPath);
+
                 if (outputGameVer == GameVersion.Y0_K1)
                 {
                     if (Directory.Exists(ptcDir))

@@ -347,27 +347,24 @@ namespace HActLib
 
                     string[] typeSplit = set2Special.Type1019.Split('_');
 
-                    switch(typeSplit[1])
+                    switch(specialData.Type)
                     {
-                        case "DAMAGE":
-                            if (typeSplit[2] != "99")
-                            {
-                                CSVHActEventDamage specialDataDamage = specialData as CSVHActEventDamage;
+                        case CSVHActEventType.Damage:
+                            CSVHActEventDamage specialDataDamage = specialData as CSVHActEventDamage;
 
-                                OEDamage damage = new OEDamage();
-                                damage.Name = set2Special.Type1019;
-                                damage.Guid = Guid.NewGuid();
-                                damage.Start = set2Special.Start;
-                                damage.End = set2Special.End;
-                                damage.ElementKind = 32;
+                            OEDamage damage = new OEDamage();
+                            damage.Name = set2Special.Type1019;
+                            damage.Guid = Guid.NewGuid();
+                            damage.Start = set2Special.Start;
+                            damage.End = set2Special.End;
+                            damage.ElementKind = 32;
 
-                                damage.Damage = specialDataDamage.Damage;
+                            damage.Damage = specialDataDamage.Damage;
 
-                                convertedNode = damage;
-                            }
+                            convertedNode = damage;
                             break;
 
-                        case "GAUGE":
+                        case CSVHActEventType.HeatChange:
                             CSVHActEventHeatGauge specialDataGauge = specialData as CSVHActEventHeatGauge;
 
                             OEHeat heat = new OEHeat();
@@ -384,7 +381,8 @@ namespace HActLib
                             convertedNode = heat;
                             break;
 
-                        case "BRANCH":
+
+                        case CSVHActEventType.Branch:
                             OEHActBranch branch = new OEHActBranch();
                             branch.Name = set2Special.Type1019;
                             branch.Guid = Guid.NewGuid();
@@ -394,21 +392,20 @@ namespace HActLib
 
                             convertedNode = branch;
                             break;
-                        case "BUTTON":
-                            if (typeSplit[2] != "99")
-                            {
-                                OEHActInput button = new OEHActInput();
-                                button.Name = set2Special.Type1019;
-                                button.Guid = Guid.NewGuid();
-                                button.Start = set2Special.Start;
-                                button.End = set2Special.End;
-                                button.ElementKind = 34;
-                                button.Timing = new GameTick(button.End - button.Start).Tick;
 
-                                convertedNode = button;
-                            }
+                        case CSVHActEventType.Button:
+                            OEHActInput button = new OEHActInput();
+                            button.Name = set2Special.Type1019;
+                            button.Guid = Guid.NewGuid();
+                            button.Start = set2Special.Start;
+                            button.End = set2Special.End;
+                            button.ElementKind = 34;
+                            button.Timing = new GameTick(button.End - button.Start).Tick;
+
+                            convertedNode = button;
                             break;
-                        case "END":
+
+                        case CSVHActEventType.HActEnd:
                             OEHActEnd end = new OEHActEnd();
                             end.Name = set2Special.Type1019;
                             end.Guid = Guid.NewGuid();

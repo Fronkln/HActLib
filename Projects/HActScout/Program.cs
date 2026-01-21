@@ -25,6 +25,7 @@ namespace HActScout
         }
 
         private static List<string> m_foundPars = new List<string>();
+        private static Dictionary<uint, string> foundUnkNodes = new Dictionary<uint, string>();
 
         static void Main(string[] args)
         {
@@ -51,9 +52,16 @@ namespace HActScout
             if (args.Length > 3)
                 recursive = args[3] == "recursive";
 
+            bool findUnknownMode = id == -1;
+
             Game gameEnum = CMN.GetGameFromString(game);
 
-            bool bepMode = args.Length > 3 && args[3] == "bep";
+            string extraMode = "";
+
+            if(args.Length > 3)
+                extraMode = args[3];
+            bool bepMode = extraMode == "bep";
+            bool pibMode = extraMode == "pibdump";
 
             if (!Directory.Exists(dir))
             {
@@ -62,6 +70,15 @@ namespace HActScout
             }
 
             Console.OutputEncoding = Encoding.GetEncoding("Shift-JIS");
+
+            
+            if(pibMode)
+            {
+                ProcessPibsNames(Directory.GetFiles(dir, "*.par", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly), gameEnum, id);
+                Console.WriteLine("Done");
+                Console.ReadKey();
+                return;
+            }
 
             if(!bepMode)
                 Process(Directory.GetFiles(dir, "*.par", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly), gameEnum, id, bepMode);
@@ -74,6 +91,14 @@ namespace HActScout
 
             foreach (string str in m_foundPars)
                 Console.WriteLine(str);
+
+            if (findUnknownMode)
+            {
+                Console.WriteLine("Unknown node IDs list: ");
+
+                foreach (var kv in foundUnkNodes.OrderBy(x=> x.Key))
+                    Console.WriteLine($"{kv.Key} {kv.Value}");
+            }
         }
 
         private static void Process(string[] files, Game game, int id, bool bepMode)
@@ -142,7 +167,7 @@ namespace HActScout
                 if(!findUnknownMode)
                     filtered = nodes.Where(x => x.ElementKind == id);
                 else
-                    filtered = nodes.Where(x => !values.Contains(x.ElementKind));
+                    filtered = nodes.Where(x => !values.Contains(x.ElementKind) && !foundUnkNodes.ContainsKey(x.ElementKind));
 
                 if (filtered.Count() > 0)
                 {
@@ -150,14 +175,60 @@ namespace HActScout
                     m_foundPars.Add(fileName);
 
                     foreach (NodeElement element in filtered)
-                        Console.WriteLine(element.Name + $" ({element.ElementKind})"  + " " + element.Guid.ToString());
+                    {
+                        Console.WriteLine(element.Name + $" ({element.ElementKind})" + " " + element.Guid.ToString());
+
+                        if(!foundUnkNodes.ContainsKey(element.ElementKind))
+                            foundUnkNodes.Add(element.ElementKind, element.Name);
+                    }
 
                     Console.WriteLine();
                 }
 
+
                 curInf.Par?.Dispose();
 
                 GC.Collect();
+            }
+        }
+
+        private static void ProcessPibsNames(string[] files, Game game, int id)
+        {
+            HashSet<uint> foundPibs = new HashSet<uint>();
+            uint pibElementID = HActLib.Internal.Reflection.GetElementIDByName("e_auth_element_particle", game);
+
+            StreamWriter writer = new StreamWriter("out_pib_list.txt");
+
+            foreach (string file in files)
+            {
+                HActInfo curInf;
+                byte[] buf = null;
+
+                string fileName = Path.GetFileName(file);
+
+                curInf = new HActInfo(file);
+                buf = curInf.GetCmnBuffer();
+
+                if (buf == null || buf.Length <= 0)
+                    continue;
+
+
+                NodeElement[] nodes = (CMN.IsDEGame(game) ? CMN.Read(buf, game).AllElements : OECMN.Read(buf).AllElements);
+
+
+                foreach(var element in nodes)
+                    if(element.ElementKind == pibElementID)
+                    {
+                        var ptc = element as DEElementParticle;
+
+                        if (foundPibs.Contains(ptc.ParticleID))
+                            continue;
+
+
+                        foundPibs.Add(ptc.ParticleID);
+                        Console.WriteLine(ptc.Name);
+                        writer.WriteLine(ptc.Name);
+                    }
             }
         }
     }

@@ -236,6 +236,7 @@ namespace HActLib
                     if (input <= Game.LJ && output >= Game.LAD7Gaiden)
                         dof2Elem.Unknown2 = 2;
                         break;
+                    /*
                 case "e_auth_element_directional_light":
                     if(input <= Game.YLAD && output >= Game.YLAD)
                     {
@@ -246,6 +247,7 @@ namespace HActLib
                             dirLight.Animation[i] = 1f;
                     }
                     break;
+                    */
 
                 case "e_auth_element_expression_target":
                     DEElementExpressionTarget expTarget = element as DEElementExpressionTarget;

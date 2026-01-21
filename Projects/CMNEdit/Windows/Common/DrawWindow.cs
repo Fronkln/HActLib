@@ -83,6 +83,10 @@ namespace CMNEdit
                     case "e_auth_element_gradation":
                         OEGradationWindow.Draw(Form1.Instance, element);
                         break;
+                    case "e_auth_element_path_adjustment":
+                        Form1.Instance.CreateHeader("Path Offset");
+                        MatrixWindow.Draw(Form1.Instance, (element as OEPathAdjustment).Adjustment);
+                        break;
                 }
             }
             else if (CMN.IsDE(Form1.curVer))

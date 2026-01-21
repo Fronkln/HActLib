@@ -28,16 +28,19 @@ namespace CMNEdit
         private NumberMode mode;
         public Action<string> action;
 
-        public NumberBox(NumberMode mode, Action<string> act)
+        private bool m_hex = false;
+
+        public NumberBox(NumberMode mode, Action<string> act, bool hex = false)
         {
             this.mode = mode;
             action = act;
+            m_hex = hex;
         }
 
         private string currentText;
 
 
-        public static bool Validate(string text, NumberMode mode)
+        public static bool Validate(string text, NumberMode mode, bool hex)
         {
             if (text.Length <= 0)
                 return false;
@@ -49,16 +52,16 @@ namespace CMNEdit
                     return float.TryParse(text, NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out result);
                 case NumberMode.Int:
                     int i;
-                    return int.TryParse(text, out i);
+                    return int.TryParse(text, hex ? NumberStyles.HexNumber : NumberStyles.Number, null, out i);
                 case NumberMode.UInt:
                     uint ui;
-                    return uint.TryParse(text, out ui);
+                    return uint.TryParse(text, hex ? NumberStyles.HexNumber : NumberStyles.Number, null, out ui);
                 case NumberMode.Long:
                     long l;
-                    return long.TryParse(text, out l);
+                    return long.TryParse(text, hex ? NumberStyles.HexNumber : NumberStyles.Number, null, out l);
                 case NumberMode.ULong:
                     ulong ul;
-                    return ulong.TryParse(text, out ul);
+                    return ulong.TryParse(text, hex ? NumberStyles.HexNumber : NumberStyles.Number, null, out ul);
 
                 case NumberMode.Short:
                     short s;
@@ -78,7 +81,7 @@ namespace CMNEdit
 
         protected void Validate()
         {
-            bool valid = Validate(Text, mode);
+            bool valid = Validate(Text, mode, m_hex);
 
             if (valid)
                 action?.Invoke(Text);

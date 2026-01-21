@@ -22,9 +22,9 @@ using MotionLib;
 using HActLib.Internal;
 using HActLib.OOE;
 using HActLib.YAct;
-using MsgLib;
+using YakuzaDataTypes.MSG;
+using YakuzaDataTypes.PAC;
 using System.Windows.Forms.DataVisualization.Charting;
-using System.Drawing.Drawing2D;
 
 namespace CMNEdit
 {
@@ -612,6 +612,8 @@ namespace CMNEdit
         }
         private void ProcessMSG(Msg msg)
         {
+            AppRegistry.Root.SetValue("LastFileDir", folderDir);
+
             Msg = msg;
 
             IsBep = false;
@@ -631,11 +633,30 @@ namespace CMNEdit
 
             hactTabs.TabPages[0].Text = "MSG";
 
+            var groupsRoot = new TreeNode("Groups");
+
 
             foreach (var group in msg.Groups)
             {
-                nodesTree.Nodes.Add(new TreeNodeMsgGroup(group));
+                groupsRoot.Nodes.Add(new TreeNodeMsgGroup(group));
             }
+
+            var coordinatesRoot = new TreeNode("Coordinates");
+
+
+            for (int i = 0; i < msg.Positions.Count; i++)
+            {
+                var coord = msg.Positions[i];
+                var node = new TreeNodeMsgCoordinate(coord);
+
+                node.Text = i + " - " + node.Text;
+
+                coordinatesRoot.Nodes.Add(node);
+            }
+
+
+            nodesTree.Nodes.Add(groupsRoot);
+            nodesTree.Nodes.Add(coordinatesRoot);
         }
 
         public void DrawCutInfo()
@@ -775,7 +796,7 @@ namespace CMNEdit
                 CreateHeader("", 0);
         }
 
-        public TextBox CreateInput(string label, string defaultValue, Action<string> editedCallback, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false)
+        public TextBox CreateInput(string label, string defaultValue, Action<string> editedCallback, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false, bool hex = false)
         {
             TableLayoutPanel varPanel = null;
 
@@ -789,11 +810,40 @@ namespace CMNEdit
             varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
             varPanel.RowCount++;
 
-            NumberBox input = new NumberBox(mode, editedCallback);
+            NumberBox input = new NumberBox(mode, editedCallback, hex);
             input.Text = defaultValue;
-            input.Size = new Size(200, 15);
+            input.Size = new Size(250, 15);
             input.ReadOnly = readOnly;
             input.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+            Control text = CreateText(label, false);
+
+            varPanel.Controls.Add(text, 0, varPanel.RowCount - 1);
+            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
+
+            return input;
+        }
+
+        public TextBox CreateMultilineInput(string label, string defaultValue, Action<string> editedCallback, int size = 25, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false)
+        {
+            TableLayoutPanel varPanel = null;
+
+            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
+
+            if (!isCsvTree)
+                varPanel = this.varPanel;
+            else
+                varPanel = csvVarPanel;
+
+            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, size + 10));
+            varPanel.RowCount++;
+
+            NumberBox input = new NumberBox(mode, editedCallback);
+            input.Text = defaultValue;
+            input.Size = new Size(250, size);
+            input.ReadOnly = readOnly;
+            input.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            input.Multiline = true;
 
             Control text = CreateText(label, false);
 
@@ -1080,9 +1130,29 @@ namespace CMNEdit
 
             if (IsMep)
             {
+                var mepEffectOE = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE);
+
                 CreateHeader("Mep");
-                CreateInput("Bone", ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneName.Text, delegate (string val) { ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneName.Set(val); });
-                CreateInput("Bone ID", ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneID.ToString(), delegate (string val) { ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
+                CreateInput("Bone", mepEffectOE.BoneName.Text, delegate (string val) { mepEffectOE.BoneName.Set(val); });
+                CreateInput("Bone ID", mepEffectOE.BoneID.ToString(), delegate (string val) { mepEffectOE.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
+
+                CreateButton("Try Update Bone ID", delegate
+                {
+                    Dictionary<string, int> checkDict = null;
+
+                    if (curGame <= Game.Y5)
+                        checkDict = MEPDict.OOEBoneID;
+                    else
+                        checkDict = MEPDict.OEBoneID;
+
+                    if(checkDict != null)
+                    {
+                        string boneName = mepEffectOE.BoneName.Text;
+
+                        if (checkDict.ContainsKey(boneName))
+                            mepEffectOE.BoneID = checkDict[boneName];
+                    }
+                });
             }
 
             switch (node.Category)
@@ -1306,6 +1376,11 @@ namespace CMNEdit
                             msgProp.Property.UnreadData = provider.Bytes.ToArray();
                     };
                 }
+            }
+            else if (node is TreeNodeMsgCoordinate)
+            {
+                TreeNodeMsgCoordinate coord = (TreeNodeMsgCoordinate)node;
+                DrawMSG.DrawCoordinate(this, coord);
             }
 
 
@@ -1577,11 +1652,11 @@ namespace CMNEdit
             {
                 foreach (var node in pastingNode)
                 {
-                   // if (node is TreeNodeMsgProperty && nodesTree.SelectedNode is TreeNodeMsgEvent)
-                   // {
-                        TreeNode newNode = (TreeNode)node.Clone();
-                        nodesTree.SelectedNode.Nodes.Add(newNode);
-                   // }
+                    // if (node is TreeNodeMsgProperty && nodesTree.SelectedNode is TreeNodeMsgEvent)
+                    // {
+                    TreeNode newNode = (TreeNode)node.Clone();
+                    nodesTree.SelectedNode.Nodes.Add(newNode);
+                    // }
                 }
             }
 
@@ -2046,7 +2121,9 @@ namespace CMNEdit
             else if (IsMsg)
             {
 
-                List<TreeNodeMsgGroup> groups = nodesTree.Nodes.Cast<TreeNodeMsgGroup>().ToList();
+                List<TreeNodeMsgGroup> groups = nodesTree.Nodes[0].Nodes.Cast<TreeNodeMsgGroup>().ToList();
+                List<TreeNodeMsgCoordinate> coords = nodesTree.Nodes[1].Nodes.Cast<TreeNodeMsgCoordinate>().ToList();
+
 
                 foreach (var gNode in groups)
                 {
@@ -2067,6 +2144,7 @@ namespace CMNEdit
                 }
 
                 Msg.Groups = groups.Select(x => x.Group).ToList();
+                Msg.Positions = coords.Select(x => x.Position).ToList();
                 Msg.Write(Msg, FilePath);
             }
 
@@ -2349,6 +2427,8 @@ namespace CMNEdit
                     return nodesToFind.Where(x => x.Type == AuthNodeTypeOOE.Character).ToArray();
                 case AuthResourceOOEType.ObjectMotion:
                     return nodesToFind.Where(x => x.Type == AuthNodeTypeOOE.Character || x.Type == AuthNodeTypeOOE.Model).Select(x => x.AnimationData.Guid).Cast<object>().ToArray();
+                case AuthResourceOOEType.Model:
+                    return nodesToFind.Where(x => x.Type == AuthNodeTypeOOE.Model).ToArray();
             }
         }
 
@@ -2367,8 +2447,10 @@ namespace CMNEdit
 
                 var array = (Node[])(EditingResourceCurrentLinkedNodes);
 
-                if (!((EditingResourceCurrentLinkedNodes == null || EditingResourceCurrentLinkedNodes.Length <= 0)))
-                    editingResourceModern.Resource.NodeGUID = array[linkedNodeBox.SelectedIndex].Guid;
+
+                if (linkedNodeBox.SelectedIndex >= 0)
+                    if (!((EditingResourceCurrentLinkedNodes == null || EditingResourceCurrentLinkedNodes.Length <= 0)))
+                        editingResourceModern.Resource.NodeGUID = array[linkedNodeBox.SelectedIndex].Guid;
 
                 editingResourceModern.Resource.StartFrame = Utils.InvariantParse(resStartBox.Text);
                 editingResourceModern.Resource.EndFrame = Utils.InvariantParse(resEndBox.Text);
@@ -2380,17 +2462,20 @@ namespace CMNEdit
                 editingResourceOoe.Resource.Resource = resourceNameTextbox.Text;
                 editingResourceOoe.Resource.Type = (AuthResourceOOEType)resourceTypeBox.SelectedIndex;
 
-                if (!((EditingResourceCurrentLinkedNodes == null || EditingResourceCurrentLinkedNodes.Length <= 0)))
+                if (linkedNodeBox.SelectedIndex >= 0)
                 {
-                    if (editingResourceOoe.Resource.Type != AuthResourceOOEType.ObjectMotion)
+                    if (!((EditingResourceCurrentLinkedNodes == null || EditingResourceCurrentLinkedNodes.Length <= 0)))
                     {
-                        var array = (AuthNodeOOE[])(EditingResourceCurrentLinkedNodes);
-                        editingResourceOoe.Resource.GUID = array[linkedNodeBox.SelectedIndex].Guid;
-                    }
-                    else
-                    {
-                        var array = EditingResourceCurrentLinkedNodes;
-                        editingResourceOoe.Resource.GUID = array.Cast<Guid>().ToArray()[linkedNodeBox.SelectedIndex];
+                        if (editingResourceOoe.Resource.Type != AuthResourceOOEType.ObjectMotion)
+                        {
+                            var array = (AuthNodeOOE[])(EditingResourceCurrentLinkedNodes);
+                            editingResourceOoe.Resource.GUID = array[linkedNodeBox.SelectedIndex].Guid;
+                        }
+                        else
+                        {
+                            var array = EditingResourceCurrentLinkedNodes;
+                            editingResourceOoe.Resource.GUID = array.Cast<Guid>().ToArray()[linkedNodeBox.SelectedIndex];
+                        }
                     }
                 }
 
@@ -4031,8 +4116,16 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
+            curGame = (Game)targetGameCombo.SelectedIndex;
+
             FilePath = dialog.FileName;
-            Msg msg = Msg.Read(FilePath);
+
+            YakuzaDataTypes.Game game = curGame >= Game.Ishin ? YakuzaDataTypes.Game.Y0 : YakuzaDataTypes.Game.Y5;
+            Msg msg = Msg.Read(FilePath, game);
+
+            //OpenFileDialog dialoga = new OpenFileDialog();
+            //dialoga.ShowDialog();
+            //var pac = PAC.Read(dialoga.FileName, game);
 
             ProcessMSG(msg);
         }
@@ -4413,6 +4506,46 @@ namespace CMNEdit
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_rightClickedNode.MoveDown();
+        }
+
+        private void moveUpBy10ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 10; i++)
+                m_rightClickedNode.MoveUp();
+        }
+
+        private void moveDownBy10ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 10; i++)
+                m_rightClickedNode.MoveDown();
+        }
+
+        private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 200; i++)
+                m_rightClickedNode.MoveUp();
+        }
+
+        private void pasteAfterSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (nodesTree.SelectedNode == null || CopiedNode.Length <= 0)
+                return;
+
+            var selectedNode = nodesTree.SelectedNode;
+            TreeNode parentNode = nodesTree.SelectedNode.Parent;
+
+            nodesTree.SuspendLayout();
+            if (parentNode == null)
+            {
+                int index = selectedNode.Index + 1;
+                nodesTree.Nodes.Insert(index, (TreeNode)CopiedNode[0].Clone());
+            }
+            else
+            {
+                int index = selectedNode.Index + 1;
+                parentNode.Nodes.Insert(index, (TreeNode)CopiedNode[0].Clone());
+            }
+            nodesTree.ResumeLayout();
         }
     }
 }
