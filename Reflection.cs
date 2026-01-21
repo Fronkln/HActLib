@@ -20,6 +20,8 @@ namespace HActLib.Internal
             {
                 default:
                     return typeof(LADIWNodeIDs);
+                case Game.YK3:
+                    return typeof(YK3NodeIDs);
                 case Game.LADPYIH:
                     return typeof(LADPYIHNodeIDs);
                 case Game.LADIW:
