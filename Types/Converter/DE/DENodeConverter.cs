@@ -138,12 +138,6 @@ namespace HActLib
             node.ReadNodeData(reader, inf, CMN.LastGameVersion);
             long postReadPos = reader.Stream.Position;
 
-
-#if DEBUG
-            System.Diagnostics.Debug.Print("Read: " + node.ToString() + " " + node.Category + " " + node.Name);
-#endif
-
-
             if (postDataPos > postReadPos)
             {
                 string debugStr = $"[WARNING] Read {postDataPos - postReadPos} bytes less than the expected {nodeSize}!\nAddress:{preReadPos}\nGNode type: {node.Category}\nUID:{node.Guid}\nName:{node.Name}";

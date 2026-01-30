@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x61)]
     [ElementID(Game.LADIW, 0x61)]
     [ElementID(Game.LADPYIH, 0x61)]
+    [ElementID(Game.YK3, 0x61)]
     public  class DEElementDivPlay : NodeElement
     {
         public string FileName;

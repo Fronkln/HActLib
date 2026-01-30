@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x121)]
     [ElementID(Game.LADIW, 0x121)]
     [ElementID(Game.LADPYIH, 0x121)]
+    [ElementID(Game.YK3, 0x121)]
     public class DEElementGrainNoise : NodeElement
     {
         public float Power = 1;

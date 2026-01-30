@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x120)]
     [ElementID(Game.LADIW, 0x120)]
     [ElementID(Game.LADPYIH, 0x120)]
+    [ElementID(Game.YK3, 0x120)]
     public class DEElementAnalogNoise : NodeElement
     {
         public float Speed = 0.1f;

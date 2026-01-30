@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x15)]
     [ElementID(Game.LADIW, 0x15)]
     [ElementID(Game.LADPYIH, 0x15)]
+    [ElementID(Game.YK3, 0x15)]
     public class DEElementParticleGround : NodeElement
     {
         public Vector3 Scale = new Vector3(1, 1, 1);

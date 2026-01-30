@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HActLib
 {
-    [GamePrefix(Game.LADPYIH, "yk3", "kiwami3", "k3")]
+    [GamePrefix(Game.YK3, "yk3", "kiwami3", "k3")]
     public enum YK3NodeIDs : uint
     {
         e_auth_element_kind_dmy = 0x0,

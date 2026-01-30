@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 namespace HActLib
@@ -12,6 +12,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x68)]
     [ElementID(Game.LADIW, 0x68)]
     [ElementID(Game.LADPYIH, 0x68)]
+    [ElementID(Game.YK3, 0x68)]
     public class DEElementCharaOut : NodeElement
     {
         public AuthReturnType ReturnType;

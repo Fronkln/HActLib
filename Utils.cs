@@ -34,11 +34,11 @@ namespace HActLib
 
             // If recursive and copying subdirectories, recursively call this method
 
-                foreach (DirectoryInfo subDir in dirs)
-                {
-                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
-                    CopyDir(subDir.FullName, newDestinationDir);
-                }          
+            foreach (DirectoryInfo subDir in dirs)
+            {
+                string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                CopyDir(subDir.FullName, newDestinationDir);
+            }
         }
 
         public static string ToLength(this string self, int length)
@@ -118,5 +118,11 @@ namespace HActLib
 
             return expandedCurve;
         }
+
+        internal static IEnumerable<Enum> GetFlags(this Enum e)
+        {
+            return Enum.GetValues(e.GetType()).Cast<Enum>().Where(e.HasFlag);
+        }
+
     }
 }

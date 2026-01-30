@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 namespace HActLib
@@ -8,6 +8,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x30)]
     [ElementID(Game.LADIW, 0x30)]
     [ElementID(Game.LADPYIH, 0x30)]
+    [ElementID(Game.YK3, 0x30)]
     public class DEElementEyesHighlight : NodeElement
     {
         public Vector2 Pos1;

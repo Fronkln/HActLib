@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 
@@ -13,6 +13,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x1E)]
     [ElementID(Game.LADIW, 0x1E)]
     [ElementID(Game.LADPYIH, 0x1E)]
+    [ElementID(Game.YK3, 0x1E)]
     */
     public class DEElementSpotLight : DEElementBaseLight
     {

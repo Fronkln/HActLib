@@ -564,6 +564,13 @@ namespace HActLib
                 case "yakuzakiwami2":
                     return Game.YK2;
 
+                case "k3":
+                    return Game.YK3;
+                case "yk3":
+                    return Game.YK3;
+                case "yakuzakiwami3":
+                    return Game.YK3;
+
                 case "je":
                     return Game.JE;
                 case "judge":
@@ -597,7 +604,7 @@ namespace HActLib
             switch (game)
             {
                 default:
-                    return GameVersion.DE2;
+                    return GameVersion.DE3;
                 case Game.Y1:
                     return GameVersion.PS2;
                 case Game.Y2:
@@ -635,6 +642,8 @@ namespace HActLib
                 case Game.LADIW:
                     return GameVersion.DE2;
                 case Game.LADPYIH:
+                    return GameVersion.DE3;
+                case Game.YK3:
                     return GameVersion.DE3;
             }
         }

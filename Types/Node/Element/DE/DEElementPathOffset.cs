@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +17,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x2A)]
     [ElementID(Game.LADIW, 0x2A)]
     [ElementID(Game.LADPYIH, 0x2A)]
+    [ElementID(Game.YK3, 0x2A)]
     public class DEElementPathOffset : NodeElement
     {
         public Matrix4x4 Matrix = Matrix4x4.Default;

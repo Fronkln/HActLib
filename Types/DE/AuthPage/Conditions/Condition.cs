@@ -8,28 +8,36 @@ namespace HActLib
     public class ConditionConvert : IConverter<BinaryFormat, Condition>
     {
 
-        public static string GetName(uint cond, Game game)
+        public static Type GetTypeListEnumForGame(Game game)
         {
             Type enumType;
 
-            if (game <= Game.Y6)
-                enumType = typeof(AuthPageConditionsY6);
-            else
-                enumType = typeof(AuthPageConditionsGeneric);
+            switch (game)
+            {
+                default:
+                    enumType = typeof(AuthPageConditionsGeneric);
+                    break;
+                case Game.Y6:
+                    enumType = typeof(AuthPageConditionsY6);
+                    break;
+                case Game.LADPYIH:
+                case Game.YK3:
+                    enumType = typeof(AuthPageConditionsPYIH);
+                    break;
 
-            return Enum.GetName(enumType, cond);
+            }
+
+            return enumType;
+        }
+
+        public static string GetName(uint cond, Game game)
+        {
+            return Enum.GetName(GetTypeListEnumForGame(game), cond);
         }
 
         public static uint GetID(string name, Game game)
         {
-            Type enumType;
-
-            if (game == Game.Y6)
-                enumType = typeof(AuthPageConditionsY6);
-            else
-                enumType = typeof(AuthPageConditionsGeneric);
-
-            return (uint)Enum.Parse(enumType, name);
+            return (uint)Enum.Parse(GetTypeListEnumForGame(game), name);
         }
 
         internal Condition GetCondFromType(uint cond, Game game)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0xB7)]
     [ElementID(Game.LADIW, 0xB7)]
     [ElementID(Game.LADPYIH, 0xB7)]
+    [ElementID(Game.YK3, 0xB7)]
     public class DEHActInput : NodeElement
     {
         public uint InputID;

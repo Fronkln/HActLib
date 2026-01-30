@@ -21,6 +21,8 @@ namespace CMNEdit
                 form.CreateInput("Condition (ID)", ((int)folder.Condition).ToString(), delegate (string val) { folder.Condition = (ConditionTable)uint.Parse(val); }, NumberBox.NumberMode.UInt);
                 form.CreateInput("Tag Value", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
                 form.CreateInput("PUID ID", folder.PuidID.ToString(), delegate (string val) { folder.PuidID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+                form.CreateInput("Logical Operator?", folder.DataFlag.ToString(), delegate (string val) { folder.DataFlag = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+                form.CreateInput("Unknown", folder.Unknown1.ToString(), delegate (string val) { folder.Unknown1 = uint.Parse(val); }, NumberBox.NumberMode.UInt);
             }
             else
             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -18,7 +18,11 @@ namespace HActLib
         public ulong Attributes; // battle_reaction_attr.bin
         public int AttackID;
         public int Unknown; //Introduced in Gaiden
-        public int Unknown2; //Introduced in Pirate Gaiden
+        public bool Unknown2; //Introduced in Pirate Gaiden
+        public bool Unknown3; //Introduced in Pirate Gaiden
+        public float Unknown4; //Introduced in Kiwami 3
+        public int Unknown5; //Introduced in Kiwami 3
+        public int Unknown6; //Introduced in Kiwami 3
     };
 
     [ElementID(Game.Y6, 0x4D)]
@@ -29,6 +33,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x4A)]
     [ElementID(Game.LADIW, 0x4A)]
     [ElementID(Game.LADPYIH, 0x4A)]
+    [ElementID(Game.YK3, 0x4A)]
     public class DETimingInfoAttack : NodeElement
     {
         public TimingInfoAttack Data = new TimingInfoAttack();
@@ -39,7 +44,7 @@ namespace HActLib
 
             Data.Damage = reader.ReadUInt32();
             Data.Power = reader.ReadUInt16();
-            Data.Flag = reader.ReadUInt16();     
+            Data.Flag = reader.ReadUInt16();
             Data.Parts = reader.ReadUInt32();
 
 
@@ -54,8 +59,23 @@ namespace HActLib
             if (CMN.LastHActDEGame == Game.LAD7Gaiden || CMN.LastHActDEGame >= Game.LADPYIH)
                 Data.Unknown = reader.ReadInt32();
 
-            if(CMN.LastHActDEGame >= Game.LADPYIH)
-                Data.Unknown2 = reader.ReadInt32();
+
+            if (CMN.LastHActDEGame >= Game.LADPYIH)
+            {
+                Data.Unknown2 = reader.ReadByte() > 0;
+                Data.Unknown3 = reader.ReadByte() > 0;
+                
+                if(CMN.LastHActDEGame < Game.YK3)
+                    reader.Stream.Position += 2;
+            }
+
+            if (CMN.LastHActDEGame >= Game.YK3)
+            {
+                Data.Unknown4 = reader.ReadSingle();
+                Data.Unknown5 = reader.ReadInt32();
+                Data.Unknown6 = reader.ReadInt32();
+            }
+
         }
 
 
@@ -78,7 +98,19 @@ namespace HActLib
                 writer.Write(Data.Unknown);
 
             if (CMN.LastHActDEGame >= Game.LADPYIH)
-                writer.Write(Data.Unknown2);
+            {
+                writer.Write(Convert.ToByte(Data.Unknown2));
+                writer.Write(Convert.ToByte(Data.Unknown3));
+
+                if (CMN.LastHActDEGame < Game.YK3)
+                    writer.WriteTimes(0, 2);
+            }
+            if (CMN.LastHActDEGame >= Game.YK3)
+            {
+                writer.Write(Data.Unknown4);
+                writer.Write(Data.Unknown5);
+                writer.Write(Data.Unknown6);
+            }
         }
 
         public override Node TryConvert(Game input, Game output)
@@ -106,6 +138,34 @@ namespace HActLib
             return this;
         }
 
+        public static Type GetAttributesForGame(Game game)
+        {
+            switch (game)
+            {
+                default:
+                    return typeof(BattleAttributeLJ);
+                case Game.Y6Demo:
+                    return typeof(BattleAttributeYK2);
+                case Game.Y6:
+                    return typeof(BattleAttributeYK2);
+                case Game.YK2:
+                    return typeof(BattleAttributeYK2);
+                case Game.JE:
+                    return typeof(BattleAttributeJE);
+                case Game.YLAD:
+                    return typeof(BattleAttributeYLAD);
+                case Game.LJ:
+                    return typeof(BattleAttributeLJ);
+                case Game.LAD7Gaiden:
+                    return typeof(BattleAttributeGaiden);
+                case Game.LADIW:
+                    return typeof(BattleAttributeIW);
+                case Game.LADPYIH:
+                    return typeof(BattleAttributeYK3);
+                case Game.YK3:
+                    return typeof(BattleAttributeYK3);
+            }
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -16,6 +16,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x5F)]
     [ElementID(Game.LADIW, 0x5F)]
     [ElementID(Game.LADPYIH, 0x5F)]
+    [ElementID(Game.YK3, 0x5F)]
     public class DEElementTimingInfoStun : NodeElement
     {
         public uint Type;

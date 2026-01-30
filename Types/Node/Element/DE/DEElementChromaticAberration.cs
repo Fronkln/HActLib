@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 namespace HActLib
@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0xAB)]
     [ElementID(Game.LADIW, 0xAB)]
     [ElementID(Game.LADPYIH, 0xAB)]
+    [ElementID(Game.YK3, 0xAB)]
     public class DEElementChromaticAberration : NodeElement
     {
         public int Samples;

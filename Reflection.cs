@@ -76,10 +76,10 @@ namespace HActLib.Internal
 
             Type elementEnum = GetElementEnumFromGame(game);
 
-            uint value;
+            object value;
 
-            if (Enum.TryParse(name, true, out value))
-                return value;
+            if (Enum.TryParse(elementEnum, name, true, out value))
+                return (uint)value;
             else
                 return 0;
         }

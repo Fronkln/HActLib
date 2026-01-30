@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x9A)]
     [ElementID(Game.LADIW, 0x9A)]
     [ElementID(Game.LADPYIH, 0x9A)]
+    [ElementID(Game.YK3, 0x9A)]
     public class DEElementReduceAssetUse : NodeElement
     {
         public enum EFlag

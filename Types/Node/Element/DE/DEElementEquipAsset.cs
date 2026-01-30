@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 namespace HActLib
@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x71)]
     [ElementID(Game.LADIW, 0x71)]
     [ElementID(Game.LADPYIH, 0x71)]
+    [ElementID(Game.YK3, 0x71)]
     public class DEElementEquipAsset : NodeElement
     {
         public uint AssetID;

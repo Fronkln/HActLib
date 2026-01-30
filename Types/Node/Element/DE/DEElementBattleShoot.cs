@@ -1,4 +1,4 @@
-﻿using Yarhl.IO;
+using Yarhl.IO;
 
 namespace HActLib
 {
@@ -10,6 +10,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x94)]
     [ElementID(Game.LADIW, 0x94)]
     [ElementID(Game.LADPYIH, 0x94)]
+    [ElementID(Game.YK3, 0x94)]
     public class DEElementBattleShoot : NodeElement
     {
         public uint Param = 0;

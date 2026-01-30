@@ -194,12 +194,47 @@ namespace HActLib
 
             switch (elementName)
             {
+
+                case "e_auth_element_battle_attack":
+                    DETimingInfoAttack attack = element as DETimingInfoAttack;
+                    var inputAttribType = DETimingInfoAttack.GetAttributesForGame(input);
+                    var outputAttribType = DETimingInfoAttack.GetAttributesForGame(output);
+
+
+                    string[] inputAttribNames = Enum.GetNames(inputAttribType);
+                    string[] outputAttribNames = Enum.GetNames(outputAttribType);
+
+
+                    ulong attackAttribs = 0;
+
+                    for (int i = 0; i < inputAttribNames.Length; i++)
+                    {
+                        ulong val = ((ulong)1 << i);
+
+                        if((attack.Data.Attributes & val) != 0)
+                        {
+                            if (Enum.IsDefined(outputAttribType, inputAttribNames[i]))
+                                attackAttribs += (ulong)1 << (int)Enum.Parse(outputAttribType, inputAttribNames[i]);
+                        }
+                    }
+
+                    attack.Data.Attributes = attackAttribs;
+  
+
+                    if(input <= Game.LAD7Gaiden && output >= Game.LADPYIH)
+                    {
+                        attack.Data.Unknown2 = true;
+                        attack.Data.Unknown3 = true;
+                    }
+
+                    break;
+
                 case "e_auth_element_se":
                     DEElementSE seElem = element as DEElementSE;
 
                     Type specialSoundsInput = DEElementSE.GetSpecialSoundTypeForGame(input);
 
-                    if(Enum.IsDefined(specialSoundsInput, seElem.CueSheet))
+                    if (Enum.IsDefined(specialSoundsInput, seElem.CueSheet))
                     {
                         Type specialSoundsOutput = DEElementSE.GetSpecialSoundTypeForGame(output);
 
@@ -214,7 +249,7 @@ namespace HActLib
                     {
                         Type cuesheetsInput = DEElementSE.GetSoundCuesheetTypeForGame(input);
 
-                        if(cuesheetsInput != null && Enum.IsDefined(cuesheetsInput, seElem.CueSheet))
+                        if (cuesheetsInput != null && Enum.IsDefined(cuesheetsInput, seElem.CueSheet))
                         {
                             Type cuesheetsOutput = DEElementSE.GetSoundCuesheetTypeForGame(output);
 
@@ -235,19 +270,19 @@ namespace HActLib
 
                     if (input <= Game.LJ && output >= Game.LAD7Gaiden)
                         dof2Elem.Unknown2 = 2;
-                        break;
-                    /*
-                case "e_auth_element_directional_light":
-                    if(input <= Game.YLAD && output >= Game.YLAD)
-                    {
-                        DEElementDirectionalLight dirLight = element as DEElementDirectionalLight;
-                        dirLight.Animation = new float[256];
-
-                        for (int i = 0; i < dirLight.Animation.Length; i++)
-                            dirLight.Animation[i] = 1f;
-                    }
                     break;
-                    */
+                /*
+            case "e_auth_element_directional_light":
+                if(input <= Game.YLAD && output >= Game.YLAD)
+                {
+                    DEElementDirectionalLight dirLight = element as DEElementDirectionalLight;
+                    dirLight.Animation = new float[256];
+
+                    for (int i = 0; i < dirLight.Animation.Length; i++)
+                        dirLight.Animation[i] = 1f;
+                }
+                break;
+                */
 
                 case "e_auth_element_expression_target":
                     DEElementExpressionTarget expTarget = element as DEElementExpressionTarget;
@@ -259,26 +294,26 @@ namespace HActLib
                     break;
 
                 case "e_auth_element_speech":
-                    
+
                     DEElementSpeech speech = element as DEElementSpeech;
 
-                        if(output <= Game.YLAD && input >= Game.YLAD)
-                        {
+                    if (output <= Game.YLAD && input >= Game.YLAD)
+                    {
                         if (speech.SpeechVersion == 12)
                             speech.SpeechVersion = 10;
-                        }
+                    }
                     break;
 
                 case "e_auth_element_rim_flash":
                     DEElementRimflash rimflash = element as DEElementRimflash;
 
-                    if((input <= Game.YK2 && output > Game.YK2) && rimflash.RimflashParams != null)
+                    if ((input <= Game.YK2 && output > Game.YK2) && rimflash.RimflashParams != null)
                     {
 
                         if (output > Game.JE)
                             rimflash.Version = 5;
 
-                        switch(output)
+                        switch (output)
                         {
                             case Game.JE:
                                 RimflashParamsV2 paramsV2 = new RimflashParamsV2();
@@ -303,7 +338,7 @@ namespace HActLib
                         }
                     }
                     break;
-                       
+
             }
         }
 

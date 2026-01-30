@@ -165,6 +165,13 @@ namespace CMNEdit
             }
         }
 
+        private void ClearVarPanel()
+        {
+            varPanel.Controls.Clear();
+            varPanel.RowCount = 0;
+            varPanel.RowStyles.Clear();
+        }
+
         private void ClearEverything()
         {
             SuspendLayout();
@@ -179,9 +186,7 @@ namespace CMNEdit
             nodesTree.Nodes.Clear();
             resTree.Nodes.Clear();
 
-            varPanel.Controls.Clear();
-            varPanel.RowCount = 0;
-            varPanel.RowStyles.Clear();
+            ClearVarPanel();
 
             ResumeLayout(true);
 
@@ -1585,7 +1590,9 @@ namespace CMNEdit
                     if (currentTab == 0 && nodesTree.SelNodes.Count > 0)
                     {
                         TreeNode node = nodesTree.SelectedNode as TreeNode;
+                        SuspendLayout();
                         DeleteSelectedNodes();
+                        ResumeLayout(true);
                     }
                 }
             }
@@ -1609,6 +1616,11 @@ namespace CMNEdit
 
         private void DeleteSelectedNodes()
         {
+            varPanel.SuspendLayout();
+            ClearVarPanel();
+            varPanel.ResumeLayout();
+            
+
             MWTreeNodeWrapper[] nodes = nodesTree.SelNodes.Values.Cast<MWTreeNodeWrapper>().ToArray();
             Hashtable table = (Hashtable)nodesTree.SelNodes.Clone();
 
@@ -1623,6 +1635,8 @@ namespace CMNEdit
 
             foreach (MWTreeNodeWrapper node in nodes)
                 nodesTree.RemoveNode(node);
+
+            EditingNode = null;
         }
 
         private void PasteNode(TreeNode[] pastingNode)

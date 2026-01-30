@@ -3,6 +3,7 @@ using CMNEdit;
 using CMNEdit.Windows.Common.DE;
 using HActLib;
 using System.Reflection.Metadata;
+using System.Globalization;
 
 namespace CMNEdit.Windows.Common.DE
 {
@@ -27,43 +28,22 @@ namespace CMNEdit.Windows.Common.DE
             form.CreateInput("Attributes", inf.Data.Attributes.ToString(), delegate (string val) { inf.Data.Attributes = ulong.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Long);
 
             if (Form1.curGame == Game.LAD7Gaiden || Form1.curGame >= Game.LADPYIH)
-                form.CreateInput("Unknown", inf.Data.Unknown.ToString(), delegate (string val) { inf.Data.Unknown = int.Parse(val); }, NumberBox.NumberMode.Int);
+                form.CreateInput("Unknown Gaiden", inf.Data.Unknown.ToString(), delegate (string val) { inf.Data.Unknown = int.Parse(val); }, NumberBox.NumberMode.Int);
            
             if(Form1.curGame >= Game.LADPYIH)
-                form.CreateInput("Unknown", inf.Data.Unknown2.ToString(), delegate (string val) { inf.Data.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
-
-            string[] options = null;
-
-            switch(Form1.curGame)
             {
-                default:
-                    options = Enum.GetNames<BattleAttributeLJ>();
-                    break;
-                case Game.Y6Demo:
-                    options = Enum.GetNames<BattleAttributeYK2>();
-                    break;
-                case Game.Y6:
-                    options = Enum.GetNames<BattleAttributeYK2>();
-                    break;
-                case Game.YK2:
-                    options = Enum.GetNames<BattleAttributeYK2>();
-                    break;
-                case Game.JE:
-                    options = Enum.GetNames<BattleAttributeJE>();
-                    break;
-                case Game.YLAD:
-                    options = Enum.GetNames<BattleAttributeYLAD>();
-                    break;
-                case Game.LJ:
-                    options = Enum.GetNames<BattleAttributeLJ>();
-                    break;
-                case Game.LAD7Gaiden:
-                    options = Enum.GetNames<BattleAttributeGaiden>();
-                    break;
-                case Game.LADIW:
-                    options = Enum.GetNames<BattleAttributeIW>();
-                    break;
+                form.CreateInput("Unknown PYIH" , Convert.ToByte(inf.Data.Unknown2).ToString(), delegate (string val) { inf.Data.Unknown2 = byte.Parse(val) > 0; }, NumberBox.NumberMode.Byte);
+                form.CreateInput("Unknown PYIH", Convert.ToByte(inf.Data.Unknown3).ToString(), delegate (string val) { inf.Data.Unknown3 = byte.Parse(val) > 0; }, NumberBox.NumberMode.Byte);
             }
+
+            if (Form1.curGame >= Game.YK3)
+            {
+                form.CreateInput("Unknown YK3", inf.Data.Unknown4.ToString(CultureInfo.InvariantCulture), delegate (string val) { inf.Data.Unknown4 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                form.CreateInput("Unknown YK3", inf.Data.Unknown5.ToString(), delegate (string val) { inf.Data.Unknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                form.CreateInput("Unknown YK3", inf.Data.Unknown6.ToString(), delegate (string val) { inf.Data.Unknown6 = int.Parse(val); }, NumberBox.NumberMode.Int); 
+            }
+
+            string[] options =  Enum.GetNames(DETimingInfoAttack.GetAttributesForGame(Form1.curGame));
 
             form.CreateButton("Edit Attributes", delegate
             {

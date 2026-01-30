@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +24,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x19)]
     [ElementID(Game.LADIW, 0x19)]
     [ElementID(Game.LADPYIH, 0x19)]
+    [ElementID(Game.YK3, 0x19)]
     public class DEElementSE : NodeElement
     {
         public enum Versions
@@ -152,6 +153,8 @@ namespace HActLib
                     return typeof(CuesheetsIW);
                 case Game.LADPYIH:
                     return typeof(CuesheetsPYIH);
+                case Game.YK3:
+                    return typeof(CuesheetsYK3);
             }
         }
 
@@ -162,6 +165,9 @@ namespace HActLib
 
             if (game == Game.YLAD || game == Game.LJ)
                 return typeof(SpecialSoundsYLAD);
+
+            if (game == Game.YK3)
+                return typeof(SpecialSoundsYK3);
 
             if (game == Game.LAD7Gaiden)
                 return typeof(SpecialSoundsTMWEHI);

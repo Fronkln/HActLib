@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 namespace HActLib
@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x55)]
     [ElementID(Game.LADIW, 0x55)]
     [ElementID(Game.LADPYIH, 0x55)]
+    [ElementID(Game.YK3, 0x55)]
     public class DEElementCameraShake : NodeElement
     {
         public CameraShakeType Type;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x8E)]
     [ElementID(Game.LADIW, 0x8E)]
     [ElementID(Game.LADPYIH, 0x8E)]
+    [ElementID(Game.YK3, 0x8E)]
     public class DEElementSpeech : NodeElement
     {
         public uint SpeechVersion;

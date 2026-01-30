@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Yarhl.IO;
@@ -17,6 +17,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x1D)]
     [ElementID(Game.LADIW, 0x1D)]
     [ElementID(Game.LADPYIH, 0x1D)]
+    [ElementID(Game.YK3, 0x1D)]
     public class DEElementRimflash : NodeElement
     {
         public uint RimflashVersion;
@@ -181,6 +182,11 @@ namespace HActLib
                     RimflashParamsV4 paramsV4 = new RimflashParamsV4();
                     paramsV4.Read(reader);
                     RimflashParams = paramsV4;
+                    break;
+                case 5:
+                    RimflashParamsV4 paramsV5 = new RimflashParamsV4();
+                    paramsV5.Read(reader);
+                    RimflashParams = paramsV5;
                     break;
             }
 

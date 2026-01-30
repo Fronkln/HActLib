@@ -132,17 +132,18 @@ namespace HActLib
                 if (detectedVersion == 0)
                 {
                     resInf.StartFrame = reader.ReadSingle();
-                    if (resInf.StartFrame < -10000000 || resInf.StartFrame > 100000000)
+                    resInf.EndFrame = reader.ReadSingle();
+
+                    //Too precise: Pirates format 
+                    bool tooPrecise = Math.Abs(resInf.EndFrame) < 1e-10 || resInf.EndFrame.ToString("G17").Length > 10;
+
+                    if (tooPrecise)
                     {
                         //Auto detection of pirate game RES which uses a new timing format
-                        reader.Stream.Position -= 4;
+                        reader.Stream.Position -= 8;
                         resInf.StartFrame = new GameTick2(reader.ReadUInt32());
                         resInf.EndFrame = new GameTick2(reader.ReadUInt32());
                         detectedVersion = 1;
-                    }
-                    else
-                    {
-                        resInf.EndFrame = reader.ReadSingle();
                     }
                 }
                 else

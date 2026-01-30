@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x47)]
     [ElementID(Game.LADIW, 0x47)]
     [ElementID(Game.LADPYIH, 0x47)]
+    [ElementID(Game.YK3, 0x47)]
     public class DEElementFollowupWindow : NodeElement
     {
         public uint Unknown = 0;

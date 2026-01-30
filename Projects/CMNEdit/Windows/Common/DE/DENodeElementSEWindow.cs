@@ -23,7 +23,7 @@ namespace CMNEdit
                 form.CreateComboBox("Version", inf.SEVer, Enum.GetNames(typeof(DEElementSE.Versions)), delegate (int val) { inf.SEVer = val; });
 
             form.CreateInput("Cuesheet ID", inf.CueSheet.ToString(), delegate (string val) { inf.CueSheet = ushort.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
-            form.CreateInput("Sound ID", inf.SoundIndex.ToString(), delegate (string val) { inf.SoundIndex = byte.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Byte);
+            form.CreateInput("Sound ID", inf.SoundIndex.ToString(), delegate (string val) { inf.SoundIndex = ushort.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
             form.CreateInput("Sound Unknown Flag", inf.Unk.ToString(), delegate (string val) { inf.Unk = byte.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Byte);
             form.CreateInput("Flag?", inf.Flags.ToString(), delegate (string val) { inf.Flags = byte.Parse(val); }, NumberBox.NumberMode.Byte);
 

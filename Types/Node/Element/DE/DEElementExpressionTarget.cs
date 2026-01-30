@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Yarhl.IO;
@@ -19,6 +19,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0xAF)]
     [ElementID(Game.LADIW, 0xAF)]
     [ElementID(Game.LADPYIH, 0xAF)]
+    [ElementID(Game.YK3, 0xAF)]
     public class DEElementExpressionTarget : NodeElement
     {
         public List<ExpressionTargetData> Data = new List<ExpressionTargetData>();
@@ -52,7 +53,7 @@ namespace HActLib
         {
             writer.Write(Data.Count);
 
-            if(version > GameVersion.Yakuza6)
+            if (version > GameVersion.Yakuza6)
                 writer.Write(Unk1);
 
             if (version <= GameVersion.DE1)

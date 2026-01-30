@@ -10,11 +10,12 @@ namespace HActLib
     [ElementID(Game.Y6, 80)]
     [ElementID(Game.YK2, 80)]
     [ElementID(Game.JE, 80)]
-    [ElementID(Game.YLAD, 77)]
-    [ElementID(Game.LJ, 77)]
-    [ElementID(Game.LAD7Gaiden, 77)]
-    [ElementID(Game.LADIW, 77)]
-    [ElementID(Game.LADPYIH, 77)]
+    [ElementID(Game.YLAD, 0x4D)]
+    [ElementID(Game.LJ, 0x4D)]
+    [ElementID(Game.LAD7Gaiden, 0x4D)]
+    [ElementID(Game.LADIW, 0x4D)]
+    [ElementID(Game.LADPYIH, 0x4D)]
+    [ElementID(Game.YK3, 0x4D)]
     public class DEElementBattleSlide : NodeElement
     {
         public int SlideType = 0;

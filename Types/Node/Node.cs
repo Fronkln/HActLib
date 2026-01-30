@@ -152,8 +152,6 @@ namespace HActLib
 
             }, sizeOffset, SeekMode.Start);
 
-            System.Diagnostics.Debug.Print($"Wrote {writtenBytes} bytes for node: " + Name + ", Category: " + Category);
-
             if (CMN.LastFile == AuthFile.CMN)
             {
                 foreach (Node child in Children)

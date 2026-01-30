@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,6 +16,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x1C)]
     [ElementID(Game.LADIW, 0x1C)]
     [ElementID(Game.LADPYIH, 0x1C)]
+    [ElementID(Game.YK3, 0x1C)]
     public class DEElementFlowdust : NodeElement
     {
         public uint FlowVersion;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x107)]
     [ElementID(Game.LADIW, 0x107)]
     [ElementID(Game.LADPYIH, 0x107)]
+    [ElementID(Game.YK3, 0x107)]
     public class DEElementAssetBreakUID : NodeElement
     {
         public uint Ver;

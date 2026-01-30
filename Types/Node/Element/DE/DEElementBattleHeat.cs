@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 namespace HActLib
@@ -11,6 +11,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x99)]
     [ElementID(Game.LADIW, 0x99)]
     [ElementID(Game.LADPYIH, 0x99)]
+    [ElementID(Game.YK3, 0x99)]
     public class DEElementBattleHeat : NodeElement
     {
         public int HeatChange;

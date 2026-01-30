@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Yarhl.IO;
@@ -13,6 +13,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x33)]
     [ElementID(Game.LADIW, 0x33)]
     [ElementID(Game.LADPYIH, 0x33)]
+    [ElementID(Game.YK3, 0x33)]
     public class DEElementUITexture : NodeElement
     {
         public uint UITexFlags = 0x1;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x1C9)]
     [ElementID(Game.LADIW, 0x1C9)]
     [ElementID(Game.LADPYIH, 0x1C9)]
+    [ElementID(Game.YK3, 0x1C9)]
     public class DEElementColorCorrection2 : NodeElement
     {
         public uint Size;

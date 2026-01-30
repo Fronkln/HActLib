@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Yarhl.IO;
 
 namespace HActLib
@@ -33,6 +33,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0xBB)]
     [ElementID(Game.LADIW, 0xBB)]
     [ElementID(Game.LADPYIH, 0xBB)]
+    [ElementID(Game.YK3, 0xBB)]
     public class DEElementBattleCommandSpecial : NodeElement
     {
         public BattleCommandSpecialID Type;

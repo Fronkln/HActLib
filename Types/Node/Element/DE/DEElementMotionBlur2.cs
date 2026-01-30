@@ -1,4 +1,4 @@
-﻿using HActLib.Internal;
+using HActLib.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x172)]
     [ElementID(Game.LADIW, 0x172)]
     [ElementID(Game.LADPYIH, 0x172)]
+    [ElementID(Game.YK3, 0x172)]
     public class DEElementMotionBlur2 : NodeElement
     {
         public float ShutterSpeed = 30;

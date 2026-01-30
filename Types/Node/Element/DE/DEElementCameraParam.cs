@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,7 @@ namespace HActLib
     [ElementID(Game.LAD7Gaiden, 0x1)]
     [ElementID(Game.LADIW, 0x1)]
     [ElementID(Game.LADPYIH, 0x1)]
+    [ElementID(Game.YK3, 0x1)]
     public class DEElementCameraParam : NodeElement
     {
         public uint ParamFlags;
