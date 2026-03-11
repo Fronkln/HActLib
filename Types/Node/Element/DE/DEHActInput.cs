@@ -31,7 +31,12 @@ namespace HActLib
             //check ver between 1.0 and 2.0
             InputID = reader.ReadUInt32();
             CondFlagNo = reader.ReadUInt32();
-            DecideTick = reader.ReadUInt32();
+
+            if (version < GameVersion.DE3)
+                DecideTick = reader.ReadUInt32();
+            else
+                DecideTick = new GameTick2(reader.ReadUInt32()).ClassicTick;
+            
             reader.ReadBytes(4);
         }
 
@@ -39,7 +44,12 @@ namespace HActLib
         {
             writer.Write(InputID);
             writer.Write(CondFlagNo);
-            writer.Write(DecideTick);
+
+            if (version < GameVersion.DE3)
+                writer.Write(DecideTick);
+            else
+                writer.Write(new GameTick(DecideTick).NewTick.Tick);
+
             writer.WriteTimes(0, 4);
         }
 

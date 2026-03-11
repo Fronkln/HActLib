@@ -169,6 +169,7 @@ namespace CMNEdit
                     break;
 
                 case "PlayAnimation":
+                case "PlayAnimationRelated":
                     form.CreateHeader("Play Animation");
                     var anim = prt.Property as MsgPropPlayAnimation;
 
@@ -202,6 +203,19 @@ namespace CMNEdit
                     form.CreateInput("Unknown", casAnim.Unk3.ToString(), delegate (string val) { casAnim.Unk3 = byte.Parse(val); }, NumberBox.NumberMode.Byte);
                     form.CreateInput("Unknown", casAnim.Unk4.ToString(), delegate (string val) { casAnim.Unk4 = short.Parse(val); }, NumberBox.NumberMode.Short);
                     form.CreateInput("Entity UID", casAnim.EntityUID.ToString(), delegate (string val) { casAnim.EntityUID = int.Parse(val); }, NumberBox.NumberMode.Int);
+                    break;
+
+
+                case "Reactor":
+                    form.CreateHeader("Reactor");
+                    var reactor = prt.Property as MsgPropReactor;
+
+                    form.CreateInput("Animation", reactor.Reactor, delegate (string val) { reactor.Reactor = val; });
+                    form.CreateInput("Entity UID", reactor.EntityUID.ToString(), delegate (string val) { reactor.EntityUID = int.Parse(val); }, NumberBox.NumberMode.Int);
+                    form.CreateInput("Unknown", reactor.Unk1.ToString(), delegate (string val) { reactor.Unk1 = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
+                    form.CreateInput("Unknown", reactor.Unk2.ToString(), delegate (string val) { reactor.Unk2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                    form.CreateInput("Unknown", reactor.Unk3.ToString(), delegate (string val) { reactor.Unk3 = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
+
                     break;
 
                 case "Choice":

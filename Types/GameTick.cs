@@ -13,6 +13,14 @@ namespace HActLib
             set { Tick = FrameToTick(value); }
         }
 
+        public GameTick2 NewTick
+        {
+            get
+            {
+                return new GameTick2(Frame);
+            }
+        }
+
         ///<summary>Convert Dragon Engine tick to frame.</summary>
         public static float TickToFrame(uint tick)
         {

@@ -452,6 +452,7 @@
         e_auth_element_conversation_camera = 0x1BC,
         e_auth_element_face2 = 0x1BD,
         e_auth_element_path_animation_curve = 0x1BF,
+        e_auth_element_transit_wall_bound = 0x1C3,
         e_auth_element_color_correction_v2 = 0x1C9,
         e_auth_element_color_scheme = 0x1CB,
         e_auth_element_floor_fog = 0x1CD,

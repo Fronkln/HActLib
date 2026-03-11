@@ -349,6 +349,11 @@ namespace HActLib
             dePtc.Color = ptc.Color;
             dePtc.Matrix = ptc.Matrix;
             dePtc.Scale = ptc.Scale;
+            dePtc.ParticleName = ptc.Name.Substring(0, 7);
+
+            if (Enum.IsDefined(typeof(ParticleIDY6), dePtc.ParticleName))
+                dePtc.ParticleID = (uint)Enum.Parse(typeof(ParticleIDY6), dePtc.ParticleName);
+
             dePtc.ParticleID = ptc.ParticleID;
             dePtc.Name = "PTC " + dePtc.ParticleID;
             dePtc.ParticleName = ptc.Name.Substring(0, 7);
