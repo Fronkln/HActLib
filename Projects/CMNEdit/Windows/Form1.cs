@@ -302,7 +302,7 @@ namespace CMNEdit
 
                 Auth = authFile;
                 IsOOEAuth = true;
-;
+                ;
 
                 foreach (var node in authFile.Nodes)
                 {
@@ -1150,7 +1150,7 @@ namespace CMNEdit
                     else
                         checkDict = MEPDict.OEBoneID;
 
-                    if(checkDict != null)
+                    if (checkDict != null)
                     {
                         string boneName = mepEffectOE.BoneName.Text;
 
@@ -1314,6 +1314,10 @@ namespace CMNEdit
                         if (set1Node.Set is ObjectHuman)
                             ObjectHumanWindow.Draw(this, set1Node.Set as ObjectHuman);
                         break;
+                    case ObjectNodeCategory.Bone:
+                        ObjectBoneWindow.Draw(this, set1Node.Set as ObjectBone);
+                        break;
+
                 }
 
             }
@@ -1619,7 +1623,7 @@ namespace CMNEdit
             varPanel.SuspendLayout();
             ClearVarPanel();
             varPanel.ResumeLayout();
-            
+
 
             MWTreeNodeWrapper[] nodes = nodesTree.SelNodes.Values.Cast<MWTreeNodeWrapper>().ToArray();
             Hashtable table = (Hashtable)nodesTree.SelNodes.Clone();
@@ -2066,8 +2070,7 @@ namespace CMNEdit
                     else if (curGame == Game.Y4)
                         csvPath = INISettings.Y4CsvPath;
 
-                    if (MessageBox.Show("Save CSV data too? Experimental feature!", "Save", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        CSV.Write(Csv, csvPath);
+                    CSV.Write(Csv, csvPath);
                 }
             }
             else if (IsPS2Prop)
@@ -4176,16 +4179,16 @@ namespace CMNEdit
 
                 resTimingsPanel.Visible = false;
 
-                foreach(var treeNode in GetAllTreeNodes())
+                foreach (var treeNode in GetAllTreeNodes())
                 {
-                    if(treeNode is TreeNodeOOEAuthNode)
+                    if (treeNode is TreeNodeOOEAuthNode)
                     {
                         var ooeNode = treeNode as TreeNodeOOEAuthNode;
                         var resource = ooeRes.GetResourceByGUID(ooeNode.Node.Guid);
 
                         if (resource.GUID != null && !string.IsNullOrEmpty(resource.Resource))
                             ooeNode.Text = resource.Resource;
-                        
+
                     }
                 }
             }

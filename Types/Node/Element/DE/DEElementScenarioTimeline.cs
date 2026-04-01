@@ -30,7 +30,7 @@ namespace HActLib
         {
             TimelineCategory = reader.ReadString(32).Split(new[] { '\0' }, 2)[0];
             Timeline = reader.ReadString(32).Split(new[] { '\0' }, 2)[0];
-            Clock = reader.ReadString(64).Split(new[] { '\0' }, 2)[0];
+            Clock = reader.ReadString(64, Encoding.UTF8).Split(new[] { '\0' }, 2)[0];
             OnlyFlagControl = reader.ReadInt32() > 0;
             FlagState = reader.ReadInt32() > 0;
             FinishOff = reader.ReadInt32() > 0;
@@ -41,7 +41,7 @@ namespace HActLib
         {
             writer.Write(TimelineCategory.ToLength(32));
             writer.Write(Timeline.ToLength(32));
-            writer.Write(Clock.ToLength(64));
+            writer.Write(Clock.ToLength(64), false, Encoding.UTF8);
             writer.Write(Convert.ToInt32(OnlyFlagControl));
             writer.Write(Convert.ToInt32(FlagState));
             writer.Write(Convert.ToInt32(FinishOff));

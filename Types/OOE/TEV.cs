@@ -68,9 +68,8 @@ namespace HActLib
             //1024 default value for if we convert any hacts from other games
             public int DataPadding;
 
-            //Amount of offset between data ptr 2 and weird space
-            //Because i couldn't figure out the magic behind them, LOL!!!
-            public int WeirdSpaceOffset;
+            //Size of data leading up to string table, starting from set 1
+            public int WeirdSize;
         }
 
         public Header TEVHeader = new Header();

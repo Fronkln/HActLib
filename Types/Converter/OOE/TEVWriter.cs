@@ -154,7 +154,7 @@ namespace HActLib
 
             if(tev.TEVHeader.DataPadding != 0)
             {
-                weirdSpaceStart = setData2Start - tev.TEVHeader.WeirdSpaceOffset;
+                weirdSpaceStart = setData2Start - tev.TEVHeader.WeirdSize;
             }
 
             foreach (ObjectBase set in objects)
@@ -377,7 +377,7 @@ namespace HActLib
             writer.Write(stringsStart);
 
             writer.Write(tev.TEVHeader.UseSoundACB);
-            writer.Write(weirdSpaceStart);
+            writer.Write((int)(stringsStart - set1Start));
 
             writer.Write(tev.TEVHeader.CameraCount);
             writer.Write(tev.TEVHeader.CameraCount2);

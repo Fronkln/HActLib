@@ -97,7 +97,7 @@ namespace HActLib
             int unkSet1DatSize = tev.AllObjects.Where(x => x.UnkFloatDats[0] != null).Count() * 32;
             tev.TEVHeader.DataPadding = (int)(tev.TEVHeader.DataPtr2 - (dataPtr1 + unkSet1DatSize));
 
-            tev.TEVHeader.WeirdSpaceOffset = (int)(tev.TEVHeader.DataPtr2 - tev.TEVHeader.UnkPtr3);
+            tev.TEVHeader.WeirdSize = (int)(tev.TEVHeader.DataPtr2 - tev.TEVHeader.UnkPtr3);
 
             return tev;
         }

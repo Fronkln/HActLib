@@ -254,7 +254,7 @@ namespace HActLib
             EffectParticle ptc = new EffectParticle();
             ptc.ParticleID = particle.ParticleID;
             ptc.Matrix = particle.Matrix;
-            ptc.Flag = particle.Flag;
+            ptc.Flag = (uint)particle.Flags;
 
             return ptc;
         }
