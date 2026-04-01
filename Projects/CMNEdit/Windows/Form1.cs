@@ -302,15 +302,15 @@ namespace CMNEdit
 
                 Auth = authFile;
                 IsOOEAuth = true;
-
-
-                if (!string.IsNullOrEmpty(authFile.Res000))
-                    OnImportResFile(authFile.Res000);
+;
 
                 foreach (var node in authFile.Nodes)
                 {
                     nodesTree.Nodes.Add(new TreeNodeOOEAuthNode(node));
                 }
+
+                if (!string.IsNullOrEmpty(authFile.Res000))
+                    OnImportResFile(authFile.Res000);
             }
             //OOE HAct TEV
             else if (magic == "TCAH")
@@ -4175,6 +4175,19 @@ namespace CMNEdit
                 resourceTypeBox.Items.AddRange(Enum.GetNames(typeof(AuthResourceOOEType)));
 
                 resTimingsPanel.Visible = false;
+
+                foreach(var treeNode in GetAllTreeNodes())
+                {
+                    if(treeNode is TreeNodeOOEAuthNode)
+                    {
+                        var ooeNode = treeNode as TreeNodeOOEAuthNode;
+                        var resource = ooeRes.GetResourceByGUID(ooeNode.Node.Guid);
+
+                        if (resource.GUID != null && !string.IsNullOrEmpty(resource.Resource))
+                            ooeNode.Text = resource.Resource;
+                        
+                    }
+                }
             }
             else
             {

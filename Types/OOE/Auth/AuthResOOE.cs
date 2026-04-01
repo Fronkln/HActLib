@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using HActLib.Internal;
 using System.Text;
 using Yarhl.IO;
+using System.Linq;
 
 namespace HActLib
 {
@@ -44,6 +45,12 @@ namespace HActLib
     public class AuthResOOE
     {
         public List<AuthResourceOOE> Resources = new List<AuthResourceOOE>();
+
+
+        public AuthResourceOOE GetResourceByGUID(Guid guid)
+        {
+            return Resources.FirstOrDefault(x =>  x.GUID == guid);
+        }
 
         public static AuthResOOE Read(string path)
         {

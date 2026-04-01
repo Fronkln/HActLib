@@ -2,7 +2,7 @@
   "profiles": {
     "HActBridge": {
       "commandName": "Project",
-      "commandLineArgs": "\"E:\\SteamLibrary\\steamapps\\common\\Yakuza 0\\media\\data\\hact.par.unpack\\h3330_knuckle_soul\" y0 ylad"
+      "commandLineArgs": "\"E:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\hact\\H1040_kyuukyoku.par.unpack\" y5 y3"
     }
   }
 }

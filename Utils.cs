@@ -52,7 +52,6 @@ namespace HActLib
             if (self.Length > length)
                 return self.Substring(0, length);
 
-
             StringBuilder str = new StringBuilder();
             str.Append(self);
 

@@ -12,7 +12,7 @@ namespace CMNEdit
     internal class TreeNodeEffect : TreeNode
     {
         public EffectBase Effect;
-       
+
         public TreeNodeEffect()
         {
 
@@ -23,7 +23,7 @@ namespace CMNEdit
             Effect = effect;
             Text = Effect.ElementKind.ToString();
 
-            switch(Effect.ElementKind)
+            switch (Effect.ElementKind)
             {
                 case EffectID.Particle:
                     Text = "PIB " + (Effect as EffectParticle).ParticleID.ToString();
@@ -33,6 +33,15 @@ namespace CMNEdit
                     Text = "Sound Cuesheet " + soundEffect.CuesheetID + " ID " + soundEffect.SoundID;
                     break;
             }
+
+
+            if (Form1.TimingInName)
+                if (Effect is EffectElement)
+                {
+                    var elem = (EffectElement)Effect;
+
+                    Text += $"({elem.Start}-{elem.End})";
+                }
 
             SetIcon();
         }
@@ -47,7 +56,7 @@ namespace CMNEdit
 
         public void SetIcon()
         {
-            switch(Effect.ElementKind)
+            switch (Effect.ElementKind)
             {
                 default:
                     SelectedImageIndex = 1;

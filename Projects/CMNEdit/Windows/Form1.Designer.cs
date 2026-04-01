@@ -208,9 +208,9 @@
             // 
             label5.AutoSize = true;
             label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            label5.Location = new System.Drawing.Point(3, 6);
+            label5.Location = new System.Drawing.Point(3, 8);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(87, 21);
+            label5.Size = new System.Drawing.Size(112, 28);
             label5.TabIndex = 7;
             label5.Text = "HAct Start";
             // 
@@ -218,9 +218,9 @@
             // 
             label6.AutoSize = true;
             label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            label6.Location = new System.Drawing.Point(96, 6);
+            label6.Location = new System.Drawing.Point(110, 8);
             label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(80, 21);
+            label6.Size = new System.Drawing.Size(100, 28);
             label6.TabIndex = 9;
             label6.Text = "HAct End";
             // 
@@ -228,9 +228,9 @@
             // 
             label7.AutoSize = true;
             label7.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label7.Location = new System.Drawing.Point(0, 2);
+            label7.Location = new System.Drawing.Point(0, 3);
             label7.Name = "label7";
-            label7.Size = new System.Drawing.Size(67, 25);
+            label7.Size = new System.Drawing.Size(84, 32);
             label7.TabIndex = 11;
             label7.Text = "Frame";
             // 
@@ -238,9 +238,9 @@
             // 
             label14.AutoSize = true;
             label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            label14.Location = new System.Drawing.Point(3, 2);
+            label14.Location = new System.Drawing.Point(3, 3);
             label14.Name = "label14";
-            label14.Size = new System.Drawing.Size(49, 21);
+            label14.Size = new System.Drawing.Size(60, 28);
             label14.TabIndex = 7;
             label14.Text = "Flags";
             // 
@@ -250,7 +250,7 @@
             label15.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             label15.Location = new System.Drawing.Point(3, 0);
             label15.Name = "label15";
-            label15.Size = new System.Drawing.Size(87, 21);
+            label15.Size = new System.Drawing.Size(107, 28);
             label15.TabIndex = 8;
             label15.Text = "Camera In";
             // 
@@ -258,18 +258,19 @@
             // 
             label16.AutoSize = true;
             label16.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            label16.Location = new System.Drawing.Point(105, 0);
+            label16.Location = new System.Drawing.Point(120, 0);
             label16.Name = "label16";
-            label16.Size = new System.Drawing.Size(100, 21);
+            label16.Size = new System.Drawing.Size(124, 28);
             label16.TabIndex = 9;
             label16.Text = "Camera Out";
             // 
             // framesInNameBox
             // 
             framesInNameBox.AutoSize = true;
-            framesInNameBox.Location = new System.Drawing.Point(375, 428);
+            framesInNameBox.Location = new System.Drawing.Point(429, 571);
+            framesInNameBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             framesInNameBox.Name = "framesInNameBox";
-            framesInNameBox.Size = new System.Drawing.Size(155, 19);
+            framesInNameBox.Size = new System.Drawing.Size(194, 24);
             framesInNameBox.TabIndex = 12;
             framesInNameBox.Text = "Start/End in Node Name";
             framesInNameBox.UseVisualStyleBackColor = true;
@@ -279,9 +280,9 @@
             // 
             hactTypeLabel.AutoSize = true;
             hactTypeLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            hactTypeLabel.Location = new System.Drawing.Point(96, 2);
+            hactTypeLabel.Location = new System.Drawing.Point(110, 3);
             hactTypeLabel.Name = "hactTypeLabel";
-            hactTypeLabel.Size = new System.Drawing.Size(46, 21);
+            hactTypeLabel.Size = new System.Drawing.Size(57, 28);
             hactTypeLabel.TabIndex = 9;
             hactTypeLabel.Text = "Type";
             // 
@@ -289,18 +290,19 @@
             // 
             targetGameLbl.AutoSize = true;
             targetGameLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            targetGameLbl.Location = new System.Drawing.Point(12, 404);
+            targetGameLbl.Location = new System.Drawing.Point(14, 539);
             targetGameLbl.Name = "targetGameLbl";
-            targetGameLbl.Size = new System.Drawing.Size(106, 21);
+            targetGameLbl.Size = new System.Drawing.Size(132, 28);
             targetGameLbl.TabIndex = 3;
             targetGameLbl.Text = "Target Game";
             // 
             // appTools
             // 
+            appTools.ImageScalingSize = new System.Drawing.Size(20, 20);
             appTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripDropDownButton1, nodeTooltip, toolStripSplitButton1, advancedButton });
             appTools.Location = new System.Drawing.Point(0, 0);
             appTools.Name = "appTools";
-            appTools.Size = new System.Drawing.Size(967, 25);
+            appTools.Size = new System.Drawing.Size(1105, 27);
             appTools.TabIndex = 0;
             appTools.Text = "Tools";
             appTools.ItemClicked += appTools_ItemClicked;
@@ -312,55 +314,55 @@
             toolStripDropDownButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripDropDownButton1.Image");
             toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            toolStripDropDownButton1.Size = new System.Drawing.Size(38, 22);
+            toolStripDropDownButton1.Size = new System.Drawing.Size(46, 24);
             toolStripDropDownButton1.Text = "File";
             // 
             // openCtrlOToolStripMenuItem
             // 
             openCtrlOToolStripMenuItem.Name = "openCtrlOToolStripMenuItem";
-            openCtrlOToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            openCtrlOToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
             openCtrlOToolStripMenuItem.Text = "Open HAct Folder";
             openCtrlOToolStripMenuItem.Click += openCtrlOToolStripMenuItem_Click;
             // 
             // openHActCMNToolStripMenuItem
             // 
             openHActCMNToolStripMenuItem.Name = "openHActCMNToolStripMenuItem";
-            openHActCMNToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            openHActCMNToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
             openHActCMNToolStripMenuItem.Text = "Open HAct";
             openHActCMNToolStripMenuItem.Click += openHActCMNToolStripMenuItem_Click;
             // 
             // openYActToolStripMenuItem
             // 
             openYActToolStripMenuItem.Name = "openYActToolStripMenuItem";
-            openYActToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            openYActToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
             openYActToolStripMenuItem.Text = "Open YAct";
             openYActToolStripMenuItem.Click += openYActToolStripMenuItem1_Click;
             // 
             // openBEPToolStripMenuItem
             // 
             openBEPToolStripMenuItem.Name = "openBEPToolStripMenuItem";
-            openBEPToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            openBEPToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
             openBEPToolStripMenuItem.Text = "Open BEP/MEP/PS2 Property";
             openBEPToolStripMenuItem.Click += openBEPToolStripMenuItem_Click;
             // 
             // openMSGToolStripMenuItem
             // 
             openMSGToolStripMenuItem.Name = "openMSGToolStripMenuItem";
-            openMSGToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            openMSGToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
             openMSGToolStripMenuItem.Text = "Open MSG";
             openMSGToolStripMenuItem.Click += openMSGToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            saveToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // saveAsToolStripMenuItem
             // 
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            saveAsToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
             saveAsToolStripMenuItem.Text = "Save As";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             // 
@@ -371,97 +373,97 @@
             nodeTooltip.Image = (System.Drawing.Image)resources.GetObject("nodeTooltip.Image");
             nodeTooltip.ImageTransparentColor = System.Drawing.Color.Magenta;
             nodeTooltip.Name = "nodeTooltip";
-            nodeTooltip.Size = new System.Drawing.Size(52, 22);
+            nodeTooltip.Size = new System.Drawing.Size(65, 24);
             nodeTooltip.Text = "Node";
             // 
             // addToolStripMenuItem
             // 
             addToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { elementToolStripMenuItem });
             addToolStripMenuItem.Name = "addToolStripMenuItem";
-            addToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            addToolStripMenuItem.Size = new System.Drawing.Size(164, 26);
             addToolStripMenuItem.Text = "Add (DE)";
             // 
             // elementToolStripMenuItem
             // 
             elementToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { damageToolStripMenuItem, soundToolStripMenuItem, qTEToolStripMenuItem, qTEBarrageToolStripMenuItem, faceExpressionToolStripMenuItem, equipAssetToolStripMenuItem, ınvincibilityToolStripMenuItem, stageWarpToolStripMenuItem, pathOffsetToolStripMenuItem, characterSpeedToolStripMenuItem, assetBreakUIDToolStripMenuItem, customToolStripMenuItem, transitStunToolStripMenuItem });
             elementToolStripMenuItem.Name = "elementToolStripMenuItem";
-            elementToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            elementToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
             elementToolStripMenuItem.Text = "Element";
             // 
             // damageToolStripMenuItem
             // 
             damageToolStripMenuItem.Name = "damageToolStripMenuItem";
-            damageToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            damageToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             damageToolStripMenuItem.Text = "Damage";
             damageToolStripMenuItem.Click += damageToolStripMenuItem_Click;
             // 
             // soundToolStripMenuItem
             // 
             soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            soundToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            soundToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             soundToolStripMenuItem.Text = "Sound";
             soundToolStripMenuItem.Click += soundToolStripMenuItem_Click;
             // 
             // qTEToolStripMenuItem
             // 
             qTEToolStripMenuItem.Name = "qTEToolStripMenuItem";
-            qTEToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            qTEToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             qTEToolStripMenuItem.Text = "QTE";
             qTEToolStripMenuItem.Click += qTEToolStripMenuItem_Click;
             // 
             // qTEBarrageToolStripMenuItem
             // 
             qTEBarrageToolStripMenuItem.Name = "qTEBarrageToolStripMenuItem";
-            qTEBarrageToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            qTEBarrageToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             qTEBarrageToolStripMenuItem.Text = "QTE Barrage";
             qTEBarrageToolStripMenuItem.Click += qTEBarrageToolStripMenuItem_Click;
             // 
             // faceExpressionToolStripMenuItem
             // 
             faceExpressionToolStripMenuItem.Name = "faceExpressionToolStripMenuItem";
-            faceExpressionToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            faceExpressionToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             faceExpressionToolStripMenuItem.Text = "Face Expression";
             faceExpressionToolStripMenuItem.Click += faceExpressionToolStripMenuItem_Click;
             // 
             // equipAssetToolStripMenuItem
             // 
             equipAssetToolStripMenuItem.Name = "equipAssetToolStripMenuItem";
-            equipAssetToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            equipAssetToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             equipAssetToolStripMenuItem.Text = "Equip Asset";
             equipAssetToolStripMenuItem.Click += equipAssetToolStripMenuItem_Click;
             // 
             // ınvincibilityToolStripMenuItem
             // 
             ınvincibilityToolStripMenuItem.Name = "ınvincibilityToolStripMenuItem";
-            ınvincibilityToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            ınvincibilityToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             ınvincibilityToolStripMenuItem.Text = "Invincibility";
             ınvincibilityToolStripMenuItem.Click += ınvincibilityToolStripMenuItem_Click;
             // 
             // stageWarpToolStripMenuItem
             // 
             stageWarpToolStripMenuItem.Name = "stageWarpToolStripMenuItem";
-            stageWarpToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            stageWarpToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             stageWarpToolStripMenuItem.Text = "Stage Warp";
             stageWarpToolStripMenuItem.Click += stageWarpToolStripMenuItem_Click;
             // 
             // pathOffsetToolStripMenuItem
             // 
             pathOffsetToolStripMenuItem.Name = "pathOffsetToolStripMenuItem";
-            pathOffsetToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            pathOffsetToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             pathOffsetToolStripMenuItem.Text = "Path Offset";
             pathOffsetToolStripMenuItem.Click += pathOffsetToolStripMenuItem_Click;
             // 
             // characterSpeedToolStripMenuItem
             // 
             characterSpeedToolStripMenuItem.Name = "characterSpeedToolStripMenuItem";
-            characterSpeedToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            characterSpeedToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             characterSpeedToolStripMenuItem.Text = "Character Speed";
             characterSpeedToolStripMenuItem.Click += characterSpeedToolStripMenuItem_Click;
             // 
             // assetBreakUIDToolStripMenuItem
             // 
             assetBreakUIDToolStripMenuItem.Name = "assetBreakUIDToolStripMenuItem";
-            assetBreakUIDToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            assetBreakUIDToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             assetBreakUIDToolStripMenuItem.Text = "Asset Break UID";
             assetBreakUIDToolStripMenuItem.Click += assetBreakUIDToolStripMenuItem_Click;
             // 
@@ -469,20 +471,20 @@
             // 
             customToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { systemSpeedEXAuthToolStripMenuItem });
             customToolStripMenuItem.Name = "customToolStripMenuItem";
-            customToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            customToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             customToolStripMenuItem.Text = "Custom";
             // 
             // systemSpeedEXAuthToolStripMenuItem
             // 
             systemSpeedEXAuthToolStripMenuItem.Name = "systemSpeedEXAuthToolStripMenuItem";
-            systemSpeedEXAuthToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            systemSpeedEXAuthToolStripMenuItem.Size = new System.Drawing.Size(251, 26);
             systemSpeedEXAuthToolStripMenuItem.Text = "System Speed (EX Auth)";
             systemSpeedEXAuthToolStripMenuItem.Click += systemSpeedEXAuthToolStripMenuItem_Click;
             // 
             // transitStunToolStripMenuItem
             // 
             transitStunToolStripMenuItem.Name = "transitStunToolStripMenuItem";
-            transitStunToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            transitStunToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             transitStunToolStripMenuItem.Text = "Transit Stun";
             transitStunToolStripMenuItem.Click += transitStunToolStripMenuItem_Click;
             // 
@@ -490,20 +492,20 @@
             // 
             addOOEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { damageHActEventToolStripMenuItem, heatGaugeHActEventToolStripMenuItem });
             addOOEToolStripMenuItem.Name = "addOOEToolStripMenuItem";
-            addOOEToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            addOOEToolStripMenuItem.Size = new System.Drawing.Size(164, 26);
             addOOEToolStripMenuItem.Text = "Add (OOE)";
             // 
             // damageHActEventToolStripMenuItem
             // 
             damageHActEventToolStripMenuItem.Name = "damageHActEventToolStripMenuItem";
-            damageHActEventToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            damageHActEventToolStripMenuItem.Size = new System.Drawing.Size(258, 26);
             damageHActEventToolStripMenuItem.Text = "Damage (HAct Event)";
             damageHActEventToolStripMenuItem.Click += damageHActEventToolStripMenuItem_Click;
             // 
             // heatGaugeHActEventToolStripMenuItem
             // 
             heatGaugeHActEventToolStripMenuItem.Name = "heatGaugeHActEventToolStripMenuItem";
-            heatGaugeHActEventToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            heatGaugeHActEventToolStripMenuItem.Size = new System.Drawing.Size(258, 26);
             heatGaugeHActEventToolStripMenuItem.Text = "Heat Gauge (HAct Event)";
             // 
             // toolStripSplitButton1
@@ -513,49 +515,49 @@
             toolStripSplitButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripSplitButton1.Image");
             toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripSplitButton1.Name = "toolStripSplitButton1";
-            toolStripSplitButton1.Size = new System.Drawing.Size(48, 22);
+            toolStripSplitButton1.Size = new System.Drawing.Size(58, 24);
             toolStripSplitButton1.Text = "Misc";
             toolStripSplitButton1.ButtonClick += toolStripSplitButton1_ButtonClick;
             // 
             // adjustTimingToolStripMenuItem
             // 
             adjustTimingToolStripMenuItem.Name = "adjustTimingToolStripMenuItem";
-            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
             adjustTimingToolStripMenuItem.Text = "Adjust Timing";
             adjustTimingToolStripMenuItem.Click += adjustTimingToolStripMenuItem_Click;
             // 
             // moveTimingToolStripMenuItem
             // 
             moveTimingToolStripMenuItem.Name = "moveTimingToolStripMenuItem";
-            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
             moveTimingToolStripMenuItem.Text = "Move Timing";
             moveTimingToolStripMenuItem.Click += moveTimingToolStripMenuItem_Click;
             // 
             // reorderBasedOnTimingToolStripMenuItem
             // 
             reorderBasedOnTimingToolStripMenuItem.Name = "reorderBasedOnTimingToolStripMenuItem";
-            reorderBasedOnTimingToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            reorderBasedOnTimingToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
             reorderBasedOnTimingToolStripMenuItem.Text = "Reorder Based On Timing";
             reorderBasedOnTimingToolStripMenuItem.Click += reorderBasedOnTimingToolStripMenuItem_Click;
             // 
             // testToolStripMenuItem
             // 
             testToolStripMenuItem.Name = "testToolStripMenuItem";
-            testToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            testToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
             testToolStripMenuItem.Text = "OOE to DE Auth Test";
             testToolStripMenuItem.Click += testToolStripMenuItem_Click;
             // 
             // test2ToolStripMenuItem
             // 
             test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
-            test2ToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            test2ToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
             test2ToolStripMenuItem.Text = "OOE to OE Auth Test";
             test2ToolStripMenuItem.Click += test2ToolStripMenuItem_Click;
             // 
             // correctSoundIDsToolStripMenuItem
             // 
             correctSoundIDsToolStripMenuItem.Name = "correctSoundIDsToolStripMenuItem";
-            correctSoundIDsToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            correctSoundIDsToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
             correctSoundIDsToolStripMenuItem.Text = "Correct Sound IDs";
             correctSoundIDsToolStripMenuItem.Click += correctSoundIDsToolStripMenuItem_Click;
             // 
@@ -566,27 +568,27 @@
             advancedButton.Image = (System.Drawing.Image)resources.GetObject("advancedButton.Image");
             advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             advancedButton.Name = "advancedButton";
-            advancedButton.Size = new System.Drawing.Size(73, 22);
+            advancedButton.Size = new System.Drawing.Size(89, 24);
             advancedButton.Text = "Advanced";
             // 
             // frameProgressionToolStripMenuItem
             // 
             frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
-            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             frameProgressionToolStripMenuItem.Text = "Frame Progression";
             frameProgressionToolStripMenuItem.Click += frameProgressionToolStripMenuItem_Click;
             // 
             // disableFrameInfoToolStripMenuItem
             // 
             disableFrameInfoToolStripMenuItem.Name = "disableFrameInfoToolStripMenuItem";
-            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             disableFrameInfoToolStripMenuItem.Text = "Disable Frame Info";
             disableFrameInfoToolStripMenuItem.Click += disableFrameInfoToolStripMenuItem_Click;
             // 
             // authPagesDEToolStripMenuItem
             // 
             authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
-            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
             authPagesDEToolStripMenuItem.Click += authPagesDEToolStripMenuItem_Click;
             // 
@@ -594,34 +596,34 @@
             // 
             convertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertToOtherDEToolStripMenuItem, bulkConvertBEPToolStripMenuItem, convertOEPropertybinToBEPToolStripMenuItem, convertMEPWithPibsToolStripMenuItem1 });
             convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            convertToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            convertToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             convertToolStripMenuItem.Text = "Convert";
             // 
             // convertToOtherDEToolStripMenuItem
             // 
             convertToOtherDEToolStripMenuItem.Name = "convertToOtherDEToolStripMenuItem";
-            convertToOtherDEToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            convertToOtherDEToolStripMenuItem.Size = new System.Drawing.Size(298, 26);
             convertToOtherDEToolStripMenuItem.Text = "Convert to Other DE";
             convertToOtherDEToolStripMenuItem.Click += convertBetweenGamesDEToolStripMenuItem_Click;
             // 
             // bulkConvertBEPToolStripMenuItem
             // 
             bulkConvertBEPToolStripMenuItem.Name = "bulkConvertBEPToolStripMenuItem";
-            bulkConvertBEPToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            bulkConvertBEPToolStripMenuItem.Size = new System.Drawing.Size(298, 26);
             bulkConvertBEPToolStripMenuItem.Text = "Bulk Convert BEP";
             bulkConvertBEPToolStripMenuItem.Click += bulkConvertBEPToolStripMenuItem_Click;
             // 
             // convertOEPropertybinToBEPToolStripMenuItem
             // 
             convertOEPropertybinToBEPToolStripMenuItem.Name = "convertOEPropertybinToBEPToolStripMenuItem";
-            convertOEPropertybinToBEPToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            convertOEPropertybinToBEPToolStripMenuItem.Size = new System.Drawing.Size(298, 26);
             convertOEPropertybinToBEPToolStripMenuItem.Text = "Convert OE property.bin to BEP";
             convertOEPropertybinToBEPToolStripMenuItem.Click += propertybinTestToolStripMenuItem_Click;
             // 
             // convertMEPWithPibsToolStripMenuItem1
             // 
             convertMEPWithPibsToolStripMenuItem1.Name = "convertMEPWithPibsToolStripMenuItem1";
-            convertMEPWithPibsToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
+            convertMEPWithPibsToolStripMenuItem1.Size = new System.Drawing.Size(298, 26);
             convertMEPWithPibsToolStripMenuItem1.Text = "Convert MEP (With Pibs)";
             convertMEPWithPibsToolStripMenuItem1.Click += convertMEPWithPibsToolStripMenuItem_Click;
             // 
@@ -629,20 +631,20 @@
             // 
             authToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { segmentAuthToolStripMenuItem, reassembleAuthToolStripMenuItem });
             authToolStripMenuItem.Name = "authToolStripMenuItem";
-            authToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            authToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             authToolStripMenuItem.Text = "Auth";
             // 
             // segmentAuthToolStripMenuItem
             // 
             segmentAuthToolStripMenuItem.Name = "segmentAuthToolStripMenuItem";
-            segmentAuthToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            segmentAuthToolStripMenuItem.Size = new System.Drawing.Size(206, 26);
             segmentAuthToolStripMenuItem.Text = "Segment Auth";
             segmentAuthToolStripMenuItem.Click += segmentAuthToolStripMenuItem_Click;
             // 
             // reassembleAuthToolStripMenuItem
             // 
             reassembleAuthToolStripMenuItem.Name = "reassembleAuthToolStripMenuItem";
-            reassembleAuthToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            reassembleAuthToolStripMenuItem.Size = new System.Drawing.Size(206, 26);
             reassembleAuthToolStripMenuItem.Text = "Reassemble Auth";
             reassembleAuthToolStripMenuItem.Click += reassembleAuthToolStripMenuItem_Click;
             // 
@@ -676,35 +678,36 @@
             // 
             // nodeContext
             // 
+            nodeContext.ImageScalingSize = new System.Drawing.Size(20, 20);
             nodeContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyNodeCTRLCToolStripMenuItem, pasteNodeCTRLVToolStripMenuItem, deleteNodeDeleteToolStripMenuItem, deleteSelectedNodeOnlyToolStripMenuItem });
             nodeContext.Name = "contextMenuStrip1";
-            nodeContext.Size = new System.Drawing.Size(234, 92);
+            nodeContext.Size = new System.Drawing.Size(280, 100);
             nodeContext.Opening += nodeContext_Opening;
             // 
             // copyNodeCTRLCToolStripMenuItem
             // 
             copyNodeCTRLCToolStripMenuItem.Name = "copyNodeCTRLCToolStripMenuItem";
-            copyNodeCTRLCToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            copyNodeCTRLCToolStripMenuItem.Size = new System.Drawing.Size(279, 24);
             copyNodeCTRLCToolStripMenuItem.Text = "Copy Node (CTRL+C)";
             copyNodeCTRLCToolStripMenuItem.Click += copyNodeCTRLCToolStripMenuItem_Click;
             // 
             // pasteNodeCTRLVToolStripMenuItem
             // 
             pasteNodeCTRLVToolStripMenuItem.Name = "pasteNodeCTRLVToolStripMenuItem";
-            pasteNodeCTRLVToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            pasteNodeCTRLVToolStripMenuItem.Size = new System.Drawing.Size(279, 24);
             pasteNodeCTRLVToolStripMenuItem.Text = "Paste Node (CTRL+V)";
             pasteNodeCTRLVToolStripMenuItem.Click += pasteNodeCTRLVToolStripMenuItem_Click;
             // 
             // deleteNodeDeleteToolStripMenuItem
             // 
             deleteNodeDeleteToolStripMenuItem.Name = "deleteNodeDeleteToolStripMenuItem";
-            deleteNodeDeleteToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            deleteNodeDeleteToolStripMenuItem.Size = new System.Drawing.Size(279, 24);
             deleteNodeDeleteToolStripMenuItem.Text = "Delete Node (Delete)";
             // 
             // deleteSelectedNodeOnlyToolStripMenuItem
             // 
             deleteSelectedNodeOnlyToolStripMenuItem.Name = "deleteSelectedNodeOnlyToolStripMenuItem";
-            deleteSelectedNodeOnlyToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            deleteSelectedNodeOnlyToolStripMenuItem.Size = new System.Drawing.Size(279, 24);
             deleteSelectedNodeOnlyToolStripMenuItem.Text = "Delete Node Without Children";
             deleteSelectedNodeOnlyToolStripMenuItem.Click += deleteSelectedNodeOnlyToolStripMenuItem_Click;
             // 
@@ -712,17 +715,19 @@
             // 
             targetGameCombo.Font = new System.Drawing.Font("Segoe UI", 9F);
             targetGameCombo.FormattingEnabled = true;
-            targetGameCombo.Location = new System.Drawing.Point(12, 428);
+            targetGameCombo.Location = new System.Drawing.Point(14, 571);
+            targetGameCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             targetGameCombo.Name = "targetGameCombo";
-            targetGameCombo.Size = new System.Drawing.Size(121, 23);
+            targetGameCombo.Size = new System.Drawing.Size(138, 28);
             targetGameCombo.TabIndex = 2;
             targetGameCombo.SelectedIndexChanged += targetGameCombo_SelectedIndexChanged;
             // 
             // textBox1
             // 
-            textBox1.Location = new System.Drawing.Point(245, 45);
+            textBox1.Location = new System.Drawing.Point(279, 59);
+            textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             textBox1.Name = "textBox1";
-            textBox1.Size = new System.Drawing.Size(238, 23);
+            textBox1.Size = new System.Drawing.Size(271, 27);
             textBox1.TabIndex = 2;
             // 
             // label2
@@ -730,9 +735,9 @@
             label2.Anchor = System.Windows.Forms.AnchorStyles.None;
             label2.AutoSize = true;
             label2.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            label2.Location = new System.Drawing.Point(23, 6);
+            label2.Location = new System.Drawing.Point(16, 9);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(195, 30);
+            label2.Size = new System.Drawing.Size(244, 37);
             label2.TabIndex = 0;
             label2.Text = "Basic Information";
             // 
@@ -742,22 +747,24 @@
             varPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             varPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             varPanel.ColumnCount = 2;
-            varPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            varPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 317F));
+            varPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 274F));
+            varPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 363F));
             varPanel.Location = new System.Drawing.Point(3, 0);
+            varPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             varPanel.Name = "varPanel";
             varPanel.RowCount = 3;
-            varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            varPanel.Size = new System.Drawing.Size(550, 308);
+            varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53F));
+            varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            varPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            varPanel.Size = new System.Drawing.Size(629, 411);
             varPanel.TabIndex = 4;
             // 
             // panel1
             // 
-            panel1.Location = new System.Drawing.Point(245, 71);
+            panel1.Location = new System.Drawing.Point(279, 93);
+            panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(200, 19);
+            panel1.Size = new System.Drawing.Size(229, 25);
             panel1.TabIndex = 3;
             // 
             // hactTabs
@@ -766,10 +773,11 @@
             hactTabs.Controls.Add(tabPage1);
             hactTabs.Controls.Add(resTab);
             hactTabs.Controls.Add(csvTab);
-            hactTabs.Location = new System.Drawing.Point(12, 33);
+            hactTabs.Location = new System.Drawing.Point(14, 44);
+            hactTabs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             hactTabs.Name = "hactTabs";
             hactTabs.SelectedIndex = 0;
-            hactTabs.Size = new System.Drawing.Size(911, 368);
+            hactTabs.Size = new System.Drawing.Size(1041, 491);
             hactTabs.TabIndex = 5;
             hactTabs.SelectedIndexChanged += hactTabs_SelectedIndexChanged;
             // 
@@ -777,10 +785,11 @@
             // 
             cmnTevTab.Controls.Add(tabControl1);
             cmnTevTab.Controls.Add(nodesTree);
-            cmnTevTab.Location = new System.Drawing.Point(4, 24);
+            cmnTevTab.Location = new System.Drawing.Point(4, 29);
+            cmnTevTab.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cmnTevTab.Name = "cmnTevTab";
-            cmnTevTab.Padding = new System.Windows.Forms.Padding(3);
-            cmnTevTab.Size = new System.Drawing.Size(903, 340);
+            cmnTevTab.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            cmnTevTab.Size = new System.Drawing.Size(1033, 458);
             cmnTevTab.TabIndex = 0;
             cmnTevTab.Text = "CMN";
             cmnTevTab.UseVisualStyleBackColor = true;
@@ -789,19 +798,21 @@
             // 
             tabControl1.Controls.Add(infoPage);
             tabControl1.Controls.Add(unkInfoPage);
-            tabControl1.Location = new System.Drawing.Point(340, 3);
+            tabControl1.Location = new System.Drawing.Point(389, 4);
+            tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(561, 337);
+            tabControl1.Size = new System.Drawing.Size(641, 449);
             tabControl1.TabIndex = 6;
             // 
             // infoPage
             // 
             infoPage.Controls.Add(varPanel);
-            infoPage.Location = new System.Drawing.Point(4, 24);
+            infoPage.Location = new System.Drawing.Point(4, 29);
+            infoPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             infoPage.Name = "infoPage";
-            infoPage.Padding = new System.Windows.Forms.Padding(3);
-            infoPage.Size = new System.Drawing.Size(553, 309);
+            infoPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            infoPage.Size = new System.Drawing.Size(633, 416);
             infoPage.TabIndex = 0;
             infoPage.Text = "Info";
             infoPage.UseVisualStyleBackColor = true;
@@ -809,10 +820,11 @@
             // unkInfoPage
             // 
             unkInfoPage.Controls.Add(unkBytesBox);
-            unkInfoPage.Location = new System.Drawing.Point(4, 24);
+            unkInfoPage.Location = new System.Drawing.Point(4, 29);
+            unkInfoPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             unkInfoPage.Name = "unkInfoPage";
-            unkInfoPage.Padding = new System.Windows.Forms.Padding(3);
-            unkInfoPage.Size = new System.Drawing.Size(553, 309);
+            unkInfoPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            unkInfoPage.Size = new System.Drawing.Size(633, 416);
             unkInfoPage.TabIndex = 1;
             unkInfoPage.Text = "Unknown Info";
             unkInfoPage.UseVisualStyleBackColor = true;
@@ -820,10 +832,11 @@
             // unkBytesBox
             // 
             unkBytesBox.Font = new System.Drawing.Font("Segoe UI", 9F);
-            unkBytesBox.Location = new System.Drawing.Point(6, 6);
+            unkBytesBox.Location = new System.Drawing.Point(7, 8);
+            unkBytesBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             unkBytesBox.Name = "unkBytesBox";
             unkBytesBox.ShadowSelectionColor = System.Drawing.Color.FromArgb(100, 60, 188, 255);
-            unkBytesBox.Size = new System.Drawing.Size(541, 287);
+            unkBytesBox.Size = new System.Drawing.Size(618, 383);
             unkBytesBox.TabIndex = 0;
             // 
             // nodesTree
@@ -833,11 +846,12 @@
             nodesTree.ImageIndex = 0;
             nodesTree.ImageList = nodeIcons;
             nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
-            nodesTree.Location = new System.Drawing.Point(-4, 0);
+            nodesTree.Location = new System.Drawing.Point(-5, 0);
+            nodesTree.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             nodesTree.Name = "nodesTree";
             nodesTree.SelectedImageIndex = 0;
             nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
-            nodesTree.Size = new System.Drawing.Size(342, 341);
+            nodesTree.Size = new System.Drawing.Size(390, 453);
             nodesTree.TabIndex = 1;
             nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
             nodesTree.AfterSelect += nodesTree_AfterSelect;
@@ -852,19 +866,21 @@
             tabPage1.Controls.Add(newCutInfoButton);
             tabPage1.Controls.Add(cutInfoPanel);
             tabPage1.Controls.Add(cutInfoTree);
-            tabPage1.Location = new System.Drawing.Point(4, 24);
+            tabPage1.Location = new System.Drawing.Point(4, 29);
+            tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            tabPage1.Size = new System.Drawing.Size(903, 340);
+            tabPage1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            tabPage1.Size = new System.Drawing.Size(1033, 458);
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Cut Info";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // deleteCutInfoButton
             // 
-            deleteCutInfoButton.Location = new System.Drawing.Point(179, 304);
+            deleteCutInfoButton.Location = new System.Drawing.Point(205, 405);
+            deleteCutInfoButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             deleteCutInfoButton.Name = "deleteCutInfoButton";
-            deleteCutInfoButton.Size = new System.Drawing.Size(75, 23);
+            deleteCutInfoButton.Size = new System.Drawing.Size(86, 31);
             deleteCutInfoButton.TabIndex = 14;
             deleteCutInfoButton.Text = "Delete";
             deleteCutInfoButton.UseVisualStyleBackColor = true;
@@ -872,9 +888,10 @@
             // 
             // newCutInfoButton
             // 
-            newCutInfoButton.Location = new System.Drawing.Point(0, 304);
+            newCutInfoButton.Location = new System.Drawing.Point(0, 405);
+            newCutInfoButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             newCutInfoButton.Name = "newCutInfoButton";
-            newCutInfoButton.Size = new System.Drawing.Size(75, 23);
+            newCutInfoButton.Size = new System.Drawing.Size(86, 31);
             newCutInfoButton.TabIndex = 13;
             newCutInfoButton.Text = "New";
             newCutInfoButton.UseVisualStyleBackColor = true;
@@ -885,16 +902,18 @@
             cutInfoPanel.Controls.Add(cutInfoApplyButton);
             cutInfoPanel.Controls.Add(cutInfoFrameBox);
             cutInfoPanel.Controls.Add(label7);
-            cutInfoPanel.Location = new System.Drawing.Point(255, 1);
+            cutInfoPanel.Location = new System.Drawing.Point(291, 1);
+            cutInfoPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cutInfoPanel.Name = "cutInfoPanel";
-            cutInfoPanel.Size = new System.Drawing.Size(201, 326);
+            cutInfoPanel.Size = new System.Drawing.Size(230, 435);
             cutInfoPanel.TabIndex = 12;
             // 
             // cutInfoApplyButton
             // 
-            cutInfoApplyButton.Location = new System.Drawing.Point(61, 59);
+            cutInfoApplyButton.Location = new System.Drawing.Point(70, 79);
+            cutInfoApplyButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cutInfoApplyButton.Name = "cutInfoApplyButton";
-            cutInfoApplyButton.Size = new System.Drawing.Size(75, 23);
+            cutInfoApplyButton.Size = new System.Drawing.Size(86, 31);
             cutInfoApplyButton.TabIndex = 13;
             cutInfoApplyButton.Text = "Apply";
             cutInfoApplyButton.UseVisualStyleBackColor = true;
@@ -902,9 +921,10 @@
             // 
             // cutInfoFrameBox
             // 
-            cutInfoFrameBox.Location = new System.Drawing.Point(5, 30);
+            cutInfoFrameBox.Location = new System.Drawing.Point(6, 40);
+            cutInfoFrameBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cutInfoFrameBox.Name = "cutInfoFrameBox";
-            cutInfoFrameBox.Size = new System.Drawing.Size(184, 23);
+            cutInfoFrameBox.Size = new System.Drawing.Size(210, 27);
             cutInfoFrameBox.TabIndex = 12;
             // 
             // cutInfoTree
@@ -912,8 +932,9 @@
             cutInfoTree.AllowDrop = true;
             cutInfoTree.ImeMode = System.Windows.Forms.ImeMode.On;
             cutInfoTree.Location = new System.Drawing.Point(0, 0);
+            cutInfoTree.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cutInfoTree.Name = "cutInfoTree";
-            cutInfoTree.Size = new System.Drawing.Size(254, 327);
+            cutInfoTree.Size = new System.Drawing.Size(290, 435);
             cutInfoTree.TabIndex = 11;
             cutInfoTree.AfterSelect += cutInfoTree_AfterSelect;
             // 
@@ -922,19 +943,21 @@
             resTab.Controls.Add(openResButton);
             resTab.Controls.Add(panel2);
             resTab.Controls.Add(resTree);
-            resTab.Location = new System.Drawing.Point(4, 24);
+            resTab.Location = new System.Drawing.Point(4, 29);
+            resTab.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resTab.Name = "resTab";
-            resTab.Padding = new System.Windows.Forms.Padding(3);
-            resTab.Size = new System.Drawing.Size(903, 340);
+            resTab.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            resTab.Size = new System.Drawing.Size(1033, 458);
             resTab.TabIndex = 1;
             resTab.Text = "RES";
             resTab.UseVisualStyleBackColor = true;
             // 
             // openResButton
             // 
-            openResButton.Location = new System.Drawing.Point(819, 3);
+            openResButton.Location = new System.Drawing.Point(936, 4);
+            openResButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             openResButton.Name = "openResButton";
-            openResButton.Size = new System.Drawing.Size(75, 23);
+            openResButton.Size = new System.Drawing.Size(86, 31);
             openResButton.TabIndex = 4;
             openResButton.Text = "Open";
             openResButton.UseVisualStyleBackColor = true;
@@ -943,9 +966,10 @@
             // panel2
             // 
             panel2.Controls.Add(panel3);
-            panel2.Location = new System.Drawing.Point(253, 0);
+            panel2.Location = new System.Drawing.Point(289, 0);
+            panel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(560, 327);
+            panel2.Size = new System.Drawing.Size(640, 436);
             panel2.TabIndex = 3;
             // 
             // panel3
@@ -958,9 +982,10 @@
             panel3.Controls.Add(applyResButton);
             panel3.Controls.Add(label4);
             panel3.Controls.Add(resourceNameTextbox);
-            panel3.Location = new System.Drawing.Point(3, 3);
+            panel3.Location = new System.Drawing.Point(3, 4);
+            panel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new System.Drawing.Size(554, 321);
+            panel3.Size = new System.Drawing.Size(633, 428);
             panel3.TabIndex = 0;
             // 
             // resTimingsPanel
@@ -969,9 +994,10 @@
             resTimingsPanel.Controls.Add(resEndBox);
             resTimingsPanel.Controls.Add(label13);
             resTimingsPanel.Controls.Add(resStartBox);
-            resTimingsPanel.Location = new System.Drawing.Point(13, 67);
+            resTimingsPanel.Location = new System.Drawing.Point(15, 89);
+            resTimingsPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resTimingsPanel.Name = "resTimingsPanel";
-            resTimingsPanel.Size = new System.Drawing.Size(144, 63);
+            resTimingsPanel.Size = new System.Drawing.Size(165, 84);
             resTimingsPanel.TabIndex = 11;
             // 
             // label12
@@ -980,75 +1006,80 @@
             label12.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             label12.Location = new System.Drawing.Point(2, 0);
             label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(56, 25);
+            label12.Size = new System.Drawing.Size(68, 32);
             label12.TabIndex = 8;
             label12.Text = "Start";
             // 
             // resEndBox
             // 
-            resEndBox.Location = new System.Drawing.Point(75, 28);
+            resEndBox.Location = new System.Drawing.Point(86, 37);
+            resEndBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resEndBox.Name = "resEndBox";
-            resEndBox.Size = new System.Drawing.Size(62, 23);
+            resEndBox.Size = new System.Drawing.Size(70, 27);
             resEndBox.TabIndex = 9;
             // 
             // label13
             // 
             label13.AutoSize = true;
             label13.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label13.Location = new System.Drawing.Point(82, 0);
+            label13.Location = new System.Drawing.Point(94, 0);
             label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(46, 25);
+            label13.Size = new System.Drawing.Size(57, 32);
             label13.TabIndex = 10;
             label13.Text = "End";
             // 
             // resStartBox
             // 
-            resStartBox.Location = new System.Drawing.Point(2, 28);
+            resStartBox.Location = new System.Drawing.Point(2, 37);
+            resStartBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resStartBox.Name = "resStartBox";
-            resStartBox.Size = new System.Drawing.Size(62, 23);
+            resStartBox.Size = new System.Drawing.Size(70, 27);
             resStartBox.TabIndex = 7;
             // 
             // linkedNodeBox
             // 
             linkedNodeBox.FormattingEnabled = true;
-            linkedNodeBox.Location = new System.Drawing.Point(411, 38);
+            linkedNodeBox.Location = new System.Drawing.Point(470, 51);
+            linkedNodeBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             linkedNodeBox.Name = "linkedNodeBox";
-            linkedNodeBox.Size = new System.Drawing.Size(121, 23);
+            linkedNodeBox.Size = new System.Drawing.Size(138, 28);
             linkedNodeBox.TabIndex = 6;
             // 
             // targetNodeLbl
             // 
             targetNodeLbl.AutoSize = true;
             targetNodeLbl.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            targetNodeLbl.Location = new System.Drawing.Point(410, 10);
+            targetNodeLbl.Location = new System.Drawing.Point(469, 13);
             targetNodeLbl.Name = "targetNodeLbl";
-            targetNodeLbl.Size = new System.Drawing.Size(122, 25);
+            targetNodeLbl.Size = new System.Drawing.Size(155, 32);
             targetNodeLbl.TabIndex = 5;
             targetNodeLbl.Text = "Target Node";
             // 
             // resourceTypeBox
             // 
             resourceTypeBox.FormattingEnabled = true;
-            resourceTypeBox.Location = new System.Drawing.Point(274, 38);
+            resourceTypeBox.Location = new System.Drawing.Point(313, 51);
+            resourceTypeBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resourceTypeBox.Name = "resourceTypeBox";
-            resourceTypeBox.Size = new System.Drawing.Size(121, 23);
+            resourceTypeBox.Size = new System.Drawing.Size(138, 28);
             resourceTypeBox.TabIndex = 4;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label1.Location = new System.Drawing.Point(265, 10);
+            label1.Location = new System.Drawing.Point(303, 13);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(140, 25);
+            label1.Size = new System.Drawing.Size(179, 32);
             label1.TabIndex = 3;
             label1.Text = "Resource Type";
             // 
             // applyResButton
             // 
-            applyResButton.Location = new System.Drawing.Point(172, 91);
+            applyResButton.Location = new System.Drawing.Point(197, 121);
+            applyResButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             applyResButton.Name = "applyResButton";
-            applyResButton.Size = new System.Drawing.Size(75, 23);
+            applyResButton.Size = new System.Drawing.Size(86, 31);
             applyResButton.TabIndex = 2;
             applyResButton.Text = "Apply";
             applyResButton.UseVisualStyleBackColor = true;
@@ -1058,24 +1089,26 @@
             // 
             label4.AutoSize = true;
             label4.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label4.Location = new System.Drawing.Point(13, 10);
+            label4.Location = new System.Drawing.Point(15, 13);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(93, 25);
+            label4.Size = new System.Drawing.Size(118, 32);
             label4.TabIndex = 1;
             label4.Text = "Resource";
             // 
             // resourceNameTextbox
             // 
-            resourceNameTextbox.Location = new System.Drawing.Point(13, 38);
+            resourceNameTextbox.Location = new System.Drawing.Point(15, 51);
+            resourceNameTextbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resourceNameTextbox.Name = "resourceNameTextbox";
-            resourceNameTextbox.Size = new System.Drawing.Size(244, 23);
+            resourceNameTextbox.Size = new System.Drawing.Size(278, 27);
             resourceNameTextbox.TabIndex = 0;
             // 
             // resTree
             // 
-            resTree.Location = new System.Drawing.Point(-4, 0);
+            resTree.Location = new System.Drawing.Point(-5, 0);
+            resTree.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resTree.Name = "resTree";
-            resTree.Size = new System.Drawing.Size(254, 341);
+            resTree.Size = new System.Drawing.Size(290, 453);
             resTree.TabIndex = 2;
             resTree.AfterSelect += resTree_AfterSelect;
             resTree.NodeMouseDoubleClick += resTree_NodeMouseDoubleClick;
@@ -1088,18 +1121,20 @@
             csvTab.Controls.Add(csvHactsView);
             csvTab.Controls.Add(csvVarPanel);
             csvTab.Controls.Add(csvTree);
-            csvTab.Location = new System.Drawing.Point(4, 24);
+            csvTab.Location = new System.Drawing.Point(4, 29);
+            csvTab.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             csvTab.Name = "csvTab";
-            csvTab.Padding = new System.Windows.Forms.Padding(3);
-            csvTab.Size = new System.Drawing.Size(903, 340);
+            csvTab.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            csvTab.Size = new System.Drawing.Size(1033, 458);
             csvTab.TabIndex = 3;
             csvTab.Text = "CSV";
             // 
             // viewSelectedCSVHActButton
             // 
-            viewSelectedCSVHActButton.Location = new System.Drawing.Point(53, 313);
+            viewSelectedCSVHActButton.Location = new System.Drawing.Point(61, 417);
+            viewSelectedCSVHActButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             viewSelectedCSVHActButton.Name = "viewSelectedCSVHActButton";
-            viewSelectedCSVHActButton.Size = new System.Drawing.Size(111, 23);
+            viewSelectedCSVHActButton.Size = new System.Drawing.Size(127, 31);
             viewSelectedCSVHActButton.TabIndex = 7;
             viewSelectedCSVHActButton.Text = "View Selected";
             viewSelectedCSVHActButton.UseVisualStyleBackColor = true;
@@ -1107,9 +1142,10 @@
             // 
             // csvHactsView
             // 
-            csvHactsView.Location = new System.Drawing.Point(6, 192);
+            csvHactsView.Location = new System.Drawing.Point(7, 256);
+            csvHactsView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             csvHactsView.Name = "csvHactsView";
-            csvHactsView.Size = new System.Drawing.Size(200, 117);
+            csvHactsView.Size = new System.Drawing.Size(228, 155);
             csvHactsView.TabIndex = 6;
             // 
             // csvVarPanel
@@ -1118,37 +1154,39 @@
             csvVarPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             csvVarPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             csvVarPanel.ColumnCount = 2;
-            csvVarPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            csvVarPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 317F));
+            csvVarPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 274F));
+            csvVarPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 440F));
             csvVarPanel.Controls.Add(label2, 0, 0);
             csvVarPanel.Controls.Add(textBox1, 1, 1);
             csvVarPanel.Controls.Add(panel1, 1, 2);
             csvVarPanel.Controls.Add(label3, 0, 1);
-            csvVarPanel.Location = new System.Drawing.Point(212, 1);
+            csvVarPanel.Location = new System.Drawing.Point(242, 1);
+            csvVarPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             csvVarPanel.Name = "csvVarPanel";
             csvVarPanel.RowCount = 3;
-            csvVarPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            csvVarPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            csvVarPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            csvVarPanel.Size = new System.Drawing.Size(627, 308);
+            csvVarPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53F));
+            csvVarPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            csvVarPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            csvVarPanel.Size = new System.Drawing.Size(717, 411);
             csvVarPanel.TabIndex = 5;
             // 
             // label3
             // 
             label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(200, 47);
+            label3.Location = new System.Drawing.Point(222, 61);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(38, 15);
+            label3.Size = new System.Drawing.Size(50, 20);
             label3.TabIndex = 4;
             label3.Text = "label3";
             label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // csvTree
             // 
-            csvTree.Location = new System.Drawing.Point(6, 2);
+            csvTree.Location = new System.Drawing.Point(7, 3);
+            csvTree.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             csvTree.Name = "csvTree";
-            csvTree.Size = new System.Drawing.Size(200, 184);
+            csvTree.Size = new System.Drawing.Size(228, 244);
             csvTree.TabIndex = 0;
             csvTree.AfterSelect += csvTree_AfterSelect;
             csvTree.MouseUp += csvTree_MouseUp;
@@ -1179,7 +1217,7 @@
             // 
             textBox2.Location = new System.Drawing.Point(243, 43);
             textBox2.Name = "textBox2";
-            textBox2.Size = new System.Drawing.Size(238, 23);
+            textBox2.Size = new System.Drawing.Size(238, 27);
             textBox2.TabIndex = 2;
             // 
             // panel4
@@ -1191,18 +1229,20 @@
             // 
             // hactStartBox
             // 
-            hactStartBox.Location = new System.Drawing.Point(3, 30);
+            hactStartBox.Location = new System.Drawing.Point(3, 40);
+            hactStartBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             hactStartBox.Name = "hactStartBox";
-            hactStartBox.Size = new System.Drawing.Size(85, 23);
+            hactStartBox.Size = new System.Drawing.Size(97, 27);
             hactStartBox.TabIndex = 6;
             hactStartBox.TextChanged += hactStartBox_TextChanged;
             hactStartBox.KeyPress += hactStartBox_KeyPress;
             // 
             // hactEndBox
             // 
-            hactEndBox.Location = new System.Drawing.Point(98, 30);
+            hactEndBox.Location = new System.Drawing.Point(112, 40);
+            hactEndBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             hactEndBox.Name = "hactEndBox";
-            hactEndBox.Size = new System.Drawing.Size(85, 23);
+            hactEndBox.Size = new System.Drawing.Size(97, 27);
             hactEndBox.TabIndex = 8;
             hactEndBox.TextChanged += hactEndBox_TextChanged;
             hactEndBox.KeyPress += hactEndBox_KeyPress;
@@ -1213,17 +1253,19 @@
             hactDurationPanel.Controls.Add(hactStartBox);
             hactDurationPanel.Controls.Add(label6);
             hactDurationPanel.Controls.Add(hactEndBox);
-            hactDurationPanel.Location = new System.Drawing.Point(163, 399);
+            hactDurationPanel.Location = new System.Drawing.Point(186, 532);
+            hactDurationPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             hactDurationPanel.Name = "hactDurationPanel";
-            hactDurationPanel.Size = new System.Drawing.Size(193, 57);
+            hactDurationPanel.Size = new System.Drawing.Size(221, 76);
             hactDurationPanel.TabIndex = 10;
             // 
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new System.Drawing.Point(375, 405);
+            checkBox1.Location = new System.Drawing.Point(429, 540);
+            checkBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             checkBox1.Name = "checkBox1";
-            checkBox1.Size = new System.Drawing.Size(165, 19);
+            checkBox1.Size = new System.Drawing.Size(207, 24);
             checkBox1.TabIndex = 11;
             checkBox1.Text = "Use Dev Names For Nodes";
             checkBox1.UseVisualStyleBackColor = true;
@@ -1234,9 +1276,9 @@
             label8.Anchor = System.Windows.Forms.AnchorStyles.None;
             label8.AutoSize = true;
             label8.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            label8.Location = new System.Drawing.Point(22, 35);
+            label8.Location = new System.Drawing.Point(34, 13);
             label8.Name = "label8";
-            label8.Size = new System.Drawing.Size(195, 30);
+            label8.Size = new System.Drawing.Size(172, 74);
             label8.TabIndex = 0;
             label8.Text = "Basic Information";
             // 
@@ -1267,64 +1309,67 @@
             // 
             // csvContextHEvent
             // 
+            csvContextHEvent.ImageScalingSize = new System.Drawing.Size(20, 20);
             csvContextHEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { addDamageToolStripMenuItem, addHeatChangeToolStripMenuItem, addBranchToolStripMenuItem, addHumanFlagToolStripMenuItem });
             csvContextHEvent.Name = "contextMenuStrip1";
-            csvContextHEvent.Size = new System.Drawing.Size(169, 92);
+            csvContextHEvent.Size = new System.Drawing.Size(197, 100);
             // 
             // addDamageToolStripMenuItem
             // 
             addDamageToolStripMenuItem.Name = "addDamageToolStripMenuItem";
-            addDamageToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            addDamageToolStripMenuItem.Size = new System.Drawing.Size(196, 24);
             addDamageToolStripMenuItem.Text = "Add Damage";
             addDamageToolStripMenuItem.Click += addDamageToolStripMenuItem_Click;
             // 
             // addHeatChangeToolStripMenuItem
             // 
             addHeatChangeToolStripMenuItem.Name = "addHeatChangeToolStripMenuItem";
-            addHeatChangeToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            addHeatChangeToolStripMenuItem.Size = new System.Drawing.Size(196, 24);
             addHeatChangeToolStripMenuItem.Text = "Add Heat Change";
             addHeatChangeToolStripMenuItem.Click += addHeatChangeToolStripMenuItem_Click;
             // 
             // addBranchToolStripMenuItem
             // 
             addBranchToolStripMenuItem.Name = "addBranchToolStripMenuItem";
-            addBranchToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            addBranchToolStripMenuItem.Size = new System.Drawing.Size(196, 24);
             addBranchToolStripMenuItem.Text = "Add Branch";
             addBranchToolStripMenuItem.Click += addBranchToolStripMenuItem_Click;
             // 
             // addHumanFlagToolStripMenuItem
             // 
             addHumanFlagToolStripMenuItem.Name = "addHumanFlagToolStripMenuItem";
-            addHumanFlagToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            addHumanFlagToolStripMenuItem.Size = new System.Drawing.Size(196, 24);
             addHumanFlagToolStripMenuItem.Text = "Add Human Flag";
             // 
             // contextMenuStrip1
             // 
+            contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem1 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new System.Drawing.Size(151, 26);
+            contextMenuStrip1.Size = new System.Drawing.Size(174, 28);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new System.Drawing.Size(150, 22);
+            toolStripMenuItem1.Size = new System.Drawing.Size(173, 24);
             toolStripMenuItem1.Text = "Add Character";
             // 
             // langOverrideLbl
             // 
             langOverrideLbl.AutoSize = true;
             langOverrideLbl.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            langOverrideLbl.Location = new System.Drawing.Point(768, 405);
+            langOverrideLbl.Location = new System.Drawing.Point(878, 540);
             langOverrideLbl.Name = "langOverrideLbl";
-            langOverrideLbl.Size = new System.Drawing.Size(155, 21);
+            langOverrideLbl.Size = new System.Drawing.Size(191, 28);
             langOverrideLbl.TabIndex = 11;
             langOverrideLbl.Text = "Language Override";
             // 
             // langOverrideBox
             // 
-            langOverrideBox.Location = new System.Drawing.Point(770, 429);
+            langOverrideBox.Location = new System.Drawing.Point(880, 572);
+            langOverrideBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             langOverrideBox.Name = "langOverrideBox";
-            langOverrideBox.Size = new System.Drawing.Size(85, 23);
+            langOverrideBox.Size = new System.Drawing.Size(97, 27);
             langOverrideBox.TabIndex = 10;
             // 
             // hactFlagsHolder
@@ -1333,23 +1378,26 @@
             hactFlagsHolder.Controls.Add(flagsBox);
             hactFlagsHolder.Controls.Add(hactTypeLabel);
             hactFlagsHolder.Controls.Add(typeBox);
-            hactFlagsHolder.Location = new System.Drawing.Point(546, 402);
+            hactFlagsHolder.Location = new System.Drawing.Point(624, 536);
+            hactFlagsHolder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             hactFlagsHolder.Name = "hactFlagsHolder";
-            hactFlagsHolder.Size = new System.Drawing.Size(193, 53);
+            hactFlagsHolder.Size = new System.Drawing.Size(221, 71);
             hactFlagsHolder.TabIndex = 11;
             // 
             // flagsBox
             // 
-            flagsBox.Location = new System.Drawing.Point(3, 26);
+            flagsBox.Location = new System.Drawing.Point(3, 35);
+            flagsBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             flagsBox.Name = "flagsBox";
-            flagsBox.Size = new System.Drawing.Size(85, 23);
+            flagsBox.Size = new System.Drawing.Size(97, 27);
             flagsBox.TabIndex = 6;
             // 
             // typeBox
             // 
-            typeBox.Location = new System.Drawing.Point(98, 26);
+            typeBox.Location = new System.Drawing.Point(112, 35);
+            typeBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             typeBox.Name = "typeBox";
-            typeBox.Size = new System.Drawing.Size(85, 23);
+            typeBox.Size = new System.Drawing.Size(97, 27);
             typeBox.TabIndex = 8;
             // 
             // cameraInPanel
@@ -1358,112 +1406,117 @@
             cameraInPanel.Controls.Add(cameraInBox);
             cameraInPanel.Controls.Add(label16);
             cameraInPanel.Controls.Add(label15);
-            cameraInPanel.Location = new System.Drawing.Point(623, 12);
+            cameraInPanel.Location = new System.Drawing.Point(712, 16);
+            cameraInPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cameraInPanel.Name = "cameraInPanel";
-            cameraInPanel.Size = new System.Drawing.Size(276, 42);
+            cameraInPanel.Size = new System.Drawing.Size(315, 56);
             cameraInPanel.TabIndex = 13;
             // 
             // cameraOutBox
             // 
-            cameraOutBox.Location = new System.Drawing.Point(109, 19);
+            cameraOutBox.Location = new System.Drawing.Point(125, 25);
+            cameraOutBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cameraOutBox.Name = "cameraOutBox";
-            cameraOutBox.Size = new System.Drawing.Size(85, 23);
+            cameraOutBox.Size = new System.Drawing.Size(97, 27);
             cameraOutBox.TabIndex = 11;
             // 
             // cameraInBox
             // 
-            cameraInBox.Location = new System.Drawing.Point(5, 19);
+            cameraInBox.Location = new System.Drawing.Point(6, 25);
+            cameraInBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cameraInBox.Name = "cameraInBox";
-            cameraInBox.Size = new System.Drawing.Size(85, 23);
+            cameraInBox.Size = new System.Drawing.Size(97, 27);
             cameraInBox.TabIndex = 10;
             // 
             // msgContextEvent
             // 
+            msgContextEvent.ImageScalingSize = new System.Drawing.Size(20, 20);
             msgContextEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem, moveDownToolStripMenuItem, moveUpBy10ToolStripMenuItem1, moveDownBy10ToolStripMenuItem1, moveToTopToolStripMenuItem, pasteAfterSelectedToolStripMenuItem });
             msgContextEvent.Name = "contextMenuStrip2";
-            msgContextEvent.Size = new System.Drawing.Size(179, 136);
+            msgContextEvent.Size = new System.Drawing.Size(211, 148);
             // 
             // moveUpToolStripMenuItem
             // 
             moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-            moveUpToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            moveUpToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             moveUpToolStripMenuItem.Text = "Move Up";
             moveUpToolStripMenuItem.Click += moveUpToolStripMenuItem_Click;
             // 
             // moveDownToolStripMenuItem
             // 
             moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-            moveDownToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            moveDownToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             moveDownToolStripMenuItem.Text = "Move Down";
             moveDownToolStripMenuItem.Click += moveDownToolStripMenuItem_Click;
             // 
             // moveUpBy10ToolStripMenuItem1
             // 
             moveUpBy10ToolStripMenuItem1.Name = "moveUpBy10ToolStripMenuItem1";
-            moveUpBy10ToolStripMenuItem1.Size = new System.Drawing.Size(178, 22);
+            moveUpBy10ToolStripMenuItem1.Size = new System.Drawing.Size(210, 24);
             moveUpBy10ToolStripMenuItem1.Text = "Move Up By 10";
             moveUpBy10ToolStripMenuItem1.Click += moveUpBy10ToolStripMenuItem_Click;
             // 
             // moveDownBy10ToolStripMenuItem1
             // 
             moveDownBy10ToolStripMenuItem1.Name = "moveDownBy10ToolStripMenuItem1";
-            moveDownBy10ToolStripMenuItem1.Size = new System.Drawing.Size(178, 22);
+            moveDownBy10ToolStripMenuItem1.Size = new System.Drawing.Size(210, 24);
             moveDownBy10ToolStripMenuItem1.Text = "Move Down By 10";
             moveDownBy10ToolStripMenuItem1.Click += moveDownBy10ToolStripMenuItem_Click;
             // 
             // moveToTopToolStripMenuItem
             // 
             moveToTopToolStripMenuItem.Name = "moveToTopToolStripMenuItem";
-            moveToTopToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            moveToTopToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             moveToTopToolStripMenuItem.Text = "Move To Top";
             moveToTopToolStripMenuItem.Click += moveToTopToolStripMenuItem_Click;
             // 
             // pasteAfterSelectedToolStripMenuItem
             // 
             pasteAfterSelectedToolStripMenuItem.Name = "pasteAfterSelectedToolStripMenuItem";
-            pasteAfterSelectedToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            pasteAfterSelectedToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             pasteAfterSelectedToolStripMenuItem.Text = "Paste After Selected";
             pasteAfterSelectedToolStripMenuItem.Click += pasteAfterSelectedToolStripMenuItem_Click;
             // 
             // msgContextProperty
             // 
+            msgContextProperty.ImageScalingSize = new System.Drawing.Size(20, 20);
             msgContextProperty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { moveUpToolStripMenuItem1, moveDownToolStripMenuItem1, moveUpBy10ToolStripMenuItem, moveDownBy10ToolStripMenuItem });
             msgContextProperty.Name = "msgContextProperty";
-            msgContextProperty.Size = new System.Drawing.Size(170, 92);
+            msgContextProperty.Size = new System.Drawing.Size(199, 100);
             // 
             // moveUpToolStripMenuItem1
             // 
             moveUpToolStripMenuItem1.Name = "moveUpToolStripMenuItem1";
-            moveUpToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
+            moveUpToolStripMenuItem1.Size = new System.Drawing.Size(198, 24);
             moveUpToolStripMenuItem1.Text = "Move Up";
             moveUpToolStripMenuItem1.Click += moveUpToolStripMenuItem_Click;
             // 
             // moveDownToolStripMenuItem1
             // 
             moveDownToolStripMenuItem1.Name = "moveDownToolStripMenuItem1";
-            moveDownToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
+            moveDownToolStripMenuItem1.Size = new System.Drawing.Size(198, 24);
             moveDownToolStripMenuItem1.Text = "Move Down";
             moveDownToolStripMenuItem1.Click += moveDownToolStripMenuItem_Click;
             // 
             // moveUpBy10ToolStripMenuItem
             // 
             moveUpBy10ToolStripMenuItem.Name = "moveUpBy10ToolStripMenuItem";
-            moveUpBy10ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            moveUpBy10ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             moveUpBy10ToolStripMenuItem.Text = "Move Up By 10";
             moveUpBy10ToolStripMenuItem.Click += moveUpBy10ToolStripMenuItem_Click;
             // 
             // moveDownBy10ToolStripMenuItem
             // 
             moveDownBy10ToolStripMenuItem.Name = "moveDownBy10ToolStripMenuItem";
-            moveDownBy10ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            moveDownBy10ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             moveDownBy10ToolStripMenuItem.Text = "Move Down By 10";
             moveDownBy10ToolStripMenuItem.Click += moveDownBy10ToolStripMenuItem_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(967, 469);
+            ClientSize = new System.Drawing.Size(1105, 625);
             Controls.Add(cameraInPanel);
             Controls.Add(framesInNameBox);
             Controls.Add(hactFlagsHolder);
@@ -1476,6 +1529,7 @@
             Controls.Add(targetGameCombo);
             Controls.Add(appTools);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             MaximizeBox = false;
             Name = "Form1";
             Text = "AuthEdit by Jhrino";

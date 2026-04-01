@@ -11,10 +11,17 @@ namespace HActLib
 {
     public class TEVWriter : IConverter<TEV, BinaryFormat>
     {
-        public bool Optimize = true;
+        public bool Optimize = false;
 
         public BinaryFormat Convert(TEV tev)
         {
+            //Since we dont understand how this data works
+            //We'll assign an arbitrary "padding"
+            //If this is zero, its a hact converted from another game
+            //So we assign this as a default value.
+            if (tev.TEVHeader.DataPadding <= 0)
+                tev.TEVHeader.DataPadding = 2048;
+
             Dictionary<ObjectBase, long> h_set1Addresses = new Dictionary<ObjectBase, long>();
             Dictionary<Set2, long> h_set2Addresses = new Dictionary<Set2, long>();
             Dictionary<EffectBase, long> h_set3Addresses = new Dictionary<EffectBase, long>();

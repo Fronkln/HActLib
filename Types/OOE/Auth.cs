@@ -17,7 +17,10 @@ namespace HActLib
         public List<AuthResourceCut> ResourceCuts = new List<AuthResourceCut>();
         public List<AuthResourceCut> CameraCuts = new List<AuthResourceCut>();
         public List<AuthReference> References = new List<AuthReference>();
-
+        
+        /// <summary>
+        /// The detected res cmn path.
+        /// </summary>
         public string ResCmn = null;
         public string Res000 = null;
 
@@ -49,10 +52,16 @@ namespace HActLib
 
             var result = Read(File.ReadAllBytes(path));
 
-
             DirectoryInfo dir = new DirectoryInfo(path);
 
-            var dirs = dir.Parent.Parent.Parent.GetDirectories();
+            DirectoryInfo searchDir = null;
+
+            if (dir.Parent.Parent.Parent.Name == dir.Parent.Parent.Name)
+                searchDir = dir.Parent.Parent;
+            else
+                searchDir = dir.Parent.Parent.Parent;
+
+            var dirs = searchDir.GetDirectories();
             var resCmnDir = dirs.FirstOrDefault(x => x.Name.Contains("res_cmn"));
             var res000Dir = dirs.FirstOrDefault(x => x.Name.Contains("000"));
 
@@ -374,42 +383,17 @@ namespace HActLib
                 uint childPtr = 0;
                 uint nextPtr = 0;
 
+                if(node.Parent != null)
+                {
+                    int myIdx = node.Parent.Children.IndexOf(node);
+                    bool isLastChild = myIdx >= node.Parent.Children.Count - 1;
+
+                    if (!isLastChild)
+                        nextPtr = nodeLocs[node.Parent.Children[myIdx + 1]];
+                }
+
                 if (node.Children.Count > 0)
                     childPtr = nodeLocs[node.Children[0]];
-                else
-                    childPtr = 0;
-
-                if (i == 0)
-                {
-                    if (nodes.Length > 1)
-                        nextPtr = nodeLocs[nodes[2]];
-                    else
-                        nextPtr = 0;
-                }
-                else
-                {
-
-                    if(node.Parent != null)
-                    {
-                        int myIdx = node.Parent.Children.IndexOf(node);
-
-                        if(myIdx == node.Parent.Children.Count - 1)
-                        {
-                            nextPtr = 0;
-                        }
-                        else
-                        {
-                            nextPtr = nodeLocs[node.Parent.Children[myIdx + 1]];
-                        }
-                    }
-                    /*
-
-                    if (i == nodes.Length - 1)
-                        writer.Write(0);
-                    else
-                        writer.Write(nodeLocs[nodes[i + 1]]);
-                    ü*/
-                }
 
 
                 writer.Write(childPtr);

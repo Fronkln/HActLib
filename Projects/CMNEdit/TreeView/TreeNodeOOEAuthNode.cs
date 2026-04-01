@@ -37,6 +37,12 @@ namespace CMNEdit
             ImageIndex = icon;
             SelectedImageIndex = icon;
 
+            SetName();
+        }
+
+
+        public void SetName()
+        {
             if (Enum.IsDefined(typeof(AuthNodeTypeOOE), (int)Node.Type))
                 Text = Node.Type.ToString();
             else

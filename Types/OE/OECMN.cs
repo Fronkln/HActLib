@@ -386,7 +386,9 @@ namespace HActLib
 
         public override int GetNodeDrawNum()
         {
-            return CMNHeader.NodeDrawNum;
+            var drawNodes = AllNodes.Where(x => x.Category == AuthNodeCategory.Character || x.Category == AuthNodeCategory.ModelCustom || x.Category == AuthNodeCategory.Asset);
+            return drawNodes.Count();
+            //return CMNHeader.NodeDrawNum;
         }
 
         public override void SetNodeDrawNum(int num)

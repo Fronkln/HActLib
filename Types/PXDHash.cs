@@ -22,5 +22,18 @@ namespace HActLib
             _Text = txt;
             Checksum = sum;
         }
+
+        public static implicit operator string(PXDHash hash)
+        {
+            return hash.Text;
+        }
+
+        public static implicit operator PXDHash(string str)
+        {
+            var hash = new PXDHash();
+            hash.Set(str);
+
+            return hash;
+        }
     };
 }

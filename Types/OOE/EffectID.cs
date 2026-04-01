@@ -31,7 +31,7 @@ namespace HActLib
         UseHumanDraw6 = 1055,
         UseHumanDraw7 = 1066,
         UseHumanDraw8 = 1067,
-        Light1 = 1014,
+        CharacterParallelLight = 1014,
         Light2 = 1015,
         Special = 1019,
         Light3 = 1040,

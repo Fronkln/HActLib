@@ -65,6 +65,7 @@ namespace HActLib
 
             //Amount of padding between data ptr 1 and data ptr 2
             //Because i couldn't figure out the magic behind them, LOL!!!
+            //1024 default value for if we convert any hacts from other games
             public int DataPadding;
 
             //Amount of offset between data ptr 2 and weird space
