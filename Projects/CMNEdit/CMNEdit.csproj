@@ -90,6 +90,9 @@
     <Compile Update="Windows\ColorViewFI.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Windows\ResourceCutWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Windows\FlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>

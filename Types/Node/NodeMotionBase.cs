@@ -69,5 +69,15 @@ namespace HActLib
         {
             return 16;
         }
+
+        public override float GetStart()
+        {
+            return Start.Frame;
+        }
+
+        public override float GetEnd()
+        {
+            return End.Frame;
+        }
     }
 }

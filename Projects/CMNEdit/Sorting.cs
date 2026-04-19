@@ -80,24 +80,38 @@ namespace CMNEdit
                 bool inrange = false;
 
 
-                if (nodeH.HActNode as NodeElement != null)
+                float nodeStart = nodeH.HActNode.GetStart();
+
+                if(nodeStart != -1)
                 {
-                    NodeElement nodeHElement = nodeH.HActNode as NodeElement;
+                    float nodeEnd = nodeH.HActNode.GetEnd();
 
                     //heuteristic
                     float multiPartLimit = 30;
 
+                    globalNode = nodeStart == 0 && nodeEnd >= end - 1;
+                    inrange = nodeStart + multiPartLimit <= nodeStart && nodeStart < start && nodeEnd < end;
 
-                    globalNode = nodeHElement.Start == 0 && nodeHElement.End >= end - 1;
-                    inrange = nodeHElement.Start + multiPartLimit <= nodeHElement.Start && nodeHElement.Start < start && nodeHElement.End < end;
-
-                    //multi-cut node
-                    if (lastCut > -1 && (globalNode || inrange))
+                    if(nodeH.HActNode is NodeMotionBase)
                     {
-                        ;
+                        float multiPartLimitMotion = 120;
+                        inrange = nodeStart < end;
+
+                        //some damn npcs have multiple animation nodes for some reason
+                        //i dont feel like solving this elegantly for now. so all their nod will be included
+                        if (!inrange)
+                            return null;
                     }
-                    else if (nodeHElement.Start < start || nodeHElement.Start > end)
-                        return null;
+                    else
+                    {
+                        //multi-cut node
+                        if (lastCut > -1 && (globalNode || inrange))
+                        {
+                            ;
+                        }
+                        else if (nodeStart < start || nodeStart > end)
+                            return null;
+                    }
                 }
 
                 TreeViewItemNode nodeNew = (TreeViewItemNode)node.Clone();
@@ -125,6 +139,29 @@ namespace CMNEdit
                             newElem.Start = newElem.Start - start;
                     }
 
+                }
+                else
+                {
+                    if(nodeNew.HActNode is NodeMotionBase)
+                    {
+                        var motion = nodeNew.HActNode as NodeMotionBase;
+
+                        if (adjustRelative)
+                        {
+
+                            if (motion.End.Frame > end)
+                                motion.End.Frame = end;
+
+                            if (lastCut > -1)
+                            {
+                                float newEnd = Utils.ConvertRange(motion.End.Frame, start, end, 0, length);
+                                motion.End.Frame = newEnd;
+                            }
+
+                            if (!globalNode)
+                                motion.Start.Frame = motion.Start.Frame - start;
+                        }
+                    }
                 }
 
 

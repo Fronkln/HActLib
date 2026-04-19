@@ -49,7 +49,7 @@ namespace HActLib
         Unknown1 = 0x0,
         Unknown2 = 0x1,
         Character = 0x2,
-        Unknown3 = 0x3,
+        CustomModel = 0x3,
         CameraMotion = 0x4,
         PathMotion = 0x5,
         AssetMotion = 0x6,

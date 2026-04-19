@@ -75,9 +75,12 @@
             testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             test2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             correctSoundIDsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            giveEveryElementRandomGUIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            setMotionNodesToFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             advancedButton = new System.Windows.Forms.ToolStripDropDownButton();
             frameProgressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             disableFrameInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            resourceCutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             authPagesDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             convertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             convertToOtherDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -511,7 +514,7 @@
             // toolStripSplitButton1
             // 
             toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { adjustTimingToolStripMenuItem, moveTimingToolStripMenuItem, reorderBasedOnTimingToolStripMenuItem, testToolStripMenuItem, test2ToolStripMenuItem, correctSoundIDsToolStripMenuItem });
+            toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { adjustTimingToolStripMenuItem, moveTimingToolStripMenuItem, reorderBasedOnTimingToolStripMenuItem, testToolStripMenuItem, test2ToolStripMenuItem, correctSoundIDsToolStripMenuItem, giveEveryElementRandomGUIDToolStripMenuItem, setMotionNodesToFrameToolStripMenuItem });
             toolStripSplitButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripSplitButton1.Image");
             toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripSplitButton1.Name = "toolStripSplitButton1";
@@ -522,49 +525,63 @@
             // adjustTimingToolStripMenuItem
             // 
             adjustTimingToolStripMenuItem.Name = "adjustTimingToolStripMenuItem";
-            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
+            adjustTimingToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
             adjustTimingToolStripMenuItem.Text = "Adjust Timing";
             adjustTimingToolStripMenuItem.Click += adjustTimingToolStripMenuItem_Click;
             // 
             // moveTimingToolStripMenuItem
             // 
             moveTimingToolStripMenuItem.Name = "moveTimingToolStripMenuItem";
-            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
+            moveTimingToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
             moveTimingToolStripMenuItem.Text = "Move Timing";
             moveTimingToolStripMenuItem.Click += moveTimingToolStripMenuItem_Click;
             // 
             // reorderBasedOnTimingToolStripMenuItem
             // 
             reorderBasedOnTimingToolStripMenuItem.Name = "reorderBasedOnTimingToolStripMenuItem";
-            reorderBasedOnTimingToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
+            reorderBasedOnTimingToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
             reorderBasedOnTimingToolStripMenuItem.Text = "Reorder Based On Timing";
             reorderBasedOnTimingToolStripMenuItem.Click += reorderBasedOnTimingToolStripMenuItem_Click;
             // 
             // testToolStripMenuItem
             // 
             testToolStripMenuItem.Name = "testToolStripMenuItem";
-            testToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
+            testToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
             testToolStripMenuItem.Text = "OOE to DE Auth Test";
             testToolStripMenuItem.Click += testToolStripMenuItem_Click;
             // 
             // test2ToolStripMenuItem
             // 
             test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
-            test2ToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
+            test2ToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
             test2ToolStripMenuItem.Text = "OOE to OE Auth Test";
             test2ToolStripMenuItem.Click += test2ToolStripMenuItem_Click;
             // 
             // correctSoundIDsToolStripMenuItem
             // 
             correctSoundIDsToolStripMenuItem.Name = "correctSoundIDsToolStripMenuItem";
-            correctSoundIDsToolStripMenuItem.Size = new System.Drawing.Size(262, 26);
+            correctSoundIDsToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
             correctSoundIDsToolStripMenuItem.Text = "Correct Sound IDs";
             correctSoundIDsToolStripMenuItem.Click += correctSoundIDsToolStripMenuItem_Click;
+            // 
+            // giveEveryElementRandomGUIDToolStripMenuItem
+            // 
+            giveEveryElementRandomGUIDToolStripMenuItem.Name = "giveEveryElementRandomGUIDToolStripMenuItem";
+            giveEveryElementRandomGUIDToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
+            giveEveryElementRandomGUIDToolStripMenuItem.Text = "Give Every Element Random GUID";
+            giveEveryElementRandomGUIDToolStripMenuItem.Click += giveEveryElementRandomGUIDToolStripMenuItem_Click;
+            // 
+            // setMotionNodesToFrameToolStripMenuItem
+            // 
+            setMotionNodesToFrameToolStripMenuItem.Name = "setMotionNodesToFrameToolStripMenuItem";
+            setMotionNodesToFrameToolStripMenuItem.Size = new System.Drawing.Size(317, 26);
+            setMotionNodesToFrameToolStripMenuItem.Text = "Set Motion Nodes To Frame";
+            setMotionNodesToFrameToolStripMenuItem.Click += setMotionNodesToFrameToolStripMenuItem_Click;
             // 
             // advancedButton
             // 
             advancedButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, authPagesDEToolStripMenuItem, convertToolStripMenuItem, authToolStripMenuItem });
+            advancedButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { frameProgressionToolStripMenuItem, disableFrameInfoToolStripMenuItem, resourceCutsToolStripMenuItem, authPagesDEToolStripMenuItem, convertToolStripMenuItem, authToolStripMenuItem });
             advancedButton.Image = (System.Drawing.Image)resources.GetObject("advancedButton.Image");
             advancedButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             advancedButton.Name = "advancedButton";
@@ -574,21 +591,28 @@
             // frameProgressionToolStripMenuItem
             // 
             frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
-            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
+            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             frameProgressionToolStripMenuItem.Text = "Frame Progression";
             frameProgressionToolStripMenuItem.Click += frameProgressionToolStripMenuItem_Click;
             // 
             // disableFrameInfoToolStripMenuItem
             // 
             disableFrameInfoToolStripMenuItem.Name = "disableFrameInfoToolStripMenuItem";
-            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
+            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             disableFrameInfoToolStripMenuItem.Text = "Disable Frame Info";
             disableFrameInfoToolStripMenuItem.Click += disableFrameInfoToolStripMenuItem_Click;
+            // 
+            // resourceCutsToolStripMenuItem
+            // 
+            resourceCutsToolStripMenuItem.Name = "resourceCutsToolStripMenuItem";
+            resourceCutsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            resourceCutsToolStripMenuItem.Text = "Resource Cuts";
+            resourceCutsToolStripMenuItem.Click += resourceCutsToolStripMenuItem_Click;
             // 
             // authPagesDEToolStripMenuItem
             // 
             authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
-            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
+            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
             authPagesDEToolStripMenuItem.Click += authPagesDEToolStripMenuItem_Click;
             // 
@@ -596,7 +620,7 @@
             // 
             convertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertToOtherDEToolStripMenuItem, bulkConvertBEPToolStripMenuItem, convertOEPropertybinToBEPToolStripMenuItem, convertMEPWithPibsToolStripMenuItem1 });
             convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            convertToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
+            convertToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             convertToolStripMenuItem.Text = "Convert";
             // 
             // convertToOtherDEToolStripMenuItem
@@ -631,7 +655,7 @@
             // 
             authToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { segmentAuthToolStripMenuItem, reassembleAuthToolStripMenuItem });
             authToolStripMenuItem.Name = "authToolStripMenuItem";
-            authToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
+            authToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             authToolStripMenuItem.Text = "Auth";
             // 
             // segmentAuthToolStripMenuItem
@@ -1708,5 +1732,8 @@
         private System.Windows.Forms.ToolStripMenuItem moveDownBy10ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem moveToTopToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteAfterSelectedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem giveEveryElementRandomGUIDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setMotionNodesToFrameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resourceCutsToolStripMenuItem;
     }
 }

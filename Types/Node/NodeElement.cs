@@ -155,5 +155,15 @@ namespace HActLib
         {
 
         }
+
+        public override float GetStart()
+        {
+            return Start;
+        }
+
+        public override float GetEnd()
+        {
+            return End;
+        }
     }
 }

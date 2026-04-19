@@ -256,5 +256,15 @@ namespace HActLib
         {
             return null;
         }
+
+        public virtual float GetStart()
+        {
+            return -1;
+        }
+
+        public virtual float GetEnd()
+        {
+            return -1;
+        }
     }
 }

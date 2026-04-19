@@ -1,30 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Reflection;
-using HActLib;
-using System.IO;
-using System.Globalization;
+﻿using CMNEdit.Windows;
 using CMNEdit.Windows.Common.DE;
-using CMNEdit.Windows;
-using ParLibrary;
-using ParLibrary.Converter;
-using PIBLib;
-using System.Drawing.Text;
 using Frame_Progression_GUI;
-using System.Collections;
-using MWControlSuite;
-using MotionLib;
+using HActLib;
 using HActLib.Internal;
 using HActLib.OOE;
 using HActLib.YAct;
+using MotionLib;
+using MWControlSuite;
+using ParLibrary;
+using ParLibrary.Converter;
+using PIBLib;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Text;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
+using System.Xml.Linq;
 using YakuzaDataTypes.MSG;
 using YakuzaDataTypes.PAC;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace CMNEdit
 {
@@ -91,6 +92,7 @@ namespace CMNEdit
         private ToolStripDropDownItem advancedTab;
         private ToolStripItem advancedFrameProgressionButton;
         private ToolStripItem disableFrameInfoButton;
+        private ToolStripItem resourceCutsButton;
         private ToolStripItem authPagesButton;
         private ToolStripItem convertBetweenGamesButton;
 
@@ -131,9 +133,10 @@ namespace CMNEdit
             advancedTab = (ToolStripDropDownItem)appTools.Items[3];
             advancedFrameProgressionButton = advancedTab.DropDownItems[0];
             disableFrameInfoButton = advancedTab.DropDownItems[1];
-            authPagesButton = advancedTab.DropDownItems[2];
+            resourceCutsButton = advancedTab.DropDownItems[2];
+            authPagesButton = advancedTab.DropDownItems[3];
 
-            convertTab = (ToolStripDropDownItem)advancedTab.DropDownItems[3];
+            convertTab = (ToolStripDropDownItem)advancedTab.DropDownItems[4];
             convertBetweenGamesButton = convertTab.DropDownItems[0];
 
             convertTab.DropDownItems.Remove(convertBetweenGamesButton);
@@ -203,6 +206,7 @@ namespace CMNEdit
             advancedTab.DropDownItems.Remove(advancedFrameProgressionButton);
             advancedTab.DropDownItems.Remove(disableFrameInfoButton);
             advancedTab.DropDownItems.Remove(authPagesButton);
+            advancedTab.DropDownItems.Remove(resourceCutsButton);
 
             hactFlagsHolder.Visible = false;
             hactTypeLabel.Visible = false;
@@ -302,7 +306,9 @@ namespace CMNEdit
 
                 Auth = authFile;
                 IsOOEAuth = true;
-                ;
+
+                CutInfos = Auth.CameraCuts;
+                hactTabs.TabPages.Add(cutPage);
 
                 foreach (var node in authFile.Nodes)
                 {
@@ -2122,7 +2128,7 @@ namespace CMNEdit
                     }
                 }
 
-
+                Auth.CameraCuts = CutInfos;
                 Auth.Write(Auth, FilePath);
 
                 if (!string.IsNullOrEmpty(ResPath))
@@ -2664,6 +2670,7 @@ namespace CMNEdit
         {
             advancedTab.DropDownItems.Add(advancedFrameProgressionButton);
             advancedTab.DropDownItems.Add(disableFrameInfoButton);
+            advancedTab.DropDownItems.Add(resourceCutsButton);
         }
 
         private void InitBEP(BEP Bep)
@@ -4292,14 +4299,38 @@ namespace CMNEdit
                 if (!string.IsNullOrEmpty(FilePath))
                 {
                     string hactDir = new FileInfo(FilePath).Directory.Parent.FullName;
+                    string resDir = Path.Combine(hactDir, resPrefix);
 
-                    if (Directory.Exists(Path.Combine(hactDir, resPrefix)))
+                    if (Directory.Exists(resDir))
                     {
-                        resFile = Path.Combine(hactDir, resPrefix, "res.bin");
+                        resFile = Path.Combine(resDir, "res.bin");
 
                         if (File.Exists(resFile))
                         {
-                            File.Copy(resFile, Path.Combine(folderDir, "res.bin"));
+                            RES res = RES.Read(resFile, false);
+
+#warning TODO: Adjust res
+                            foreach (var resource in res.Resources)
+                            {
+                                //These tend to have the full length of the hact. Wont touch
+                                if (resource.Type != ResourceType.CustomModel && resource.Type != ResourceType.Character)
+                                {
+                                    resource.StartFrame -= currentStart;
+                                    resource.EndFrame -= currentStart;
+                                }
+
+                            }
+
+                            RES.Write(res, Path.Combine(folderDir, "res.bin"), CMN.IsDEGame(curGame));
+                            // File.Copy(resFile, Path.Combine(folderDir, "res.bin"));
+                        }
+
+                        string[] files = Directory.GetFiles(resDir);
+
+                        foreach (string str in files)
+                        {
+                            if (!str.EndsWith(".bin"))
+                                File.Copy(str, Path.Combine(folderDir, Path.GetFileName(str)), true);
                         }
                     }
 
@@ -4407,7 +4438,6 @@ namespace CMNEdit
 
                     resourceCuts.Add(segment.ResourceCutInfo[0] + cmn.HActEnd);
 
-
                     oldEnd = cmn.HActEnd;
                     cmn.HActEnd += segment.HActEnd;
 
@@ -4423,12 +4453,46 @@ namespace CMNEdit
                         else
                         {
                             Node originalParent = cmn.FindNodeByGUID(element.Parent.Guid);
-                            originalParent.Children.Add(element);
 
-                            element.Start += oldEnd;
-                            element.End += oldEnd;
+                            //huhhh
+                            if (originalParent != null)
+                            {
+                                originalParent.Children.Add(element);
+
+                                element.Start += oldEnd;
+                                element.End += oldEnd;
+                            }
                         }
                     }
+
+                    //jank but i dont fucking care
+                    foreach (Node node in segment.GetNodes())
+                    {
+                        if (!(node is NodeMotionBase))
+                            continue;
+
+                        NodeMotionBase segmentedNode = (NodeMotionBase)node;
+                        NodeMotionBase originalNode = (NodeMotionBase)cmn.FindNodeByGUID(node.Guid);
+
+                        if (originalNode != null)
+                        {
+                            originalNode.End.Frame += segmentedNode.End.Frame;
+                        }
+                        else
+                        {
+                            Node originalParent = cmn.FindNodeByGUID(node.Parent.Guid);
+
+                            //huhhh
+                            if (originalParent != null)
+                            {
+                                originalParent.Children.Add(node);
+
+                                segmentedNode.Start.Frame += oldEnd;
+                                segmentedNode.End.Frame += oldEnd;
+                            }
+                        }
+                    }
+
                 }
 
 
@@ -4451,11 +4515,36 @@ namespace CMNEdit
                         Directory.CreateDirectory(resDir);
 
                     RES.Write(segmentedRes, Path.Combine(resDir, "res.bin"), CMN.IsDEGame(game));
+
+                    string[] files = Directory.GetFiles(segmentPath);
+
+                    foreach (string str in files)
+                    {
+                        if (!str.EndsWith(".bin"))
+                            File.Copy(str, Path.Combine(resDir, Path.GetFileName(str)), true);
+                    }
                 }
 
                 curSegment++;
             }
 
+            //go back to 000 and correct any character/model lengths who typically are present for full hact duration..
+            string res0Path = Path.Combine(outputPath, "000", "res.bin");
+
+            if (File.Exists(res0Path))
+            {
+                RES res = RES.Read(res0Path, false);
+
+                foreach (var resource in res.Resources)
+                {
+                    if (resource.Type == ResourceType.Character || resource.Type == ResourceType.CustomModel || resource.Type == ResourceType.Model)
+                    {
+                        resource.EndFrame = cmn.HActEnd;
+                    }
+                }
+
+                RES.Write(res, res0Path, false);
+            }
 
             cmn.CutInfo = cutInfos.Distinct().ToArray();
             cmn.ResourceCutInfo = resourceCuts.ToArray();
@@ -4576,6 +4665,40 @@ namespace CMNEdit
                 parentNode.Nodes.Insert(index, (TreeNode)CopiedNode[0].Clone());
             }
             nodesTree.ResumeLayout();
+        }
+
+        private void giveEveryElementRandomGUIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var node in GetCurrentAuthAllElements())
+            {
+                node.Guid = Guid.NewGuid();
+            }
+        }
+
+        private void setMotionNodesToFrameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Enter the end frame", "Frame", "");
+
+            if (string.IsNullOrEmpty(input))
+                return;
+
+            float endFrame = Utils.InvariantParse(input);
+
+            foreach (var node in GetAllNodes())
+            {
+                if (node is NodeMotionBase)
+                {
+                    var motion = (NodeMotionBase)node;
+                    motion.End.Frame = endFrame;
+                }
+            }
+        }
+
+        private void resourceCutsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResourceCutWindow cutsWindow = new ResourceCutWindow();
+            cutsWindow.Visible = true;
+            cutsWindow.Init(ResourceCutInfos);
         }
     }
 }

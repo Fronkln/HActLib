@@ -1,11 +1,12 @@
 ﻿using HActLib.Internal;
+using HActLib.OOE;
 using System;
-using System.IO;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using Yarhl.IO;
-using HActLib.OOE;
-using System.Linq;
 
 namespace HActLib
 {
@@ -15,7 +16,7 @@ namespace HActLib
 
         public List<AuthNodeOOE> Nodes = new List<AuthNodeOOE>();
         public List<AuthResourceCut> ResourceCuts = new List<AuthResourceCut>();
-        public List<AuthResourceCut> CameraCuts = new List<AuthResourceCut>();
+        public List<float> CameraCuts = new List<float>();
         public List<AuthReference> References = new List<AuthReference>();
         
         /// <summary>
@@ -117,8 +118,9 @@ namespace HActLib
 
             for (int i = 0; i < cameraCutPtr.Pointer; i++)
             {
-                auth.CameraCuts.Add(new AuthResourceCut() { Start = authReader.ReadSingle(), End = authReader.ReadSingle() });
-                authReader.Stream.Position += 8;
+                float cut = authReader.ReadSingle();
+                auth.CameraCuts.Add(cut);
+                authReader.Stream.Position += 12;
             }
 
             authReader.Stream.Position = referencesPtr.Pointer;
@@ -316,10 +318,18 @@ namespace HActLib
 
             long cameraCutStart = writer.Stream.Position;
 
-            foreach (AuthResourceCut cut in file.CameraCuts)
+            for (int i = 0; i < file.CameraCuts.Count; i++)
             {
-                writer.Write(cut.Start);
-                writer.Write(cut.End);
+                float cutStart = file.CameraCuts[i];
+                float cutEnd = 0;
+
+                if (i < file.CameraCuts.Count - 1)
+                    cutEnd = file.CameraCuts[i + 1];
+                else
+                    cutEnd = file.Length;
+
+                writer.Write(cutStart);
+                writer.Write(cutEnd);
 
                 writer.WriteTimes(0, 8);
             }

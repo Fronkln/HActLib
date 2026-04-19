@@ -33,9 +33,9 @@ namespace HActLib
             List<float> cutInfos = new List<float>();
             List<float> resourceCutInfos = new List<float>();
 
-            foreach (AuthResourceCut cutInfo in authFile.CameraCuts)
+            foreach (float cutInfo in authFile.CameraCuts)
             {
-                cutInfos.Add(cutInfo.Start);
+                cutInfos.Add(cutInfo);
             }
 
             foreach (AuthResourceCut cutInfo in authFile.ResourceCuts)
