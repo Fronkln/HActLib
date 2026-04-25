@@ -63,7 +63,7 @@ namespace HActLib
                     }
 
                     bw.Write(bmpHeader2);
-                    bw.Write(unkBytes);
+                    bw.Write(unkBytes.Chunk(3).Select((x) => x.Reverse()).SelectMany(x => x).ToArray());
                 }
 
                 return ms.GetBuffer();

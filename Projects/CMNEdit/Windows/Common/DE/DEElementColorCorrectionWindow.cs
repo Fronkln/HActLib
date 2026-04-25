@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -55,7 +56,7 @@ namespace CMNEdit.Windows.Common.DE
                                 byte[] buf = new byte[reader.BaseStream.Length - 54];
                                 reader.BaseStream.Position += 54;
                                 reader.BaseStream.Read(buf, 0, buf.Length);
-                                correction.unkBytes = buf;
+                                correction.unkBytes = buf.Chunk(3).Select((x) => x.Reverse()).SelectMany(x => x).ToArray();
                             }
                         }
                     }
