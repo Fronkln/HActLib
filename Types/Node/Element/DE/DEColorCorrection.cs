@@ -118,7 +118,9 @@ namespace HActLib
                     }
 
                     bw.Write(bmpHeader2);
-                    bw.Write(unkBytes);
+
+                    // This basically flips pairs of 3 for it to go from RGB to BGR
+                    bw.Write(unkBytes.Chunk(3).Select((x) => x.Reverse()).SelectMany(x => x).ToArray());
                 }
 
                 return ms.GetBuffer();
