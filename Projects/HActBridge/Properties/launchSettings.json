@@ -2,7 +2,7 @@
   "profiles": {
     "HActBridge": {
       "commandName": "Project",
-      "commandLineArgs": "\"E:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\hact\\H1040_kyuukyoku.par.unpack\" y5 y3"
+      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Yakuza Kiwami\\media\\data\\hact.par.unpack_\\h20021_gougeki_c\" y0 gaiden"
     }
   }
 }

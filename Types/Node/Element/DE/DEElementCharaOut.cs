@@ -16,13 +16,13 @@ namespace HActLib
     public class DEElementCharaOut : NodeElement
     {
         public AuthReturnType ReturnType;
-        public GameTick PlayRange;
+        public GameTick PlayRange = new GameTick();
         public uint TickLength;
         public bool RagdollInfoExists;
 
-        public PXDHash Hash;
+        public PXDHash Hash = new PXDHash();
 
-        public TimingInfoRagdoll RagdollInfo;
+        public TimingInfoRagdoll RagdollInfo = new TimingInfoRagdoll();
 
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {

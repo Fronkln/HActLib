@@ -35,6 +35,8 @@ namespace HActLib
 
         public Node FindNodeByGUID(Guid guid) { return GetNodes().FirstOrDefault(x => x.Guid == guid); }
 
+        public List<NodeElement> FindElementsByType(uint elementType) { return AllElements.Where(x => x.ElementKind == elementType).ToList(); }
+
         public NodeElement[] AllElements
         {
             get

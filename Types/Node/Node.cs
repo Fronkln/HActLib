@@ -15,7 +15,7 @@ namespace HActLib
         /// <summary> Data exclusive to BEP files. </summary>
         public BEPData BEPDat = new BEPData();
 
-        public Guid Guid = new Guid();
+        public Guid Guid = Guid.NewGuid();
 
         public AuthNodeCategory Category;
         internal int NodeSize; 

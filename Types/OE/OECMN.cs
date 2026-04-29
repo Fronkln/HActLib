@@ -74,7 +74,7 @@ namespace HActLib
             int soundInfoPtr = 0;
             int nodeInfoPtr = 0;
 
-            if(cmn.CMNHeader.Version <= 10)
+            if (cmn.CMNHeader.Version <= 10)
             {
                 cutInfoPtr = cmnReader.ReadInt32();
                 resourceCutInfoPtr = cmnReader.ReadInt32();
@@ -386,9 +386,10 @@ namespace HActLib
 
         public override int GetNodeDrawNum()
         {
-            var drawNodes = AllNodes.Where(x => x.Category == AuthNodeCategory.Character || x.Category == AuthNodeCategory.ModelCustom || x.Category == AuthNodeCategory.Asset);
-            return drawNodes.Count() + 1;
-            //return CMNHeader.NodeDrawNum;
+            //TODO: Best way to get this is using res.bin
+            //var drawNodes = AllNodes.Where(x => x.Category == AuthNodeCategory.Character || x.Category == AuthNodeCategory.ModelCustom || x.Category == AuthNodeCategory.Asset);
+            //return drawNodes.Count() + 1;
+            return CMNHeader.NodeDrawNum;
         }
 
         public override void SetNodeDrawNum(int num)

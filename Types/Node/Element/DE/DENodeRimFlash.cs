@@ -274,6 +274,14 @@ namespace HActLib
             }
         }
 
+        public void ImportParams(byte[] paramsBuffer)
+        {
+            var buf = DataStreamFactory.FromArray(paramsBuffer, 0, paramsBuffer.Length);
+            var reader = new DataReader(buf);
+
+            ReadParams(reader, new NodeConvInf(), CMN.LastGameVersion);
+        }
+
         public void ImportParams(string path)
         {
             byte[] dat = File.ReadAllBytes(path);
@@ -292,6 +300,18 @@ namespace HActLib
             File.WriteAllBytes(path, buf.ToArray());
 
             buf.Dispose();
+        }
+
+        public byte[] ExportParams()
+        {
+            var buf = DataStreamFactory.FromMemory();
+            DataWriter writer = new DataWriter(buf);
+            RimflashParams.Write(writer);
+
+            byte[] output = buf.ToArray();
+            buf.Dispose();
+
+            return output;
         }
     }
 }

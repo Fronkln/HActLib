@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Yarhl.FileSystem;
 
 namespace HActLib.Internal
 {
@@ -173,6 +174,35 @@ namespace HActLib.Internal
             ElementNodes[Game.YK1] = ElementNodes[Game.Y0];
 
             Done = true;
+        }
+
+        public static NodeElement CreateElementOfType(uint elementKind, Game game)
+        {
+            NodeElement node = null;
+
+            if (Reflection.ElementNodes[CMN.LastHActDEGame].ContainsKey(elementKind))
+                node = (NodeElement)Activator.CreateInstance(Reflection.ElementNodes[CMN.LastHActDEGame][elementKind]);
+            else
+            {
+                if (Reflection.UserNodes[CMN.LastHActDEGame].ContainsKey(elementKind))
+                {
+                    NodeElementUser userNode = new NodeElementUser();
+                    userNode.UserData = Reflection.UserNodes[CMN.LastHActDEGame][elementKind];
+
+                    foreach (var field in userNode.UserData.Fields)
+                    {
+                        userNode.Fields.Add(field.Copy());
+                    }
+
+                    node = userNode;
+                }
+                else
+                    node = new NodeElement();
+            }
+
+            node.ElementKind = elementKind;
+
+            return node;
         }
     }
 }

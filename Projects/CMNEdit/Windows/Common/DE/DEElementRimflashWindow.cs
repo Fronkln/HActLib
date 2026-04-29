@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -47,6 +48,7 @@ namespace CMNEdit.Windows.Common.DE
                 {
                     CopiedParam = inf.RimflashParams;
                 });
+
             }
 
             form.CreateButton("Paste Param", delegate
@@ -56,6 +58,36 @@ namespace CMNEdit.Windows.Common.DE
                 if (inf.ParamID != 0)
                     inf.ParamID = 0;
             });
+
+            form.CreateButton("Import DBRef String", delegate
+            {
+                string input = Microsoft.VisualBasic.Interaction.InputBox("DB Ref string from effect_rim_flash_param.bin",
+                "DB Ref Import",
+                "",
+                0,
+                0);
+
+                if (string.IsNullOrEmpty(input))
+                    return;
+
+                input = input.Trim();
+
+                byte[] dat = DBBinaryString.Decode(input);
+
+                inf.ImportParams(dat);
+            });
+
+
+            if(inf.RimflashParams != null)
+            {
+                form.CreateButton("Export DBRef String", delegate
+                {
+                    string output = DBBinaryString.Encode(inf.ExportParams());
+                    System.Windows.Forms.Clipboard.SetText(output);
+
+                    MessageBox.Show("Copied DBRef string to clipboard.");
+                });
+            }
 
             form.CreateInput("Rimflash Version", inf.RimflashVersion.ToString(), null, readOnly: true);
             form.CreateInput("Parameter Version", inf.ParamVersion.ToString(), null, readOnly: true);

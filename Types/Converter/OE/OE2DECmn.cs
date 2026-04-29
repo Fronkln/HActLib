@@ -38,6 +38,56 @@ namespace HActLib
             converted.Root = Convert(oeCMN.Root, oeCMN.CMNHeader.Version, CMN.LastHActDEGame, oeGame);
             converted.AuthPages = GeneratePages(oeCMN);
 
+            if(oeCMN.CMNHeader.ChainCameraOut > -1)
+            {
+                List<NodeElement> hactEnds = oeCMN.FindElementsByType(Reflection.GetElementIDByName("e_auth_element_hact_end", oeGame));
+
+                foreach(var camera in converted.AllCameras)
+                {
+                    foreach (var end in hactEnds)
+                    {
+                        DEElementCameraLink hactEndChain = (DEElementCameraLink)Reflection.CreateElementOfType(Reflection.GetElementIDByName("e_auth_element_connect_camera", CMN.LastHActDEGame), CMN.LastHActDEGame);
+                        hactEndChain.Start = end.Start;
+                        hactEndChain.End = end.End;
+                        hactEndChain.LinkFlags = 5;
+                        hactEndChain.TrsFovYRadians = 0.5f;
+
+                        hactEndChain.Name = "Chain Camera Out Linkout";
+
+                        for (int i = 0; i < hactEndChain.Animation.Length; i++)
+                            hactEndChain.Animation[i] = 255;
+
+                        camera.Children.Add(hactEndChain);
+                    }
+                }
+
+                //dont have the IQ to do this with complex hacts that have branching
+                if (oeCMN.FindElementsByType(Reflection.GetElementIDByName("e_auth_element_hact_branching", oeGame)).Count <= 0)
+                {
+                    foreach(var character in converted.AllCharacters)
+                    {
+                        bool hasDmgNode = character.GetChildsOfType<NodeBattleDamage>().Length > 0;
+
+                        foreach (var end in hactEnds)
+                        {
+                            DEElementCharaOut connectOut = (DEElementCharaOut)Reflection.CreateElementOfType(Reflection.GetElementIDByName("e_auth_element_connect_chara_out", CMN.LastHActDEGame), CMN.LastHActDEGame);
+                            connectOut.Start = end.Start;
+                            connectOut.End = end.End;
+                            connectOut.PlayRange.Frame = 5;
+                            connectOut.Name = "Chain Camera Chara Linkout";
+                            connectOut.UpdateTimingMode = 2;
+
+                            if (hasDmgNode)
+                                connectOut.ReturnType = AuthReturnType.Down;
+                            else
+                                connectOut.ReturnType = AuthReturnType.Stand;
+
+                            character.Children.Add(connectOut);
+                        }
+                    }
+                }
+            }
+
             return converted;
         }
 
@@ -106,6 +156,7 @@ namespace HActLib
                     deCharacter.CharacterID = 1; //dummy if not replaced
                     deCharacter.ScaleID = (uint)scale;
                     deCharacter.ReplaceID = GetReplaceIDFromName(oeNode.Name);
+                    deCharacter.OptionFlag = 16;
 
                     deNode = deCharacter;
 

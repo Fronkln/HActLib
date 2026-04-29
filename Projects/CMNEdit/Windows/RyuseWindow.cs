@@ -67,11 +67,13 @@ namespace CMNEdit.Windows
                 case Game.LJ:
                     return PibVersion.LJ;
                 case Game.LAD7Gaiden:
-                    return PibVersion.LJ;
+                    return PibVersion.Gaiden;
                 case Game.LADIW:
-                    return PibVersion.LJ;
+                    return PibVersion.Gaiden;
                 case Game.LADPYIH:
-                    return PibVersion.LJ;
+                    return PibVersion.Gaiden;
+                case Game.YK3:
+                    return PibVersion.YK3;
             }
 
             return PibVersion.LJ;
@@ -219,17 +221,6 @@ namespace CMNEdit.Windows
                                     {
                                         PibVersion target = GetPibVersionForGame(prefixGame);
                                         BasePib pibFile = PIB.Read(ptcBuf, node.Name);
-
-                                        if (pibFile.Version == PibVersion.LJ)
-                                        {
-                                            foreach (var emitter in pibFile.Emitters)
-                                            {
-                                                if (prefixGame == Game.LAD7Gaiden || prefixGame == Game.LADPYIH)
-                                                    (emitter as PibEmitterv58).ToGaidenRevision();
-                                                else
-                                                    (emitter as PibEmitterv58).ToLJRevision();
-                                            }
-                                        }
 
                                         BasePib newPib = PIB.Convert(pibFile, target);
 
