@@ -13,11 +13,8 @@ namespace HActBridge
     /// </summary>
     public static class DEParticleConverter
     {
-        public static bool Convert(Game game, HActInfo infy, string outputDir)
+        public static bool Convert(Game game, Game outputGame, HActInfo infy, string outputDir)
         {
-            if (game != Game.Y6)
-                return false;
-
             if (!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
 
@@ -29,11 +26,11 @@ namespace HActBridge
                 DirectoryInfo ptcDir = inf.Parent.Parent.GetDirectories().FirstOrDefault(x => x.Name.StartsWith("particle"));
                 FileInfo[] ptcFiles = ptcDir.GetFiles("*.pib", SearchOption.AllDirectories);
 
-                CMN convertedDE = CMN.Read(infy.MainPath, Game.Y6);
+                CMN convertedDE = CMN.Read(infy.MainPath, game);
 
                 if (ptcDir != null)
                 {
-                    NodeElement[] ptcs = convertedDE.AllElements.Where(x => x.ElementKind == Reflection.GetElementIDByName("e_auth_element_particle", Game.Y6)).ToArray();
+                    NodeElement[] ptcs = convertedDE.AllElements.Where(x => x.ElementKind == Reflection.GetElementIDByName("e_auth_element_particle", game)).ToArray();
                     HashSet<uint> foundPtcs = new HashSet<uint>();
 
                     foreach (DEElementParticle ptc in ptcs)
@@ -41,16 +38,17 @@ namespace HActBridge
                         if (foundPtcs.Contains(ptc.ParticleID))
                             continue;
 
-                        string ptcName = ptc.Name.Substring(0, 7);
-                        FileInfo ptcFile = ptcFiles.FirstOrDefault(x => x.Name == $"{ptcName}.pib");
+                        string ptcName = ptc.Name.Substring(0, 7).ToLowerInvariant();
+                        FileInfo ptcFile = ptcFiles.FirstOrDefault(x => x.Name.ToLowerInvariant() == $"{ptcName}.pib");
 
                         if (ptcFile != null)
                         {
                             foundPtcs.Add(ptc.ParticleID);
                             try
                             {
-                                Pib29 pib = (Pib29)PIB.Read(ptcFile.FullName);
-                                PIB.Write(pib.ToV27(), Path.Combine(outputDir, $"{ptcName}.pib"));
+                                BasePib pib = PIB.Read(ptcFile.FullName);
+                                BasePib convertedPib = PIB.Convert(pib, Program.GetPibVersionForGame(outputGame));
+                                PIB.Write(convertedPib, Path.Combine(outputDir, $"{ptcName}.pib"));
 
                                 foreach (BasePibEmitter emitter in pib.Emitters)
                                 {

@@ -539,7 +539,7 @@ namespace HActLib
             se.CustomDecayFarVol = oeSE.CustomDecayFarVol;
             se.CustomDecayNearVol = oeSE.CustomDecayNearVol;
 
-            if (oeSE.IsFighterSound())
+            if (oeSE.IsGVSound())
             {
                 se.SoundIndex = (byte)GetFighterSoundCategory(oeSE.Sound);
                 se.Unk = 128;

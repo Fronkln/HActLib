@@ -334,11 +334,11 @@ namespace HActLib
             }
 
             tev.TEVHeader.CameraCount = tev.AllObjects.Where(x => x is ObjectCamera).Count();
-            tev.TEVHeader.CameraCount2 = tev.TEVHeader.CameraCount;
+            tev.TEVHeader.CameraMotionCount = tev.TEVHeader.CameraCount;
             tev.TEVHeader.CameraCount3 = tev.TEVHeader.CameraCount;
 
             tev.TEVHeader.CharacterCount = tev.AllObjects.Where(x => x is ObjectHuman).Count();
-            tev.TEVHeader.CharacterCount2 = tev.TEVHeader.CharacterCount;
+            tev.TEVHeader.CharacterMotionCount = tev.TEVHeader.CharacterCount;
 
             tev.TEVHeader.SpecialElementCount = tev.AllSet2.Where(x => x is Set2Element1019).Count();
             tev.TEVHeader.UseSoundACB = tev.CuesheetIDs.Count;
@@ -380,9 +380,9 @@ namespace HActLib
             writer.Write((int)(stringsStart - set1Start));
 
             writer.Write(tev.TEVHeader.CameraCount);
-            writer.Write(tev.TEVHeader.CameraCount2);
+            writer.Write(tev.TEVHeader.CameraMotionCount);
             writer.Write(tev.TEVHeader.CharacterCount);
-            writer.Write(tev.TEVHeader.CharacterCount2);
+            writer.Write(tev.TEVHeader.CharacterMotionCount);
 
             writer.Write(tev.TEVHeader.UnkRegion1);
             writer.Write(tev.TEVHeader.UnkVal1);

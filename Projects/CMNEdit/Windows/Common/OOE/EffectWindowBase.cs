@@ -17,6 +17,7 @@ namespace CMNEdit
 
             form.CreateInput("GUID", effect.Guid.ToString(), null, readOnly: true);
             form.CreateInput("Type", effect.ElementKind.ToString(), null, readOnly: true);
+            form.CreateInput("Bone ID", effect.BoneID.ToString(), delegate(string val) { effect.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

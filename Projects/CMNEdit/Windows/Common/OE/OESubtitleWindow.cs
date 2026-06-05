@@ -18,16 +18,15 @@ namespace CMNEdit
 
             form.CreateHeader("Subtitle");
 
-            form.CreateInput("Unknown", subtitle.UnkNum.ToString(), delegate (string val) { subtitle.UnkNum = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateSpace(15);
 
-            for(int i = 0; i < subtitle.Subtitles.Count; i++)
+            for (int i = 0; i < subtitle.Subtitles.Count; i++)
             {
                 OESubtitle.SubtitleEntry entry = subtitle.Subtitles[i];
                 DrawEntry(form, entry, i);
             }
 
-            if(subtitle.SubtitlesJP.Count > 0)
+            if (subtitle.SubtitlesJP.Count > 0)
             {
                 form.CreateHeader("Subtitles(JP)");
 
@@ -38,8 +37,27 @@ namespace CMNEdit
                 }
             }
 
-           form.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); subtitle.SubtitlesJP.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
-           form.CreateButton("Clear All", delegate { subtitle.Subtitles.Clear(); subtitle.SubtitlesJP.Clear(); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
+            form.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); subtitle.SubtitlesJP.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
+            form.CreateButton("Insert New", delegate
+            {
+                string input = Microsoft.VisualBasic.Interaction.InputBox("Insert subtitle index to insert to", "New Subtitle", "");
+
+                if (string.IsNullOrEmpty(input))
+                    return;
+
+                int idx = 0;
+
+                if (!int.TryParse(input, out idx))
+                    return;
+
+                if (idx < 0 || idx >= subtitle.Subtitles.Count)
+                    return;
+
+                subtitle.Subtitles.Insert(idx, new OESubtitle.SubtitleEntry());
+                subtitle.SubtitlesJP.Insert(idx, new OESubtitle.SubtitleEntry());
+                Form1.Instance.ProcessSelectedNode(Form1.EditingNode);
+            });
+            form.CreateButton("Clear All", delegate { subtitle.Subtitles.Clear(); subtitle.SubtitlesJP.Clear(); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
         }
 
         private static void DrawEntry(Form1 form, OESubtitle.SubtitleEntry entry, int idx)

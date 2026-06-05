@@ -420,6 +420,16 @@ namespace CMNEdit
                     form.CreateInput("Unknown String", unkPropStr2.UnknownString.ToString(), delegate (string val) { unkPropStr2.UnknownString = val; });
                     break;
 
+                case "PlayHAct":
+                    form.CreateHeader("Play HAct");
+                    var playHAct = prt.Property as MsgPropPlayHAct;
+
+                    form.CreateInput("HAct", playHAct.HAct, delegate(string val) { playHAct.HAct = val; });
+                    form.CreateInput("Unknown 1", playHAct.Unk1.ToString(), delegate (string val) { playHAct.Unk1 = short.Parse(val); }, NumberBox.NumberMode.Short);
+                    form.CreateInput("Unknown 2", playHAct.Unk2.ToString(), delegate (string val) { playHAct.Unk2 = short.Parse(val); }, NumberBox.NumberMode.Int);
+                    form.CreateInput("Unknown 3", playHAct.Unk3.ToString(), delegate (string val) { playHAct.Unk3 = short.Parse(val); }, NumberBox.NumberMode.Short);
+                    break;
+
             }
         }
 

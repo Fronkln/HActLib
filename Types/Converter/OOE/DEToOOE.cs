@@ -65,15 +65,6 @@ namespace HActLib
             {
                 case AuthNodeCategory.Path:
                     ObjectPath ooePath = new ObjectPath();
-
-                    Set2ElementMotion pathMotion = new Set2ElementMotion();
-                    pathMotion.Type = Set2NodeCategory.PathMotion;
-                    pathMotion.Start = 0;
-                    pathMotion.End = 0;
-                    pathMotion.Resource = "global_center.gmt";
-
-                    ooePath.Children.Add(pathMotion);
-
                     createdNode = ooePath;
 
                     break;
@@ -97,7 +88,7 @@ namespace HActLib
 
                     charaMot.Start = oeCharaMot.Start;
                     charaMot.End = oeCharaMot.End;
-                    charaMot.Resource = res.FindByGUID(oeCharaMot.Guid).Name += ".gmt";
+                    charaMot.Resource = res.FindByGUID(oeCharaMot.Guid).MainResource += ".gmt";
 
                     createdNode = charaMot;
 
@@ -110,7 +101,7 @@ namespace HActLib
 
                     camMot.Start = oeCamMot.Start.Frame;
                     camMot.End = oeCamMot.End.Frame;
-                    camMot.Resource = res.FindByGUID(oeCamMot.Guid).Name += ".cmt";
+                    camMot.Resource = res.FindByGUID(oeCamMot.Guid).MainResource += ".cmt";
 
                     createdNode = camMot;
                     break;

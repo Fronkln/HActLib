@@ -41,13 +41,13 @@ namespace HActLib
             public int CameraCount;
 
             ///<summary>Offset: 0x44</summary>
-            public int CameraCount2;
+            public int CameraMotionCount;
 
             ///<summary>Offset: 0x48</summary>
             public int CharacterCount;
 
             ///<summary>Offset: 0x4C</summary>
-            public int CharacterCount2;
+            public int CharacterMotionCount;
 
             //32 bytes, mostly all zeroes, not the case on 6090 hact though.
             public byte[] UnkRegion1;

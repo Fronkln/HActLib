@@ -13,7 +13,7 @@ namespace HActLib.OOE
     {
         public Guid Guid;
         public EffectID ElementKind;
-        public uint Unk2;
+        public int BoneID;
         public uint Unk3;
 
         public byte[] Data = new byte[0];
@@ -37,7 +37,7 @@ namespace HActLib.OOE
             ElementKind = (EffectID)reader.ReadUInt32();
             uint dataSize = reader.ReadUInt32();
 
-            Unk2 = reader.ReadUInt32();
+            BoneID = reader.ReadInt32();
             Unk3 = reader.ReadUInt32();
 
             return dataSize;
@@ -54,7 +54,7 @@ namespace HActLib.OOE
             writer.Write((uint)ElementKind);
             writer.Write(0); //the size will be written by the algoritm authomatically
 
-            writer.Write(Unk2);
+            writer.Write(BoneID);
             writer.Write(Unk3);
         }
 

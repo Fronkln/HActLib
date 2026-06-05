@@ -2,7 +2,7 @@
   "profiles": {
     "HActScout": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\YakuzaKiwami3Demo\\runtime\\media\\data\\hact_bis\" -1 yk3"
+      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\BrawlerKiwami\\hact_yazawa\" 49 ylad"
     }
   }
 }

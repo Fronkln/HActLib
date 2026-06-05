@@ -25,7 +25,6 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml.Linq;
 using YakuzaDataTypes.MSG;
-using YakuzaDataTypes.PAC;
 
 namespace CMNEdit
 {
@@ -53,6 +52,7 @@ namespace CMNEdit
         public static CSVHAct TevCsvEntry;
 
         public static Msg Msg;
+        public static MsgOOE MsgOOE;
 
         public static GameVersion curVer;
         public static Game curGame = Game.YLAD; //only used for DE
@@ -211,6 +211,8 @@ namespace CMNEdit
             hactFlagsHolder.Visible = false;
             hactTypeLabel.Visible = false;
             typeBox.Visible = false;
+
+            flagsLabel.Text = "Flags";
         }
 
         private void toolStripLabel1_Click(object sender, EventArgs e)
@@ -371,6 +373,8 @@ namespace CMNEdit
                 hactStartBox.Visible = false;
                 hactEndBox.Visible = false;
                 hactDurationPanel.Visible = false;
+                hactFlagsHolder.Visible = true;
+                flagsLabel.Text = "Cuesheet ID";
 
                 IsTev = true;
 
@@ -401,6 +405,17 @@ namespace CMNEdit
 
                 TreeNodeSet1 root = DrawTEVSet1(Tev.Root);
                 nodesTree.Nodes.Add(root);
+
+                string cuesheets = "";
+
+                for (int i = 0; i < Tev.CuesheetIDs.Count; i++)
+                {
+                    cuesheets += Tev.CuesheetIDs[i].ToString();
+
+                    if (i != Tev.CuesheetIDs.Count - 1)
+                        cuesheets += ",";
+                }
+                flagsBox.Text = cuesheets;
             }
             else
             {
@@ -621,10 +636,56 @@ namespace CMNEdit
                 nodesTree.Nodes.Add(propNode);
             }
         }
+
+        private void ProcessMSGOOE(MsgOOE msg)
+        {
+            MsgOOE = msg;
+
+            IsBep = false;
+            IsMep = false;
+            IsHact = false;
+            IsTev = false;
+            IsOE = false;
+            IsPS2Prop = false;
+            IsYAct = false;
+            IsMsg = true;
+
+            ClearEverything();
+
+            hactTabs.TabPages.Remove(csvTab);
+            hactTabs.TabPages.Remove(resPage);
+            hactTabs.TabPages.Remove(cutPage);
+
+            hactTabs.TabPages[0].Text = "MSG";
+
+            var groupsRoot = new TreeNode("Groups");
+
+
+            foreach (var group in msg.Groups)
+            {
+                groupsRoot.Nodes.Add(new TreeNodeMsgGroupOOE(group));
+            }
+
+            var coordinatesRoot = new TreeNode("Coordinates");
+
+
+            for (int i = 0; i < msg.Coordinates.Count; i++)
+            {
+                var coord = msg.Coordinates[i];
+                var node = new TreeNodeMsgCoordinate(coord);
+
+                node.Text = i + " - " + node.Text;
+
+                coordinatesRoot.Nodes.Add(node);
+            }
+
+
+            nodesTree.Nodes.Add(groupsRoot);
+            nodesTree.Nodes.Add(coordinatesRoot);
+        }
+
         private void ProcessMSG(Msg msg)
         {
-            AppRegistry.Root.SetValue("LastFileDir", folderDir);
-
             Msg = msg;
 
             IsBep = false;
@@ -2465,7 +2526,7 @@ namespace CMNEdit
             if (editingResourceModern != null)
             {
                 EditingResource.Text = resourceNameTextbox.Text;
-                editingResourceModern.Resource.Name = resourceNameTextbox.Text;
+                editingResourceModern.Resource.MainResource = resourceNameTextbox.Text;
                 editingResourceModern.Resource.Type = (ResourceType)resourceTypeBox.SelectedIndex;
 
                 var array = (Node[])(EditingResourceCurrentLinkedNodes);
@@ -2515,7 +2576,7 @@ namespace CMNEdit
             {
                 Node foundNode = null;
 
-                resourceNameTextbox.Text = editingResourceModern.Resource.Name;
+                resourceNameTextbox.Text = editingResourceModern.Resource.MainResource;
                 resourceTypeBox.SelectedIndex = (int)editingResourceModern.Resource.Type;
                 resStartBox.Text = editingResourceModern.Resource.StartFrame.ToString(CultureInfo.InvariantCulture);
                 resEndBox.Text = editingResourceModern.Resource.EndFrame.ToString(CultureInfo.InvariantCulture);
@@ -4143,15 +4204,28 @@ namespace CMNEdit
             curGame = (Game)targetGameCombo.SelectedIndex;
 
             FilePath = dialog.FileName;
+            AppRegistry.Root.SetValue("LastFileDir", folderDir);
 
-            YakuzaDataTypes.Game game = curGame >= Game.Ishin ? YakuzaDataTypes.Game.Y0 : YakuzaDataTypes.Game.Y5;
-            Msg msg = Msg.Read(FilePath, game);
+            byte[] fileBuf = File.ReadAllBytes(FilePath);
+
+            //OOE MSG
+            if (fileBuf[4] == 0x77 && fileBuf[0xB] == 0x18)
+            {
+                MsgOOE ooeMsg = MsgOOE.Read(fileBuf);
+
+                ProcessMSGOOE(ooeMsg);
+            }
+            else
+            {
+                YakuzaDataTypes.Game game = curGame >= Game.Ishin ? YakuzaDataTypes.Game.Y0 : YakuzaDataTypes.Game.Y5;
+                Msg msg = Msg.Read(FilePath, game);
+
+                ProcessMSG(msg);
+            }
 
             //OpenFileDialog dialoga = new OpenFileDialog();
             //dialoga.ShowDialog();
             //var pac = PAC.Read(dialoga.FileName, game);
-
-            ProcessMSG(msg);
         }
 
         private void openResButton_Click(object sender, EventArgs e)
@@ -4699,6 +4773,37 @@ namespace CMNEdit
             ResourceCutWindow cutsWindow = new ResourceCutWindow();
             cutsWindow.Visible = true;
             cutsWindow.Init(ResourceCutInfos);
+        }
+
+        private void csvTree_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (ModifierKeys.HasFlag(Keys.Control))
+            {
+                //Copy/Paste
+                if (e.KeyCode == Keys.C || e.KeyCode == Keys.V)
+                {
+                    if (currentTab == 0 && nodesTree.SelectedNode != null)
+                    {
+                        if (e.KeyCode == Keys.C)
+                            CopiedNode = new TreeNode[] { csvTree.SelectedNode };
+                        else
+                            PasteNode(CopiedNode);
+                    }
+                }
+            }
+            else
+            {
+                if (e.KeyCode == Keys.Delete)
+                {
+                    if (currentTab == 0 && nodesTree.SelNodes.Count > 0)
+                    {
+                        TreeNode node = nodesTree.SelectedNode as TreeNode;
+                        SuspendLayout();
+                        DeleteSelectedNodes();
+                        ResumeLayout(true);
+                    }
+                }
+            }
         }
     }
 }

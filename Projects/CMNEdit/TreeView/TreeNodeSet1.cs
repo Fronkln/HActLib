@@ -21,7 +21,7 @@ namespace CMNEdit
         public TreeNodeSet1(ObjectBase set)
         {
             Set = set;
-            Text = set.GetName();
+            Text = set.Name;
 
             int num1019 = 0;
 

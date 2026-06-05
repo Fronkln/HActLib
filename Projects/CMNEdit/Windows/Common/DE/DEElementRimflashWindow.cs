@@ -12,6 +12,7 @@ namespace CMNEdit.Windows.Common.DE
 {
     internal static class DEElementRimflashWindow
     {
+        public static byte[] CopiedCommand = null;
         public static RimflashParams CopiedParam;
 
         public static void Draw(Form1 form, Node node)
@@ -96,11 +97,25 @@ namespace CMNEdit.Windows.Common.DE
             
             if(inf.CommandData != null)
             {
+                form.CreateButton("Copy Command", delegate
+                {
+                    CopiedCommand = inf.CommandData;
+                });
+
                 form.CreateButton("Clear Command", delegate
                 {
                     inf.CommandData = null;
                 });
             }
+
+            if(CopiedCommand != null)
+            {
+                form.CreateButton("Paste Command", delegate
+                {
+                    inf.CommandData = CopiedCommand;
+                });
+            }
+
 
             if (inf.Curve != null)
             {

@@ -29,11 +29,14 @@ namespace HActLib
 
         public RGBA Color = new RGBA(255, 255, 255, 255);
 
-        public int Unknown6 = 0;
-        public float Speed = 1;
+        public uint TickOffset = 0;
+        public float TickScale = 1;
 
         //Y0 and Above
-        public Vector4 Unknown8 = new Vector4(1, -1, -1, 0);
+        public float ColorScaleA = 1;
+        public float InFrame = -1;
+        public float OutFrame = -1;
+        public float DisableFrameChangeMotion = 0;
         public byte[] Animation = new byte[32];
 
         public OEParticle() : base()
@@ -57,13 +60,16 @@ namespace HActLib
             Unknown5 = reader.ReadInt32();
 
             Color = RGBA.Read(reader);
-            Unknown6 = reader.ReadInt32();
-            Speed = reader.ReadSingle(); //1 in Y0, 0 in Y5
+            TickOffset = reader.ReadUInt32();
+            TickScale = reader.ReadSingle(); //1 in Y0, 0 in Y5
             //---END OF Y5 DATA--
 
             if (inf.version > 15)
             {
-                Unknown8 = reader.ReadVector4();
+                ColorScaleA = reader.ReadSingle();
+                InFrame = reader.ReadSingle();
+                OutFrame = reader.ReadSingle();
+                DisableFrameChangeMotion = reader.ReadSingle();
                 Animation = reader.ReadBytes(32);
             }
         }
@@ -90,12 +96,15 @@ namespace HActLib
             writer.Write(Unknown5);
 
             writer.Write(Color);
-            writer.Write(Unknown6);
-            writer.Write(Speed);
+            writer.Write(TickOffset);
+            writer.Write(TickScale);
 
             if (hactVer > 10)
             {
-                writer.Write(Unknown8);
+                writer.Write(ColorScaleA);
+                writer.Write(InFrame);
+                writer.Write(OutFrame);
+                writer.Write(DisableFrameChangeMotion);
                 writer.Write(Animation);
             }
         }
@@ -104,8 +113,11 @@ namespace HActLib
         {
             base.OE_ConvertToY5();
 
-            Speed = 1;
-            Unknown8 = new Vector4(1, -1, -1, 0);
+            TickScale = 1;
+            ColorScaleA = 1;
+            InFrame = -1;
+            OutFrame = -1;
+            DisableFrameChangeMotion = 0;
             Animation = new byte[32];
 
             for (int i = 0; i < Animation.Length; i++)
@@ -116,7 +128,7 @@ namespace HActLib
         {
             base.OE_ConvertToY5();
 
-            Speed = 0;
+            TickScale = 0;
         }
     }
 }

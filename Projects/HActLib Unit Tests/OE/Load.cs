@@ -46,7 +46,7 @@ namespace HActLib.UnitTests.OE
 
             foreach (NodeElement element in cmn.AllElements)
                 if (element is OEElementSE)
-                    if ((element as OEElementSE).IsFighterSound())
+                    if ((element as OEElementSE).IsGVSound())
                     {
                         Console.WriteLine("wowza");
                     }

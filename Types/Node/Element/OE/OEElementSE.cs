@@ -55,17 +55,18 @@ namespace HActLib
         }
 
 
-        public bool IsFighterSound()
+        public bool IsGVSound()
         {
-            //Y5: 5120
-            //Ishin: ??
-            //Y0: 32828
-            //Y1: Assumed Y0
+            //Between 0x8000 and 0x8999
+            return Cuesheet >= 32768 && Cuesheet < 36864;
+        }
 
-            if (Cuesheet == 32788 || Cuesheet == 32828)
-                return true;
-            else
-                return false;
+        public int GetGVCategory()
+        {
+
+            if (!IsGVSound())
+                return 0;
+            return Cuesheet - 32768;
         }
 
         internal override int GetSize(GameVersion version, uint hactVer)

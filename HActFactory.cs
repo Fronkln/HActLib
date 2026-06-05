@@ -125,8 +125,7 @@ namespace HActLib
                 resEntry.Type = ResourceType.Character;
                 resEntry.EndFrame = convertedTEV.CMNHeader.End;
                 resEntry.Unk1 = 1;
-                resEntry.Unk2 = 1;
-                resEntry.Name = chara.Name;
+                resEntry.MainResource = chara.Name;
 
                 res.Resources.Add(resEntry);
             }
@@ -140,11 +139,10 @@ namespace HActLib
                     Resource motionRes = new Resource();
                     motionRes.NodeGUID = motion.Guid;
                     motionRes.Type = ResourceType.CharacterMotion;
-                    motionRes.Name = motion.Name.Replace(".gmt", "");
+                    motionRes.MainResource = motion.Name.Replace(".gmt", "");
                     motionRes.StartFrame = motion.Start;
                     motionRes.EndFrame = motion.End;
                     motionRes.Unk1 = 0;
-                    motionRes.Unk2 = 1;
 
                     res.Resources.Add(motionRes);
 
@@ -171,11 +169,10 @@ namespace HActLib
                     Resource camRes = new Resource();
                     camRes.NodeGUID = motion.Guid;
                     camRes.Type = ResourceType.CameraMotion;
-                    camRes.Name = motion.Name.Replace(".cmt", "");
+                    camRes.MainResource = motion.Name.Replace(".cmt", "");
                     camRes.StartFrame = motion.Start;
                     camRes.EndFrame = motion.End;
                     camRes.Unk1 = 0;
-                    camRes.Unk2 = 1;
 
                     res.Resources.Add(camRes);
                     File.Copy(Path.Combine(tevDir, motion.Name), Path.Combine(outputRESDir, motion.Name), true);
@@ -245,8 +242,7 @@ namespace HActLib
                 resEntry.Type = ResourceType.Character;
                 resEntry.EndFrame = convertedTEV.Header.End;
                 resEntry.Unk1 = 0;
-                resEntry.Unk2 = 1;
-                resEntry.Name = "character_" + (uint)chara.ReplaceID;
+                resEntry.MainResource = "character_" + (uint)chara.ReplaceID;
 
                 res.Resources.Add(resEntry);
             }
@@ -261,8 +257,7 @@ namespace HActLib
                 resEntry.Type = ResourceType.CameraMotion;
                 resEntry.EndFrame = camMot.End;
                 resEntry.Unk1 = 0;
-                resEntry.Unk2 = 1;
-                resEntry.Name = camMot.Name.Replace(".cmt", "");
+                resEntry.MainResource = camMot.Name.Replace(".cmt", "");
 
                 res.Resources.Add(resEntry);
             }
@@ -277,8 +272,7 @@ namespace HActLib
                 resEntry.Type = ResourceType.CharacterMotion;
                 resEntry.EndFrame = convertedTEV.Header.End;
                 resEntry.Unk1 = 0;
-                resEntry.Unk2 = 1;
-                resEntry.Name = charMot.Name.Replace(".gmt", "");
+                resEntry.MainResource = charMot.Name.Replace(".gmt", "");
 
                 res.Resources.Add(resEntry);
             }
@@ -296,19 +290,19 @@ namespace HActLib
                 if (gmtExporterExists && resInf.Type == ResourceType.CharacterMotion)
                 {
                    
-                    string inp = Path.Combine(tevPath, resInf.Name.Replace("\0", "") + ".gmt");
-                    string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".gmt");
+                    string inp = Path.Combine(tevPath, resInf.MainResource.Replace("\0", "") + ".gmt");
+                    string dir = Path.Combine(outputRESDir, resInf.MainResource.Replace("\0", "") + ".gmt");
 
                     var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig y3 -og yk2 -i {'\u0022'}{inp}{'\u0022'} -o {'\u0022'}{dir}{'\u0022'}");
                     proc.WaitForExit();
                 }
                 else if (resInf.Type == ResourceType.CameraMotion)
                 {
-                    string inp = Path.Combine(tevPath, resInf.Name.Replace("\0", "") + ".cmt");
-                    string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".cmt");
+                    string inp = Path.Combine(tevPath, resInf.MainResource.Replace("\0", "") + ".cmt");
+                    string dir = Path.Combine(outputRESDir, resInf.MainResource.Replace("\0", "") + ".cmt");
 
                     //this is an actual problem. 6080 richardson
-                    if(!string.IsNullOrEmpty(resInf.Name))
+                    if(!string.IsNullOrEmpty(resInf.MainResource))
                         File.Copy(inp, dir, true);
                 }
             }
@@ -502,15 +496,15 @@ namespace HActLib
 
                 if (res.Type == ResourceType.CharacterMotion)
                 {
-                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".gmt");
-                    string dir = Path.Combine(outputRESDir, res.Name.Replace("\0", "") + ".gmt");
+                    string inp = Path.Combine(inputDir, res.MainResource.Replace("\0", "") + ".gmt");
+                    string dir = Path.Combine(outputRESDir, res.MainResource.Replace("\0", "") + ".gmt");
 
                     var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig {inputGmt} -og {outputGmt} -i {'\u0022'}{inp}{'\u0022'} -o {'\u0022'}{dir}{'\u0022'}");
                 }
                 else if (res.Type == ResourceType.CameraMotion)
                 {
-                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".cmt");
-                    string dir = Path.Combine(outputRESDir, res.Name.Replace("\0", "") + ".cmt");
+                    string inp = Path.Combine(inputDir, res.MainResource.Replace("\0", "") + ".cmt");
+                    string dir = Path.Combine(outputRESDir, res.MainResource.Replace("\0", "") + ".cmt");
 
                     File.Copy(inp, dir, true);
                 }
@@ -558,15 +552,15 @@ namespace HActLib
 
                 if (res.Type == ResourceType.CharacterMotion)
                 {
-                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".gmt");
-                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".gmt");
+                    string inp = Path.Combine(inputDir, res.MainResource.Replace("\0", "") + ".gmt");
+                    string dir = Path.Combine(outputDir, res.MainResource.Replace("\0", "") + ".gmt");
 
                    var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig y0 -og y3 -i {'\u0022'}{inp}{'\u0022'} -o {'\u0022'}{dir}{'\u0022'}");
                 }
                 else if(res.Type == ResourceType.CameraMotion)
                 {
-                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".cmt");
-                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".cmt");
+                    string inp = Path.Combine(inputDir, res.MainResource.Replace("\0", "") + ".cmt");
+                    string dir = Path.Combine(outputDir, res.MainResource.Replace("\0", "") + ".cmt");
 
                     File.Copy(inp, dir, true);
                 }
@@ -608,15 +602,15 @@ namespace HActLib
 
                 if (res.Type == ResourceType.CharacterMotion)
                 {
-                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".gmt");
-                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".gmt");
+                    string inp = Path.Combine(inputDir, res.MainResource.Replace("\0", "") + ".gmt");
+                    string dir = Path.Combine(outputDir, res.MainResource.Replace("\0", "") + ".gmt");
 
                     var proc = System.Diagnostics.Process.Start(GMTConverterPath, $"-ig yk2 -og y3 -i {'\u0022'}{inp}{'\u0022'} -o {'\u0022'}{dir}{'\u0022'}");
                 }
                 else if (res.Type == ResourceType.CameraMotion)
                 {
-                    string inp = Path.Combine(inputDir, res.Name.Replace("\0", "") + ".cmt");
-                    string dir = Path.Combine(outputDir, res.Name.Replace("\0", "") + ".cmt");
+                    string inp = Path.Combine(inputDir, res.MainResource.Replace("\0", "") + ".cmt");
+                    string dir = Path.Combine(outputDir, res.MainResource.Replace("\0", "") + ".cmt");
 
                     File.Copy(inp, dir, true);
                 }
@@ -662,8 +656,8 @@ namespace HActLib
 
                     if (gmtExporterExists && resInf.Type == ResourceType.CharacterMotion)
                     {
-                        string inp = Path.Combine(inputDir, resInf.Name.Replace("\0", "") + ".gmt");
-                        string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".gmt");
+                        string inp = Path.Combine(inputDir, resInf.MainResource.Replace("\0", "") + ".gmt");
+                        string dir = Path.Combine(outputRESDir, resInf.MainResource.Replace("\0", "") + ".gmt");
 
                         string inputGame = "";
                         string outputGame = "";
@@ -688,22 +682,22 @@ namespace HActLib
                     }
                     else if (resInf.Type == ResourceType.CameraMotion)
                     {
-                        string inp = Path.Combine(inputDir, resInf.Name + ".cmt");
-                        string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".cmt");
+                        string inp = Path.Combine(inputDir, resInf.MainResource + ".cmt");
+                        string dir = Path.Combine(outputRESDir, resInf.MainResource.Replace("\0", "") + ".cmt");
 
                         File.Copy(inp, dir, true);
                     }
                     else if(resInf.Type == ResourceType.AssetMotion)
                     {
-                        string inp = Path.Combine(inputDir, resInf.Name + ".gmt");
-                        string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".gmt");
+                        string inp = Path.Combine(inputDir, resInf.MainResource + ".gmt");
+                        string dir = Path.Combine(outputRESDir, resInf.MainResource.Replace("\0", "") + ".gmt");
 
                         File.Copy(inp, dir, true);
                     }
                     else if(resInf.Type == ResourceType.PathMotion)
                     {
-                        string inp = Path.Combine(inputDir, resInf.Name + ".gmt");
-                        string dir = Path.Combine(outputRESDir, resInf.Name.Replace("\0", "") + ".gmt");
+                        string inp = Path.Combine(inputDir, resInf.MainResource + ".gmt");
+                        string dir = Path.Combine(outputRESDir, resInf.MainResource.Replace("\0", "") + ".gmt");
 
                         File.Copy(inp, dir, true);
                     }

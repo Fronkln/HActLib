@@ -9,6 +9,7 @@ using Yarhl.FileFormat;
 using HActLib.OOE;
 using HActLib.Internal;
 using System.Runtime;
+using System.Reflection.Metadata;
 
 
 
@@ -47,15 +48,18 @@ namespace HActLib
                 res = RES.Read(ress[0].FindFile("res.bin").Read(), false);
 
             TEV tev = new TEV();
-            tev.CuesheetIDs = new List<uint>();
+            
+            
+            //not yet.
+            //tev.CuesheetIDs = inf.Cmn.SoundInfo.Select(x => (ushort)((x >> 16) & 0xFFFF)).Distinct().Where(x => x < 0x8000).Select(x => (uint)x).ToList(); // new List<uint>();
 
-            tev.Root = (ObjectBase)Convert(inf.Cmn, inf.Cmn.AllNodes[0])[0];
+            tev.Root = (ObjectBase)Convert(inf.Cmn, inf.Cmn.AllNodes[0], null, null)[0];
 
 
             return tev;
         }
        
-        public List<ITEVObject> Convert(OECMN cmn, Node node)
+        public List<ITEVObject> Convert(OECMN cmn, Node node, Node parent, ObjectBase tevParent)
         {
             List<ITEVObject> createdNodes = new List<ITEVObject>();
 
@@ -65,15 +69,6 @@ namespace HActLib
             {
                 case AuthNodeCategory.Path:
                     ObjectPath ooePath = new ObjectPath();
-
-                    Set2ElementMotion pathMotion = new Set2ElementMotion();
-                    pathMotion.Type = Set2NodeCategory.PathMotion;
-                    pathMotion.Start = 0;
-                    pathMotion.End = 120;
-                    pathMotion.Resource = "global_center.gmt";
-
-                    ooePath.Children.Add(pathMotion);
-
                     createdNode = ooePath;
 
                     break;
@@ -97,7 +92,7 @@ namespace HActLib
 
                     charaMot.Start = oeCharaMot.Start;
                     charaMot.End = oeCharaMot.End;
-                    charaMot.Resource = res.FindByGUID(oeCharaMot.Guid).Name += ".gmt";
+                    charaMot.Resource = res.FindByGUID(oeCharaMot.Guid).MainResource += ".gmt";
 
                     createdNode = charaMot;
 
@@ -110,13 +105,13 @@ namespace HActLib
 
                     camMot.Start = oeCamMot.Start;
                     camMot.End = oeCamMot.End;
-                    camMot.Resource = res.FindByGUID(oeCamMot.Guid).Name += ".cmt";
+                    camMot.Resource = res.FindByGUID(oeCamMot.Guid).MainResource += ".cmt";
 
                     createdNode = camMot;
                     break;
 
                 case AuthNodeCategory.Element:
-                    EffectBase effect = GenerateEffect(node as NodeElement);
+                    EffectBase effect = GenerateEffect(node as NodeElement, parent, tevParent);
 
                     if (effect != null)
                         createdNode = effect;
@@ -134,7 +129,7 @@ namespace HActLib
 
                 foreach(Node child in node.Children)
                 {
-                    List<ITEVObject> convertedChilds = Convert(cmn, child);
+                    List<ITEVObject> convertedChilds = Convert(cmn, child, node, obj);
 
                     foreach(ITEVObject childies in convertedChilds)
                     {
@@ -178,7 +173,11 @@ namespace HActLib
             {
                 string boneName = "";
 
-                boneName = OEEffect.ConvertY0BoneNameToY5Name(bone.BoneName);
+                int oeBoneID = oeBone.BoneID;
+                var oeKv = MEPDict.OEBoneID.FirstOrDefault(x => x.Value == oeBoneID);
+
+                if (!string.IsNullOrEmpty(oeKv.Key))
+                    boneName = OEEffect.ConvertY0BoneNameToY3Name(oeKv.Key);
 
                 if (boneName == null)
                     boneName = bone.BoneName;
@@ -193,16 +192,19 @@ namespace HActLib
                 bone.BoneName = oeBone.BoneName.Text;
                 bone.BoneID = oeBone.BoneID;
 
+                var y5Kv = MEPDict.OOEBoneID.FirstOrDefault(x => x.Value == bone.BoneID);
 
-                if (MEPDict.Y3BoneID.ContainsKey(bone.BoneName))
-                    bone.BoneID = MEPDict.Y3BoneID[bone.BoneName];
+                if(!string.IsNullOrEmpty(y5Kv.Key))
+                {
+                    bone.BoneID = MEPDict.Y3BoneID[y5Kv.Key];
+                }
             }
 
 
             return bone;
         }
 
-        private EffectBase GenerateEffect(NodeElement element)
+        private EffectBase GenerateEffect(NodeElement element, Node parent, ObjectBase tevParent)
         {
             Game game;
 
@@ -227,7 +229,10 @@ namespace HActLib
             switch(Reflection.GetElementNameByID(element.ElementKind, game))
             {
                 case "e_auth_element_particle":
-                    effect = GenerateParticle(element as OEParticle);
+                    effect = GenerateParticle(element as OEParticle, parent);
+                    break;
+                case "e_auth_element_sound":
+                    effect = GenerateSound(element as OEElementSE);
                     break;
             }
 
@@ -240,6 +245,10 @@ namespace HActLib
                     ooeElement.Start = element.Start;
                     ooeElement.End = element.End;
                     ooeElement.ElementFlags = 256;
+
+                    if (tevParent != null)
+                        if (tevParent.Type == ObjectNodeCategory.Bone)
+                            ooeElement.BoneID = (tevParent as ObjectBone).BoneID;
                 }
 
                 effect.Guid = Guid.NewGuid();
@@ -249,12 +258,21 @@ namespace HActLib
             return effect;
         }
 
-        private EffectParticle GenerateParticle(OEParticle particle)
+        private EffectParticle GenerateParticle(OEParticle particle, Node parent)
         {
             EffectParticle ptc = new EffectParticle();
             ptc.ParticleID = particle.ParticleID;
             ptc.Matrix = particle.Matrix;
-            ptc.Flag = (uint)particle.Flags;
+            ptc.Flag = (EffectParticleFlags)particle.Flags;
+            ptc.Scale = particle.Scale;
+
+            if(parent != null)
+            {
+                if (parent.Category == AuthNodeCategory.Camera)
+                    ptc.Flag |= EffectParticleFlags.Screen;
+                else
+                    ptc.Flag &= ~EffectParticleFlags.Screen;
+            }
 
             return ptc;
         }
@@ -263,7 +281,17 @@ namespace HActLib
         {
             EffectSound sound = new EffectSound();
 
-            return null;
+            if (oeSound.IsGVSound())
+                sound.CuesheetID = 0;
+            else
+                sound.CuesheetID = oeSound.Cuesheet;
+
+            sound.SoundID = oeSound.Sound;
+
+            sound.Start = (int)oeSound.Start;
+            sound.End = (int)oeSound.End;
+
+            return sound;
         }
     }
 }

@@ -115,7 +115,6 @@ namespace HActLib
                         convertedResource = new Resource();
                         convertedResource.Type = ResourceType.Character;
                         convertedResource.Unk1 = 0;
-                        convertedResource.Unk2 = 1;
 
                         //Height is also stored on OOE res. do that later
                         break;
@@ -123,7 +122,6 @@ namespace HActLib
                         convertedResource = new Resource();
                         convertedResource.Type = ResourceType.CameraMotion;
                         convertedResource.Unk1 = 0;
-                        convertedResource.Unk2 = 1;
                         break;
 
                     //TODO: Seperate
@@ -131,7 +129,6 @@ namespace HActLib
                         convertedResource = new Resource();
                         convertedResource.Type = ResourceType.CharacterMotion;
                         convertedResource.Unk1 = 0;
-                        convertedResource.Unk2 = 1;
                         break;
                 }
 
@@ -140,7 +137,7 @@ namespace HActLib
                     convertedResource.NodeGUID = guid;
                     convertedResource.StartFrame = cutInfo.Start;
                     convertedResource.EndFrame = cutInfo.End;
-                    convertedResource.Name = ooeResource.Resource.Replace(".gmt", "").Replace(".cmt", "");
+                    convertedResource.MainResource = ooeResource.Resource.Replace(".gmt", "").Replace(".cmt", "");
 
                     newRes.Resources.Add(convertedResource);
                 }
@@ -153,7 +150,7 @@ namespace HActLib
         {
             foreach (var resource in newRes.Resources)
             {
-                string origPath = Path.Combine(resDir.FullName, resource.Name);
+                string origPath = Path.Combine(resDir.FullName, resource.MainResource);
 
                 //Just copy CMT
                 if (resource.Type == ResourceType.CameraMotion)
@@ -163,7 +160,7 @@ namespace HActLib
                     if (!File.Exists(origPath))
                         continue;
 
-                    File.Copy(origPath, Path.Combine(outputDirectory, resource.Name + ".cmt"), true);
+                    File.Copy(origPath, Path.Combine(outputDirectory, resource.MainResource + ".cmt"), true);
                 }
 
                 
@@ -174,7 +171,7 @@ namespace HActLib
                     if (!File.Exists(origPath))
                         continue;
 
-                    File.Copy(origPath, Path.Combine(outputDirectory, resource.Name + ".gmt"), true);
+                    File.Copy(origPath, Path.Combine(outputDirectory, resource.MainResource + ".gmt"), true);
                 }
             }
         }

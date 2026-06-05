@@ -182,13 +182,17 @@ namespace HActLib
                     OEParticle oePtc = new OEParticle();
                     oePtc.ParticleID = dePtc.ParticleID;
                     oePtc.Color = dePtc.Color;
-                    oePtc.Color.a = 255;
                     oePtc.Animation = dePtc.Animation;
                     oePtc.Matrix = dePtc.Matrix;
                     oePtc.Scale = dePtc.Scale;
-                    oePtc.Speed = dePtc.TickScale;
+                    oePtc.TickScale = dePtc.TickScale;
+                    oePtc.TickOffset = dePtc.TickOffset;
+                    oePtc.ColorScaleA = dePtc.ColorScaleA;
+                    oePtc.InFrame = dePtc.InFrame;
+                    oePtc.OutFrame = dePtc.OutFrame;
+                    oePtc.DisableFrameChangeMotion = dePtc.DisableFrameChangeMotion;
                     oePtc.ElementKind = Reflection.GetElementIDByName("e_auth_element_particle", oeGame);
-                    oePtc.Flag = dePtc.Flag;
+                    oePtc.Flags = (int)dePtc.ParticleFlag;
 
                     if((dePtc.ParticleFlag & (1 << 2)) != 0)
                     {
@@ -353,7 +357,7 @@ namespace HActLib
             }
 
 
-            if (!oeSE.IsFighterSound())
+            if (!oeSE.IsGVSound())
                 return null;
 
 

@@ -131,6 +131,23 @@ namespace HActLib
             return boneName;
         }
 
+        public static string ConvertY0BoneNameToY3Name(string boneName)
+        {
+            if (string.IsNullOrEmpty(boneName))
+                return null;
+
+            if (boneName == "face_c_n")
+                return "face";
+
+            int cIdx = boneName.IndexOf("_c_");
+
+            if (cIdx >= 0)
+                if (!boneName.Contains("_l") && !boneName.Contains("_r"))
+                    boneName = boneName.Remove(cIdx, 2);
+
+            return boneName;
+        }
+
         //Y5 bone ID goes in, Y0 bone name comes out
         public static string ConvertY5BoneIDToY0Name(int boneID)
         {

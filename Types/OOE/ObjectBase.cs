@@ -34,7 +34,9 @@ namespace HActLib.OOE
             public byte[] Unk2;
         }
 
+        //0 is name?
         public string[] StringTable = new string[4] { null, null, null, null };
+
         public ObjectNodeCategory Type;
         public uint Category;
 
@@ -59,7 +61,18 @@ namespace HActLib.OOE
 
         public _Set1Internal _InternalInfo = new _Set1Internal();
 
-        public virtual string GetName() => "Unknown Set 1";
+        public string Name
+        {
+            get
+            {
+                return StringTable[0];
+            }
+            set
+            {
+                StringTable[0] = value;
+            }
+        }
+        public virtual string GetName() => Name;
 
 
         public ObjectBase()

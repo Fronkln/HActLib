@@ -25,8 +25,8 @@ namespace CMNEdit
             form.CreateInput("Unknown", particle.Unknown3.ToString(), delegate (string val) { particle.Unknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Unknown", particle.Unknown4.ToString(), delegate (string val) { particle.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
             form.CreateInput("Unknown", particle.Unknown5.ToString(), delegate (string val) { particle.Unknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", particle.Unknown6.ToString(), delegate (string val) { particle.Unknown6 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Speed", particle.Speed.ToString(), delegate (string val) { particle.Speed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            form.CreateInput("Tick Offset", particle.TickOffset.ToString(), delegate (string val) { particle.TickOffset = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            form.CreateInput("Speed", particle.TickScale.ToString(), delegate (string val) { particle.TickScale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
             form.CreateInput("Scale X", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Scale Y", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);

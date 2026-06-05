@@ -22,7 +22,6 @@ namespace HActLib
             public string Text = "";
         }
 
-        public int UnkNum;
         public int UnkNum2;
 
         public List<SubtitleEntry> Subtitles = new List<SubtitleEntry>();
@@ -31,7 +30,8 @@ namespace HActLib
         internal override void ReadElementData(DataReader reader, NodeConvInf inf, GameVersion version)
         {
             uint count = reader.ReadUInt32();
-            UnkNum = reader.ReadInt32();
+            uint count2 = reader.ReadUInt32();
+
             UnkNum2 = reader.ReadInt32();
 
             if(inf.version <= 15)
@@ -53,7 +53,7 @@ namespace HActLib
 
                     reader.ReadBytes(8);
 
-                    entry.Text = reader.ReadString(128).Split(new[] { '\0' }, 2)[0];
+                    entry.Text = reader.ReadString(128, Encoding.UTF8).Split(new[] { '\0' }, 2)[0];
 
                     Subtitles.Add(entry);
                 }
@@ -83,7 +83,7 @@ namespace HActLib
 
                     reader.ReadBytes(8);
 
-                    entry.Text = reader.ReadString(256).Split(new[] { '\0' }, 2)[0];
+                    entry.Text = reader.ReadString(256, Encoding.UTF8).Split(new[] { '\0' }, 2)[0];
 
                     Subtitles.Add(entry);
                 }
@@ -102,7 +102,7 @@ namespace HActLib
             long start = writer.Stream.Position;
 
             writer.Write(Subtitles.Count);
-            writer.Write(UnkNum);
+            writer.Write(SubtitlesJP.Count);
             writer.Write(UnkNum2);
 
             long sizeStart = 0;
@@ -125,7 +125,7 @@ namespace HActLib
 
                     writer.WriteTimes(0, 8);
 
-                    writer.Write(entry.Text.ToLength(128), 128, false, Encoding.GetEncoding(932));
+                    writer.Write(entry.Text.ToLength(128), 128, false, Encoding.UTF8);
                 }
             }
             else

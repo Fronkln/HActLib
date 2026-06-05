@@ -1,13 +1,14 @@
-﻿using System;
+﻿using HActLib.Internal;
+using HActLib.OOE;
+using ParLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
-using Yarhl.IO;
 using Yarhl.FileFormat;
-using HActLib.OOE;
-using HActLib.Internal;
-using System.Runtime;
+using Yarhl.IO;
 
 
 
@@ -446,6 +447,7 @@ namespace HActLib
                     oeParticle.ParticleID = ooeParticle.ParticleID;
                     oeParticle.Flags = (int)ooeParticle.Flag;
                     oeParticle.Matrix = ooeParticle.Matrix;
+                    oeParticle.Scale = ooeParticle.Scale;
                     oeParticle.Name = "PTC: " + oeParticle.ParticleID;
                     oeParticle.UpdateTimingMode = 0;
 

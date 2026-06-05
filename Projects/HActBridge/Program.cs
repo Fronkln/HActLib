@@ -111,7 +111,7 @@ namespace HActBridge
                                     BasePib pib = PIB.Read(file.Path);
 
                                     Console.WriteLine("Converting " + pib.Name);
-                                    PIB.Write(PIB.Convert(pib, GetVersionForGame(OutputGame)), Path.Combine(pibDir, Path.GetFileName(file.Path)));
+                                    PIB.Write(PIB.Convert(pib, GetPibVersionForGame(OutputGame)), Path.Combine(pibDir, Path.GetFileName(file.Path)));
                                 }
 
                                 foreach (var file in tex)
@@ -148,23 +148,19 @@ namespace HActBridge
             bool success = HActFactory.ConvertDEToOE(args[0], outputDir, InputGame, OECMN.GetCMNVersionForGame(OutputGame));
 
 
+            string outputCMNDir = Path.Combine(outputDir, "cmn");
+            string outputPTCDir = Path.Combine(outputDir, "ptc");
+            HActInfo hactInf = new HActInfo(args[0]);
 
-            if(InputGame == Game.Y6 && OECMN.GetCMNVersionForGame(OutputGame) == 16)
+            DirectoryInfo hactDir = new DirectoryInfo(hactInf.MainPath);
+
+
+            if (DEParticleConverter.Convert(InputGame, OutputGame, hactInf, outputPTCDir))
             {
-                string outputCMNDir = Path.Combine(outputDir, "cmn");
-                string outputPTCDir = Path.Combine(outputDir, "ptc");
-                HActInfo hactInf = new HActInfo(args[0]);
+                OECMN cmn = OECMN.Read(Path.Combine(outputCMNDir, "cmn.bin"));
+                cmn.SetFlags(1); //Use PTC
 
-                DirectoryInfo hactDir = new DirectoryInfo(hactInf.MainPath);
-
-
-                if(DEParticleConverter.Convert(InputGame, hactInf, outputPTCDir))
-                {
-                    OECMN cmn = OECMN.Read(Path.Combine(outputCMNDir, "cmn.bin"));
-                    cmn.SetFlags(1); //Use PTC
-
-                    OECMN.Write(cmn, Path.Combine(outputCMNDir, "cmn.bin"));
-                }
+                OECMN.Write(cmn, Path.Combine(outputCMNDir, "cmn.bin"));
             }
 
             return success;
@@ -264,7 +260,7 @@ namespace HActBridge
             if (pibs.Length > 0)
             {
                 string inputPibDir = new FileInfo(pibs[0].Path).FullName;
-                string pibDir = Path.Combine(outputDir, "ptc");
+                string pibDir = Path.Combine(outputDir, "ptc", "tmp_ptc");
 
                 if (!Directory.Exists(pibDir))
                     Directory.CreateDirectory(pibDir);
@@ -312,7 +308,7 @@ namespace HActBridge
             {
                 string pibName = Path.GetFileName(str);
                 Console.WriteLine("Converting " + pibName);
-                PibVersion outputVersion = GetVersionForGame(game);
+                PibVersion outputVersion = GetPibVersionForGame(game);
 
                 BasePib pib = PIB.Read(str);
                 BasePib convertedPib = PIB.Convert(pib, outputVersion);
@@ -337,7 +333,7 @@ namespace HActBridge
             }
         }
 
-        static PibVersion GetVersionForGame(Game game)
+        public static PibVersion GetPibVersionForGame(Game game)
         {
             switch (game)
             {
@@ -365,6 +361,12 @@ namespace HActBridge
                     return PibVersion.YLAD;
                 case Game.LJ:
                     return PibVersion.LJ;
+                case Game.LADPYIH:
+                    return PibVersion.Gaiden;
+                case Game.LAD7Gaiden: 
+                    return PibVersion.Gaiden;
+                case Game.YK3:
+                    return PibVersion.YK3;
             }
         }
     }

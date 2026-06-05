@@ -12,7 +12,7 @@ namespace CMNEdit.Windows
         public TreeViewItemResource(Resource res)
         {
             Resource = res;
-            Text = res.Name + $"({res.Type})";
+            Text = res.MainResource + $"({res.Type})";
         }
     }
 }

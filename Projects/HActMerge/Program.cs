@@ -273,7 +273,7 @@ namespace HActMerge
 
                 if (extension != null)
                 {
-                    string file = Path.Combine(dir, resFile.Name + extension);
+                    string file = Path.Combine(dir, resFile.MainResource + extension);
 
                     if (File.Exists(file))
                     {

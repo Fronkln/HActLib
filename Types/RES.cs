@@ -14,10 +14,12 @@ namespace HActLib
         public Guid NodeGUID;
         public ResourceType Type;
         public int Unk1; // 1 sometimes in OE always 0 in DE
-        public int Unk2; // seems to be always 1
-        public string Name; //192 bytes long
+        public string MainResource { get { return Resources[0]; } set { if (Resources.Count <= 0) Resources.Add(value); else Resources[0] = value; } } //192 bytes long
+        public List<string> Resources = new List<string>();
         public float StartFrame;
         public float EndFrame;
+
+        public byte[] UnkData = new byte[0];
 
         public Resource()
         {
@@ -28,19 +30,29 @@ namespace HActLib
         {
             NodeGUID = target;
             Type = type;
-            Name = resource;
+            MainResource = resource;
             StartFrame = start;
             EndFrame = end;
         }
 
         public Resource Clone()
         {
-            return (Resource)MemberwiseClone();
+            Resource newRes = new Resource();
+            newRes.NodeGUID = NodeGUID;
+            newRes.Unk1 = Unk1;
+            newRes.StartFrame = StartFrame;
+            newRes.EndFrame = EndFrame;
+            newRes.Type = Type;
+            newRes.UnkData = UnkData;
+
+            newRes.Resources.AddRange(Resources);
+
+            return newRes;
         }
 
         public override string ToString()
         {
-            return Name;
+            return MainResource;
         }
     }
 
@@ -66,7 +78,6 @@ namespace HActLib
         public int Version = 0;
 
         public List<Resource> Resources = new List<Resource>();
-
 
         public Resource FindByGUID(Guid guid)
         {
@@ -125,9 +136,15 @@ namespace HActLib
                 resInf.NodeGUID = new Guid(reader.ReadBytes(16));
                 resInf.Type = (ResourceType)reader.ReadUInt32();
                 resInf.Unk1 = reader.ReadInt32();
-                resInf.Unk2 = reader.ReadInt32();
-                resInf.Name = reader.ReadString(192).Split(new[] { '\0' }, 2)[0];
+                int ResourceCount = reader.ReadInt32();
 
+                long end = reader.Stream.Position + 192;
+
+                for (int k = 0; k < ResourceCount; k++)
+                    resInf.Resources.Add(reader.ReadString(32).Split(new[] { '\0' }, 2)[0]);
+
+                if (reader.Stream.Position < end)
+                    resInf.UnkData = reader.ReadBytes((int)(end - reader.Stream.Position));
 
                 if (detectedVersion == 0)
                 {
@@ -173,8 +190,17 @@ namespace HActLib
                 writer.Write(resInf.NodeGUID.ToByteArray());
                 writer.Write((uint)resInf.Type);
                 writer.Write(resInf.Unk1);
-                writer.Write(resInf.Unk2);
-                writer.Write(resInf.Name.ToLength(192), fixedSize: 192, nullTerminator: false);
+                writer.Write(resInf.Resources.Count);
+
+                long end = writer.Stream.Position + 192;
+
+                for(int i = 0; i < resInf.Resources.Count; i++)
+                    writer.Write(resInf.Resources[i].ToLength(32), fixedSize: 32, nullTerminator: false);
+
+                writer.Write(resInf.UnkData);
+
+                if (writer.Stream.Position < end)
+                    writer.WriteTimes(0, (int)(end - writer.Stream.Position));
 
                 if (res.Version <= 0)
                 {

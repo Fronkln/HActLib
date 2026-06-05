@@ -555,6 +555,7 @@ namespace HActLib
                     ptc.End = ooePtc.End;
                     ptc.Matrix = ooePtc.Matrix;
                     ptc.ParticleID = ooePtc.ParticleID;
+                    ptc.Scale = ooePtc.Scale;
 
                     if(optionalInfo != null)
                     {

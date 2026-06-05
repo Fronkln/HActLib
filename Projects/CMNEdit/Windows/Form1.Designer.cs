@@ -32,10 +32,10 @@
             System.Windows.Forms.Label label5;
             System.Windows.Forms.Label label6;
             System.Windows.Forms.Label label7;
-            System.Windows.Forms.Label label14;
             System.Windows.Forms.Label label15;
             System.Windows.Forms.Label label16;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            flagsLabel = new System.Windows.Forms.Label();
             framesInNameBox = new System.Windows.Forms.CheckBox();
             hactTypeLabel = new System.Windows.Forms.Label();
             targetGameLbl = new System.Windows.Forms.Label();
@@ -100,6 +100,7 @@
             textBox1 = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
             varPanel = new System.Windows.Forms.TableLayoutPanel();
+            nodesTree = new MWControlSuite.MWTreeView();
             panel1 = new System.Windows.Forms.Panel();
             hactTabs = new System.Windows.Forms.TabControl();
             cmnTevTab = new System.Windows.Forms.TabPage();
@@ -107,7 +108,6 @@
             infoPage = new System.Windows.Forms.TabPage();
             unkInfoPage = new System.Windows.Forms.TabPage();
             unkBytesBox = new Be.Windows.Forms.HexBox();
-            nodesTree = new MWControlSuite.MWTreeView();
             tabPage1 = new System.Windows.Forms.TabPage();
             deleteCutInfoButton = new System.Windows.Forms.Button();
             newCutInfoButton = new System.Windows.Forms.Button();
@@ -179,7 +179,6 @@
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
-            label14 = new System.Windows.Forms.Label();
             label15 = new System.Windows.Forms.Label();
             label16 = new System.Windows.Forms.Label();
             appTools.SuspendLayout();
@@ -237,16 +236,6 @@
             label7.TabIndex = 11;
             label7.Text = "Frame";
             // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            label14.Location = new System.Drawing.Point(3, 3);
-            label14.Name = "label14";
-            label14.Size = new System.Drawing.Size(60, 28);
-            label14.TabIndex = 7;
-            label14.Text = "Flags";
-            // 
             // label15
             // 
             label15.AutoSize = true;
@@ -267,10 +256,20 @@
             label16.TabIndex = 9;
             label16.Text = "Camera Out";
             // 
+            // flagsLabel
+            // 
+            flagsLabel.AutoSize = true;
+            flagsLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            flagsLabel.Location = new System.Drawing.Point(3, 3);
+            flagsLabel.Name = "flagsLabel";
+            flagsLabel.Size = new System.Drawing.Size(60, 28);
+            flagsLabel.TabIndex = 7;
+            flagsLabel.Text = "Flags";
+            // 
             // framesInNameBox
             // 
             framesInNameBox.AutoSize = true;
-            framesInNameBox.Location = new System.Drawing.Point(429, 571);
+            framesInNameBox.Location = new System.Drawing.Point(414, 571);
             framesInNameBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             framesInNameBox.Name = "framesInNameBox";
             framesInNameBox.Size = new System.Drawing.Size(194, 24);
@@ -591,28 +590,28 @@
             // frameProgressionToolStripMenuItem
             // 
             frameProgressionToolStripMenuItem.Name = "frameProgressionToolStripMenuItem";
-            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            frameProgressionToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             frameProgressionToolStripMenuItem.Text = "Frame Progression";
             frameProgressionToolStripMenuItem.Click += frameProgressionToolStripMenuItem_Click;
             // 
             // disableFrameInfoToolStripMenuItem
             // 
             disableFrameInfoToolStripMenuItem.Name = "disableFrameInfoToolStripMenuItem";
-            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            disableFrameInfoToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             disableFrameInfoToolStripMenuItem.Text = "Disable Frame Info";
             disableFrameInfoToolStripMenuItem.Click += disableFrameInfoToolStripMenuItem_Click;
             // 
             // resourceCutsToolStripMenuItem
             // 
             resourceCutsToolStripMenuItem.Name = "resourceCutsToolStripMenuItem";
-            resourceCutsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            resourceCutsToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             resourceCutsToolStripMenuItem.Text = "Resource Cuts";
             resourceCutsToolStripMenuItem.Click += resourceCutsToolStripMenuItem_Click;
             // 
             // authPagesDEToolStripMenuItem
             // 
             authPagesDEToolStripMenuItem.Name = "authPagesDEToolStripMenuItem";
-            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            authPagesDEToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             authPagesDEToolStripMenuItem.Text = "Auth Pages (DE)";
             authPagesDEToolStripMenuItem.Click += authPagesDEToolStripMenuItem_Click;
             // 
@@ -620,7 +619,7 @@
             // 
             convertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { convertToOtherDEToolStripMenuItem, bulkConvertBEPToolStripMenuItem, convertOEPropertybinToBEPToolStripMenuItem, convertMEPWithPibsToolStripMenuItem1 });
             convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            convertToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            convertToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             convertToolStripMenuItem.Text = "Convert";
             // 
             // convertToOtherDEToolStripMenuItem
@@ -655,7 +654,7 @@
             // 
             authToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { segmentAuthToolStripMenuItem, reassembleAuthToolStripMenuItem });
             authToolStripMenuItem.Name = "authToolStripMenuItem";
-            authToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            authToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             authToolStripMenuItem.Text = "Auth";
             // 
             // segmentAuthToolStripMenuItem
@@ -1213,6 +1212,7 @@
             csvTree.Size = new System.Drawing.Size(228, 244);
             csvTree.TabIndex = 0;
             csvTree.AfterSelect += csvTree_AfterSelect;
+            csvTree.KeyDown += csvTree_KeyDown;
             csvTree.MouseUp += csvTree_MouseUp;
             // 
             // label10
@@ -1286,7 +1286,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new System.Drawing.Point(429, 540);
+            checkBox1.Location = new System.Drawing.Point(414, 540);
             checkBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new System.Drawing.Size(207, 24);
@@ -1398,7 +1398,7 @@
             // 
             // hactFlagsHolder
             // 
-            hactFlagsHolder.Controls.Add(label14);
+            hactFlagsHolder.Controls.Add(flagsLabel);
             hactFlagsHolder.Controls.Add(flagsBox);
             hactFlagsHolder.Controls.Add(hactTypeLabel);
             hactFlagsHolder.Controls.Add(typeBox);
@@ -1735,5 +1735,6 @@
         private System.Windows.Forms.ToolStripMenuItem giveEveryElementRandomGUIDToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setMotionNodesToFrameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resourceCutsToolStripMenuItem;
+        private System.Windows.Forms.Label flagsLabel;
     }
 }

@@ -195,6 +195,13 @@ namespace HActLib
 
         internal override void WriteElementData(DataWriter writer, GameVersion version, int hactVer)
         {
+            //DB Ref
+            if (ParamID != 0)
+            {
+                RimflashParams = null;
+                ParamVersion = 0;
+            }
+
             long headerStart = writer.Stream.Position;
             writer.Write(RimflashVersion);
 

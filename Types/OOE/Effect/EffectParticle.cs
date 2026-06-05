@@ -11,10 +11,10 @@ namespace HActLib.OOE
     public class EffectParticle : EffectElement
     {
         public uint ParticleID = 0;
-        public uint Flag;
+        public EffectParticleFlags Flag;
         public int Unknown2;
         public Matrix4x4 Matrix = Matrix4x4.Default;
-        public Vector3 Unknown3 = new Vector3(1, 1, 1);
+        public Vector3 Scale = new Vector3(1, 1, 1);
         public int Unknown4;
         public Vector3 Unknown5;
         public int Unknown6;
@@ -36,13 +36,13 @@ namespace HActLib.OOE
             base.ReadEffectData(reader, alt);
 
             ParticleID = reader.ReadUInt32();
-            Flag = reader.ReadUInt32();
+            Flag = (EffectParticleFlags)reader.ReadUInt32();
             Unknown2 = reader.ReadInt32();
             Matrix = reader.ReadMatrix4x4();
 
             reader.Stream.Position += 4;
 
-            Unknown3 = reader.ReadVector3();
+            Scale = reader.ReadVector3();
             Unknown4 = reader.ReadInt32();
             Unknown5 = reader.ReadVector3();
             Unknown6 = reader.ReadInt32();
@@ -57,13 +57,13 @@ namespace HActLib.OOE
             base.WriteEffectData(writer, alt);
 
             writer.Write(ParticleID);
-            writer.Write(Flag);
+            writer.Write((uint)Flag);
             writer.Write(Unknown2);
             writer.Write(Matrix);
 
             writer.WriteTimes(0, 4);
 
-            writer.Write(Unknown3);
+            writer.Write(Scale);
             writer.Write(Unknown4);
             writer.Write(Unknown5);
             writer.Write(Unknown6);
@@ -72,5 +72,10 @@ namespace HActLib.OOE
 
             writer.Write(UnkRegion1);
         }
+    }
+
+    public enum EffectParticleFlags
+    {
+        Screen = 512
     }
 }
