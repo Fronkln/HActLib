@@ -11,7 +11,7 @@ namespace HActLib
 {
     public class TEVWriter : IConverter<TEV, BinaryFormat>
     {
-        public bool Optimize = false;
+        internal static bool Optimize = true;
 
         public BinaryFormat Convert(TEV tev)
         {
@@ -377,7 +377,7 @@ namespace HActLib
             writer.Write(stringsStart);
 
             writer.Write(tev.TEVHeader.UseSoundACB);
-            writer.Write((int)(stringsStart - set1Start));
+            writer.Write((int)(stringsStart - set1Start) + 4);
 
             writer.Write(tev.TEVHeader.CameraCount);
             writer.Write(tev.TEVHeader.CameraMotionCount);

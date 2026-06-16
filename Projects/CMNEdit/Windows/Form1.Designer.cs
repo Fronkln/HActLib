@@ -119,6 +119,8 @@
             openResButton = new System.Windows.Forms.Button();
             panel2 = new System.Windows.Forms.Panel();
             panel3 = new System.Windows.Forms.Panel();
+            label14 = new System.Windows.Forms.Label();
+            resource2NameBox = new System.Windows.Forms.TextBox();
             resTimingsPanel = new System.Windows.Forms.Panel();
             label12 = new System.Windows.Forms.Label();
             resEndBox = new System.Windows.Forms.TextBox();
@@ -883,6 +885,7 @@
             nodesTree.KeyUp += nodesTree_KeyUp;
             nodesTree.MouseUp += nodesTree_MouseUp;
             // 
+            // 
             // tabPage1
             // 
             tabPage1.Controls.Add(deleteCutInfoButton);
@@ -997,6 +1000,8 @@
             // 
             // panel3
             // 
+            panel3.Controls.Add(label14);
+            panel3.Controls.Add(resource2NameBox);
             panel3.Controls.Add(resTimingsPanel);
             panel3.Controls.Add(linkedNodeBox);
             panel3.Controls.Add(targetNodeLbl);
@@ -1011,13 +1016,31 @@
             panel3.Size = new System.Drawing.Size(633, 428);
             panel3.TabIndex = 0;
             // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            label14.Location = new System.Drawing.Point(15, 82);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(139, 32);
+            label14.TabIndex = 13;
+            label14.Text = "Resource 2";
+            // 
+            // resource2NameBox
+            // 
+            resource2NameBox.Location = new System.Drawing.Point(15, 118);
+            resource2NameBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            resource2NameBox.Name = "resource2NameBox";
+            resource2NameBox.Size = new System.Drawing.Size(278, 27);
+            resource2NameBox.TabIndex = 12;
+            // 
             // resTimingsPanel
             // 
             resTimingsPanel.Controls.Add(label12);
             resTimingsPanel.Controls.Add(resEndBox);
             resTimingsPanel.Controls.Add(label13);
             resTimingsPanel.Controls.Add(resStartBox);
-            resTimingsPanel.Location = new System.Drawing.Point(15, 89);
+            resTimingsPanel.Location = new System.Drawing.Point(313, 87);
             resTimingsPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             resTimingsPanel.Name = "resTimingsPanel";
             resTimingsPanel.Size = new System.Drawing.Size(165, 84);
@@ -1099,10 +1122,10 @@
             // 
             // applyResButton
             // 
-            applyResButton.Location = new System.Drawing.Point(197, 121);
+            applyResButton.Location = new System.Drawing.Point(15, 225);
             applyResButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             applyResButton.Name = "applyResButton";
-            applyResButton.Size = new System.Drawing.Size(86, 31);
+            applyResButton.Size = new System.Drawing.Size(283, 69);
             applyResButton.TabIndex = 2;
             applyResButton.Text = "Apply";
             applyResButton.UseVisualStyleBackColor = true;
@@ -1736,5 +1759,7 @@
         private System.Windows.Forms.ToolStripMenuItem setMotionNodesToFrameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resourceCutsToolStripMenuItem;
         private System.Windows.Forms.Label flagsLabel;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox resource2NameBox;
     }
 }

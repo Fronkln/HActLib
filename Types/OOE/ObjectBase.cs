@@ -256,7 +256,7 @@ namespace HActLib.OOE
             long curReadPos = reader.Stream.Position;
             ProcessNodeData(reader);
 
-            ReadSet2(reader, _InternalInfo.Set2Ptr, _InternalInfo.UnkNum1);
+            ReadSet2(reader, _InternalInfo.Set2Ptr, _InternalInfo.UnkNum1, TEVWriter.Optimize);
             ReadEffect(reader, _InternalInfo.Set3Ptr);
 
             reader.Stream.Seek(curReadPos);

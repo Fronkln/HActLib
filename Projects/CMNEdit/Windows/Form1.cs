@@ -2546,6 +2546,9 @@ namespace CMNEdit
                 editingResourceOoe.Resource.Resource = resourceNameTextbox.Text;
                 editingResourceOoe.Resource.Type = (AuthResourceOOEType)resourceTypeBox.SelectedIndex;
 
+                if (editingResourceOoe.Resource.Resource2 != null)
+                    editingResourceOoe.Resource.Resource2 = resource2NameBox.Text;
+
                 if (linkedNodeBox.SelectedIndex >= 0)
                 {
                     if (!((EditingResourceCurrentLinkedNodes == null || EditingResourceCurrentLinkedNodes.Length <= 0)))
@@ -2630,6 +2633,9 @@ namespace CMNEdit
                     linkedNodeBox.SelectedIndex = Array.IndexOf(array, foundNode);
                 else
                     linkedNodeBox.SelectedIndex = -1;
+
+                resource2NameBox.ReadOnly = editingResourceOoe.Resource.Resource2 == null;
+                resource2NameBox.Text = editingResourceOoe.Resource.Resource2;
             }
 
         }
@@ -3841,25 +3847,6 @@ namespace CMNEdit
             return TevCsvEntry.SpecialNodes.Where(x => x.Name.StartsWith(type)).Count();
         }
 
-        private void UpdateCSV()
-        {
-            if (Csv == null || TevCsvEntry == null)
-                return;
-
-            //Order csv events
-            TreeNodeSet2[] events = GetAllHActEvents().GroupBy(x => (x.Set as Set2Element1019).Type1019).Select(y => y.First()).ToArray();
-
-            List<CSVHActEvent> eventsCsv = new List<CSVHActEvent>();
-
-            foreach (TreeNodeSet2 set2 in events)
-            {
-                Set2Element1019 elem = set2.Set as Set2Element1019;
-                eventsCsv.Add(TevCsvEntry.TryGetHActEventData(elem.Type1019.Split(new[] { '\0' }, 2)[0]));
-            }
-
-            TevCsvEntry.SpecialNodes = eventsCsv.ToList();
-        }
-
         private void csvTree_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -4782,12 +4769,27 @@ namespace CMNEdit
                 //Copy/Paste
                 if (e.KeyCode == Keys.C || e.KeyCode == Keys.V)
                 {
-                    if (currentTab == 0 && nodesTree.SelectedNode != null)
+                    if (currentTab == 1)
                     {
                         if (e.KeyCode == Keys.C)
                             CopiedNode = new TreeNode[] { csvTree.SelectedNode };
                         else
-                            PasteNode(CopiedNode);
+                        {
+                            if (CopiedNode != null)
+                            {
+                                var csvNode = CopiedNode[0];
+
+                                if(csvNode is TreeNodeCSVCharacter)
+                                {
+                                    var csvChara = (TreeNodeCSVCharacter)csvNode;
+                                    var newChara = csvChara.Character.Copy();
+                                    newChara.Name = newChara.Name + "_COPY";
+
+                                    TevCsvEntry.Characters.Add(newChara);
+                                    DrawCSV();
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -4795,11 +4797,11 @@ namespace CMNEdit
             {
                 if (e.KeyCode == Keys.Delete)
                 {
-                    if (currentTab == 0 && nodesTree.SelNodes.Count > 0)
+                    if (currentTab == 1)
                     {
-                        TreeNode node = nodesTree.SelectedNode as TreeNode;
+                        TreeNode node = csvTree.SelectedNode as TreeNode;
                         SuspendLayout();
-                        DeleteSelectedNodes();
+                        node.Remove();
                         ResumeLayout(true);
                     }
                 }
