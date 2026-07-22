@@ -649,6 +649,7 @@ namespace CMNEdit
             IsPS2Prop = false;
             IsYAct = false;
             IsMsg = true;
+            Msg = null;
 
             ClearEverything();
 
@@ -687,6 +688,7 @@ namespace CMNEdit
         private void ProcessMSG(Msg msg)
         {
             Msg = msg;
+            MsgOOE = null;
 
             IsBep = false;
             IsMep = false;
@@ -1458,6 +1460,25 @@ namespace CMNEdit
                 TreeNodeMsgCoordinate coord = (TreeNodeMsgCoordinate)node;
                 DrawMSG.DrawCoordinate(this, coord);
             }
+            else if (node is TreeNodeMsgPropertyOOE)
+            {
+                TreeNodeMsgPropertyOOE propOOE = (TreeNodeMsgPropertyOOE)node;
+
+                provider = new Be.Windows.Forms.DynamicByteProvider(propOOE.Property.UnreadData);
+
+                provider.Changed += delegate
+                {
+                    if (provider.Bytes.Count == propOOE.Property.UnreadData.Length)
+                        propOOE.Property.UnreadData = provider.Bytes.ToArray();
+                };
+
+                DrawMSGOOE.DrawProperty(this, propOOE);
+            }
+            else if(node is TreeNodeMsgEventOOE)
+            {
+                TreeNodeMsgEventOOE eventOOE = (TreeNodeMsgEventOOE)node;
+                DrawMSGOOE.DrawEvent(this, eventOOE);
+            }
 
 
             unkBytesBox.ByteProvider = provider;
@@ -2205,31 +2226,72 @@ namespace CMNEdit
             else if (IsMsg)
             {
 
-                List<TreeNodeMsgGroup> groups = nodesTree.Nodes[0].Nodes.Cast<TreeNodeMsgGroup>().ToList();
-                List<TreeNodeMsgCoordinate> coords = nodesTree.Nodes[1].Nodes.Cast<TreeNodeMsgCoordinate>().ToList();
-
-
-                foreach (var gNode in groups)
+                if (Msg != null)
                 {
-                    gNode.Group.Events.Clear();
+                    List<TreeNodeMsgGroup> groups = nodesTree.Nodes[0].Nodes.Cast<TreeNodeMsgGroup>().ToList();
+                    List<TreeNodeMsgCoordinate> coords = nodesTree.Nodes[1].Nodes.Cast<TreeNodeMsgCoordinate>().ToList();
 
-                    List<TreeNodeMsgEvent> events = gNode.Nodes.Cast<TreeNodeMsgEvent>().ToList();
-
-                    foreach (var eNode in events)
+                    foreach (var gNode in groups)
                     {
-                        eNode.Event.Properties.Clear();
-                        List<TreeNodeMsgProperty> properties = eNode.Nodes.Cast<TreeNodeMsgProperty>().ToList();
+                        gNode.Group.Events.Clear();
 
-                        foreach (var prop in properties)
-                            eNode.Event.Properties.Add(prop.Property);
+                        List<TreeNodeMsgEvent> events = gNode.Nodes.Cast<TreeNodeMsgEvent>().ToList();
 
-                        gNode.Group.Events.Add(eNode.Event);
+                        foreach (var eNode in events)
+                        {
+                            eNode.Event.Properties.Clear();
+                            List<TreeNodeMsgProperty> properties = eNode.Nodes.Cast<TreeNodeMsgProperty>().ToList();
+
+                            foreach (var prop in properties)
+                                eNode.Event.Properties.Add(prop.Property);
+
+                            gNode.Group.Events.Add(eNode.Event);
+                        }
                     }
-                }
 
-                Msg.Groups = groups.Select(x => x.Group).ToList();
-                Msg.Positions = coords.Select(x => x.Position).ToList();
-                Msg.Write(Msg, FilePath);
+                    Msg.Groups = groups.Select(x => x.Group).ToList();
+                    Msg.Positions = coords.Select(x => x.Position).ToList();
+                    Msg.Write(Msg, FilePath);
+                }
+                else
+                {
+                    List<TreeNodeMsgGroupOOE> groups = nodesTree.Nodes[0].Nodes.Cast<TreeNodeMsgGroupOOE>().ToList();
+                    List<TreeNodeMsgCoordinate> coords = nodesTree.Nodes[1].Nodes.Cast<TreeNodeMsgCoordinate>().ToList();
+
+                    foreach (var gNode in groups)
+                    {
+                        gNode.Group.Subgroups.Clear();
+
+                        List<TreeNodeMsgSubGroupOOE> subGroups = gNode.Nodes.Cast<TreeNodeMsgSubGroupOOE>().ToList();
+
+                        foreach (var sNode in subGroups)
+                        {
+                            sNode.SubGroup.Events.Clear();
+
+                            List<TreeNodeMsgEventOOE> events = sNode.Nodes.Cast<TreeNodeMsgEventOOE>().ToList();
+
+                            foreach(var eNode in events)
+                            {
+                                eNode.Event.Properties.Clear();
+
+                                List<TreeNodeMsgPropertyOOE> properties = eNode.Nodes.Cast<TreeNodeMsgPropertyOOE>().ToList();
+
+                                foreach (var prop in properties)
+                                    eNode.Event.Properties.Add(prop.Property);
+                            }
+
+                            foreach (var _event in events)
+                                sNode.SubGroup.Events.Add(_event.Event);
+
+                            gNode.Group.Subgroups.Add(sNode.SubGroup);
+                        }
+                    }
+
+                    MsgOOE.Groups = groups.Select(x => x.Group).ToList();
+                    MsgOOE.Coordinates = coords.Select(x => x.Position).ToList();
+
+                    MsgOOE.Write(MsgOOE, FilePath);
+                }
             }
 
         }

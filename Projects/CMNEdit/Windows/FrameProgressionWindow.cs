@@ -119,7 +119,14 @@ namespace Frame_Progression_GUI
                 return;
 
             for (int i = 0; i < frameProgression.Items.Count - 1; i++)
-                frameProgressionSpeed[i] = SelectedCamera.FrameProgression[i + 1] - SelectedCamera.FrameProgression[i];
+            {
+                float diff = SelectedCamera.FrameProgression[i + 1] - SelectedCamera.FrameProgression[i];
+
+                if (diff > 2)
+                    diff = 1;
+
+                frameProgressionSpeed[i] = diff;
+            }
 
             if (frameProgressionSpeed.Length > 1)
                 frameProgressionSpeed[frameProgressionSpeed.Length - 1] = 1;
@@ -266,9 +273,10 @@ namespace Frame_Progression_GUI
 
             for (int i = 0; i < frameCount; i++)
             {
-                float curVal = CMNEdit.Utils.InvariantParse(frameProgression.Items[i].Text);
+                float curVal = CMNEdit.Utils.InvariantParse(frameProgression.Items[curIdx].Text);
                 float newVal = curVal + val;
-                frameProgression.Items[i].Text = newVal.ToString(CultureInfo.InvariantCulture);
+                frameProgression.Items[curIdx].Text = newVal.ToString(CultureInfo.InvariantCulture);
+                curIdx++;
             }
         }
 

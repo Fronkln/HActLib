@@ -25,14 +25,14 @@ namespace CMNEdit
             ContextMenuStrip = Form1.Instance.msgContextProperty;
 
             Property = property;
-            /*
-            byte type1 = (byte)((ushort)property.PropType >> 8);
-            byte type2 = (byte)((ushort)property.PropType & 0xFF);
-            string typeFormat = $"{type1:D}-{type2:D}";
 
-            var propEnumType = typeof(MsgPropTypeUnknown);
 
-            string name = Enum.GetName(propEnumType, (ushort)property.PropType);
+
+            string typeFormat = property.Type.ToString("X");
+
+            var propEnumType = typeof(MsgPropTypeOOE);
+
+            string name = Enum.GetName(propEnumType, (ushort)property.Type);
 
             switch (name)
             {
@@ -43,8 +43,6 @@ namespace CMNEdit
                         Text = Regex.Replace("Property", @"(?<!^)(?=[A-Z])", " ") + " (" + typeFormat + ")";
                     break;
             }
-            */
-
 
         }
 
