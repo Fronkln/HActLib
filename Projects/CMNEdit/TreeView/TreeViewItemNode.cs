@@ -20,7 +20,11 @@ namespace CMNEdit
         {
             TreeViewItemNode cloned =  (TreeViewItemNode)base.Clone();
             cloned.HActNode = HActNode.Copy();
-            cloned.HActNode.Guid = Guid.NewGuid();
+
+            if(!INISettings.CopyNodeGUIDs)
+                cloned.HActNode.Guid = Guid.NewGuid();
+            else
+                cloned.HActNode.Guid = HActNode.Guid;
 
             return cloned;
         }

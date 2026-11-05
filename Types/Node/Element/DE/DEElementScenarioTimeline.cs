@@ -7,9 +7,9 @@ using Yarhl.IO;
 
 namespace HActLib
 {
-    [ElementID(Game.Y6, 0x18)]
-    [ElementID(Game.YK2, 0x18)]
-    [ElementID(Game.JE, 0x18)]
+//    [ElementID(Game.Y6, 0x18)]
+ //   [ElementID(Game.YK2, 0x18)]
+ //   [ElementID(Game.JE, 0x18)]
     [ElementID(Game.YLAD, 0x17)]
     [ElementID(Game.LJ, 0x17)]
     [ElementID(Game.LAD7Gaiden, 0x17)]

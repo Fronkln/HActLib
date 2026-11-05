@@ -16,7 +16,7 @@ namespace HActLib
 
         public float[] FrameProgressionSpeed = new float[0];
 
-        private float[] Caption = new float[0];
+        public float[] Caption = new float[0];
 
         public NodeCamera()
         {

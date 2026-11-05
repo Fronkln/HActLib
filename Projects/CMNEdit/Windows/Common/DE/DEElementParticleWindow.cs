@@ -30,6 +30,9 @@ namespace CMNEdit
             form.CreateInput("Position Y", particle.Matrix.VM3.y.ToString(), delegate (string val) { particle.Matrix.VM3.y = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             form.CreateInput("Position Z", particle.Matrix.VM3.z.ToString(), delegate (string val) { particle.Matrix.VM3.z = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
+            form.CreateInput("In Frame", particle.InFrame.ToString(), delegate (string val) { particle.InFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            form.CreateInput("Out Frame", particle.OutFrame.ToString(), delegate (string val) { particle.OutFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
             form.CreateInput("Color Scale A", particle.ColorScaleA.ToString(), delegate (string val) { particle.ColorScaleA = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
             Panel particleColPanel = null;

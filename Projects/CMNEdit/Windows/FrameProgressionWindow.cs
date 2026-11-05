@@ -74,6 +74,10 @@ namespace Frame_Progression_GUI
 
                 frameProgression.Items.Add(item);
             }
+
+            for (int i = 0; i < camera.Caption.Length; i++)
+                captionsBox.Items.Add(camera.Caption[i]);
+
             //   listView1.Items.AddRange((camera.FrameProgression.Select(x => x.ToString(CultureInfo.InvariantCulture)).Select(x => new ListViewItem(x)).ToArray()));
             // listView1.Items.subAddRange((camera.FrameProgression.Select(x => x.ToString(CultureInfo.InvariantCulture)).Select(x => new ListViewItem(x)).ToArray()));
             cameraList.SelectedIndex = idx;
@@ -285,7 +289,7 @@ namespace Frame_Progression_GUI
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             saveFileDialog.Title = "Export Frame Progression";
-            
+
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -293,12 +297,12 @@ namespace Frame_Progression_GUI
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine("Frame | Speed Change");
                     sb.AppendLine("-------------------");
-                    
+
                     foreach (ListViewItem item in frameProgression.Items)
                     {
                         sb.AppendLine($"{item.Text} | {item.SubItems[1].Text}");
                     }
-                    
+
                     File.WriteAllText(saveFileDialog.FileName, sb.ToString());
                     MessageBox.Show("Frame progression exported successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -316,12 +320,12 @@ namespace Frame_Progression_GUI
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Frame | Speed Change");
                 sb.AppendLine("-------------------");
-                
+
                 foreach (ListViewItem item in frameProgression.Items)
                 {
                     sb.AppendLine($"{item.Text} | {item.SubItems[1].Text}");
                 }
-                
+
                 Clipboard.SetText(sb.ToString());
                 MessageBox.Show("Frame progression copied to clipboard!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

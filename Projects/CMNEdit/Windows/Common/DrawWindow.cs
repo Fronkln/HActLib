@@ -87,6 +87,20 @@ namespace CMNEdit
                         Form1.Instance.CreateHeader("Path Offset");
                         MatrixWindow.Draw(Form1.Instance, (element as OEPathAdjustment).Adjustment);
                         break;
+                    case "e_auth_element_depth_of_field2":
+                        Form1.Instance.CreateHeader("DOF2");
+
+                        var dof2 = (element as OEDOF2);
+
+                        Form1.Instance.CreateInput("Near Before", dof2.NearBefore.ToString(), delegate (string val) { dof2.NearBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        Form1.Instance.CreateInput("Far Before", dof2.FarBefore.ToString(), delegate (string val) { dof2.FarBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
+                        Form1.Instance.CreateInput("Near After", dof2.NearAfter.ToString(), delegate (string val) { dof2.NearAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        Form1.Instance.CreateInput("Far After", dof2.FarAfter.ToString(), delegate (string val) { dof2.FarAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+
+                        Form1.Instance.CreateInput("F-Stop Before", dof2.FStopBefore.ToString(), delegate (string val) { dof2.FStopBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        Form1.Instance.CreateInput("F-Stop Far", dof2.FStopAfter.ToString(), delegate (string val) { dof2.FStopAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        break;
                 }
             }
             else if (CMN.IsDE(Form1.curVer))

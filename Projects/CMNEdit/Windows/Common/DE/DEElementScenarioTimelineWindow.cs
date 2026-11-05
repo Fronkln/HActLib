@@ -9,6 +9,9 @@ namespace CMNEdit.Windows
         {
             DEElementScenarioTimeline timeline = node as DEElementScenarioTimeline;
 
+            if (timeline == null)
+                return;
+
             form.CreateHeader("Scenario Timeline");
             form.CreateInput("Category", timeline.TimelineCategory, delegate (string val) { timeline.TimelineCategory = val; });
             form.CreateInput("Timeline", timeline.Timeline, delegate (string val) { timeline.Timeline = val; });

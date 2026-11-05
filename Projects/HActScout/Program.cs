@@ -144,51 +144,59 @@ namespace HActScout
                     Console.WriteLine();
                     continue;
                 }
-
-                NodeElement[] nodes = null;
-
-                //  try
-                //{
-                if (!bepMode)
-                    nodes = (isDE ? CMN.Read(buf, game).AllElements : OECMN.Read(buf).AllElements);
-                else
-                   nodes = (BEP.Read(buf, game).AllElements);
-                // }
-                // catch
-                //{
-                // Console.WriteLine("Cmn reading failed! " + fileName);
-                // curInf.Par?.Dispose();
-                // Console.WriteLine();
-                //  continue;
-                //}
-
-                IEnumerable<NodeElement> filtered = null;
-
-                if(!findUnknownMode)
-                    filtered = nodes.Where(x => x.ElementKind == id);
-                else
-                    filtered = nodes.Where(x => !values.Contains(x.ElementKind) && !foundUnkNodes.ContainsKey(x.ElementKind));
-
-                if (filtered.Count() > 0)
+                try
                 {
-                    WriteLineColor("Found node in " + fileName + "\n", ConsoleColor.Green);
-                    m_foundPars.Add(fileName);
 
-                    foreach (NodeElement element in filtered)
+                    NodeElement[] nodes = null;
+
+                    //  try
+                    //{
+                    if (!bepMode)
+                        nodes = (isDE ? CMN.Read(buf, game).AllElements : OECMN.Read(buf).AllElements);
+                    else
+                        nodes = (BEP.Read(buf, game).AllElements);
+                    // }
+                    // catch
+                    //{
+                    // Console.WriteLine("Cmn reading failed! " + fileName);
+                    // curInf.Par?.Dispose();
+                    // Console.WriteLine();
+                    //  continue;
+                    //}
+
+                    IEnumerable<NodeElement> filtered = null;
+
+                    if (!findUnknownMode)
+                        filtered = nodes.Where(x => x.ElementKind == id);
+                    else
+                        filtered = nodes.Where(x => !values.Contains(x.ElementKind) && !foundUnkNodes.ContainsKey(x.ElementKind));
+
+                    if (filtered.Count() > 0)
                     {
-                        Console.WriteLine(element.Name + $" ({element.ElementKind})" + " " + element.Guid.ToString());
+                        WriteLineColor("Found node in " + fileName + "\n", ConsoleColor.Green);
+                        m_foundPars.Add(fileName);
 
-                        if(!foundUnkNodes.ContainsKey(element.ElementKind))
-                            foundUnkNodes.Add(element.ElementKind, element.Name);
+                        foreach (NodeElement element in filtered)
+                        {
+                            Console.WriteLine(element.Name + $" ({element.ElementKind})" + " " + element.Guid.ToString());
+
+                            if (!foundUnkNodes.ContainsKey(element.ElementKind))
+                                foundUnkNodes.Add(element.ElementKind, element.Name);
+                        }
+
+                        Console.WriteLine();
                     }
 
+
+                    curInf.Par?.Dispose();
+
+                    GC.Collect();
+                }
+                catch
+                {
+                    WriteLineColor("Reading failed! " + Path.GetFileName(file), ConsoleColor.Red);
                     Console.WriteLine();
                 }
-
-
-                curInf.Par?.Dispose();
-
-                GC.Collect();
             }
         }
 
@@ -213,22 +221,30 @@ namespace HActScout
                     continue;
 
 
-                NodeElement[] nodes = (CMN.IsDEGame(game) ? CMN.Read(buf, game).AllElements : OECMN.Read(buf).AllElements);
+                try
+                {
+                    NodeElement[] nodes = (CMN.IsDEGame(game) ? CMN.Read(buf, game).AllElements : OECMN.Read(buf).AllElements);
 
 
-                foreach(var element in nodes)
-                    if(element.ElementKind == pibElementID)
-                    {
-                        var ptc = element as DEElementParticle;
+                    foreach (var element in nodes)
+                        if (element.ElementKind == pibElementID)
+                        {
+                            var ptc = element as DEElementParticle;
 
-                        if (foundPibs.Contains(ptc.ParticleID))
-                            continue;
+                            if (foundPibs.Contains(ptc.ParticleID))
+                                continue;
 
 
-                        foundPibs.Add(ptc.ParticleID);
-                        Console.WriteLine(ptc.Name);
-                        writer.WriteLine(ptc.Name);
-                    }
+                            foundPibs.Add(ptc.ParticleID);
+                            Console.WriteLine(ptc.Name);
+                            writer.WriteLine(ptc.Name);
+                        }
+                }
+                catch
+                {
+                    WriteLineColor("Reading failed! " + Path.GetFileName(file), ConsoleColor.Red);
+                    Console.WriteLine();
+                }
             }
         }
     }

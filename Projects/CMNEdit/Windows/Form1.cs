@@ -23,7 +23,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using System.Xml.Linq;
 using YakuzaDataTypes.MSG;
 
 namespace CMNEdit
