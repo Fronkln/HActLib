@@ -13,12 +13,12 @@ namespace CMNEdit
         {
             DEElementFullscreenAuthMovie mov = node as DEElementFullscreenAuthMovie;
 
-            form.CreateHeader("Fullscreen Movie");
+            PropertyEditorBuilder.CreateHeader("Fullscreen Movie");
 
-            form.CreateInput("Movie", mov.Movie, delegate (string val) { mov.Movie = val; }, NumberBox.NumberMode.Text);
+            PropertyEditorBuilder.CreateInput("Movie", mov.Movie, delegate (string val) { mov.Movie = val; }, NumberBox.NumberMode.Text);
 
-            form.CreateInput("Movie Start Frame", mov.MovieStart.ToString(), delegate (string val) { mov.MovieStart = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Movie End Frame", mov.MovieEnd.ToString(), delegate (string val) { mov.MovieEnd = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Movie Start Frame", mov.MovieStart.ToString(), delegate (string val) { mov.MovieStart = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Movie End Frame", mov.MovieEnd.ToString(), delegate (string val) { mov.MovieEnd = uint.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

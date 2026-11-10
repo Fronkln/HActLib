@@ -16,9 +16,9 @@ namespace CMNEdit
             if (subtitle == null)
                 return;
 
-            form.CreateHeader("Subtitle");
+            PropertyEditorBuilder.CreateHeader("Subtitle");
 
-            form.CreateSpace(15);
+            PropertyEditorBuilder.CreateSpace(15);
 
             for (int i = 0; i < subtitle.Subtitles.Count; i++)
             {
@@ -28,7 +28,7 @@ namespace CMNEdit
 
             if (subtitle.SubtitlesJP.Count > 0)
             {
-                form.CreateHeader("Subtitles(JP)");
+                PropertyEditorBuilder.CreateHeader("Subtitles(JP)");
 
                 for (int i = 0; i < subtitle.SubtitlesJP.Count; i++)
                 {
@@ -37,8 +37,8 @@ namespace CMNEdit
                 }
             }
 
-            form.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); subtitle.SubtitlesJP.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
-            form.CreateButton("Insert New", delegate
+            PropertyEditorBuilder.CreateButton("Add New", delegate { subtitle.Subtitles.Add(new OESubtitle.SubtitleEntry()); subtitle.SubtitlesJP.Add(new OESubtitle.SubtitleEntry()); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
+            PropertyEditorBuilder.CreateButton("Insert New", delegate
             {
                 string input = Microsoft.VisualBasic.Interaction.InputBox("Insert subtitle index to insert to", "New Subtitle", "");
 
@@ -57,16 +57,16 @@ namespace CMNEdit
                 subtitle.SubtitlesJP.Insert(idx, new OESubtitle.SubtitleEntry());
                 Form1.Instance.ProcessSelectedNode(Form1.EditingNode);
             });
-            form.CreateButton("Clear All", delegate { subtitle.Subtitles.Clear(); subtitle.SubtitlesJP.Clear(); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
+            PropertyEditorBuilder.CreateButton("Clear All", delegate { subtitle.Subtitles.Clear(); subtitle.SubtitlesJP.Clear(); Form1.Instance.ProcessSelectedNode(Form1.EditingNode); });
         }
 
         private static void DrawEntry(Form1 form, OESubtitle.SubtitleEntry entry, int idx)
         {
-            form.CreateInput($"Subtitle {idx} Start", entry.Start.ToString(), delegate (string val) { entry.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput($"Subtitle {idx} End", entry.End.ToString(), delegate (string val) { entry.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateMultilineInput($"Subtitle {idx} Text", entry.Text.ToString(), delegate (string val) { entry.Text = val; }, 50);
+            PropertyEditorBuilder.CreateInput($"Subtitle {idx} Start", entry.Start.ToString(), delegate (string val) { entry.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput($"Subtitle {idx} End", entry.End.ToString(), delegate (string val) { entry.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateMultilineInput($"Subtitle {idx} Text", entry.Text.ToString(), delegate (string val) { entry.Text = val; }, 50);
 
-            form.CreateSpace(25);
+            PropertyEditorBuilder.CreateSpace(25);
         }
     }
 }

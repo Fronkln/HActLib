@@ -16,24 +16,24 @@ namespace CMNEdit
         {
             DEElementUIFade uiFade = node as DEElementUIFade;
 
-            form.CreateHeader("UI Fade");
+            PropertyEditorBuilder.CreateHeader("UI Fade");
 
             Panel colorPanel = null;
 
-            form.CreateHeader("Fade");
+            PropertyEditorBuilder.CreateHeader("Fade");
 
-            form.CreateInput("Flags", uiFade.Flags.ToString(), delegate (string val) { uiFade.Flags = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("In Frame", uiFade.InFrame.ToString(), delegate (string val) { uiFade.InFrame = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Out Frame", uiFade.OutFrame.ToString(), delegate (string val) { uiFade.OutFrame = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Flags", uiFade.Flags.ToString(), delegate (string val) { uiFade.Flags = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("In Frame", uiFade.InFrame.ToString(), delegate (string val) { uiFade.InFrame = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Out Frame", uiFade.OutFrame.ToString(), delegate (string val) { uiFade.OutFrame = uint.Parse(val); }, NumberBox.NumberMode.UInt);
 
-            colorPanel = form.CreatePanel("Fade Color", uiFade.Color,
+            colorPanel = PropertyEditorBuilder.CreatePanel("Fade Color", uiFade.Color,
                 delegate (Color col)
                 {
                     uiFade.Color = col;
                     colorPanel.BackColor = col;
                 });
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CurveView curveForm = new CurveView();
                 curveForm.Visible = true;

@@ -9,9 +9,9 @@ namespace CMNEdit
         {
             OEHActEnd end = node as OEHActEnd;
 
-            form.CreateHeader("HAct End");
+            PropertyEditorBuilder.CreateHeader("HAct End");
 
-            form.CreateInput("Unknown", end.Unknown.ToString(), delegate (string val) { end.Unknown = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", end.Unknown.ToString(), delegate (string val) { end.Unknown = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

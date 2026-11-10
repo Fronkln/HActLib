@@ -23,38 +23,38 @@ namespace CMNEdit
             switch (field.FieldType)
             {
                 default:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { }, NumberBox.NumberMode.Text, true);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { }, NumberBox.NumberMode.Text, true);
                     break;
                 case UserElementFieldType.ByteArray:
                     break;
                 case UserElementFieldType.FixedString:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate(string val) { field.Value = val; });
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate(string val) { field.Value = val; });
                     break;
                 case UserElementFieldType.Byte:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = byte.Parse(val); }, NumberBox.NumberMode.Byte);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = byte.Parse(val); }, NumberBox.NumberMode.Byte);
                     break;
                 case UserElementFieldType.Short:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = short.Parse(val); }, NumberBox.NumberMode.Ushort);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = short.Parse(val); }, NumberBox.NumberMode.Ushort);
                     break;
                 case UserElementFieldType.Int32:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = int.Parse(val); }, NumberBox.NumberMode.Int);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = int.Parse(val); }, NumberBox.NumberMode.Int);
                     break;
                 case UserElementFieldType.Int64:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = long.Parse(val); }, NumberBox.NumberMode.Long);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = long.Parse(val); }, NumberBox.NumberMode.Long);
                     break;
                 case UserElementFieldType.UShort:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
                     break;
                 case UserElementFieldType.UInt32:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = uint.Parse(val); }, NumberBox.NumberMode.UInt);
                     break;
                 case UserElementFieldType.UInt64:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = ulong.Parse(val); }, NumberBox.NumberMode.ULong);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = ulong.Parse(val); }, NumberBox.NumberMode.ULong);
                     break;
                 case UserElementFieldType.RGB32:
                     Panel rgb32Panel = null;
 
-                    rgb32Panel = form.CreatePanel(fieldName, (RGB32)field.Value,
+                    rgb32Panel = PropertyEditorBuilder.CreatePanel(fieldName, (RGB32)field.Value,
                         delegate (Color col)
                         {
                             field.Value = (RGB32)col;
@@ -65,7 +65,7 @@ namespace CMNEdit
                 case UserElementFieldType.BRG32:
                     Panel brg32Panel = null;
 
-                    brg32Panel = form.CreatePanel(fieldName, (RGB32)field.Value,
+                    brg32Panel = PropertyEditorBuilder.CreatePanel(fieldName, (RGB32)field.Value,
                         delegate (Color col)
                         {
                             field.Value = (RGB32)col;
@@ -76,7 +76,7 @@ namespace CMNEdit
                 case UserElementFieldType.RGBF32:
                     Panel rgbf32Panel = null;
 
-                    rgbf32Panel = form.CreatePanelFI2(fieldName, ((RGB)field.Value).Clamp(), (RGB)field.Value,
+                    rgbf32Panel = PropertyEditorBuilder.CreatePanelFI2(fieldName, ((RGB)field.Value).Clamp(), (RGB)field.Value,
                         delegate (RGB col)
                         {
                             field.Value = (RGB)col;
@@ -87,7 +87,7 @@ namespace CMNEdit
                 case UserElementFieldType.BRGF32:
                     Panel brgf32Panel = null;
 
-                    brg32Panel = form.CreatePanel(fieldName, (RGB)field.Value,
+                    brg32Panel = PropertyEditorBuilder.CreatePanel(fieldName, (RGB)field.Value,
                         delegate (Color col)
                         {
                             field.Value = (RGB)col;
@@ -98,7 +98,7 @@ namespace CMNEdit
                 case UserElementFieldType.RGBA32:
                     Panel rgba32Panel = null;
 
-                    rgba32Panel = form.CreatePanel(fieldName, (RGBA32)field.Value,
+                    rgba32Panel = PropertyEditorBuilder.CreatePanel(fieldName, (RGBA32)field.Value,
                         delegate (Color col)
                         {
                             field.Value = (RGBA32)col;
@@ -107,11 +107,11 @@ namespace CMNEdit
                     break;
 
                 case UserElementFieldType.Float:
-                    form.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                    PropertyEditorBuilder.CreateInput(fieldName, field.Value.ToString(), delegate (string val) { field.Value = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
                     break;
 
                 case UserElementFieldType.FAnimationCurve:
-                    form.CreateButton(fieldName, delegate
+                    PropertyEditorBuilder.CreateButton(fieldName, delegate
                     {
                         CurveView myNewForm = new CurveView();
                         myNewForm.Visible = true;
@@ -124,7 +124,7 @@ namespace CMNEdit
                     break;
 
                 case UserElementFieldType.AnimationCurve:
-                    form.CreateButton(fieldName, delegate
+                    PropertyEditorBuilder.CreateButton(fieldName, delegate
                     {
                         CurveView myNewForm = new CurveView();
                         myNewForm.Visible = true;
@@ -143,7 +143,7 @@ namespace CMNEdit
         {
             var nodeUser = node as NodeElementUser;
 
-            form.CreateHeader(nodeUser.UserData.NodeName.Replace("_", " "));
+            PropertyEditorBuilder.CreateHeader(nodeUser.UserData.NodeName.Replace("_", " "));
 
             for(int i = 0; i < nodeUser.Fields.Count; i++)
                 DrawField(form, nodeUser, i);

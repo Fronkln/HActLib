@@ -9,7 +9,7 @@ namespace CMNEdit
     {
         public static void Draw(Pager form, TreeViewItemTransition transition)
         {
-            form.CreateHeader("Transition Information");
+            PropertyEditorBuilder.CreateHeader("Transition Information");
 
             List<string> options = new List<string>();
             options.Add("HAct end");
@@ -17,7 +17,7 @@ namespace CMNEdit
             foreach(string str in Form1.Instance.AuthPagesDE.Select(x => x.PageTitleText))
                 options.Add(str);
 
-            form.CreateComboBox("Transition to: ", transition.Transition.DestinationPageIndex + 1, options.ToArray(), delegate(int val) 
+            PropertyEditorBuilder.CreateComboBox("Transition to: ", transition.Transition.DestinationPageIndex + 1, options.ToArray(), delegate(int val) 
             {
                 transition.Transition.DestinationPageIndex = val - 1;
                 form.ProcessHierarchy();

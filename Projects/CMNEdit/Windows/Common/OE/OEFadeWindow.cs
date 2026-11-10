@@ -18,15 +18,15 @@ namespace CMNEdit
 
             Panel colorPanel = null;
 
-            form.CreateHeader("Fade");
-            colorPanel = form.CreatePanel("Fade Color", fade.Color,
+            PropertyEditorBuilder.CreateHeader("Fade");
+            colorPanel = PropertyEditorBuilder.CreatePanel("Fade Color", fade.Color,
                 delegate (Color col)
                 {
                     fade.Color = col;
                     colorPanel.BackColor = col;
                 });
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CurveView curveForm = new CurveView();
                 curveForm.Visible = true;

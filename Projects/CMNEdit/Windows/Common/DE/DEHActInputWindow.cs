@@ -15,13 +15,13 @@ namespace CMNEdit.Windows.Common.DE
         {
             DEHActInput inf = node as DEHActInput;
 
-            form.CreateSpace(25);
-            form.CreateHeader("QTE Input");
+            PropertyEditorBuilder.CreateSpace(25);
+            PropertyEditorBuilder.CreateHeader("QTE Input");
 
-            form.CreateInput("Input ID", inf.InputID.ToString(), delegate (string val) { inf.InputID = (uint)int.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Condition Flag", inf.CondFlagNo.ToString(), delegate (string val) { inf.CondFlagNo = (uint)int.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Input ID", inf.InputID.ToString(), delegate (string val) { inf.InputID = (uint)int.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Condition Flag", inf.CondFlagNo.ToString(), delegate (string val) { inf.CondFlagNo = (uint)int.Parse(val); }, NumberBox.NumberMode.UInt);
 
-            form.CreateInput("Decide Frame", new GameTick(inf.DecideTick).Frame.ToString(), delegate (string val) { inf.DecideTick = new GameTick(float.Parse(val)).Tick; }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Decide Frame", new GameTick(inf.DecideTick).Frame.ToString(), delegate (string val) { inf.DecideTick = new GameTick(float.Parse(val)).Tick; }, NumberBox.NumberMode.Float);
         }
     }
 }

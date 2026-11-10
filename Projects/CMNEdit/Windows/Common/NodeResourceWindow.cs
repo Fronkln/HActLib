@@ -16,8 +16,8 @@ namespace CMNEdit
             if (res == null)
                 return;
 
-            form.CreateHeader("Resource");
-            form.CreateInput("Name", res.Resource.MainResource, delegate (string val) { res.Text = val; res.Resource.MainResource = val; });
+            PropertyEditorBuilder.CreateHeader("Resource");
+            PropertyEditorBuilder.CreateInput("Name", res.Resource.MainResource, delegate (string val) { res.Text = val; res.Resource.MainResource = val; });
         }
     }
 }

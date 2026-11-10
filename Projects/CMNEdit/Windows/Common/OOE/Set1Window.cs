@@ -11,9 +11,9 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, ObjectBase set)
         {   
-            form.CreateHeader("Object");
+            PropertyEditorBuilder.CreateHeader("Object");
 
-            form.CreateInput("Unknown", set._InternalInfo.UnkNum1.ToString(), delegate(string val) { set._InternalInfo.UnkNum1 = uint.Parse(val); }, NumberBox.NumberMode.UInt)
+            PropertyEditorBuilder.CreateInput("Unknown", set._InternalInfo.UnkNum1.ToString(), delegate(string val) { set._InternalInfo.UnkNum1 = uint.Parse(val); }, NumberBox.NumberMode.UInt)
 ;
             for(int i = 0; i < set.StringTable.Length; i++)
                 CreateStringTable(form, set, i);
@@ -21,7 +21,7 @@ namespace CMNEdit
 
         private static void CreateStringTable(Form1 form, ObjectBase set, int idx)
         {
-            form.CreateInput("String", set.StringTable[idx], delegate (string val) { set.StringTable[idx] = val; });
+            PropertyEditorBuilder.CreateInput("String", set.StringTable[idx], delegate (string val) { set.StringTable[idx] = val; });
         }
     }
 }

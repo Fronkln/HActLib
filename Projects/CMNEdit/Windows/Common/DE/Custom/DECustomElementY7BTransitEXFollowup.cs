@@ -13,12 +13,12 @@ namespace CMNEdit
         {
             DECustomY7BTransitEXFollowup transitHact = node as DECustomY7BTransitEXFollowup;
 
-            form.CreateHeader("Transit HAct");
+            PropertyEditorBuilder.CreateHeader("Transit HAct");
 
-            form.CreateInput("YHC Name", transitHact.YHCName, delegate (string val) { transitHact.YHCName = val; });
-            form.CreateInput("YHC Attack Name", transitHact.YHCAttackName, delegate (string val) { transitHact.YHCAttackName = val; });
+            PropertyEditorBuilder.CreateInput("YHC Name", transitHact.YHCName, delegate (string val) { transitHact.YHCName = val; });
+            PropertyEditorBuilder.CreateInput("YHC Attack Name", transitHact.YHCAttackName, delegate (string val) { transitHact.YHCAttackName = val; });
 
-            form.CreateInput("Job ID", transitHact.JobRestriction.ToString(), delegate (string val) { transitHact.JobRestriction = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Job ID", transitHact.JobRestriction.ToString(), delegate (string val) { transitHact.JobRestriction = uint.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

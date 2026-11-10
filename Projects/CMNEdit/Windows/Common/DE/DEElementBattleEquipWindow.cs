@@ -14,11 +14,11 @@ namespace CMNEdit
             DEElementEquipAsset equip = node as DEElementEquipAsset;
 
 
-            form.CreateHeader("Equip Asset");
+            PropertyEditorBuilder.CreateHeader("Equip Asset");
 
-            form.CreateInput("Asset ID", equip.AssetID.ToString(), delegate (string val) { equip.AssetID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateComboBox("Equip Slot", (int)equip.EquipSlot, Enum.GetNames(typeof(AttachmentSlot)), delegate (int id) {equip.EquipSlot = (AttachmentSlot)id; });
-            form.CreateInput("Equip Flags", equip.EquipFlags.ToString(), delegate (string val) { equip.EquipFlags = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Asset ID", equip.AssetID.ToString(), delegate (string val) { equip.AssetID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateComboBox("Equip Slot", (int)equip.EquipSlot, Enum.GetNames(typeof(AttachmentSlot)), delegate (int id) {equip.EquipSlot = (AttachmentSlot)id; });
+            PropertyEditorBuilder.CreateInput("Equip Flags", equip.EquipFlags.ToString(), delegate (string val) { equip.EquipFlags = uint.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

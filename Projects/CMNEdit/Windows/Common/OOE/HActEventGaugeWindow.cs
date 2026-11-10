@@ -15,9 +15,9 @@ namespace CMNEdit
             if (gauge == null)
                 return;
 
-            form.CreateHeader("Heat Change (CSV)");
+            PropertyEditorBuilder.CreateHeader("Heat Change (CSV)");
 
-            form.CreateInput("Change", gauge.Change.ToString(), delegate (string val) { gauge.Change = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Change", gauge.Change.ToString(), delegate (string val) { gauge.Change = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

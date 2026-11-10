@@ -9,8 +9,8 @@ namespace CMNEdit
         {
             DEElementBattleSlide slide = node as DEElementBattleSlide;
 
-            form.CreateHeader("Battle Slide");
-            form.CreateInput("Slide Type", slide.SlideType.ToString(), delegate (string val) { slide.SlideType = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateHeader("Battle Slide");
+            PropertyEditorBuilder.CreateInput("Slide Type", slide.SlideType.ToString(), delegate (string val) { slide.SlideType = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

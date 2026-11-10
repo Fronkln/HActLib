@@ -12,8 +12,8 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, Set2Element1019 element)
         {
-            form.CreateHeader("HAct Event (HE)");
-            form.CreateInput("Type", element.Type1019, delegate(string val) { element.Type1019 = val; });
+            PropertyEditorBuilder.CreateHeader("HAct Event (HE)");
+            PropertyEditorBuilder.CreateInput("Type", element.Type1019, delegate(string val) { element.Type1019 = val; });
         }
     }
 }

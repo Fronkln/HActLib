@@ -13,10 +13,10 @@ namespace CMNEdit
         {
             DEElementTimingInfoStun stun = node as DEElementTimingInfoStun;
 
-            form.CreateHeader("Transit Stun");
+            PropertyEditorBuilder.CreateHeader("Transit Stun");
 
-            form.CreateInput("Type", stun.Type.ToString(), delegate (string val) { stun.Type = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("GMT ID", stun.GmtID.ToString(), delegate (string val) { stun.GmtID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Type", stun.Type.ToString(), delegate (string val) { stun.Type = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("GMT ID", stun.GmtID.ToString(), delegate (string val) { stun.GmtID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

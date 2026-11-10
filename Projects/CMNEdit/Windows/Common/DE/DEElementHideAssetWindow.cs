@@ -11,10 +11,10 @@ namespace CMNEdit.Windows.Common.DE
         {
             DEElementHideAsset inf = node as DEElementHideAsset;
 
-            form.CreateSpace(25);
-            form.CreateHeader("Hide Asset");
+            PropertyEditorBuilder.CreateSpace(25);
+            PropertyEditorBuilder.CreateHeader("Hide Asset");
 
-            form.CreateComboBox("Asset Slot", (int)inf.ID, Enum.GetNames(typeof(AttachmentSlot)), delegate (int id) { inf.ID = (AttachmentSlot)id; });
+            PropertyEditorBuilder.CreateComboBox("Asset Slot", (int)inf.ID, Enum.GetNames(typeof(AttachmentSlot)), delegate (int id) { inf.ID = (AttachmentSlot)id; });
         }
     }
 }

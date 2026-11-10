@@ -12,7 +12,7 @@ namespace CMNEdit.Windows
     {
         public static void DrawMEPNode(Form1 form, MepEffectY3 node)
         {
-            form.CreateHeader("Effect (MEP)");
+            PropertyEditorBuilder.CreateHeader("Effect (MEP)");
         }
     }
 }

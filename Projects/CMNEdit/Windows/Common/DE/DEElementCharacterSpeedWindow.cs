@@ -14,14 +14,14 @@ namespace CMNEdit
         {
             DEElementCharacterSpeed speed = node as DEElementCharacterSpeed;
 
-            form.CreateHeader("Character Speed");
+            PropertyEditorBuilder.CreateHeader("Character Speed");
 
 
            
-            form.CreateInput("Minimum Speed", speed.MinSpeed.ToString(), delegate (string val) { speed.MinSpeed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Maximum Speed", speed.MaxSpeed.ToString(), delegate (string val) { speed.MaxSpeed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);         
+            PropertyEditorBuilder.CreateInput("Minimum Speed", speed.MinSpeed.ToString(), delegate (string val) { speed.MinSpeed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Maximum Speed", speed.MaxSpeed.ToString(), delegate (string val) { speed.MaxSpeed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);         
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
                 myNewForm.Visible = true;

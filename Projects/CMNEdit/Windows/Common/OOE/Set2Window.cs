@@ -11,15 +11,15 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, Set2 set)
         {
-            form.CreateHeader("Set 2");
+            PropertyEditorBuilder.CreateHeader("Set 2");
 
-            form.CreateInput("Type", set.Type.ToString(), null, NumberBox.NumberMode.Text, true);
-            form.CreateInput("Effect ID", set.EffectID.ToString(), null, NumberBox.NumberMode.Text, true);
+            PropertyEditorBuilder.CreateInput("Type", set.Type.ToString(), null, NumberBox.NumberMode.Text, true);
+            PropertyEditorBuilder.CreateInput("Effect ID", set.EffectID.ToString(), null, NumberBox.NumberMode.Text, true);
 
-            form.CreateInput("Resource", set.Resource.ToString(), delegate (string val) { set.Resource = val; });
+            PropertyEditorBuilder.CreateInput("Resource", set.Resource.ToString(), delegate (string val) { set.Resource = val; });
 
-            form.CreateInput("Start", set.Start.ToString(), delegate (string val) { set.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("End", set.End.ToString(), delegate (string val) { set.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Start", set.Start.ToString(), delegate (string val) { set.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("End", set.End.ToString(), delegate (string val) { set.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

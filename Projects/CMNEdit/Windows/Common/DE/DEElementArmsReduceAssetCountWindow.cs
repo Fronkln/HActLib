@@ -13,9 +13,9 @@ namespace CMNEdit
         {
             DEElementReduceAssetUse reduceUse = node as DEElementReduceAssetUse;
 
-            form.CreateHeader("Reduce Use Count");
-            form.CreateInput("Reduce Amount", reduceUse.ReduceCount.ToString(), delegate (string val) { reduceUse.ReduceCount = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Flags", ((uint)reduceUse.Flag).ToString(), delegate (string val) { reduceUse.Flags = (DEElementReduceAssetUse.EFlag)uint.Parse(val); });
+            PropertyEditorBuilder.CreateHeader("Reduce Use Count");
+            PropertyEditorBuilder.CreateInput("Reduce Amount", reduceUse.ReduceCount.ToString(), delegate (string val) { reduceUse.ReduceCount = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Flags", ((uint)reduceUse.Flag).ToString(), delegate (string val) { reduceUse.Flags = (DEElementReduceAssetUse.EFlag)uint.Parse(val); });
         }
     }
 }

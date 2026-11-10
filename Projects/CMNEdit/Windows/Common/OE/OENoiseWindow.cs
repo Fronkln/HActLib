@@ -13,13 +13,13 @@ namespace CMNEdit
         {
             OENoise noise = node as OENoise;
 
-            form.CreateHeader("Noise");
-            form.CreateInput("Power", noise.Power.ToString(), delegate (string val) { noise.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Size", noise.Size.ToString(), delegate (string val) { noise.Size = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Unknown", noise.NoiseUnk3.ToString(), delegate (string val) { noise.NoiseUnk3 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Intensity", noise.Power.ToString(), delegate (string val) { noise.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateHeader("Noise");
+            PropertyEditorBuilder.CreateInput("Power", noise.Power.ToString(), delegate (string val) { noise.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Size", noise.Size.ToString(), delegate (string val) { noise.Size = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Unknown", noise.NoiseUnk3.ToString(), delegate (string val) { noise.NoiseUnk3 = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Intensity", noise.Power.ToString(), delegate (string val) { noise.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
                 myNewForm.Visible = true;

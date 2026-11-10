@@ -17,18 +17,18 @@ namespace CMNEdit
             Panel circlePanel = null;
             Panel circlePanel2 = null;
 
-            form.CreateHeader("Circle " + (i + 1));
+            PropertyEditorBuilder.CreateHeader("Circle " + (i + 1));
             var circle = grad.Circles[i];
 
 
-            circlePanel = form.CreatePanel("Inner Color", circle.ColorInner,
+            circlePanel = PropertyEditorBuilder.CreatePanel("Inner Color", circle.ColorInner,
             delegate (Color col)
             {
                 circle.ColorInner = col;
                 circlePanel.BackColor = col;
             });
 
-            circlePanel2 = form.CreatePanel("Outer Color", circle.ColorOuter,
+            circlePanel2 = PropertyEditorBuilder.CreatePanel("Outer Color", circle.ColorOuter,
             delegate (Color col)
             {
                 circle.ColorOuter = col;
@@ -40,13 +40,13 @@ namespace CMNEdit
         {
             DEElementGradation grad = node as DEElementGradation;
 
-            form.CreateHeader("Gradation (Incomplete)");
+            PropertyEditorBuilder.CreateHeader("Gradation (Incomplete)");
 
-            form.CreateInput("Depth", grad.Depth.ToString(), delegate(string val) { grad.Depth = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Deep", grad.Deep.ToString(), delegate (string val) { grad.Deep = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Power", grad.Power.ToString(), delegate (string val) { grad.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Depth", grad.Depth.ToString(), delegate(string val) { grad.Depth = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Deep", grad.Deep.ToString(), delegate (string val) { grad.Deep = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Power", grad.Power.ToString(), delegate (string val) { grad.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
                 myNewForm.Visible = true;
@@ -60,14 +60,14 @@ namespace CMNEdit
             Panel color1Panel = null;
             Panel color1AfterPanel = null;
 
-            color1Panel = form.CreatePanel("Color 1", grad.ColorL1,
+            color1Panel = PropertyEditorBuilder.CreatePanel("Color 1", grad.ColorL1,
                 delegate (Color col)
                 {
                     grad.ColorL1 = col;
                     color1Panel.BackColor = col;
                 });
 
-            color1AfterPanel = form.CreatePanel("Color 1 After", grad.ColorL1After,
+            color1AfterPanel = PropertyEditorBuilder.CreatePanel("Color 1 After", grad.ColorL1After,
                 delegate (Color col)
                 {
                     grad.ColorL1After = col;
@@ -84,7 +84,7 @@ namespace CMNEdit
             }
 
             /*
-            form.CreateButton("Color1", delegate
+            PropertyEditorBuilder.CreateButton("Color1", delegate
             {
                 ColorDialog dig = new ColorDialog();
                 dig.Color = Color.FromArgb((int)grad.ColorL1.R, (int)grad.ColorL1.G, (int)grad.ColorL1.B);

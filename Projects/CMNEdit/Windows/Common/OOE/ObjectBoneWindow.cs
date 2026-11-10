@@ -12,9 +12,9 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, ObjectBone obj)
         {
-            form.CreateHeader("Bone");
+            PropertyEditorBuilder.CreateHeader("Bone");
 
-            form.CreateInput("Bone ID ", obj.BoneID.ToString(), delegate (string val) { obj.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Bone ID ", obj.BoneID.ToString(), delegate (string val) { obj.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

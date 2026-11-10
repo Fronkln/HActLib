@@ -13,13 +13,13 @@ namespace CMNEdit
         {
             DEElementColorCorrectionMask mask = node as DEElementColorCorrectionMask;
 
-            form.CreateHeader("Color Correction Mask");
-            form.CreateInput("Hue", mask.Hue.ToString(), delegate (string val) { mask.Hue = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Saturation", mask.Saturation.ToString(), delegate (string val) { mask.Saturation = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Contrast", mask.Contrast.ToString(), delegate (string val) { mask.Contrast = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Luminance", mask.Luminance.ToString(), delegate (string val) { mask.Luminance = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Disable Character", Convert.ToInt32(mask.DisableCharacter).ToString(), delegate (string val) { mask.DisableCharacter = val.Equals("1"); });
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateHeader("Color Correction Mask");
+            PropertyEditorBuilder.CreateInput("Hue", mask.Hue.ToString(), delegate (string val) { mask.Hue = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Saturation", mask.Saturation.ToString(), delegate (string val) { mask.Saturation = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Contrast", mask.Contrast.ToString(), delegate (string val) { mask.Contrast = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Luminance", mask.Luminance.ToString(), delegate (string val) { mask.Luminance = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Disable Character", Convert.ToInt32(mask.DisableCharacter).ToString(), delegate (string val) { mask.DisableCharacter = val.Equals("1"); });
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
                 myNewForm.Visible = true;

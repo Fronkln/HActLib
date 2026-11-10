@@ -13,8 +13,8 @@ namespace CMNEdit.Windows.Common.DE
 
             if (node is DETimingInfoMuteki)
             {
-                form.CreateHeader("Invincibility");
-                form.CreateComboBox("Mode:", (int)muteki.Param, Enum.GetNames(typeof(InvulnerabilityParam)), delegate (int val) { muteki.Param = (uint)val; });
+                PropertyEditorBuilder.CreateHeader("Invincibility");
+                PropertyEditorBuilder.CreateComboBox("Mode:", (int)muteki.Param, Enum.GetNames(typeof(InvulnerabilityParam)), delegate (int val) { muteki.Param = (uint)val; });
             }
         }
     }

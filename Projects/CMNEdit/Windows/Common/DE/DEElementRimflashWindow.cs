@@ -19,13 +19,13 @@ namespace CMNEdit.Windows.Common.DE
         {
             DEElementRimflash inf = node as DEElementRimflash;
 
-            form.CreateSpace(25);
-            form.CreateHeader("Rimflash");
+            PropertyEditorBuilder.CreateSpace(25);
+            PropertyEditorBuilder.CreateHeader("Rimflash");
 
 
             if (inf.ParamID == 0 && inf.RimflashParams != null)
             {
-                form.CreateButton("Import Param", delegate
+                PropertyEditorBuilder.CreateButton("Import Param", delegate
                 {
                     OpenFileDialog wind = new OpenFileDialog();
 
@@ -35,7 +35,7 @@ namespace CMNEdit.Windows.Common.DE
                     inf.ImportParams(wind.FileName);
                 });
 
-                form.CreateButton("Export Param", delegate
+                PropertyEditorBuilder.CreateButton("Export Param", delegate
                 {
                     SaveFileDialog wind = new SaveFileDialog();
 
@@ -45,14 +45,14 @@ namespace CMNEdit.Windows.Common.DE
                     inf.ExportParams(wind.FileName);
                 });
 
-                form.CreateButton("Copy Param", delegate
+                PropertyEditorBuilder.CreateButton("Copy Param", delegate
                 {
                     CopiedParam = inf.RimflashParams;
                 });
 
             }
 
-            form.CreateButton("Paste Param", delegate
+            PropertyEditorBuilder.CreateButton("Paste Param", delegate
             {
                 if (CopiedParam != null)
                     inf.RimflashParams = CopiedParam;
@@ -60,7 +60,7 @@ namespace CMNEdit.Windows.Common.DE
                     inf.ParamID = 0;
             });
 
-            form.CreateButton("Import DBRef String", delegate
+            PropertyEditorBuilder.CreateButton("Import DBRef String", delegate
             {
                 string input = Microsoft.VisualBasic.Interaction.InputBox("DB Ref string from effect_rim_flash_param.bin",
                 "DB Ref Import",
@@ -81,7 +81,7 @@ namespace CMNEdit.Windows.Common.DE
 
             if(inf.RimflashParams != null)
             {
-                form.CreateButton("Export DBRef String", delegate
+                PropertyEditorBuilder.CreateButton("Export DBRef String", delegate
                 {
                     string output = DBBinaryString.Encode(inf.ExportParams());
                     System.Windows.Forms.Clipboard.SetText(output);
@@ -90,19 +90,19 @@ namespace CMNEdit.Windows.Common.DE
                 });
             }
 
-            form.CreateInput("Rimflash Version", inf.RimflashVersion.ToString(), null, readOnly: true);
-            form.CreateInput("Parameter Version", inf.ParamVersion.ToString(), null, readOnly: true);
-            form.CreateInput("Fade Time", inf.FadeOutTime.ToString(), delegate (string val) { inf.FadeOutTime = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Root Value", inf.RootValue.ToString(), delegate (string val) { inf.RootValue = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Rimflash Version", inf.RimflashVersion.ToString(), null, readOnly: true);
+            PropertyEditorBuilder.CreateInput("Parameter Version", inf.ParamVersion.ToString(), null, readOnly: true);
+            PropertyEditorBuilder.CreateInput("Fade Time", inf.FadeOutTime.ToString(), delegate (string val) { inf.FadeOutTime = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Root Value", inf.RootValue.ToString(), delegate (string val) { inf.RootValue = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             
             if(inf.CommandData != null)
             {
-                form.CreateButton("Copy Command", delegate
+                PropertyEditorBuilder.CreateButton("Copy Command", delegate
                 {
                     CopiedCommand = inf.CommandData;
                 });
 
-                form.CreateButton("Clear Command", delegate
+                PropertyEditorBuilder.CreateButton("Clear Command", delegate
                 {
                     inf.CommandData = null;
                 });
@@ -110,7 +110,7 @@ namespace CMNEdit.Windows.Common.DE
 
             if(CopiedCommand != null)
             {
-                form.CreateButton("Paste Command", delegate
+                PropertyEditorBuilder.CreateButton("Paste Command", delegate
                 {
                     inf.CommandData = CopiedCommand;
                 });
@@ -119,7 +119,7 @@ namespace CMNEdit.Windows.Common.DE
 
             if (inf.Curve != null)
             {
-                form.CreateButton("Curve", delegate
+                PropertyEditorBuilder.CreateButton("Curve", delegate
                 {
                     CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
                     myNewForm.Visible = true;
@@ -130,7 +130,7 @@ namespace CMNEdit.Windows.Common.DE
                         });
                 });
 
-                form.CreateButton("New Curve (8 values)", delegate
+                PropertyEditorBuilder.CreateButton("New Curve (8 values)", delegate
                 {
                     float[] newCurve = new float[8];
 
@@ -140,7 +140,7 @@ namespace CMNEdit.Windows.Common.DE
                     inf.Curve = newCurve.ToList();
                 });
 
-                form.CreateButton("New Curve (16 values)", delegate
+                PropertyEditorBuilder.CreateButton("New Curve (16 values)", delegate
                 {
                     float[] newCurve = new float[16];
 
@@ -151,8 +151,8 @@ namespace CMNEdit.Windows.Common.DE
                 });
             }
 
-            form.CreateInput("Parameter ID", inf.ParamID.ToString(), delegate (string val) { inf.ParamID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateComboBox("Attachment Slot", (int)inf.AttachmentSlot, Enum.GetNames(typeof(AttachmentSlot)), delegate (int id) { inf.AttachmentSlot = (AttachmentSlot)id; });
+            PropertyEditorBuilder.CreateInput("Parameter ID", inf.ParamID.ToString(), delegate (string val) { inf.ParamID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateComboBox("Attachment Slot", (int)inf.AttachmentSlot, Enum.GetNames(typeof(AttachmentSlot)), delegate (int id) { inf.AttachmentSlot = (AttachmentSlot)id; });
 
             if (inf.RimflashParams != null)
             {
@@ -166,77 +166,77 @@ namespace CMNEdit.Windows.Common.DE
                 Panel color10Panel = null;
                 Panel color11Panel = null;
 
-                form.CreateHeader("Parameters Data");
+                PropertyEditorBuilder.CreateHeader("Parameters Data");
 
                 if(inf.ParamVersion >= 2)             
-                    form.CreateInput("Pattern ID", v2params.Pattern.ToString(), delegate (string val) { v2params.Pattern = int.Parse(val); }, NumberBox.NumberMode.Int);
+                    PropertyEditorBuilder.CreateInput("Pattern ID", v2params.Pattern.ToString(), delegate (string val) { v2params.Pattern = int.Parse(val); }, NumberBox.NumberMode.Int);
 
-                form.CreateInput("Color 0 Intensity", v1params.Color0Intensity.ToString(), delegate (string val) { v1params.Color0Intensity = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Color 1 Intensity", v1params.Color1Intensity.ToString(), delegate (string val) { v1params.Color1Intensity = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Color 0 Intensity", v1params.Color0Intensity.ToString(), delegate (string val) { v1params.Color0Intensity = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Color 1 Intensity", v1params.Color1Intensity.ToString(), delegate (string val) { v1params.Color1Intensity = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                color00Panel = form.CreatePanel("Color 00", v1params.Color00.Clamp(),
+                color00Panel = PropertyEditorBuilder.CreatePanel("Color 00", v1params.Color00.Clamp(),
                     delegate (Color col)
                     {
                         v1params.Color00 = col;
                         color00Panel.BackColor = ((RGB32)col).Clamp();
                     });
-                color01Panel = form.CreatePanel("Color 01", v1params.Color01,
+                color01Panel = PropertyEditorBuilder.CreatePanel("Color 01", v1params.Color01,
                     delegate (Color col)
                     {
                         v1params.Color01 = col;
                         color01Panel.BackColor = ((RGB32)col).Clamp();
                     });
 
-                form.CreateInput("Color 01 Fresnel", v1params.Color01Fresnel.ToString(), delegate (string val) { v1params.Color01Fresnel = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Color 01 Fresnel", v1params.Color01Fresnel.ToString(), delegate (string val) { v1params.Color01Fresnel = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                color10Panel = form.CreatePanel("Color 10", v1params.Color10.Clamp(),
+                color10Panel = PropertyEditorBuilder.CreatePanel("Color 10", v1params.Color10.Clamp(),
                     delegate (Color col)
                     {
                         v1params.Color10 = col;
                         color10Panel.BackColor = ((RGB32)col).Clamp();
                     });
-                color11Panel = form.CreatePanel("Color 11", v1params.Color11.Clamp(),
+                color11Panel = PropertyEditorBuilder.CreatePanel("Color 11", v1params.Color11.Clamp(),
                     delegate (Color col)
                     {
                         v1params.Color11 = col;
                         color11Panel.BackColor = ((RGB32)col).Clamp();
                     });
 
-                form.CreateInput("Color 1 Fresnel", v1params.Color1Fresnel.ToString(), delegate (string val) { v1params.Color1Fresnel = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Color 1 Fresnel", v1params.Color1Fresnel.ToString(), delegate (string val) { v1params.Color1Fresnel = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                form.CreateInput("Alpha", v1params.Alpha.ToString(), delegate (string val) { v1params.Alpha = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Alpha", v1params.Alpha.ToString(), delegate (string val) { v1params.Alpha = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
                 if (inf.ParamVersion >= 3)
                 {
                     RimflashParamsV3 v3params = v2params as RimflashParamsV3;
-                    form.CreateInput("Color Intensity Power", v3params.ColorIntensityPower.ToString(), delegate (string val) { v3params.ColorIntensityPower = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                    form.CreateInput("Chroma Power", v3params.ChromaPower.ToString(), delegate (string val) { v3params.ChromaPower = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                    PropertyEditorBuilder.CreateInput("Color Intensity Power", v3params.ColorIntensityPower.ToString(), delegate (string val) { v3params.ColorIntensityPower = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                    PropertyEditorBuilder.CreateInput("Chroma Power", v3params.ChromaPower.ToString(), delegate (string val) { v3params.ChromaPower = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
                 }
 
-                form.CreateInput("Noise Coordinate Size", v1params.NoiseCoordinateSize.ToString(), delegate (string val) { v1params.NoiseCoordinateSize = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Turbulence Coordinate Size", v1params.TurbulenceCoordinateSize.ToString(), delegate (string val) { v1params.TurbulenceCoordinateSize = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Turbulence Scale Base", v1params.TurbulenceScaleBase.ToString(), delegate (string val) { v1params.TurbulenceScaleBase = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Turbulence Scale Speed", v1params.TurbulanceScaleSpd.ToString(), delegate (string val) { v1params.TurbulanceScaleSpd = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Normal Lerp", v1params.NormalLerp.ToString(), delegate (string val) { v1params.NormalLerp = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Noise Coordinate Size", v1params.NoiseCoordinateSize.ToString(), delegate (string val) { v1params.NoiseCoordinateSize = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Turbulence Coordinate Size", v1params.TurbulenceCoordinateSize.ToString(), delegate (string val) { v1params.TurbulenceCoordinateSize = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Turbulence Scale Base", v1params.TurbulenceScaleBase.ToString(), delegate (string val) { v1params.TurbulenceScaleBase = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Turbulence Scale Speed", v1params.TurbulanceScaleSpd.ToString(), delegate (string val) { v1params.TurbulanceScaleSpd = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Normal Lerp", v1params.NormalLerp.ToString(), delegate (string val) { v1params.NormalLerp = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                form.CreateHeader("Flow");
+                PropertyEditorBuilder.CreateHeader("Flow");
 
-                form.CreateInput("Flow Gravity", v1params.flow_grav.ToString(), delegate (string val) { v1params.flow_grav = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow Gravity", v1params.flow_grav.ToString(), delegate (string val) { v1params.flow_grav = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                form.CreateInput("Flow WX", v1params.flow_wx.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Flow WY", v1params.flow_wy.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Flow WZ", v1params.flow_wz.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow WX", v1params.flow_wx.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow WY", v1params.flow_wy.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow WZ", v1params.flow_wz.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                form.CreateSpace(20);
+                PropertyEditorBuilder.CreateSpace(20);
 
-                form.CreateInput("Flow LX", v1params.flow_lx.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Flow LY", v1params.flow_ly.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Flow LZ", v1params.flow_lz.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow LX", v1params.flow_lx.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow LY", v1params.flow_ly.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow LZ", v1params.flow_lz.ToString(), delegate (string val) { v1params.flow_wx = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                form.CreateSpace(20);
+                PropertyEditorBuilder.CreateSpace(20);
 
-                form.CreateInput("Flow Node Speed", v1params.flow_node_spd.ToString(), delegate (string val) { v1params.flow_node_spd = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Flow Friction", v1params.flow_fric.ToString(), delegate (string val) { v1params.flow_fric = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow Node Speed", v1params.flow_node_spd.ToString(), delegate (string val) { v1params.flow_node_spd = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Flow Friction", v1params.flow_fric.ToString(), delegate (string val) { v1params.flow_fric = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
             }
         }

@@ -16,12 +16,12 @@ namespace CMNEdit
             if (speed.Type > 5)
                 speed.Type = 5;
 
-            form.CreateHeader("System Speed (Custom)");
+            PropertyEditorBuilder.CreateHeader("System Speed (Custom)");
 
             string[] speedTypes = Enum.GetNames<SpeedType>();
 
-            form.CreateComboBox("Speed Type", (int)speed.Type, speedTypes, delegate (int index) { speed.Type = (uint)index; });
-            form.CreateInput("Speed", speed.Speed.ToString(), delegate (string val) { speed.Speed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateComboBox("Speed Type", (int)speed.Type, speedTypes, delegate (int index) { speed.Type = (uint)index; });
+            PropertyEditorBuilder.CreateInput("Speed", speed.Speed.ToString(), delegate (string val) { speed.Speed = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

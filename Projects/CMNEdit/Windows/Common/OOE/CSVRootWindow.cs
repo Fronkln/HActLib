@@ -10,11 +10,11 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form)
         {
-            form.CreateHeader($"HAct {Form1.TevCsvEntry.ID}", 0);
-            form.CreateInput("Name", Form1.TevCsvEntry.Name, delegate(string val) { Form1.TevCsvEntry.Name = val; });
-            form.CreateInput("Unknown", Form1.TevCsvEntry.Unk1.ToString(), delegate (string val) { Form1.TevCsvEntry.Unk1 = int.Parse(val); });
-            form.CreateInput("Unknown", Form1.TevCsvEntry.Unk2.ToString(), delegate (string val) { Form1.TevCsvEntry.Unk2 = int.Parse(val); });
-            form.CreateInput("Flags", Form1.TevCsvEntry.Flags.ToString(), delegate (string val) { Form1.TevCsvEntry.Flags = int.Parse(val); });
+            PropertyEditorBuilder.CreateHeader($"HAct {Form1.TevCsvEntry.ID}", 0);
+            PropertyEditorBuilder.CreateInput("Name", Form1.TevCsvEntry.Name, delegate(string val) { Form1.TevCsvEntry.Name = val; });
+            PropertyEditorBuilder.CreateInput("Unknown", Form1.TevCsvEntry.Unk1.ToString(), delegate (string val) { Form1.TevCsvEntry.Unk1 = int.Parse(val); });
+            PropertyEditorBuilder.CreateInput("Unknown", Form1.TevCsvEntry.Unk2.ToString(), delegate (string val) { Form1.TevCsvEntry.Unk2 = int.Parse(val); });
+            PropertyEditorBuilder.CreateInput("Flags", Form1.TevCsvEntry.Flags.ToString(), delegate (string val) { Form1.TevCsvEntry.Flags = int.Parse(val); });
         }
     }
 }

@@ -13,11 +13,11 @@ namespace CMNEdit
         {
             DEElementSpeech speech = node as DEElementSpeech;
 
-            form.CreateHeader("Speech");
+            PropertyEditorBuilder.CreateHeader("Speech");
 
-            form.CreateInput("Version", speech.SpeechVersion.ToString(), delegate (string val) { speech.SpeechVersion = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Cuesheet ID", speech.SpeechCuesheet.ToString(), delegate (string val) { speech.SpeechCuesheet = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
-            form.CreateInput("Sound ID", speech.SpeechID.ToString(), delegate (string val) { speech.SpeechID = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
+            PropertyEditorBuilder.CreateInput("Version", speech.SpeechVersion.ToString(), delegate (string val) { speech.SpeechVersion = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Cuesheet ID", speech.SpeechCuesheet.ToString(), delegate (string val) { speech.SpeechCuesheet = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
+            PropertyEditorBuilder.CreateInput("Sound ID", speech.SpeechID.ToString(), delegate (string val) { speech.SpeechID = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
 
         }
     }

@@ -2,7 +2,7 @@
   "profiles": {
     "HActScout": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Yakuza Like a Dragon\\runtime\\media\\mods\\BrawlerKiwami\\hact_yazawa\" 49 ylad"
+      "commandLineArgs": "\"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Yakuza Kiwami\\media\\data\\hact.par.unpack\" 23 y0"
     }
   }
 }

@@ -18,31 +18,31 @@ namespace CMNEdit
 
             Panel colorPanel = null;
 
-            form.CreateHeader("Particle");
-            form.CreateInput("Particle ID", particle.ParticleID.ToString(), delegate (string val) { particle.ParticleID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Flags", particle.Flags.ToString(), delegate (string val) { particle.Flags = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", particle.Unknown2.ToString(), delegate (string val) { particle.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", particle.Unknown3.ToString(), delegate (string val) { particle.Unknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", particle.Unknown4.ToString(), delegate (string val) { particle.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", particle.Unknown5.ToString(), delegate (string val) { particle.Unknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Tick Offset", particle.TickOffset.ToString(), delegate (string val) { particle.TickOffset = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Speed", particle.TickScale.ToString(), delegate (string val) { particle.TickScale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateHeader("Particle");
+            PropertyEditorBuilder.CreateInput("Particle ID", particle.ParticleID.ToString(), delegate (string val) { particle.ParticleID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Flags", particle.Flags.ToString(), delegate (string val) { particle.Flags = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", particle.Unknown2.ToString(), delegate (string val) { particle.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", particle.Unknown3.ToString(), delegate (string val) { particle.Unknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", particle.Unknown4.ToString(), delegate (string val) { particle.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", particle.Unknown5.ToString(), delegate (string val) { particle.Unknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Tick Offset", particle.TickOffset.ToString(), delegate (string val) { particle.TickOffset = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Speed", particle.TickScale.ToString(), delegate (string val) { particle.TickScale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-            form.CreateInput("Scale X", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Scale Y", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Scale Z", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Scale X", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Scale Y", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Scale Z", particle.Scale.x.ToString(), delegate (string val) { particle.Scale.x = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
 
-            colorPanel = form.CreatePanel("Color", particle.Color,
+            colorPanel = PropertyEditorBuilder.CreatePanel("Color", particle.Color,
                 delegate (Color col)
                 {
                     particle.Color = col;
                     colorPanel.BackColor = col;
                 });
 
-            form.CreateInput("Transparency", particle.Color.a.ToString(), delegate (string val) { particle.Color.a = byte.Parse(val); }, NumberBox.NumberMode.Byte);
+            PropertyEditorBuilder.CreateInput("Transparency", particle.Color.a.ToString(), delegate (string val) { particle.Color.a = byte.Parse(val); }, NumberBox.NumberMode.Byte);
 
-            form.CreateSpace(25);
+            PropertyEditorBuilder.CreateSpace(25);
 
             MatrixWindow.Draw(form, particle.Matrix);
         }

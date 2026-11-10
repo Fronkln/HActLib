@@ -13,8 +13,8 @@ namespace CMNEdit.Windows
         {
             DEElementFollowupWindow wind = node as DEElementFollowupWindow;
 
-            form.CreateHeader("Followup Window");
-            form.CreateInput("Param", wind.Unknown.ToString(), delegate (string val) { wind.Unknown = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateHeader("Followup Window");
+            PropertyEditorBuilder.CreateInput("Param", wind.Unknown.ToString(), delegate (string val) { wind.Unknown = uint.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

@@ -9,17 +9,17 @@ namespace CMNEdit
         {
             NodeElement inf = node as NodeElement;
 
-            form.CreateSpace(25);
-            form.CreateHeader("Element Info");
+            PropertyEditorBuilder.CreateSpace(25);
+            PropertyEditorBuilder.CreateHeader("Element Info");
 
-            form.CreateInput("ID", inf.ElementKind.ToString(), delegate (string val) { inf.ElementKind = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-            form.CreateInput("Version", inf.Version.ToString(), delegate(string val) { inf.Version = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Element Flag", inf.ElementFlag.ToString(), delegate(string val){ inf.ElementFlag = uint.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateComboBox("Play Type", (int)inf.PlayType, System.Enum.GetNames(typeof(ElementPlayType)), delegate (int val) { inf.PlayType = (ElementPlayType)val; });
-            form.CreateInput("Update Timing Mode", inf.UpdateTimingMode.ToString(), delegate (string val) { inf.UpdateTimingMode = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("ID", inf.ElementKind.ToString(), delegate (string val) { inf.ElementKind = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Version", inf.Version.ToString(), delegate(string val) { inf.Version = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Element Flag", inf.ElementFlag.ToString(), delegate(string val){ inf.ElementFlag = uint.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateComboBox("Play Type", (int)inf.PlayType, System.Enum.GetNames(typeof(ElementPlayType)), delegate (int val) { inf.PlayType = (ElementPlayType)val; });
+            PropertyEditorBuilder.CreateInput("Update Timing Mode", inf.UpdateTimingMode.ToString(), delegate (string val) { inf.UpdateTimingMode = uint.Parse(val); }, NumberBox.NumberMode.UInt);
 
-            form.CreateInput("Start", inf.Start.ToString(), delegate(string val){ inf.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("End", inf.End.ToString(), delegate (string val) { inf.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Start", inf.Start.ToString(), delegate(string val){ inf.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("End", inf.End.ToString(), delegate (string val) { inf.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

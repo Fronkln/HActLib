@@ -12,10 +12,10 @@ namespace CMNEdit.Windows
             if (timeline == null)
                 return;
 
-            form.CreateHeader("Scenario Timeline");
-            form.CreateInput("Category", timeline.TimelineCategory, delegate (string val) { timeline.TimelineCategory = val; });
-            form.CreateInput("Timeline", timeline.Timeline, delegate (string val) { timeline.Timeline = val; });
-            form.CreateInput("Clock", timeline.Clock, delegate (string val) { timeline.Clock = val; });
+            PropertyEditorBuilder.CreateHeader("Scenario Timeline");
+            PropertyEditorBuilder.CreateInput("Category", timeline.TimelineCategory, delegate (string val) { timeline.TimelineCategory = val; });
+            PropertyEditorBuilder.CreateInput("Timeline", timeline.Timeline, delegate (string val) { timeline.Timeline = val; });
+            PropertyEditorBuilder.CreateInput("Clock", timeline.Clock, delegate (string val) { timeline.Clock = val; });
         }
     }
 }

@@ -13,10 +13,10 @@ namespace CMNEdit
         {
             OEHeat heat = node as OEHeat;
 
-            form.CreateHeader("Heat Change");
-            form.CreateInput("Heat Change", heat.HeatChange.ToString(), delegate (string val) { heat.HeatChange = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", heat.Unknown1.ToString(), delegate (string val) { heat.Unknown1 = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
-            form.CreateInput("Unknown", heat.Unknown2.ToString(), delegate (string val) { heat.Unknown2 = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateHeader("Heat Change");
+            PropertyEditorBuilder.CreateInput("Heat Change", heat.HeatChange.ToString(), delegate (string val) { heat.HeatChange = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", heat.Unknown1.ToString(), delegate (string val) { heat.Unknown1 = ushort.Parse(val); }, NumberBox.NumberMode.Ushort);
+            PropertyEditorBuilder.CreateInput("Unknown", heat.Unknown2.ToString(), delegate (string val) { heat.Unknown2 = uint.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

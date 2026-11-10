@@ -17,7 +17,7 @@ namespace CMNEdit
         {
             DEElementSpotLight spot = node as DEElementSpotLight;
 
-            form.CreateHeader("Spot Light");
+            PropertyEditorBuilder.CreateHeader("Spot Light");
             DEElementBaseSpotlightWindow.Draw(form, node);
         }
     }

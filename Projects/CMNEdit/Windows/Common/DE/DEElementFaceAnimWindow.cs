@@ -31,8 +31,8 @@ namespace CMNEdit
                     break;
             }
 
-            form.CreateHeader("Face Animation");
-            form.CreateComboBox("Pattern", (int)anim.PatternID, Enum.GetNames(enumType), delegate (int val) { anim.PatternID = (uint)val; });
+            PropertyEditorBuilder.CreateHeader("Face Animation");
+            PropertyEditorBuilder.CreateComboBox("Pattern", (int)anim.PatternID, Enum.GetNames(enumType), delegate (int val) { anim.PatternID = (uint)val; });
         }
     }
 }

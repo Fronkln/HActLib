@@ -9,9 +9,9 @@ namespace CMNEdit
         {
             DEElementTalkText text = node as DEElementTalkText;
 
-            form.CreateHeader("Talk Text");
-            form.CreateInput("Category ID", text.TalkCategory.ToString(), delegate (string var) { text.TalkCategory = uint.Parse(var); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Text ID", text.TextID.ToString(), delegate (string var) { text.TextID = uint.Parse(var); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateHeader("Talk Text");
+            PropertyEditorBuilder.CreateInput("Category ID", text.TalkCategory.ToString(), delegate (string var) { text.TalkCategory = uint.Parse(var); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Text ID", text.TextID.ToString(), delegate (string var) { text.TextID = uint.Parse(var); }, NumberBox.NumberMode.Int);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, CSVHActEventHuman human)
         {
-            form.CreateHeader("Human (CSV)");
-            form.CreateInput("Unknown", human.Unknown.ToString(), delegate(string value) { human.Unknown = int.Parse(value); }, NumberBox.NumberMode.Int, false);
+            PropertyEditorBuilder.CreateHeader("Human (CSV)");
+            PropertyEditorBuilder.CreateInput("Unknown", human.Unknown.ToString(), delegate(string value) { human.Unknown = int.Parse(value); }, NumberBox.NumberMode.Int, false);
         }
     }
 }

@@ -13,8 +13,8 @@ namespace CMNEdit
         {
             DECustomElementLAB8CharacterSelection selection = node as DECustomElementLAB8CharacterSelection;
 
-            form.CreateHeader("Character Selection");
-            form.CreateInput("Player ID", selection.PlayerID.ToString(), delegate (string val) { selection.PlayerID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateHeader("Character Selection");
+            PropertyEditorBuilder.CreateInput("Player ID", selection.PlayerID.ToString(), delegate (string val) { selection.PlayerID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

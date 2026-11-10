@@ -12,9 +12,9 @@ namespace CMNEdit
         {
             DEElementExpressionTarget expTarget = node as DEElementExpressionTarget;
 
-            form.CreateHeader("Random Settings");
+            PropertyEditorBuilder.CreateHeader("Random Settings");
 
-            form.CreateButton("Add New",
+            PropertyEditorBuilder.CreateButton("Add New",
                 delegate
                 {
                     ExpressionTargetData targetDat = new ExpressionTargetData();
@@ -24,7 +24,7 @@ namespace CMNEdit
                 }
             );
 
-            form.CreateButton("Set All to 0",
+            PropertyEditorBuilder.CreateButton("Set All to 0",
                 delegate
                 {
                     foreach (ExpressionTargetData dat in expTarget.Data)
@@ -33,7 +33,7 @@ namespace CMNEdit
                 }
             );
 
-            form.CreateButton("Set All to 0.5",
+            PropertyEditorBuilder.CreateButton("Set All to 0.5",
                 delegate
                 {
                     foreach (ExpressionTargetData dat in expTarget.Data)
@@ -42,7 +42,7 @@ namespace CMNEdit
                 }
             );
 
-            form.CreateButton("Set All to 1",
+            PropertyEditorBuilder.CreateButton("Set All to 1",
                 delegate
                 {
                     foreach (ExpressionTargetData dat in expTarget.Data)
@@ -53,7 +53,7 @@ namespace CMNEdit
 
 
 
-            form.CreateButton("Lerp All to 1",
+            PropertyEditorBuilder.CreateButton("Lerp All to 1",
                 delegate
                 {
                     foreach (ExpressionTargetData dat in expTarget.Data)
@@ -65,7 +65,7 @@ namespace CMNEdit
             );
 
 
-            form.CreateButton("RANDOMIZE EVERYTHING!!!",
+            PropertyEditorBuilder.CreateButton("RANDOMIZE EVERYTHING!!!",
                 delegate
                 {
                     Random rnd = new Random();

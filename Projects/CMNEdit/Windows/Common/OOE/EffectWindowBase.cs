@@ -11,13 +11,13 @@ namespace CMNEdit
     {
         public static void Draw(Form1 form, EffectBase effect)
         {
-            form.CreateHeader("Effect");
+            PropertyEditorBuilder.CreateHeader("Effect");
 
-            form.CreateSpace(25);
+            PropertyEditorBuilder.CreateSpace(25);
 
-            form.CreateInput("GUID", effect.Guid.ToString(), null, readOnly: true);
-            form.CreateInput("Type", effect.ElementKind.ToString(), null, readOnly: true);
-            form.CreateInput("Bone ID", effect.BoneID.ToString(), delegate(string val) { effect.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("GUID", effect.Guid.ToString(), null, readOnly: true);
+            PropertyEditorBuilder.CreateInput("Type", effect.ElementKind.ToString(), null, readOnly: true);
+            PropertyEditorBuilder.CreateInput("Bone ID", effect.BoneID.ToString(), delegate(string val) { effect.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

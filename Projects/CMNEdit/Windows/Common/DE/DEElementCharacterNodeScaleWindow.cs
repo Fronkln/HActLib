@@ -13,9 +13,9 @@ namespace CMNEdit
         {
             DEElementCharacterNodeScale nodeScale = node as DEElementCharacterNodeScale;
 
-            form.CreateHeader("Character Scale");
-            form.CreateInput("Head Scale", nodeScale.HeadScale.ToString(), delegate (string val) { nodeScale.HeadScale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Hand Scale", nodeScale.HandScale.ToString(), delegate (string val) { nodeScale.HandScale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateHeader("Character Scale");
+            PropertyEditorBuilder.CreateInput("Head Scale", nodeScale.HeadScale.ToString(), delegate (string val) { nodeScale.HeadScale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Hand Scale", nodeScale.HandScale.ToString(), delegate (string val) { nodeScale.HandScale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

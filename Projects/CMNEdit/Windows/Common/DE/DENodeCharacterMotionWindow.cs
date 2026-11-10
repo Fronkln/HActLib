@@ -18,12 +18,12 @@ namespace CMNEdit.Windows.Common.DE
             if (baseMotion == null)
                 return;
 
-            form.CreateHeader("Motion Info");
+            PropertyEditorBuilder.CreateHeader("Motion Info");
 
-            form.CreateInput("Start", baseMotion.Start.Frame.ToString(), delegate (string val) { baseMotion.Start.Frame = float.Parse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("End", baseMotion.End.Frame.ToString(), delegate (string val) { baseMotion.End.Frame = float.Parse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Motion Frame", baseMotion.MotionTick.Frame.ToString(), delegate (string val) { baseMotion.MotionTick.Frame = float.Parse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Flags", baseMotion.Flags.ToString(), delegate (string val) { baseMotion.Flags = uint.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Start", baseMotion.Start.Frame.ToString(), delegate (string val) { baseMotion.Start.Frame = float.Parse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("End", baseMotion.End.Frame.ToString(), delegate (string val) { baseMotion.End.Frame = float.Parse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Motion Frame", baseMotion.MotionTick.Frame.ToString(), delegate (string val) { baseMotion.MotionTick.Frame = float.Parse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Flags", baseMotion.Flags.ToString(), delegate (string val) { baseMotion.Flags = uint.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

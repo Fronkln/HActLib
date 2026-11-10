@@ -9,8 +9,8 @@ namespace CMNEdit
         {
             OEHActStopEnd stopEnd = node as OEHActStopEnd;
 
-            form.CreateHeader("HAct Stop End");
-            form.CreateInput("Unknown", stopEnd.Unknown.ToString(), delegate (string val) { stopEnd.Unknown = short.Parse(val); }, NumberBox.NumberMode.Ushort);
+            PropertyEditorBuilder.CreateHeader("HAct Stop End");
+            PropertyEditorBuilder.CreateInput("Unknown", stopEnd.Unknown.ToString(), delegate (string val) { stopEnd.Unknown = short.Parse(val); }, NumberBox.NumberMode.Ushort);
         }
     }
 }

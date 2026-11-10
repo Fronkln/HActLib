@@ -13,9 +13,9 @@ namespace CMNEdit
         {
             DEElementDivPlay divPlay = node as DEElementDivPlay;
 
-            form.CreateHeader("Div Play");
+            PropertyEditorBuilder.CreateHeader("Div Play");
 
-            form.CreateInput("File Name", divPlay.FileName, delegate(string val) { divPlay.FileName = val; });
+            PropertyEditorBuilder.CreateInput("File Name", divPlay.FileName, delegate(string val) { divPlay.FileName = val; });
         }
     }
 }

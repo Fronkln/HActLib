@@ -15,10 +15,10 @@ namespace CMNEdit.Windows.Common.DE
         {
             DEElementStageWarp inf = node as DEElementStageWarp;
 
-            form.CreateSpace(25);
-            form.CreateHeader("Stage Warp");
+            PropertyEditorBuilder.CreateSpace(25);
+            PropertyEditorBuilder.CreateHeader("Stage Warp");
 
-            form.CreateInput("Warp ID", inf.WarpId.ToString(), delegate (string val) { inf.WarpId = (uint)int.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Warp ID", inf.WarpId.ToString(), delegate (string val) { inf.WarpId = (uint)int.Parse(val); }, NumberBox.NumberMode.UInt);
         }
     }
 }

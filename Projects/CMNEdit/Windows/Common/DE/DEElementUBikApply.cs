@@ -13,10 +13,10 @@ namespace CMNEdit
         {
             DEElementUBIKApply ubik = (DEElementUBIKApply)node;
 
-            form.CreateHeader("Apply UBIK");
-            form.CreateInput("Ubik", ubik.Ubik, delegate(string val) { ubik.Ubik = val; });
-            form.CreateInput("Unknown", ubik.Unknown1.ToString(), delegate (string val) { ubik.Unknown1 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            form.CreateInput("Unknown", ubik.Unknown2.ToString(), delegate (string val) { ubik.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateHeader("Apply UBIK");
+            PropertyEditorBuilder.CreateInput("Ubik", ubik.Ubik, delegate(string val) { ubik.Ubik = val; });
+            PropertyEditorBuilder.CreateInput("Unknown", ubik.Unknown1.ToString(), delegate (string val) { ubik.Unknown1 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", ubik.Unknown2.ToString(), delegate (string val) { ubik.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

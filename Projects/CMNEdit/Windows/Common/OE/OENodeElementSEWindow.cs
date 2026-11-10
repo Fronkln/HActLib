@@ -13,21 +13,21 @@ namespace CMNEdit
         {
             OEElementSE inf = node as OEElementSE;
 
-            form.CreateSpace(25);
-            form.CreateHeader("Sound Effect");
+            PropertyEditorBuilder.CreateSpace(25);
+            PropertyEditorBuilder.CreateHeader("Sound Effect");
 
-            form.CreateInput("Cuesheet ID", inf.Cuesheet.ToString(), delegate (string val) { inf.Cuesheet = ushort.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
-            form.CreateInput("Sound ID", inf.Sound.ToString(), delegate (string val) { inf.Sound = ushort.Parse(val); Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
-            form.CreateInput("Flag?", inf.Flags.ToString(), delegate (string val) { inf.Flags = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Cuesheet ID", inf.Cuesheet.ToString(), delegate (string val) { inf.Cuesheet = ushort.Parse(val); if (Form1.EditingNode != null) Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
+            PropertyEditorBuilder.CreateInput("Sound ID", inf.Sound.ToString(), delegate (string val) { inf.Sound = ushort.Parse(val); if(Form1.EditingNode != null) Form1.EditingNode.Update(); }, NumberBox.NumberMode.Ushort);
+            PropertyEditorBuilder.CreateInput("Flag?", inf.Flags.ToString(), delegate (string val) { inf.Flags = uint.Parse(val); }, NumberBox.NumberMode.UInt);
 
 
-            form.CreateInput("Volume?", inf.Volume.ToString(), delegate (string val) { inf.Volume = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Volume?", inf.Volume.ToString(), delegate (string val) { inf.Volume = int.Parse(val); }, NumberBox.NumberMode.Int);
            
-            form.CreateInput("Decay Near Distance", inf.CustomDecayNearDist.ToString(), delegate (string val) { inf.CustomDecayNearDist = float.Parse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Decay Near Volume", inf.CustomDecayNearVol.ToString(), delegate (string val) { inf.CustomDecayNearVol = float.Parse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Decay Near Distance", inf.CustomDecayNearDist.ToString(), delegate (string val) { inf.CustomDecayNearDist = float.Parse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Decay Near Volume", inf.CustomDecayNearVol.ToString(), delegate (string val) { inf.CustomDecayNearVol = float.Parse(val); }, NumberBox.NumberMode.Float);
 
-            form.CreateInput("Decay Far Distance", inf.CustomDecayFarDist.ToString(), delegate (string val) { inf.CustomDecayFarDist = float.Parse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Decay Far Volume", inf.CustomDecayFarVol.ToString(), delegate (string val) { inf.CustomDecayFarVol = float.Parse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Decay Far Distance", inf.CustomDecayFarDist.ToString(), delegate (string val) { inf.CustomDecayFarDist = float.Parse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Decay Far Volume", inf.CustomDecayFarVol.ToString(), delegate (string val) { inf.CustomDecayFarVol = float.Parse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

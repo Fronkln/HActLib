@@ -17,9 +17,9 @@ namespace CMNEdit.Windows
         {
             DEElementColorCorrection2 correction = colorCorrect as DEElementColorCorrection2;
 
-            form.CreateHeader("Color Correction V2");
+            PropertyEditorBuilder.CreateHeader("Color Correction V2");
 
-            form.CreateButton("View", delegate
+            PropertyEditorBuilder.CreateButton("View", delegate
             {
                 using (MemoryStream ms = new MemoryStream(correction.ToBitmapBytes()))
                 {
@@ -31,7 +31,7 @@ namespace CMNEdit.Windows
                 }
             });
 
-            form.CreateButton("Replace with BMP",
+            PropertyEditorBuilder.CreateButton("Replace with BMP",
                 delegate
                 {
                     OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -52,7 +52,7 @@ namespace CMNEdit.Windows
                     }
                 });
 
-            form.CreateButton("Export BMP", delegate
+            PropertyEditorBuilder.CreateButton("Export BMP", delegate
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "BMP File | *.bmp";
@@ -64,7 +64,7 @@ namespace CMNEdit.Windows
                 }
             });
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
                 myNewForm.Visible = true;

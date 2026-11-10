@@ -13,15 +13,15 @@ namespace CMNEdit
         {
             OEPersonCaption caption = node as OEPersonCaption;
 
-            form.CreateHeader("Person Caption");
+            PropertyEditorBuilder.CreateHeader("Person Caption");
 
-            form.CreateInput("Texture", caption.Texture.ToString(), delegate (string val) { caption.Texture = val; });
+            PropertyEditorBuilder.CreateInput("Texture", caption.Texture.ToString(), delegate (string val) { caption.Texture = val; });
 
-            form.CreateInput("Position X", caption.PosX.ToString(), delegate (string val) { caption.PosX = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Position Y", caption.PosY.ToString(), delegate (string val) { caption.PosY = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Position X", caption.PosX.ToString(), delegate (string val) { caption.PosX = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Position Y", caption.PosY.ToString(), delegate (string val) { caption.PosY = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-            form.CreateInput("Size X", caption.SizeX.ToString(), delegate (string val) { caption.SizeX = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Size Y", caption.SizeY.ToString(), delegate (string val) { caption.SizeY = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Size X", caption.SizeX.ToString(), delegate (string val) { caption.SizeX = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Size Y", caption.SizeY.ToString(), delegate (string val) { caption.SizeY = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

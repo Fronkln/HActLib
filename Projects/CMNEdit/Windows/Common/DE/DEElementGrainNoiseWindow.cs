@@ -14,13 +14,13 @@ namespace CMNEdit
         {
             DEElementGrainNoise noise = node as DEElementGrainNoise;
 
-            form.CreateHeader("Grain Noise");
+            PropertyEditorBuilder.CreateHeader("Grain Noise");
 
-            form.CreateInput("Power", noise.Power.ToString(), delegate (string val) { noise.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Size", noise.Size.ToString(), delegate (string val) { noise.Size = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-            form.CreateInput("Intensity", noise.Intensity.ToString(), delegate (string val) { noise.Intensity = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+            PropertyEditorBuilder.CreateInput("Power", noise.Power.ToString(), delegate (string val) { noise.Power = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Size", noise.Size.ToString(), delegate (string val) { noise.Size = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateInput("Intensity", noise.Intensity.ToString(), delegate (string val) { noise.Intensity = uint.Parse(val); }, NumberBox.NumberMode.UInt);
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CurveView curveForm = new CurveView();
                 curveForm.Visible = true;

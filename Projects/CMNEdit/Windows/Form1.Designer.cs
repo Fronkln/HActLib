@@ -784,6 +784,26 @@
             varPanel.Size = new System.Drawing.Size(629, 411);
             varPanel.TabIndex = 4;
             // 
+            // nodesTree
+            // 
+            nodesTree.AllowDrop = true;
+            nodesTree.ImageIndex = 0;
+            nodesTree.ImageList = nodeIcons;
+            nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
+            nodesTree.Location = new System.Drawing.Point(-5, 0);
+            nodesTree.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            nodesTree.Name = "nodesTree";
+            nodesTree.SelectedImageIndex = 0;
+            nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
+            nodesTree.Size = new System.Drawing.Size(390, 453);
+            nodesTree.TabIndex = 1;
+            nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
+            nodesTree.AfterSelect += nodesTree_AfterSelect;
+            nodesTree.KeyDown += nodesTree_KeyDown;
+            nodesTree.KeyPress += nodesTree_KeyPress;
+            nodesTree.KeyUp += nodesTree_KeyUp;
+            nodesTree.MouseUp += nodesTree_MouseUp;
+            // 
             // panel1
             // 
             panel1.Location = new System.Drawing.Point(279, 93);
@@ -863,28 +883,6 @@
             unkBytesBox.ShadowSelectionColor = System.Drawing.Color.FromArgb(100, 60, 188, 255);
             unkBytesBox.Size = new System.Drawing.Size(618, 383);
             unkBytesBox.TabIndex = 0;
-            // 
-            // nodesTree
-            // 
-            nodesTree.AllowDrop = true;
-            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
-            nodesTree.ImageIndex = 0;
-            nodesTree.ImageList = nodeIcons;
-            nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;
-            nodesTree.Location = new System.Drawing.Point(-5, 0);
-            nodesTree.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            nodesTree.Name = "nodesTree";
-            nodesTree.SelectedImageIndex = 0;
-            nodesTree.SelNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.SelNodes");
-            nodesTree.Size = new System.Drawing.Size(390, 453);
-            nodesTree.TabIndex = 1;
-            nodesTree.AfterSelNodeChanged += nodesTree_AfterSelNodeChanged;
-            nodesTree.AfterSelect += nodesTree_AfterSelect;
-            nodesTree.KeyDown += nodesTree_KeyDown;
-            nodesTree.KeyPress += nodesTree_KeyPress;
-            nodesTree.KeyUp += nodesTree_KeyUp;
-            nodesTree.MouseUp += nodesTree_MouseUp;
-            // 
             // 
             // tabPage1
             // 
@@ -1624,8 +1622,6 @@
         public System.Windows.Forms.ContextMenuStrip nodeContext;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TableLayoutPanel varPanel;
-        private System.Windows.Forms.TabControl hactTabs;
         private System.Windows.Forms.TabPage cmnTevTab;
         private System.Windows.Forms.TabPage resTab;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
@@ -1690,7 +1686,6 @@
         private System.Windows.Forms.ToolStripMenuItem disableFrameInfoToolStripMenuItem;
         private System.Windows.Forms.TabPage csvTab;
         private System.Windows.Forms.TreeView csvTree;
-        private System.Windows.Forms.TableLayoutPanel csvVarPanel;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox2;
@@ -1761,5 +1756,8 @@
         private System.Windows.Forms.Label flagsLabel;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox resource2NameBox;
+        public System.Windows.Forms.TableLayoutPanel varPanel;
+        public System.Windows.Forms.TabControl hactTabs;
+        public System.Windows.Forms.TableLayoutPanel csvVarPanel;
     }
 }

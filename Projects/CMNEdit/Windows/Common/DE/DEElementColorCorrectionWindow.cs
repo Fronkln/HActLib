@@ -17,19 +17,19 @@ namespace CMNEdit.Windows.Common.DE
         {
             DEElementColorCorrection correction = colorCorrect as DEElementColorCorrection;
 
-            form.CreateHeader("Color Correction");
+            PropertyEditorBuilder.CreateHeader("Color Correction");
 
 
-            form.CreateInput("Use Curve", Convert.ToByte(correction.UseCurve).ToString(), delegate (string val) { correction.UseCurve = byte.Parse(val) > 0; }, NumberBox.NumberMode.Byte);
+            PropertyEditorBuilder.CreateInput("Use Curve", Convert.ToByte(correction.UseCurve).ToString(), delegate (string val) { correction.UseCurve = byte.Parse(val) > 0; }, NumberBox.NumberMode.Byte);
 
             if (Form1.curVer > GameVersion.DE1)
             {
-                form.CreateInput("Use Saturation", Convert.ToByte(correction.UseSaturation).ToString(), delegate (string val) { correction.UseSaturation = byte.Parse(val) > 0; }, NumberBox.NumberMode.Byte);
+                PropertyEditorBuilder.CreateInput("Use Saturation", Convert.ToByte(correction.UseSaturation).ToString(), delegate (string val) { correction.UseSaturation = byte.Parse(val) > 0; }, NumberBox.NumberMode.Byte);
 
-                form.CreateInput("Contrast", correction.Contrast.ToString(), delegate (string val) { correction.Contrast = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                form.CreateInput("Saturation Control", correction.SaturationControl.ToString(), delegate (string val) { correction.SaturationControl = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Contrast", correction.Contrast.ToString(), delegate (string val) { correction.Contrast = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Saturation Control", correction.SaturationControl.ToString(), delegate (string val) { correction.SaturationControl = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             }
-            form.CreateButton("View", delegate
+            PropertyEditorBuilder.CreateButton("View", delegate
             {
                 using (MemoryStream ms = new MemoryStream(correction.ToBitmapBytes()))
                 {
@@ -41,7 +41,7 @@ namespace CMNEdit.Windows.Common.DE
                 }
             });
 
-            form.CreateButton("Replace with BMP",
+            PropertyEditorBuilder.CreateButton("Replace with BMP",
                 delegate
                 {
                     OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -62,7 +62,7 @@ namespace CMNEdit.Windows.Common.DE
                     }
                 });
 
-            form.CreateButton("Export BMP", delegate
+            PropertyEditorBuilder.CreateButton("Export BMP", delegate
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "BMP File | *.bmp";
@@ -74,7 +74,7 @@ namespace CMNEdit.Windows.Common.DE
                 }
             });
 
-            form.CreateButton("Curve", delegate
+            PropertyEditorBuilder.CreateButton("Curve", delegate
             {
                 CMNEdit.Windows.CurveView myNewForm = new CMNEdit.Windows.CurveView();
                 myNewForm.Visible = true;

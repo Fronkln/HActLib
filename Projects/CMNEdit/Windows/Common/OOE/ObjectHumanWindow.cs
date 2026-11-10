@@ -14,13 +14,13 @@ namespace CMNEdit
         {
             CSVCharacter csvEntry = Form1.TevCsvEntry.TryGetHActCharacter(obj.Replace);
 
-            form.CreateHeader("Human");
+            PropertyEditorBuilder.CreateHeader("Human");
 
-            form.CreateInput("Name", obj.Replace, delegate (string val) { obj.Replace = val; });
-            form.CreateInput("Object Type", obj.ObjectType, delegate (string val) { obj.ObjectType = val; });
-            form.CreateInput("Body", obj.BodyType, delegate (string val) { obj.BodyType = val; });
+            PropertyEditorBuilder.CreateInput("Name", obj.Replace, delegate (string val) { obj.Replace = val; });
+            PropertyEditorBuilder.CreateInput("Object Type", obj.ObjectType, delegate (string val) { obj.ObjectType = val; });
+            PropertyEditorBuilder.CreateInput("Body", obj.BodyType, delegate (string val) { obj.BodyType = val; });
 
-            form.CreateInput("Height", obj.Height.ToString(), delegate (string val) { obj.Height = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Height", obj.Height.ToString(), delegate (string val) { obj.Height = int.Parse(val); }, NumberBox.NumberMode.Int);
 
             if (csvEntry != null)
             {

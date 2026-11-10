@@ -788,332 +788,6 @@ namespace CMNEdit
             return expanded.ToArray();
         }
 
-        public void CreateHeader(string label, float spacing = 0)
-        {
-            TableLayoutPanel varPanel = null;
-            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            Label label2 = new Label();
-            label2.Anchor = AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Font = new Font("Arial", 16F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.Location = new Point(42, 5);
-            label2.Size = new Size(195, 10);
-            label2.TabIndex = 0;
-            label2.Text = label;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
-            varPanel.RowCount++;
-
-            varPanel.Controls.Add(label2, 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(CreateText(""), 1, varPanel.RowCount - 1);
-        }
-
-        public Control CreateText(string label, bool left = false, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            Label text = new Label();
-
-            if (!left)
-                text.Anchor = AnchorStyles.Right;
-            else
-                text.Anchor = AnchorStyles.Left;
-
-            text.AutoSize = true;
-            text.Size = new Size(58, 15);
-            text.TabIndex = 1;
-            text.Text = label;
-
-            return text;
-        }
-
-        public void CreateSpace(float space, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, space));
-            varPanel.RowCount++;
-
-            varPanel.Controls.Add(CreateText("", isCsvTree), 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(CreateText("", isCsvTree), 1, varPanel.RowCount - 1);
-        }
-
-        public void CreateSpace(bool big)
-        {
-            TableLayoutPanel varPanel = null;
-
-            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            if (big)
-                CreateHeader("", 0);
-        }
-
-        public TextBox CreateInput(string label, string defaultValue, Action<string> editedCallback, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false, bool hex = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            varPanel.RowCount++;
-
-            NumberBox input = new NumberBox(mode, editedCallback, hex);
-            input.Text = defaultValue;
-            input.Size = new Size(250, 15);
-            input.ReadOnly = readOnly;
-            input.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-
-            Control text = CreateText(label, false);
-
-            varPanel.Controls.Add(text, 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
-
-            return input;
-        }
-
-        public TextBox CreateMultilineInput(string label, string defaultValue, Action<string> editedCallback, int size = 25, NumberBox.NumberMode mode = NumberBox.NumberMode.Text, bool readOnly = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            bool isCsvTree = hactTabs.SelectedTab.Text == "CSV";
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, size + 10));
-            varPanel.RowCount++;
-
-            NumberBox input = new NumberBox(mode, editedCallback);
-            input.Text = defaultValue;
-            input.Size = new Size(250, size);
-            input.ReadOnly = readOnly;
-            input.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            input.Multiline = true;
-
-            Control text = CreateText(label, false);
-
-            varPanel.Controls.Add(text, 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
-
-            return input;
-        }
-
-        public Button CreateButton(string text, Action clicked, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            isCsvTree = hactTabs.SelectedTab.Text == "CSV";
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 35));
-            varPanel.RowCount++;
-
-            Button input = new Button();
-            input.Text = text;
-            input.Size = new Size(200, 50);
-            input.Click += delegate { clicked?.Invoke(); };
-
-            varPanel.Controls.Add(CreateText(""), 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
-
-            return input;
-        }
-
-        public Panel CreatePanel(string label, Color color, Action<Color> finished, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            varPanel.RowCount++;
-
-            Panel input = new Panel();
-            input.BorderStyle = BorderStyle.Fixed3D;
-            input.Size = new Size(200, 50);
-            input.Click += delegate
-            {
-                CMNEdit.Windows.ColorView myNewForm = new CMNEdit.Windows.ColorView();
-                myNewForm.Visible = true;
-                myNewForm.Init(input.BackColor, finished);
-            };
-            input.BackColor = color;
-
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
-
-            return input;
-        }
-
-        public Panel CreatePanelFI(string label, Color color, Action<HActLib.RGB> finished, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            varPanel.RowCount++;
-
-            Panel input = new Panel();
-            input.BorderStyle = BorderStyle.Fixed3D;
-            input.Size = new Size(200, 50);
-            input.Click += delegate
-            {
-                CMNEdit.Windows.ColorViewFI myNewForm = new CMNEdit.Windows.ColorViewFI();
-                myNewForm.Visible = true;
-                myNewForm.Init(input.BackColor, finished);
-            };
-            input.BackColor = color;
-
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
-
-            return input;
-        }
-
-        public Panel CreatePanelFI2(string label, Color panelColor, HActLib.RGB color, Action<HActLib.RGB> finished, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            varPanel.RowCount++;
-
-            Panel input = new Panel();
-            input.BorderStyle = BorderStyle.Fixed3D;
-            input.Size = new Size(200, 50);
-            input.Click += delegate
-            {
-                CMNEdit.Windows.ColorViewFI myNewForm = new CMNEdit.Windows.ColorViewFI();
-                myNewForm.Visible = true;
-                myNewForm.Init(color, finished);
-            };
-            input.BackColor = panelColor;
-
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
-
-            return input;
-        }
-
-        public void CreateComboBox(string label, int defaultIndex, string[] items, Action<int> editedCallback, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            if (defaultIndex < 0 || defaultIndex >= items.Length)
-            {
-#if DEBUG
-                //  throw new Exception("Combobox index error");
-#endif
-                //  defaultIndex = 0;
-
-                if (defaultIndex > 0)
-                {
-                    List<string> itemsList = items.ToList();
-
-                    while (itemsList.Count - 1 != defaultIndex)
-                    {
-                        //BIG PROBLEM!
-
-                        if (itemsList.Count > 128)
-                        {
-                            defaultIndex = itemsList.Count - 1;
-                            break;
-                        }
-
-                        itemsList.Add("Unknown");
-                    }
-
-                    items = itemsList.ToArray();
-                }
-            }
-
-            ComboBox input = new ComboBox();
-            input.Items.AddRange(items);
-            input.SelectedIndex = defaultIndex;
-            input.Size = new Size(200, 15);
-
-            input.SelectedIndexChanged += delegate { editedCallback?.Invoke(input.SelectedIndex); };
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
-            varPanel.RowCount++;
-
-            varPanel.Controls.Add(CreateText(label), 0, varPanel.RowCount - 1);
-            varPanel.Controls.Add(input, 1, varPanel.RowCount - 1);
-        }
-
-        public void CreateHexBox(byte[] buf, bool isCsvTree = false)
-        {
-            TableLayoutPanel varPanel = null;
-
-            if (!isCsvTree)
-                varPanel = this.varPanel;
-            else
-                varPanel = csvVarPanel;
-
-            System.ComponentModel.Design.ByteViewer hexBox2 = new System.ComponentModel.Design.ByteViewer();
-
-            hexBox2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            hexBox2.Location = new System.Drawing.Point(3, 68);
-            hexBox2.Name = "hexBox2";
-            //hexBox2.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-            hexBox2.Size = new System.Drawing.Size(200, 200);
-            hexBox2.TabIndex = 3;
-
-            varPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 200));
-            varPanel.RowCount++;
-
-            varPanel.Controls.Add(hexBox2, 1, varPanel.RowCount - 1);
-            varPanel.Controls.Add(CreateText(""), 0, varPanel.RowCount - 1);
-        }
-
         void ClearNodeMenu()
         {
             varPanel.Controls.Clear();
@@ -1187,7 +861,9 @@ namespace CMNEdit
             else
             {
                 if (curGame > Game.Y4)
+                {
                     node = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE).Effect;
+                }
                 else
                 {
                     DrawTEVEffectWindow(((treeNode as TreeViewItemMepNode).Node as MepEffectY3).Effect);
@@ -1205,11 +881,11 @@ namespace CMNEdit
             {
                 var mepEffectOE = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE);
 
-                CreateHeader("Mep");
-                CreateInput("Bone", mepEffectOE.BoneName.Text, delegate (string val) { mepEffectOE.BoneName.Set(val); });
-                CreateInput("Bone ID", mepEffectOE.BoneID.ToString(), delegate (string val) { mepEffectOE.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
+                PropertyEditorBuilder.CreateHeader("Mep");
+                PropertyEditorBuilder.CreateInput("Bone", mepEffectOE.BoneName.Text, delegate (string val) { mepEffectOE.BoneName.Set(val); });
+                PropertyEditorBuilder.CreateInput("Bone ID", mepEffectOE.BoneID.ToString(), delegate (string val) { mepEffectOE.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
 
-                CreateButton("Try Update Bone ID", delegate
+                PropertyEditorBuilder.CreateButton("Try Update Bone ID", delegate
                 {
                     Dictionary<string, int> checkDict = null;
 
@@ -1242,11 +918,11 @@ namespace CMNEdit
                     {
                         OENodeAsset assetOE = node as OENodeAsset;
 
-                        CreateHeader("Asset");
-                        CreateInput("Unknown", assetOE.Unknown1.ToString(), delegate (string val) { assetOE.Unknown1 = int.Parse(val); }, NumberBox.NumberMode.Int);
-                        CreateInput("Unknown", assetOE.Unknown2.ToString(), delegate (string val) { assetOE.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
-                        CreateInput("Unknown", assetOE.Unknown3.ToString(), delegate (string val) { assetOE.Unknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
-                        CreateInput("Unknown", assetOE.Unknown4.ToString(), delegate (string val) { assetOE.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                        PropertyEditorBuilder.CreateHeader("Asset");
+                        PropertyEditorBuilder.CreateInput("Unknown", assetOE.Unknown1.ToString(), delegate (string val) { assetOE.Unknown1 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                        PropertyEditorBuilder.CreateInput("Unknown", assetOE.Unknown2.ToString(), delegate (string val) { assetOE.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                        PropertyEditorBuilder.CreateInput("Unknown", assetOE.Unknown3.ToString(), delegate (string val) { assetOE.Unknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                        PropertyEditorBuilder.CreateInput("Unknown", assetOE.Unknown4.ToString(), delegate (string val) { assetOE.Unknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
 
                     }
                     break;
@@ -1294,7 +970,7 @@ namespace CMNEdit
                     break;
 
                 case AuthNodeCategory.Path:
-                    CreateHeader("Path");
+                    PropertyEditorBuilder.CreateHeader("Path");
                     MatrixWindow.Draw(this, (node as NodePathBase).Matrix);
                     break;
 
@@ -1350,17 +1026,17 @@ namespace CMNEdit
             {
                 TreeNodeOOEAuthNode authNode = (TreeNodeOOEAuthNode)node;
 
-                CreateHeader("Auth Node");
+                PropertyEditorBuilder.CreateHeader("Auth Node");
 
-                CreateInput("GUID", authNode.Node.Guid.ToString(), delegate (string val) { authNode.Node.Guid = new Guid(val); });
-                CreateInput("Type", authNode.Node.Type.ToString(), null, readOnly: true);
+                PropertyEditorBuilder.CreateInput("GUID", authNode.Node.Guid.ToString(), delegate (string val) { authNode.Node.Guid = new Guid(val); });
+                PropertyEditorBuilder.CreateInput("Type", authNode.Node.Type.ToString(), null, readOnly: true);
 
-                CreateHeader("Animation Data");
-                CreateInput("Type", authNode.Node.AnimationData.Type.ToString(), delegate (string val) { authNode.Node.AnimationData.Type = int.Parse(val); }, NumberBox.NumberMode.Int);
-                CreateInput("Unknown", authNode.Node.AnimationData.Unknown2.ToString(), delegate (string val) { authNode.Node.AnimationData.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
-                CreateInput("GUID", authNode.Node.AnimationData.Guid.ToString(), delegate (string val) { authNode.Node.AnimationData.Guid = new Guid(val); });
-                CreateInput("Start", authNode.Node.AnimationData.StartFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.StartFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                CreateInput("End", authNode.Node.AnimationData.EndFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.EndFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateHeader("Animation Data");
+                PropertyEditorBuilder.CreateInput("Type", authNode.Node.AnimationData.Type.ToString(), delegate (string val) { authNode.Node.AnimationData.Type = int.Parse(val); }, NumberBox.NumberMode.Int);
+                PropertyEditorBuilder.CreateInput("Unknown", authNode.Node.AnimationData.Unknown2.ToString(), delegate (string val) { authNode.Node.AnimationData.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+                PropertyEditorBuilder.CreateInput("GUID", authNode.Node.AnimationData.Guid.ToString(), delegate (string val) { authNode.Node.AnimationData.Guid = new Guid(val); });
+                PropertyEditorBuilder.CreateInput("Start", authNode.Node.AnimationData.StartFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.StartFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("End", authNode.Node.AnimationData.EndFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.EndFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
             }
 
             else if (node is TreeNodeSet1)
@@ -1415,7 +1091,7 @@ namespace CMNEdit
             else if (node is TreeNodeEffect)
             {
                 DrawTEVEffectWindow((node as TreeNodeEffect).Effect);
-                CreateHeader("");
+                PropertyEditorBuilder.CreateHeader("");
                 varPanel.ResumeLayout();
                 return;
             }
@@ -1424,7 +1100,7 @@ namespace CMNEdit
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
 
-            CreateHeader("");
+            PropertyEditorBuilder.CreateHeader("");
         }
 
         public void ProcessSelectedNodeMSG()
@@ -1483,7 +1159,7 @@ namespace CMNEdit
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
 
-            CreateHeader("");
+            PropertyEditorBuilder.CreateHeader("");
         }
 
         private void DrawElement1019(Set2Element1019 element, bool isCSVTree = false)
@@ -1498,16 +1174,16 @@ namespace CMNEdit
             if (hevent == null)
                 return;
 
-            CreateHeader("HAct Event (CSV)");
-            CreateInput("Name", hevent.Name, delegate (string val) { hevent.Name = val; SelectedNodeCsvTree.Text = val; });
+            PropertyEditorBuilder.CreateHeader("HAct Event (CSV)");
+            PropertyEditorBuilder.CreateInput("Name", hevent.Name, delegate (string val) { hevent.Name = val; SelectedNodeCsvTree.Text = val; });
 
-            CreateInput("Type", hevent.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
-            CreateInput("Unknown", hevent.HEUnknown2.ToString(), delegate (string val) { hevent.HEUnknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            CreateInput("Unknown", hevent.HEUnknown3.ToString(), delegate (string val) { hevent.HEUnknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            CreateInput("Unknown", hevent.HEUnknown4.ToString(), delegate (string val) { hevent.HEUnknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            CreateInput("Unknown", hevent.HEUnknown5.ToString(), delegate (string val) { hevent.HEUnknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            CreateInput("Unknown", hevent.HEUnknown6.ToString(), delegate (string val) { hevent.HEUnknown6 = int.Parse(val); }, NumberBox.NumberMode.Int);
-            CreateInput("Unknown", hevent.HEUnknown7.ToString(), delegate (string val) { hevent.HEUnknown7 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Type", hevent.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
+            PropertyEditorBuilder.CreateInput("Unknown", hevent.HEUnknown2.ToString(), delegate (string val) { hevent.HEUnknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", hevent.HEUnknown3.ToString(), delegate (string val) { hevent.HEUnknown3 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", hevent.HEUnknown4.ToString(), delegate (string val) { hevent.HEUnknown4 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", hevent.HEUnknown5.ToString(), delegate (string val) { hevent.HEUnknown5 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", hevent.HEUnknown6.ToString(), delegate (string val) { hevent.HEUnknown6 = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateInput("Unknown", hevent.HEUnknown7.ToString(), delegate (string val) { hevent.HEUnknown7 = int.Parse(val); }, NumberBox.NumberMode.Int);
 
             switch (hevent.Type)
             {
@@ -1538,7 +1214,7 @@ namespace CMNEdit
                 case "TreeViewItemExpressionTargetDataOE":
                     TreeViewItemExpressionTargetDataOE itemExpDatOE = nodesTree.SelectedNode as TreeViewItemExpressionTargetDataOE;
 
-                    CreateButton("Curve", delegate
+                    PropertyEditorBuilder.CreateButton("Curve", delegate
                     {
                         CurveView myNewForm = new CurveView();
                         myNewForm.Visible = true;
@@ -1553,15 +1229,15 @@ namespace CMNEdit
 
                 case "TreeViewItemExpressionTargetData":
                     TreeViewItemExpressionTargetData itemExpDat = nodesTree.SelectedNode as TreeViewItemExpressionTargetData;
-                    CreateHeader("Expression Target Data");
-                    CreateComboBox("Target", (int)itemExpDat.Data.FaceTargetID, Enum.GetNames<DEFaceTarget>(),
+                    PropertyEditorBuilder.CreateHeader("Expression Target Data");
+                    PropertyEditorBuilder.CreateComboBox("Target", (int)itemExpDat.Data.FaceTargetID, Enum.GetNames<DEFaceTarget>(),
                         delegate (int idx)
                         {
                             itemExpDat.Data.FaceTargetID = (DEFaceTarget)idx;
                             itemExpDat.Update();
                         });
 
-                    CreateButton("Curve", delegate
+                    PropertyEditorBuilder.CreateButton("Curve", delegate
                     {
                         CurveView myNewForm = new CurveView();
                         myNewForm.Visible = true;
@@ -1632,7 +1308,7 @@ namespace CMNEdit
                         return expandedCurve;
                     }
 
-                    CreateButton("Simplify Curve to 32 Points", delegate
+                    PropertyEditorBuilder.CreateButton("Simplify Curve to 32 Points", delegate
                     {
                         itemExpDat.Data.Animation = ConvertTo32PointCurve(itemExpDat.Data.Animation);
                     });
@@ -2718,6 +2394,8 @@ namespace CMNEdit
 
             if (res != DialogResult.OK)
                 return;
+
+            FilePath = dialog.FileName;
 
             CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
 
@@ -3886,7 +3564,7 @@ namespace CMNEdit
                 DrawHActEvent(hevent);
             }
 
-            CreateHeader("", 0);
+            PropertyEditorBuilder.CreateHeader("", 0);
 
             csvVarPanel.ResumeLayout();
         }
@@ -3972,11 +3650,11 @@ namespace CMNEdit
             if (node is TreeNodeYActY2Animation)
             {
                 var y2Anim = node as TreeNodeYActY2Animation;
-                CreateHeader($"Animation ({y2Anim.Animation.Format})");
-                CreateInput("Start", y2Anim.Animation.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                CreateInput("End", y2Anim.Animation.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateHeader($"Animation ({y2Anim.Animation.Format})");
+                PropertyEditorBuilder.CreateInput("Start", y2Anim.Animation.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("End", y2Anim.Animation.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                CreateButton("Export", delegate
+                PropertyEditorBuilder.CreateButton("Export", delegate
                 {
                     string format = y2Anim.Animation.Format.ToString().ToLowerInvariant();
 
@@ -3995,8 +3673,8 @@ namespace CMNEdit
 
             if (node is TreeNodeYActCameraMotion)
             {
-                CreateHeader("Camera Animation");
-                CreateButton("Import", delegate
+                PropertyEditorBuilder.CreateHeader("Camera Animation");
+                PropertyEditorBuilder.CreateButton("Import", delegate
                 {
                     OpenFileDialog dialog = new OpenFileDialog();
                     dialog.Filter = "PS2 Object/Camera Animation (*.mtbw)|*.mtbw";
@@ -4010,7 +3688,7 @@ namespace CMNEdit
                             animNode.OrigCamera.MTBWFile = animNode.File.Buffer;
                     }
                 });
-                CreateButton("Export", delegate
+                PropertyEditorBuilder.CreateButton("Export", delegate
                 {
                     SaveFileDialog dialog = new SaveFileDialog();
                     dialog.Filter = "PS2 Camera Animation (*.mtbw)|*.mtbw";
@@ -4026,8 +3704,8 @@ namespace CMNEdit
             }
             else if (node is TreeNodeYActCharacterMotion)
             {
-                CreateHeader("Character Animation");
-                CreateButton("Import", delegate
+                PropertyEditorBuilder.CreateHeader("Character Animation");
+                PropertyEditorBuilder.CreateButton("Import", delegate
                 {
                     OpenFileDialog dialog = new OpenFileDialog();
                     dialog.Filter = "Character Animation|*.omt;*.dat";
@@ -4037,7 +3715,7 @@ namespace CMNEdit
                         (node as TreeNodeYActCharacterMotion).File.Buffer = File.ReadAllBytes(dialog.FileName);
                     }
                 });
-                CreateButton("Export", delegate
+                PropertyEditorBuilder.CreateButton("Export", delegate
                 {
                     SaveFileDialog dialog = new SaveFileDialog();
                     dialog.Filter = "PS2 Animation (*.omt)|*.omt";
@@ -4054,28 +3732,28 @@ namespace CMNEdit
             else if (node is TreeNodeYActEffect)
             {
                 var effectNode = node as TreeNodeYActEffect;
-                CreateHeader("YAct Effect");
+                PropertyEditorBuilder.CreateHeader("YAct Effect");
 
                 if (!string.IsNullOrEmpty(effectNode.Effect.Name))
-                    CreateInput("Name", effectNode.Effect.Name.ToString(), delegate (string val) { effectNode.Effect.Name = val; });
+                    PropertyEditorBuilder.CreateInput("Name", effectNode.Effect.Name.ToString(), delegate (string val) { effectNode.Effect.Name = val; });
 
-                CreateInput("Start", effectNode.Effect.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                CreateInput("End", effectNode.Effect.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                CreateInput("Bone ID", effectNode.Effect.BoneID.ToString(), delegate (string val) { effectNode.Effect.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
+                PropertyEditorBuilder.CreateInput("Start", effectNode.Effect.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("End", effectNode.Effect.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("Bone ID", effectNode.Effect.BoneID.ToString(), delegate (string val) { effectNode.Effect.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
 
 
                 switch ((YActEffectType)effectNode.Effect.Type)
                 {
                     case YActEffectType.Particle:
                         var ptcEffect = effectNode.Effect as YActEffectParticle;
-                        CreateHeader("Particle");
-                        CreateInput("Particle ID", ptcEffect.Particle.ToString(), delegate (string val) { ptcEffect.Particle = int.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Int);
+                        PropertyEditorBuilder.CreateHeader("Particle");
+                        PropertyEditorBuilder.CreateInput("Particle ID", ptcEffect.Particle.ToString(), delegate (string val) { ptcEffect.Particle = int.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Int);
                         break;
                     case YActEffectType.Sound:
                         var soundEffect = effectNode.Effect as YActEffectSound;
-                        CreateHeader("Sound");
-                        CreateInput("Cuesheet ID", soundEffect.CuesheetID.ToString(), delegate (string val) { soundEffect.CuesheetID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
-                        CreateInput("Sound ID", soundEffect.SoundID.ToString(), delegate (string val) { soundEffect.SoundID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
+                        PropertyEditorBuilder.CreateHeader("Sound");
+                        PropertyEditorBuilder.CreateInput("Cuesheet ID", soundEffect.CuesheetID.ToString(), delegate (string val) { soundEffect.CuesheetID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
+                        PropertyEditorBuilder.CreateInput("Sound ID", soundEffect.SoundID.ToString(), delegate (string val) { soundEffect.SoundID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
                         break;
                 }
 
@@ -4083,7 +3761,7 @@ namespace CMNEdit
                 provider = new Be.Windows.Forms.DynamicByteProvider(effectNode.Effect.UnknownData);
             }
 
-            CreateHeader("");
+            PropertyEditorBuilder.CreateHeader("");
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
         }
@@ -4097,10 +3775,10 @@ namespace CMNEdit
             if (node is TreeNodePS2PropertyData1)
             {
                 var dat1Node = node as TreeNodePS2PropertyData1;
-                CreateHeader("Property (Data1)");
-                CreateInput("Type", dat1Node.Data1.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
-                CreateInput("Start", dat1Node.Data1.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                CreateInput("End", dat1Node.Data1.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateHeader("Property (Data1)");
+                PropertyEditorBuilder.CreateInput("Type", dat1Node.Data1.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
+                PropertyEditorBuilder.CreateInput("Start", dat1Node.Data1.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("End", dat1Node.Data1.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
                 if (dat1Node.Data1.UnknownData != null)
                 {
@@ -4115,10 +3793,10 @@ namespace CMNEdit
             else if (node is TreeNodePS2PropertyData2)
             {
                 var dat2Node = node as TreeNodePS2PropertyData2;
-                CreateHeader("Property (Data2)");
-                CreateInput("Type?", dat2Node.Data2.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
-                CreateInput("Start", dat2Node.Data2.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                CreateInput("End", dat2Node.Data2.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateHeader("Property (Data2)");
+                PropertyEditorBuilder.CreateInput("Type?", dat2Node.Data2.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
+                PropertyEditorBuilder.CreateInput("Start", dat2Node.Data2.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                PropertyEditorBuilder.CreateInput("End", dat2Node.Data2.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
                 if (dat2Node.Data2.UnknownData != null)
                 {
@@ -4131,7 +3809,7 @@ namespace CMNEdit
                 }
             }
 
-            CreateHeader("");
+            PropertyEditorBuilder.CreateHeader("");
             unkBytesBox.ByteProvider = provider;
             varPanel.ResumeLayout();
         }

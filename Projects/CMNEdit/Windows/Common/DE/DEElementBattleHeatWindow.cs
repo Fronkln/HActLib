@@ -9,8 +9,8 @@ namespace CMNEdit
         {
             DEElementBattleHeat heat = node as DEElementBattleHeat;
 
-            form.CreateHeader("Battle Heat");
-            form.CreateInput("Heat Change", heat.HeatChange.ToString(), delegate (string val) { heat.HeatChange = int.Parse(val); }, NumberBox.NumberMode.Int);
+            PropertyEditorBuilder.CreateHeader("Battle Heat");
+            PropertyEditorBuilder.CreateInput("Heat Change", heat.HeatChange.ToString(), delegate (string val) { heat.HeatChange = int.Parse(val); }, NumberBox.NumberMode.Int);
         }
     }
 }

@@ -13,8 +13,8 @@ namespace CMNEdit
         {
             OERimlightScale rimScale = node as OERimlightScale;
 
-            form.CreateHeader("Rim Light Scale");
-            form.CreateInput("Scale", rimScale.Scale.ToString(), delegate (string val) { rimScale.Scale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+            PropertyEditorBuilder.CreateHeader("Rim Light Scale");
+            PropertyEditorBuilder.CreateInput("Scale", rimScale.Scale.ToString(), delegate (string val) { rimScale.Scale = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
         }
     }
 }

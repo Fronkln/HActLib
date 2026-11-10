@@ -84,22 +84,22 @@ namespace CMNEdit
                         OEGradationWindow.Draw(Form1.Instance, element);
                         break;
                     case "e_auth_element_path_adjustment":
-                        Form1.Instance.CreateHeader("Path Offset");
+                        PropertyEditorBuilder.CreateHeader("Path Offset");
                         MatrixWindow.Draw(Form1.Instance, (element as OEPathAdjustment).Adjustment);
                         break;
                     case "e_auth_element_depth_of_field2":
-                        Form1.Instance.CreateHeader("DOF2");
+                        PropertyEditorBuilder.CreateHeader("DOF2");
 
                         var dof2 = (element as OEDOF2);
 
-                        Form1.Instance.CreateInput("Near Before", dof2.NearBefore.ToString(), delegate (string val) { dof2.NearBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                        Form1.Instance.CreateInput("Far Before", dof2.FarBefore.ToString(), delegate (string val) { dof2.FarBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        PropertyEditorBuilder.CreateInput("Near Before", dof2.NearBefore.ToString(), delegate (string val) { dof2.NearBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        PropertyEditorBuilder.CreateInput("Far Before", dof2.FarBefore.ToString(), delegate (string val) { dof2.FarBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                        Form1.Instance.CreateInput("Near After", dof2.NearAfter.ToString(), delegate (string val) { dof2.NearAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                        Form1.Instance.CreateInput("Far After", dof2.FarAfter.ToString(), delegate (string val) { dof2.FarAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        PropertyEditorBuilder.CreateInput("Near After", dof2.NearAfter.ToString(), delegate (string val) { dof2.NearAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        PropertyEditorBuilder.CreateInput("Far After", dof2.FarAfter.ToString(), delegate (string val) { dof2.FarAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
 
-                        Form1.Instance.CreateInput("F-Stop Before", dof2.FStopBefore.ToString(), delegate (string val) { dof2.FStopBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                        Form1.Instance.CreateInput("F-Stop Far", dof2.FStopAfter.ToString(), delegate (string val) { dof2.FStopAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        PropertyEditorBuilder.CreateInput("F-Stop Before", dof2.FStopBefore.ToString(), delegate (string val) { dof2.FStopBefore = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                        PropertyEditorBuilder.CreateInput("F-Stop Far", dof2.FStopAfter.ToString(), delegate (string val) { dof2.FStopAfter = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
                         break;
                 }
             }
@@ -247,7 +247,7 @@ namespace CMNEdit
                         DEElementCameraLinkWindow.Draw(Form1.Instance, element);
                         break;
                     case "e_auth_element_path_offset":
-                        Form1.Instance.CreateHeader("Path Offset");
+                        PropertyEditorBuilder.CreateHeader("Path Offset");
                         MatrixWindow.Draw(Form1.Instance, (element as DEElementPathOffset).Matrix);
                         break;
                     case "e_auth_element_scenario_timeline":

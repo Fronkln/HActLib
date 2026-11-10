@@ -15,14 +15,14 @@ namespace CMNEdit
 
             if (!IsCustomCondition(folder))
             {
-                form.CreateHeader("Condition Folder");
+                PropertyEditorBuilder.CreateHeader("Condition Folder");
 
-                form.CreateComboBox("Condition", (int)folder.Condition, Enum.GetNames(typeof(ConditionTable)), delegate (int index) { folder.Condition = (ConditionTable)index; });
-                form.CreateInput("Condition (ID)", ((int)folder.Condition).ToString(), delegate (string val) { folder.Condition = (ConditionTable)uint.Parse(val); }, NumberBox.NumberMode.UInt);
-                form.CreateInput("Tag Value", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
-                form.CreateInput("PUID ID", folder.PuidID.ToString(), delegate (string val) { folder.PuidID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-                form.CreateInput("Logical Operator?", folder.DataFlag.ToString(), delegate (string val) { folder.DataFlag = uint.Parse(val); }, NumberBox.NumberMode.UInt);
-                form.CreateInput("Unknown", folder.Unknown1.ToString(), delegate (string val) { folder.Unknown1 = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+                PropertyEditorBuilder.CreateComboBox("Condition", (int)folder.Condition, Enum.GetNames(typeof(ConditionTable)), delegate (int index) { folder.Condition = (ConditionTable)index; });
+                PropertyEditorBuilder.CreateInput("Condition (ID)", ((int)folder.Condition).ToString(), delegate (string val) { folder.Condition = (ConditionTable)uint.Parse(val); }, NumberBox.NumberMode.UInt);
+                PropertyEditorBuilder.CreateInput("Tag Value", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
+                PropertyEditorBuilder.CreateInput("PUID ID", folder.PuidID.ToString(), delegate (string val) { folder.PuidID = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+                PropertyEditorBuilder.CreateInput("Logical Operator?", folder.DataFlag.ToString(), delegate (string val) { folder.DataFlag = uint.Parse(val); }, NumberBox.NumberMode.UInt);
+                PropertyEditorBuilder.CreateInput("Unknown", folder.Unknown1.ToString(), delegate (string val) { folder.Unknown1 = uint.Parse(val); }, NumberBox.NumberMode.UInt);
             }
             else
             {
@@ -31,8 +31,8 @@ namespace CMNEdit
                     switch ((uint)folder.Condition)
                     {
                         case 133700001:
-                            form.CreateHeader("Condition Folder (Custom)");
-                            form.CreateInput("Job ID", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
+                            PropertyEditorBuilder.CreateHeader("Condition Folder (Custom)");
+                            PropertyEditorBuilder.CreateInput("Job ID", folder.TagValue.ToString(), delegate (string val) { folder.TagValue = int.Parse(val); }, NumberBox.NumberMode.Int);
                             break;
                     }
                 }
