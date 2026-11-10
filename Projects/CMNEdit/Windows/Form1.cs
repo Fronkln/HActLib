@@ -31,18 +31,9 @@ namespace CMNEdit
     public partial class Form1 : Form
     {
         public static Form1 Instance;
-        public static string FilePath;
 
-        private static MEP Mep;
-
-        private static TEV Tev;
-        public static CSV Csv;
-        public static Auth Auth;
         public uint TevHActID;
         public static CSVHAct TevCsvEntry;
-
-        public static Msg Msg;
-        public static MsgOOE MsgOOE;
 
         public static GameVersion curVer;
         public static Game curGame = Game.YLAD; //only used for DE
@@ -224,7 +215,7 @@ namespace CMNEdit
 
             ProcessHAct(inf);
 
-            FilePath = inf.GetCmnPath();
+            FileContext.FilePath = inf.GetCmnPath();
         }
 
         private void openHActCMNToolStripMenuItem_Click(object sender, EventArgs e)
@@ -275,21 +266,21 @@ namespace CMNEdit
             Array.Copy(buf, magicBuf, 4);
             string magic = Encoding.UTF8.GetString(magicBuf);
 
-            FilePath = hactInf.FindFile("hact_tev.bin").Path;
+            FileContext.FilePath = hactInf.FindFile("hact_tev.bin").Path;
 
             //OOE auth
             if (magic == "AUTH")
             {
-                Auth authFile = Auth.Read(FilePath);
+                Auth authFile = Auth.Read(FileContext.FilePath);
                 hactTabs.TabPages[0].Text = "AUTH";
 
                 hactTabs.TabPages.Remove(cutPage);
                 hactDurationPanel.Visible = true;
 
-                Auth = authFile;
+                FileContext.Auth = authFile;
                 FileContext.IsOOEAuth = true;
 
-                CutInfos = Auth.CameraCuts;
+                CutInfos = authFile.CameraCuts;
                 hactTabs.TabPages.Add(cutPage);
 
                 foreach (var node in authFile.Nodes)
@@ -358,13 +349,13 @@ namespace CMNEdit
 
                 FileContext.IsTev = true;
 
-                Tev = TEV.Read(buf);
-                Csv = CSV.Read(csvPath);
+                FileContext.Tev = TEV.Read(buf);
+                FileContext.Csv = CSV.Read(csvPath);
 
-                if (Csv == null)
+                if (FileContext.Csv == null)
                     throw new Exception("CSV returned null, the file does not exist.");
 
-                FileInfo inf = new FileInfo(FilePath);
+                FileInfo inf = new FileInfo(FileContext.FilePath);
 
                 try
                 {
@@ -378,21 +369,21 @@ namespace CMNEdit
                     TevHActID = 0;
                 }
 
-                TevCsvEntry = Csv.TryGetEntry(TevHActID);
+                TevCsvEntry = FileContext.Csv.TryGetEntry(TevHActID);
 
                 if (TevCsvEntry == null)
                     throw new Exception("Couldn't find hact_csv entry for " + TevHActID);
 
-                TreeNodeSet1 root = DrawTEVSet1(Tev.Root);
+                TreeNodeSet1 root = DrawTEVSet1(FileContext.Tev.Root);
                 nodesTree.Nodes.Add(root);
 
                 string cuesheets = "";
 
-                for (int i = 0; i < Tev.CuesheetIDs.Count; i++)
+                for (int i = 0; i < FileContext.Tev.CuesheetIDs.Count; i++)
                 {
-                    cuesheets += Tev.CuesheetIDs[i].ToString();
+                    cuesheets += FileContext.Tev.CuesheetIDs[i].ToString();
 
-                    if (i != Tev.CuesheetIDs.Count - 1)
+                    if (i != FileContext.Tev.CuesheetIDs.Count - 1)
                         cuesheets += ",";
                 }
                 flagsBox.Text = cuesheets;
@@ -608,11 +599,11 @@ namespace CMNEdit
 
         private void ProcessMSGOOE(MsgOOE msg)
         {
-            MsgOOE = msg;
+            FileContext.MsgOOE = msg;
 
             FileContext.Reset();
             FileContext.IsMsg = true;
-            Msg = null;
+            FileContext.Msg = null;
 
             ClearEverything();
 
@@ -650,8 +641,8 @@ namespace CMNEdit
 
         private void ProcessMSG(Msg msg)
         {
-            Msg = msg;
-            MsgOOE = null;
+            FileContext.Msg = msg;
+            FileContext.MsgOOE = null;
 
             FileContext.Reset();
             FileContext.IsMsg = true;
@@ -1733,12 +1724,12 @@ namespace CMNEdit
             Yarhl.IO.DataStream stream = null;
 
             if (FileContext.IsBep || FileContext.IsMep)
-                if (string.IsNullOrEmpty(FilePath))
+                if (string.IsNullOrEmpty(FileContext.FilePath))
                 {
                     SaveFileDialog dialog = new SaveFileDialog();
                     dialog.DefaultExt = (FileContext.IsBep ? ".bep" : ".mep");
                     dialog.ShowDialog();
-                    FilePath = dialog.FileName;
+                    FileContext.FilePath = dialog.FileName;
                 }
 
             CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
@@ -1753,9 +1744,9 @@ namespace CMNEdit
                     GenerateBaseInfo(cmn);
                     
                     if (FileContext.IsOE)
-                        OECMN.Write(cmn as OECMN, FilePath);
+                        OECMN.Write(cmn as OECMN, FileContext.FilePath);
                     else
-                        CMN.Write(cmn as CMN, FilePath);
+                        CMN.Write(cmn as CMN, FileContext.FilePath);
 
 
                     if (!string.IsNullOrEmpty(ResPath))
@@ -1771,28 +1762,28 @@ namespace CMNEdit
                 }
             }
             else if (FileContext.IsBep)
-                BEP.Write(GenerateBep(), FilePath, curGame);
+                BEP.Write(GenerateBep(), FileContext.FilePath, curGame);
             else if (FileContext.IsMep)
             {
                 curGame = (Game)targetGameCombo.SelectedIndex;
                 ConvertCurrentMep();
-                MEP.Write(Mep, FilePath);
+                MEP.Write(FileContext.Mep, FileContext.FilePath);
             }
             else if (FileContext.IsTev)
             {
-                Tev.Root = GenerateTEVHierarchy();
-                TEV.Write(Tev, FilePath);
+                FileContext.Tev.Root = GenerateTEVHierarchy();
+                TEV.Write(FileContext.Tev, FileContext.FilePath);
 
                 string csvPath = null;
 
-                if (Csv != null)
+                if (FileContext.Csv != null)
                 {
                     if (curGame == Game.Y3)
                         csvPath = INISettings.Y3CsvPath;
                     else if (curGame == Game.Y4)
                         csvPath = INISettings.Y4CsvPath;
 
-                    CSV.Write(Csv, csvPath);
+                    CSV.Write(FileContext.Csv, csvPath);
                 }
             }
             else if (FileContext.IsPS2Prop)
@@ -1805,47 +1796,47 @@ namespace CMNEdit
                 propFile.MoveProperties = dat1s;
                 propFile.Effects = dat2s;
 
-                OMTProperty.Write(propFile, FilePath);
+                OMTProperty.Write(propFile, FileContext.FilePath);
             }
             else if (FileContext.IsYAct)
             {
                 var treeNodes = GetAllTreeNodes();
                 YActEffect[] effects = GetAllTreeNodes().Where(x => x is TreeNodeYActEffect).Cast<TreeNodeYActEffect>().Select(x => x.Effect).ToArray();
                 yact.Effects = effects.ToList();
-                YActY1.Write(FilePath, yact);
+                YActY1.Write(FileContext.FilePath, yact);
             }
             else if (FileContext.IsOOEAuth)
             {
                 var nodesHierarchy = GenerateOOEAuthHierarchy();
-                Auth.Nodes = nodesHierarchy;
+                FileContext.Auth.Nodes = nodesHierarchy;
 
-                foreach (AuthNodeOOE node in Auth.AllNodes)
+                foreach (AuthNodeOOE node in FileContext.Auth.AllNodes)
                 {
                     if (node.Type == AuthNodeTypeOOE.Character || node.Type == AuthNodeTypeOOE.Model)
                     {
                         if (node.Type == AuthNodeTypeOOE.Character)
                         {
-                            if (!Auth.References.Any(x => x.Guid == node.AnimationData.Guid))
+                            if (!FileContext.Auth.References.Any(x => x.Guid == node.AnimationData.Guid))
                             {
                                 AuthReference reference = new AuthReference();
                                 reference.Guid = node.AnimationData.Guid;
 
-                                Auth.References.Add(reference);
+                                FileContext.Auth.References.Add(reference);
                             }
                         }
 
-                        if (!Auth.References.Any(x => x.Guid == node.Guid))
+                        if (!FileContext.Auth.References.Any(x => x.Guid == node.Guid))
                         {
                             AuthReference reference = new AuthReference();
                             reference.Guid = node.Guid;
 
-                            Auth.References.Add(reference);
+                            FileContext.Auth.References.Add(reference);
                         }
                     }
                 }
 
-                Auth.CameraCuts = CutInfos;
-                Auth.Write(Auth, FilePath);
+                FileContext.Auth.CameraCuts = CutInfos;
+                Auth.Write(FileContext.Auth, FileContext.FilePath);
 
                 if (!string.IsNullOrEmpty(ResPath))
                 {
@@ -1860,7 +1851,7 @@ namespace CMNEdit
             else if (FileContext.IsMsg)
             {
 
-                if (Msg != null)
+                if (FileContext.Msg != null)
                 {
                     List<TreeNodeMsgGroup> groups = nodesTree.Nodes[0].Nodes.Cast<TreeNodeMsgGroup>().ToList();
                     List<TreeNodeMsgCoordinate> coords = nodesTree.Nodes[1].Nodes.Cast<TreeNodeMsgCoordinate>().ToList();
@@ -1883,9 +1874,9 @@ namespace CMNEdit
                         }
                     }
 
-                    Msg.Groups = groups.Select(x => x.Group).ToList();
-                    Msg.Positions = coords.Select(x => x.Position).ToList();
-                    Msg.Write(Msg, FilePath);
+                    FileContext.Msg.Groups = groups.Select(x => x.Group).ToList();
+                    FileContext.Msg.Positions = coords.Select(x => x.Position).ToList();
+                    Msg.Write(FileContext.Msg, FileContext.FilePath);
                 }
                 else
                 {
@@ -1921,10 +1912,10 @@ namespace CMNEdit
                         }
                     }
 
-                    MsgOOE.Groups = groups.Select(x => x.Group).ToList();
-                    MsgOOE.Coordinates = coords.Select(x => x.Position).ToList();
+                    FileContext.MsgOOE.Groups = groups.Select(x => x.Group).ToList();
+                    FileContext.MsgOOE.Coordinates = coords.Select(x => x.Position).ToList();
 
-                    MsgOOE.Write(MsgOOE, FilePath);
+                    MsgOOE.Write(FileContext.MsgOOE, FileContext.FilePath);
                 }
             }
 
@@ -1936,10 +1927,10 @@ namespace CMNEdit
             curGame = (Game)targetGameCombo.SelectedIndex;
             MepEffect[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffect>().ToArray();
 
-            if (Mep.Version == MEPVersion.Y5 || Mep.Version == MEPVersion.Y0)
+            if (FileContext.Mep.Version >= MEPVersion.Y5)
             {
 
-                if (Mep.Version == MEPVersion.Y5)
+                if (FileContext.Mep.Version == MEPVersion.Y5)
                 {
                     if (curGame >= Game.Y0)
                     {
@@ -1962,29 +1953,16 @@ namespace CMNEdit
                 }
             }
 
-            Mep.Effects = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).ToList();
+            FileContext.Mep.Effects = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).ToList();
 
-            switch (curGame)
-            {
-                default:
-                    Mep.Version = MEPVersion.Y0;
-                    break;
-                case Game.Y3:
-                    Mep.Version = MEPVersion.Y3;
-                    break;
-                case Game.Y4:
-                    Mep.Version = MEPVersion.Y3;
-                    break;
-                case Game.Y5:
-                    Mep.Version = MEPVersion.Y5;
-                    break;
-                case Game.Y0:
-                    Mep.Version = MEPVersion.Y0;
-                    break;
-                case Game.YK1:
-                    Mep.Version = MEPVersion.Y0;
-                    break;
-            }
+            if (curGame >= Game.Y0)
+                FileContext.Mep.Version = MEPVersion.Y0;
+            else if (curGame == Game.Y5)
+                FileContext.Mep.Version = MEPVersion.Y5;
+            else if (curGame <= Game.Y4)
+                FileContext.Mep.Version = MEPVersion.Y3;
+            else
+                FileContext.Mep.Version = MEPVersion.Y0;
         }
 
 
@@ -2347,14 +2325,14 @@ namespace CMNEdit
                 dialog.FileName = "cmn.bin";
 
             if (FileContext.IsBep)
-                dialog.FileName = FilePath;
+                dialog.FileName = FileContext.FilePath;
 
             DialogResult res = dialog.ShowDialog();
 
             if (res != DialogResult.OK)
                 return;
 
-            FilePath = dialog.FileName;
+            FileContext.FilePath = dialog.FileName;
 
             CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
 
@@ -2375,7 +2353,7 @@ namespace CMNEdit
                 else if (FileContext.IsMep)
                 {
                     ConvertCurrentMep();
-                    MEP.Write(Mep, dialog.FileName);
+                    MEP.Write(FileContext.Mep, dialog.FileName);
                 }
             }
         }
@@ -2397,26 +2375,26 @@ namespace CMNEdit
             curGame = (Game)targetGameCombo.SelectedIndex;
             curVer = CMN.GetVersionForGame(curGame);
             CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
-            FilePath = dialog.FileName;
+            FileContext.FilePath = dialog.FileName;
 
             nodesTree.SuspendLayout();
 
             if (curGame == Game.Y1 || curGame == Game.Y2)
             {
-                FilePath = dialog.FileName;
+                FileContext.FilePath = dialog.FileName;
                 OMTProperty property = OMTProperty.Read(dialog.FileName);
 
                 ProcessPS2Prop(property);
             }
             else if (curGame > Game.Y3 && curGame < Game.Y6Demo)
             {
-                Mep = MEP.Read(dialog.FileName);
-                InitMEP(Mep);
+                FileContext.Mep = MEP.Read(dialog.FileName);
+                InitMEP(FileContext.Mep);
             }
             else
             {
                 BEP Bep = BEP.Read(dialog.FileName, curGame);
-                FilePath = dialog.FileName;
+                FileContext.FilePath = dialog.FileName;
 
                 InitBEP(Bep);
             }
@@ -2883,7 +2861,7 @@ namespace CMNEdit
             }
 
 
-            MEP.Write(Mep, Path.Combine(output, Path.GetFileName(FilePath)));
+            MEP.Write(FileContext.Mep, Path.Combine(output, Path.GetFileName(FileContext.FilePath)));
         }
 
         private void convertMEPToBEPToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2941,7 +2919,7 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
-            FilePath = null;
+            FileContext.FilePath = null;
 
             MEP mep = MEP.Read(dialog.FileName);
             mepVer = mep.Version;
@@ -3459,7 +3437,7 @@ namespace CMNEdit
             {
                 csvHactsView.Nodes.Clear();
 
-                foreach (var hact in Csv.Entries)
+                foreach (var hact in FileContext.Csv.Entries)
                 {
                     csvHactsView.Nodes.Add(new TreeNodeCSVHAct(hact));
                 }
@@ -3534,7 +3512,7 @@ namespace CMNEdit
         //Returns: 1
         private int GetCurrentIDForEvent(string type)
         {
-            if (Csv == null || TevCsvEntry == null)
+            if (FileContext.Csv == null || TevCsvEntry == null)
                 return 0;
 
             return TevCsvEntry.SpecialNodes.Where(x => x.Name.StartsWith(type)).Count();
@@ -3580,7 +3558,7 @@ namespace CMNEdit
 
         private void damageHActEventToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Csv == null || TevCsvEntry == null)
+            if (FileContext.Csv == null || TevCsvEntry == null)
                 return;
 
             TreeNode parent = nodesTree.SelectedNode == null ? nodesTree.Nodes[0] : nodesTree.SelectedNode;
@@ -3845,9 +3823,9 @@ namespace CMNEdit
 
             hactInf = inf;
             folderDir = Path.GetDirectoryName(dialog.FileName);
-            FilePath = dialog.FileName;
+            FileContext.FilePath = dialog.FileName;
 
-            yact = BaseYAct.Read(FilePath);
+            yact = BaseYAct.Read(FileContext.FilePath);
 
             ProcessYAct(yact);
         }
@@ -3863,7 +3841,7 @@ namespace CMNEdit
             if (res != DialogResult.OK)
                 return;
 
-            FilePath = dialog.FileName;
+            FileContext.FilePath = dialog.FileName;
             OMTProperty property = OMTProperty.Read(dialog.FileName);
 
             ProcessPS2Prop(property);
@@ -3883,10 +3861,10 @@ namespace CMNEdit
 
             curGame = (Game)targetGameCombo.SelectedIndex;
 
-            FilePath = dialog.FileName;
+            FileContext.FilePath = dialog.FileName;
             AppRegistry.Root.SetValue("LastFileDir", folderDir);
 
-            byte[] fileBuf = File.ReadAllBytes(FilePath);
+            byte[] fileBuf = File.ReadAllBytes(FileContext.FilePath);
 
             //OOE MSG
             if (fileBuf[4] == 0x77 && fileBuf[0xB] == 0x18)
@@ -3898,7 +3876,7 @@ namespace CMNEdit
             else
             {
                 YakuzaDataTypes.Game game = curGame >= Game.Ishin ? YakuzaDataTypes.Game.Y0 : YakuzaDataTypes.Game.Y5;
-                Msg msg = Msg.Read(FilePath, game);
+                Msg msg = Msg.Read(FileContext.FilePath, game);
 
                 ProcessMSG(msg);
             }
@@ -4050,9 +4028,9 @@ namespace CMNEdit
                 string resFile = null;
 
 
-                if (!string.IsNullOrEmpty(FilePath))
+                if (!string.IsNullOrEmpty(FileContext.FilePath))
                 {
-                    string hactDir = new FileInfo(FilePath).Directory.Parent.FullName;
+                    string hactDir = new FileInfo(FileContext.FilePath).Directory.Parent.FullName;
                     string resDir = Path.Combine(hactDir, resPrefix);
 
                     if (Directory.Exists(resDir))

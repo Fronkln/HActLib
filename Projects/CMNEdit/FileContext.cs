@@ -20,9 +20,9 @@ namespace CMNEdit
         public static bool IsOOEAuth;
         public static bool IsMsg;
 
-        private static MEP Mep;
+        public static MEP Mep;
 
-        private static TEV Tev;
+        public static TEV Tev;
         public static CSV Csv;
         public static Auth Auth;
         public static uint TevHActID;
