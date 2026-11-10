@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32526.322
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.12002.237 oobstable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HActLib", "HActLib.csproj", "{8D5B29EC-E0F6-49A8-9F50-02F836157D48}"
 EndProject
@@ -9,16 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMNEdit", "Projects\CMNEdit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HActBridge", "Projects\HActBridge\HActBridge.csproj", "{43A63CED-841E-48E3-910B-B29F4E1201E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryuse Ga Gotoku", "Projects\Ryuse Ga Gotoku\Ryuse Ga Gotoku.csproj", "{30E6838F-089E-47B6-9082-4862E131A55B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HActLib Unit Tests", "Projects\HActLib Unit Tests\HActLib Unit Tests.csproj", "{DF23BD1F-FD3D-4BC2-9053-B42B5EED2121}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6E6E181F-C601-42C6-A7EF-3A21E49D46C5}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameProgression", "Projects\FrameProgression\FrameProgression.csproj", "{3690C214-5AFF-4B49-BB46-0AB58EE3BBF1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HActScout", "Projects\HActScout\HActScout.csproj", "{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}"
 EndProject
@@ -42,18 +36,6 @@ Global
 		{43A63CED-841E-48E3-910B-B29F4E1201E7}.Debug|x64.Build.0 = Debug|x64
 		{43A63CED-841E-48E3-910B-B29F4E1201E7}.Release|x64.ActiveCfg = Release|x64
 		{43A63CED-841E-48E3-910B-B29F4E1201E7}.Release|x64.Build.0 = Release|x64
-		{30E6838F-089E-47B6-9082-4862E131A55B}.Debug|x64.ActiveCfg = Debug|x64
-		{30E6838F-089E-47B6-9082-4862E131A55B}.Debug|x64.Build.0 = Debug|x64
-		{30E6838F-089E-47B6-9082-4862E131A55B}.Release|x64.ActiveCfg = Release|x64
-		{30E6838F-089E-47B6-9082-4862E131A55B}.Release|x64.Build.0 = Release|x64
-		{DF23BD1F-FD3D-4BC2-9053-B42B5EED2121}.Debug|x64.ActiveCfg = Debug|x64
-		{DF23BD1F-FD3D-4BC2-9053-B42B5EED2121}.Debug|x64.Build.0 = Debug|x64
-		{DF23BD1F-FD3D-4BC2-9053-B42B5EED2121}.Release|x64.ActiveCfg = Release|x64
-		{DF23BD1F-FD3D-4BC2-9053-B42B5EED2121}.Release|x64.Build.0 = Release|x64
-		{3690C214-5AFF-4B49-BB46-0AB58EE3BBF1}.Debug|x64.ActiveCfg = Debug|x64
-		{3690C214-5AFF-4B49-BB46-0AB58EE3BBF1}.Debug|x64.Build.0 = Debug|x64
-		{3690C214-5AFF-4B49-BB46-0AB58EE3BBF1}.Release|x64.ActiveCfg = Release|x64
-		{3690C214-5AFF-4B49-BB46-0AB58EE3BBF1}.Release|x64.Build.0 = Release|x64
 		{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}.Debug|x64.ActiveCfg = Debug|x64
 		{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}.Debug|x64.Build.0 = Debug|x64
 		{2AC7EB2A-E9F2-4F49-91B7-0EF42829260C}.Release|x64.ActiveCfg = Release|x64

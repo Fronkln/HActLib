@@ -83,7 +83,7 @@ namespace CMNEdit
         private int currentTab = 0;
 
         private static string folderDir = "";
-        private static HActDir hactInf;
+        public static HActDir hactInf;
         public string ResPath = "";
 
         public static bool TimingInName = false;
@@ -1055,7 +1055,7 @@ namespace CMNEdit
 
                 DrawMSGOOE.DrawProperty(this, propOOE);
             }
-            else if(node is TreeNodeMsgEventOOE)
+            else if (node is TreeNodeMsgEventOOE)
             {
                 TreeNodeMsgEventOOE eventOOE = (TreeNodeMsgEventOOE)node;
                 DrawMSGOOE.DrawEvent(this, eventOOE);
@@ -1317,7 +1317,7 @@ namespace CMNEdit
             if (pastingNode == null || pastingNode.Length == 0)
                 return;
 
-            pastingNode = SortNodesByVisualOrder(pastingNode, nodesTree);
+            pastingNode = NodeTreeManager.SortNodesByVisualOrder(pastingNode, nodesTree);
 
             if (FileContext.IsOOEAuth)
             {
@@ -1482,18 +1482,6 @@ namespace CMNEdit
         {
         }
 
-        private void saveCtrlSToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "HAct cmn files (*.bin)|*.bin|All files (*.*)|*.*";
-
-            DialogResult res = dialog.ShowDialog();
-
-
-            if (res == DialogResult.OK)
-                CMN.Write(GenerateHAct(), dialog.FileName);
-        }
-
         private void hactTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentTab = hactTabs.SelectedIndex;
@@ -1516,57 +1504,6 @@ namespace CMNEdit
                 ProcessSelectedNode(foundNode);
             }
 
-        }
-        public void GenerateBaseInfo(BaseCMN cmn)
-        {
-            cmn.Version = OECMN.GetCMNVersionForGame(curGame);
-            cmn.HActStart = Utils.InvariantParse(hactStartBox.Text);
-            cmn.HActEnd = Utils.InvariantParse(hactEndBox.Text);
-            cmn.CutInfo = CutInfos.OrderBy(x => x).ToArray();
-            cmn.DisableFrameInfo = DisableFrameInfos.OrderBy(x => x.Start).ToList();
-            cmn.SetChainCameraIn(Utils.InvariantParse(cameraInBox.Text));
-            cmn.SetChainCameraOut(Utils.InvariantParse(cameraOutBox.Text));
-            cmn.ResourceCutInfo = ResourceCutInfos;
-            cmn.SetFlags(uint.Parse(flagsBox.Text));
-            cmn.SetNodeDrawNum(NodeDrawNum);
-
-            TreeViewItemNode[] nodes = GetAllNodesTreeView();
-
-            void ChildLoop(TreeViewItemNode node)
-            {
-                node.HActNode.Children.Clear();
-
-                foreach (TreeViewItemNode treeChild in node.Nodes.Cast<TreeNode>().Where(x => x is TreeViewItemNode))
-                {
-                    node.HActNode.Children.Add(treeChild.HActNode);
-                    ChildLoop(treeChild);
-                }
-            }
-
-            ChildLoop(nodes[0]);
-
-            cmn.Root = nodes[0].HActNode;
-        }
-
-        public CMN GenerateHAct()
-        {
-            CMN cmn = new CMN();
-            cmn.GameVersion = CMN.GetVersionForGame(curGame);
-            cmn.SoundInfo = SoundInfoDE;
-            cmn.Header.Type = int.Parse(typeBox.Text.ToString());
-            cmn.AuthPages = AuthPagesDE.ToList();
-            cmn.AuthPageUnk = AuthPagesDEUnk;
-            cmn.Header.SkipPointTick = SkipPointTickDE;
-
-            return cmn;
-        }
-
-        public OECMN GenerateOEHAct()
-        {
-            OECMN cmn = new OECMN();
-            cmn.SoundInfo = SoundInfoOE;
-
-            return cmn;
         }
 
         public BEP GenerateBep()
@@ -1631,50 +1568,6 @@ namespace CMNEdit
             return (nodesTree.Nodes[0] as TreeNodeSet1).Set;
         }
 
-        private List<AuthNodeOOE> GenerateOOEAuthHierarchy()
-        {
-            void ChildLoop(TreeNode node)
-            {
-                TreeNodeOOEAuthNode authNode = node as TreeNodeOOEAuthNode;
-
-                if (authNode == null)
-                    return;
-
-                if (authNode.Parent != null)
-                {
-                    authNode.Node.Parent = (authNode.Parent as TreeNodeOOEAuthNode).Node;
-                    authNode.Node.Parent.Children.Add(authNode.Node);
-                }
-
-                authNode.Node.Children.Clear();
-                authNode.Node.Effects.Clear();
-
-                foreach (TreeNode treeChild in node.Nodes.Cast<TreeNode>())
-                {
-                    if (treeChild is TreeNodeEffect)
-                    {
-                        authNode.Node.Effects.Add((treeChild as TreeNodeEffect).Effect);
-                    }
-                    ChildLoop(treeChild);
-                }
-            }
-
-            List<AuthNodeOOE> rootNodes = new List<AuthNodeOOE>();
-
-            foreach (TreeNode node in nodesTree.Nodes)
-            {
-                TreeNodeOOEAuthNode authNode = node as TreeNodeOOEAuthNode;
-
-                if (authNode == null)
-                    continue;
-
-                ChildLoop(node);
-                rootNodes.Add(authNode.Node);
-            }
-
-            return rootNodes;
-        }
-
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Yarhl.IO.DataStream stream = null;
@@ -1694,28 +1587,7 @@ namespace CMNEdit
             //Write hact
             if (FileContext.IsHact)
             {
-                if (!hactInf.IsPar)
-                {
-                    BaseCMN cmn = (FileContext.IsOE ? GenerateOEHAct() : GenerateHAct());
-                    GenerateBaseInfo(cmn);
-                    
-                    if (FileContext.IsOE)
-                        OECMN.Write(cmn as OECMN, FileContext.FilePath);
-                    else
-                        CMN.Write(cmn as CMN, FileContext.FilePath);
-
-
-                    if (!string.IsNullOrEmpty(ResPath))
-                    {
-                        RES newRes = new RES();
-                        newRes.Version = curGame >= Game.LADPYIH ? 1 : 0;
-
-                        foreach (TreeViewItemResource res in resTree.Nodes)
-                            newRes.Resources.Add(res.Resource);
-
-                        RES.Write(newRes, ResPath, CMN.IsDE(curVer));
-                    }
-                }
+                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
             }
             else if (FileContext.IsBep)
                 BEP.Write(GenerateBep(), FileContext.FilePath, curGame);
@@ -1763,46 +1635,7 @@ namespace CMNEdit
             }
             else if (FileContext.IsOOEAuth)
             {
-                var nodesHierarchy = GenerateOOEAuthHierarchy();
-                FileContext.Auth.Nodes = nodesHierarchy;
-
-                foreach (AuthNodeOOE node in FileContext.Auth.AllNodes)
-                {
-                    if (node.Type == AuthNodeTypeOOE.Character || node.Type == AuthNodeTypeOOE.Model)
-                    {
-                        if (node.Type == AuthNodeTypeOOE.Character)
-                        {
-                            if (!FileContext.Auth.References.Any(x => x.Guid == node.AnimationData.Guid))
-                            {
-                                AuthReference reference = new AuthReference();
-                                reference.Guid = node.AnimationData.Guid;
-
-                                FileContext.Auth.References.Add(reference);
-                            }
-                        }
-
-                        if (!FileContext.Auth.References.Any(x => x.Guid == node.Guid))
-                        {
-                            AuthReference reference = new AuthReference();
-                            reference.Guid = node.Guid;
-
-                            FileContext.Auth.References.Add(reference);
-                        }
-                    }
-                }
-
-                FileContext.Auth.CameraCuts = CutInfos;
-                Auth.Write(FileContext.Auth, FileContext.FilePath);
-
-                if (!string.IsNullOrEmpty(ResPath))
-                {
-                    AuthResOOE newRes = new AuthResOOE();
-
-                    foreach (TreeViewItemResourceOOE resource in resTree.Nodes)
-                        newRes.Resources.Add(resource.Resource);
-
-                    AuthResOOE.Write(newRes, ResPath);
-                }
+                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
             }
             else if (FileContext.IsMsg)
             {
@@ -1851,7 +1684,7 @@ namespace CMNEdit
 
                             List<TreeNodeMsgEventOOE> events = sNode.Nodes.Cast<TreeNodeMsgEventOOE>().ToList();
 
-                            foreach(var eNode in events)
+                            foreach (var eNode in events)
                             {
                                 eNode.Event.Properties.Clear();
 
@@ -2011,56 +1844,6 @@ namespace CMNEdit
             return list;
         }
 
-        private Node[] FilterNodesBasedOnResource(ResourceType type)
-        {
-            var nodesToFind = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode);
-
-            if (nodesToFind == null)
-                return new Node[0];
-
-            switch (type)
-            {
-                default:
-                    return new Node[0];
-
-                case ResourceType.AssetMotion:
-                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.ModelMotion).ToArray();
-
-                case ResourceType.Character:
-                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.Character).ToArray();
-
-                case ResourceType.CharacterMotion:
-                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.CharacterMotion).ToArray();
-
-                case ResourceType.CameraMotion:
-                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.CameraMotion).ToArray();
-
-                case ResourceType.PathMotion:
-                    return nodesToFind.Where(x => x.Category == AuthNodeCategory.PathMotion).ToArray();
-            }
-
-        }
-
-        private object[] FilterNodesBasedOnResourceOOE(AuthResourceOOEType type)
-        {
-            AuthNodeOOE[] nodesToFind = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeNodeOOEAuthNode>().Select(x => x.Node).ToArray();
-
-            if (nodesToFind == null)
-                return new AuthNodeOOE[0];
-
-            switch (type)
-            {
-                default:
-                    return new AuthNodeOOE[0];
-                case AuthResourceOOEType.Character:
-                    return nodesToFind.Where(x => x.Type == AuthNodeTypeOOE.Character).ToArray();
-                case AuthResourceOOEType.ObjectMotion:
-                    return nodesToFind.Where(x => x.Type == AuthNodeTypeOOE.Character || x.Type == AuthNodeTypeOOE.Model).Select(x => x.AnimationData.Guid).Cast<object>().ToArray();
-                case AuthResourceOOEType.Model:
-                    return nodesToFind.Where(x => x.Type == AuthNodeTypeOOE.Model).ToArray();
-            }
-        }
-
         private void applyResButton_Click(object sender, EventArgs e)
         {
             if (EditingResource == null)
@@ -2129,7 +1912,7 @@ namespace CMNEdit
                 resStartBox.Text = editingResourceModern.Resource.StartFrame.ToString(CultureInfo.InvariantCulture);
                 resEndBox.Text = editingResourceModern.Resource.EndFrame.ToString(CultureInfo.InvariantCulture);
 
-                EditingResourceCurrentLinkedNodes = FilterNodesBasedOnResource(editingResourceModern.Resource.Type);
+                EditingResourceCurrentLinkedNodes = NodeTreeManager.FilterNodesBasedOnResource(editingResourceModern.Resource.Type);
 
                 var array = (Node[])(EditingResourceCurrentLinkedNodes);
 
@@ -2153,7 +1936,7 @@ namespace CMNEdit
                 resourceNameTextbox.Text = editingResourceOoe.Resource.Resource;
                 resourceTypeBox.SelectedIndex = (int)editingResourceOoe.Resource.Type;
 
-                EditingResourceCurrentLinkedNodes = FilterNodesBasedOnResourceOOE(editingResourceOoe.Resource.Type);
+                EditingResourceCurrentLinkedNodes = NodeTreeManager.FilterNodesBasedOnResourceOOE(editingResourceOoe.Resource.Type);
 
                 object[] array;
                 object foundNode;
@@ -2204,29 +1987,7 @@ namespace CMNEdit
                 return;
 
             FileContext.FilePath = dialog.FileName;
-
-            CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
-
-            //TODO: GENERATE HACT
-            if (FileContext.IsHact)
-            {
-                BaseCMN cmn = (FileContext.IsOE ? GenerateOEHAct() : GenerateHAct());
-                GenerateBaseInfo(cmn);
-                if (FileContext.IsOE)
-                    OECMN.Write(cmn as OECMN, dialog.FileName);
-                else
-                    CMN.Write(cmn as CMN, dialog.FileName);
-            }
-            else
-            {
-                if (FileContext.IsBep)
-                    BEP.Write(GenerateBep(), dialog.FileName, curVer);
-                else if (FileContext.IsMep)
-                {
-                    ConvertCurrentMep();
-                    MEP.Write(FileContext.Mep, dialog.FileName);
-                }
-            }
+            saveToolStripMenuItem_Click(sender, e);
         }
 
         private void openBEPToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2930,16 +2691,8 @@ namespace CMNEdit
                 nodes = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode).ToArray();
             else
             {
-                BaseCMN genHact = null;
-
-                if (FileContext.IsOE)
-                    genHact = GenerateOEHAct();
-                else
-                    genHact = GenerateHAct();
-
-                GenerateBaseInfo(genHact);
+                BaseCMN genHact = ((HActFormatEditor)(FileContext.ActiveFormatEditor)).GenerateFullHAct();
                 nodes = genHact.GetNodes();
-
 
                 for (int i = 0; i < AuthPagesDE.Length; i++)
                 {
@@ -3749,32 +3502,6 @@ namespace CMNEdit
             }
         }
 
-        List<TreeNode> GetTreeInOrder(TreeView treeView)
-        {
-            List<TreeNode> ordered = new List<TreeNode>();
-
-            void Traverse(TreeNodeCollection nodes)
-            {
-                foreach (TreeNode node in nodes)
-                {
-                    ordered.Add(node);
-                    if (node.Nodes.Count > 0)
-                        Traverse(node.Nodes);
-                }
-            }
-
-            Traverse(treeView.Nodes);
-            return ordered;
-        }
-
-        TreeNode[] SortNodesByVisualOrder(TreeNode[] inputNodes, TreeView treeView)
-        {
-            var fullOrder = GetTreeInOrder(treeView);
-            return inputNodes
-                .OrderBy(node => fullOrder.IndexOf(node))
-                .ToArray();
-        }
-
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_rightClickedNode.MoveUp();
@@ -3876,7 +3603,7 @@ namespace CMNEdit
                             {
                                 var csvNode = CopiedNode[0];
 
-                                if(csvNode is TreeNodeCSVCharacter)
+                                if (csvNode is TreeNodeCSVCharacter)
                                 {
                                     var csvChara = (TreeNodeCSVCharacter)csvNode;
                                     var newChara = csvChara.Character.Copy();

@@ -90,19 +90,11 @@ namespace CMNEdit.Windows
             bool is58Game = prefixGame == Game.LJ || prefixGame == Game.LADIW || prefixGame == Game.LAD7Gaiden;
 
             if (FileContext.IsBep || FileContext.IsMep)
-                nodes = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode).ToArray()
+                nodes = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode).ToArray();
             else
             {
-                BaseCMN genHact = null;
-
-                if (FileContext.IsOE)
-                    genHact = Form1.Instance.GenerateOEHAct();
-                else
-                    genHact = Form1.Instance.GenerateHAct();
-
-                Form1.Instance.GenerateBaseInfo(genHact);
+                BaseCMN genHact = ((HActFormatEditor)(FileContext.ActiveFormatEditor)).GenerateFullHAct();
                 nodes = genHact.GetNodes();
-
 
                 for (int i = 0; i < Form1.Instance.AuthPagesDE.Length; i++)
                 {

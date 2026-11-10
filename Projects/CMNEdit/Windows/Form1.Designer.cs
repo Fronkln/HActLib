@@ -1642,8 +1642,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox linkedNodeBox;
         private System.Windows.Forms.Label targetNodeLbl;
-        private System.Windows.Forms.TextBox hactStartBox;
-        private System.Windows.Forms.TextBox hactEndBox;
         private System.Windows.Forms.ImageList nodeIcons;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openBEPToolStripMenuItem;
@@ -1722,7 +1720,6 @@
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem test2ToolStripMenuItem;
         private System.Windows.Forms.Panel hactFlagsHolder;
-        private System.Windows.Forms.TextBox typeBox;
         private System.Windows.Forms.Label hactTypeLabel;
         private System.Windows.Forms.ToolStripMenuItem reorderBasedOnTimingToolStripMenuItem;
         private System.Windows.Forms.CheckBox framesInNameBox;
@@ -1760,5 +1757,8 @@
         public System.Windows.Forms.TextBox flagsBox;
         public System.Windows.Forms.TextBox cameraInBox;
         public System.Windows.Forms.TextBox cameraOutBox;
+        public System.Windows.Forms.TextBox hactStartBox;
+        public System.Windows.Forms.TextBox hactEndBox;
+        public System.Windows.Forms.TextBox typeBox;
     }
 }
