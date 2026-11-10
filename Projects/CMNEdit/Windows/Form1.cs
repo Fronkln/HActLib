@@ -194,11 +194,6 @@ namespace CMNEdit
             flagsLabel.Text = "Flags";
         }
 
-        private void toolStripLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void openCtrlOToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
@@ -251,7 +246,6 @@ namespace CMNEdit
 
             curGame = (Game)targetGameCombo.SelectedIndex;
 
-            // byte[] buf = File.ReadAllBytes(hactInf.MainPath);
             byte[] buf = hactInf.GetCmnBuffer();
 
             if (buf == null)
@@ -279,6 +273,7 @@ namespace CMNEdit
 
                 FileContext.Auth = authFile;
                 FileContext.IsOOEAuth = true;
+                FileContext.ActiveFormatEditor = new OoeAuthFormatEditor();
 
                 CutInfos = authFile.CameraCuts;
                 hactTabs.TabPages.Add(cutPage);
@@ -395,6 +390,7 @@ namespace CMNEdit
                 hactStartBox.Visible = true;
                 hactEndBox.Visible = true;
                 FileContext.IsHact = true;
+                FileContext.ActiveFormatEditor = new HActFormatEditor();
 
                 hactFlagsHolder.Visible = true;
 
@@ -2026,30 +2022,6 @@ namespace CMNEdit
             }
         }
 
-        public AuthNodeOOE[] GetAllNodesOOEAuth()
-        {
-            if (nodesTree.Nodes.Count <= 0)
-                return new AuthNodeOOE[0];
-
-            List<TreeNode> nodes = new List<TreeNode>();
-
-            void Process(TreeNode node)
-            {
-                nodes.Add(node);
-
-                foreach (TreeNode child in node.Nodes)
-                    Process(child);
-            }
-
-            foreach (TreeNode node in nodesTree.Nodes)
-                Process(node);
-
-            return nodes.Where(x => x is TreeNodeOOEAuthNode)
-               .Cast<TreeNodeOOEAuthNode>()
-               .Select(x => x.Node)
-               .ToArray();
-        }
-
         public TreeNode[] GetAllTreeNodes()
         {
 
@@ -2158,17 +2130,15 @@ namespace CMNEdit
 
         private object[] FilterNodesBasedOnResourceOOE(AuthResourceOOEType type)
         {
-            AuthNodeOOE[] nodesToFind = GetAllNodesOOEAuth();
+            AuthNodeOOE[] nodesToFind = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeNodeOOEAuthNode>().Select(x => x.Node).ToArray();
 
             if (nodesToFind == null)
                 return new AuthNodeOOE[0];
-
 
             switch (type)
             {
                 default:
                     return new AuthNodeOOE[0];
-
                 case AuthResourceOOEType.Character:
                     return nodesToFind.Where(x => x.Type == AuthNodeTypeOOE.Character).ToArray();
                 case AuthResourceOOEType.ObjectMotion:
@@ -2473,6 +2443,7 @@ namespace CMNEdit
         {
             FileContext.Reset();
             FileContext.IsBep = true;
+            FileContext.ActiveFormatEditor = new BEPFormatEditor();
 
             hactTabs.TabPages[0].Text = "BEP";
             hactTabs.TabPages.Remove(resPage);

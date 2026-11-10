@@ -20,6 +20,8 @@ namespace CMNEdit
         public static bool IsOOEAuth;
         public static bool IsMsg;
 
+        public static FormatEditorBase ActiveFormatEditor = null;
+
         public static MEP Mep;
 
         public static TEV Tev;
