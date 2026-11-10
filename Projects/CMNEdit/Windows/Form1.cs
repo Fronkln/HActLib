@@ -684,33 +684,6 @@ namespace CMNEdit
                 cutInfoTree.Nodes.Add(new TreeViewItemCutInfo(f));
         }
 
-        public void ReDraw()
-        {
-            SuspendLayout();
-
-            if (nodesTree.Nodes.Count == 0)
-                return;
-
-            if (!FileContext.IsBep)
-            {
-                Node root = (nodesTree.Nodes[0] as TreeViewItemNode).HActNode;
-
-                nodesTree.Nodes.Clear();
-                nodesTree.Nodes.Add(new TreeViewItemNode(root));
-            }
-            else
-            {
-                Node[] nodes = GetAllNodes();
-
-                nodesTree.Nodes.Clear();
-
-                foreach (Node node in nodes)
-                    nodesTree.Nodes.Add(new TreeViewItemNode(node));
-            }
-
-            ResumeLayout(true);
-        }
-
         public void ClearNodes()
         {
             SuspendLayout();
@@ -1528,7 +1501,7 @@ namespace CMNEdit
 
         private void resTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Node[] nodesToFind = GetAllNodes();
+            var nodesToFind = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode);
 
             TreeViewItemResource resNode = e.Node as TreeViewItemResource;
             Resource res = resNode.Resource;
@@ -1600,8 +1573,7 @@ namespace CMNEdit
         {
             BEP bep = new BEP();
             bep.Game = curGame;
-            bep.Nodes.AddRange(GetAllNodes());
-
+            bep.Nodes.AddRange(FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode));
 
             return bep;
         }
@@ -1959,67 +1931,8 @@ namespace CMNEdit
 
         public NodeElement[] GetCurrentAuthAllElements()
         {
-            Node[] allNodes = GetAllNodes();
+            var allNodes = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode);
             return allNodes.Where(x => x.Category == AuthNodeCategory.Element).Cast<NodeElement>().ToArray();
-        }
-
-        public Node[] GetAllNodes()
-        {
-            if (nodesTree.Nodes.Count <= 0)
-                return new Node[0];
-
-
-            if (!FileContext.IsMep)
-            {
-                List<TreeNode> nodes = new List<TreeNode>();
-
-                void Process(TreeNode node)
-                {
-                    nodes.Add(node);
-
-                    foreach (TreeNode child in node.Nodes)
-                        Process(child);
-                }
-
-                if (!FileContext.IsBep)
-                    Process(nodesTree.Nodes[0]);
-                else
-                {
-                    foreach (TreeNode node in nodesTree.Nodes)
-                        Process(node);
-                }
-
-                return nodes.Where(x => x is TreeViewItemNode)
-                   .Cast<TreeViewItemNode>()
-                   .Select(x => x.HActNode)
-                   .ToArray();
-            }
-            else
-            {
-                List<Node> children = new List<Node>();
-
-                void ChildLoop(TreeNode parent)
-                {
-                    foreach (TreeNode node in parent.Nodes)
-                    {
-                        TreeViewItemNode hactNode = node as TreeViewItemNode;
-
-                        if (hactNode != null)
-                        {
-                            hactNode.Nodes.Add(hactNode);
-                            ChildLoop(hactNode);
-                        }
-                    }
-                }
-
-                TreeViewItemNode[] rootNodes = GetAllNodesTreeView();
-
-
-                return nodesTree.Nodes
-                   .Cast<TreeViewItemNode>()
-                   .Select(x => x.HActNode)
-                   .ToArray();
-            }
         }
 
         public TreeNode[] GetAllTreeNodes()
@@ -2100,7 +2013,7 @@ namespace CMNEdit
 
         private Node[] FilterNodesBasedOnResource(ResourceType type)
         {
-            Node[] nodesToFind = GetAllNodes();
+            var nodesToFind = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode);
 
             if (nodesToFind == null)
                 return new Node[0];
@@ -3014,7 +2927,7 @@ namespace CMNEdit
             GameVersion targetVer = CMN.GetVersionForGame(prefixGame);
 
             if (FileContext.IsBep || FileContext.IsMep)
-                nodes = GetAllNodes();
+                nodes = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode).ToArray();
             else
             {
                 BaseCMN genHact = null;
@@ -3929,7 +3842,7 @@ namespace CMNEdit
 
             float endFrame = Utils.InvariantParse(input);
 
-            foreach (var node in GetAllNodes())
+            foreach (var node in FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode))
             {
                 if (node is NodeMotionBase)
                 {

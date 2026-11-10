@@ -90,7 +90,7 @@ namespace CMNEdit.Windows
             bool is58Game = prefixGame == Game.LJ || prefixGame == Game.LADIW || prefixGame == Game.LAD7Gaiden;
 
             if (FileContext.IsBep || FileContext.IsMep)
-                nodes = Form1.Instance.GetAllNodes();
+                nodes = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode).ToArray()
             else
             {
                 BaseCMN genHact = null;
@@ -200,10 +200,12 @@ namespace CMNEdit.Windows
 
                     string[] ptcs = null;
 
+                    var allNodes = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode);
+
                     if (oldGame >= Game.YK2)
-                        ptcs = Form1.Instance.GetAllNodes().Where(x => x is DEElementParticle).Cast<DEElementParticle>().Select(x => (x.ParticleName + ".pib").ToLowerInvariant()).Distinct().ToArray();
+                        ptcs = allNodes.Cast<DEElementParticle>().Select(x => (x.ParticleName + ".pib").ToLowerInvariant()).Distinct().ToArray();
                     else
-                        ptcs = Form1.Instance.GetAllNodes().Where(x => x is DEElementParticle).Cast<DEElementParticle>().Select(x => (x.Name.Substring(0, 7) + ".pib").ToLowerInvariant()).Distinct().ToArray();
+                        ptcs = allNodes.Where(x => x is DEElementParticle).Cast<DEElementParticle>().Select(x => (x.Name.Substring(0, 7) + ".pib").ToLowerInvariant()).Distinct().ToArray();
 
                     foreach (string str in ptcs)
                     {

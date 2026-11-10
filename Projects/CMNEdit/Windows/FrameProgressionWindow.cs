@@ -36,7 +36,7 @@ namespace Frame_Progression_GUI
 
             cameraList.SelectedIndexChanged += delegate { OnSelectedCameraChanged(cameraList.SelectedIndex); };
 
-            m_cameras = Form1.Instance.GetAllNodes().Where(x => x.Category == AuthNodeCategory.Camera).Cast<NodeCamera>().ToArray();
+            m_cameras = FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode).Where(x => x.Category == AuthNodeCategory.Camera).Cast<NodeCamera>().ToArray();
             cameraList.Items.AddRange(m_cameras.Select(x => x.Name).ToArray());
 
             if (m_cameras.Length <= 0)
