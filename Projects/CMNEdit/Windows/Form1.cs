@@ -156,7 +156,7 @@ namespace CMNEdit
             varPanel.RowStyles.Clear();
         }
 
-        private void ClearEverything()
+        public void ClearEverything()
         {
             SuspendLayout();
 
@@ -973,18 +973,7 @@ namespace CMNEdit
             if (node is TreeNodeOOEAuthNode)
             {
                 TreeNodeOOEAuthNode authNode = (TreeNodeOOEAuthNode)node;
-
-                PropertyEditorBuilder.CreateHeader("Auth Node");
-
-                PropertyEditorBuilder.CreateInput("GUID", authNode.Node.Guid.ToString(), delegate (string val) { authNode.Node.Guid = new Guid(val); });
-                PropertyEditorBuilder.CreateInput("Type", authNode.Node.Type.ToString(), null, readOnly: true);
-
-                PropertyEditorBuilder.CreateHeader("Animation Data");
-                PropertyEditorBuilder.CreateInput("Type", authNode.Node.AnimationData.Type.ToString(), delegate (string val) { authNode.Node.AnimationData.Type = int.Parse(val); }, NumberBox.NumberMode.Int);
-                PropertyEditorBuilder.CreateInput("Unknown", authNode.Node.AnimationData.Unknown2.ToString(), delegate (string val) { authNode.Node.AnimationData.Unknown2 = int.Parse(val); }, NumberBox.NumberMode.Int);
-                PropertyEditorBuilder.CreateInput("GUID", authNode.Node.AnimationData.Guid.ToString(), delegate (string val) { authNode.Node.AnimationData.Guid = new Guid(val); });
-                PropertyEditorBuilder.CreateInput("Start", authNode.Node.AnimationData.StartFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.StartFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                PropertyEditorBuilder.CreateInput("End", authNode.Node.AnimationData.EndFrame.ToString(CultureInfo.InvariantCulture), delegate (string val) { authNode.Node.AnimationData.EndFrame = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
+                DrawTEV.Draw(authNode);
             }
 
             else if (node is TreeNodeSet1)
@@ -2110,7 +2099,7 @@ namespace CMNEdit
             }
         }
 
-        private TreeViewItemNode[] GetAllNodesTreeView()
+        public TreeViewItemNode[] GetAllNodesTreeView()
         {
             return nodesTree.Nodes.Cast<TreeNode>()
                .Where(x => x is TreeViewItemNode)
@@ -2480,7 +2469,7 @@ namespace CMNEdit
         }
 
 
-        private void SetBEPMode()
+        public void SetBEPMode()
         {
             FileContext.Reset();
             FileContext.IsBep = true;
@@ -2865,159 +2854,7 @@ namespace CMNEdit
 
         private void convertMEPToBEPToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PibVersion GetVersionForGame(Game game)
-            {
-                switch (game)
-                {
-                    default:
-                        return PibVersion.Y0;
-                    case Game.Y5:
-                        return PibVersion.Y5;
-                    case Game.Ishin:
-                        return PibVersion.Ishin;
-                    case Game.Y6:
-                        return PibVersion.Y6;
-                    case Game.YK2:
-                        return PibVersion.YK2;
-                    case Game.JE:
-                        return PibVersion.JE;
-                    case Game.YLAD:
-                        return PibVersion.YLAD;
-                    case Game.LJ:
-                        return PibVersion.LJ;
-                }
-            }
-
-
-            Game selectedDEGame = curGame = (Game)targetGameCombo.SelectedIndex;
-
-            if (!CMN.IsDEGame(selectedDEGame))
-            {
-                MessageBox.Show("Select a DE game first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            MEPVersion mepVer;
-            Game game;
-            Dictionary<string, Node> m_createdBones = new Dictionary<string, Node>();
-
-            Node ConvertMepNodeToBep(MepEffectOE mepNode)
-            {
-                Node node = null;
-                node = OE2DECmn.Convert(mepNode.Effect, OECMN.GetCMNVersionForGame(game), selectedDEGame, game);
-
-                return node;
-            }
-
-            OpenFileDialog dialog = new OpenFileDialog();
-            // dialog.Filter = ".mep|.MEP file";
-            dialog.CheckFileExists = true;
-
-            DialogResult res = dialog.ShowDialog();
-
-            if (res != DialogResult.OK)
-                return;
-
-            FileContext.FilePath = null;
-
-            MEP mep = MEP.Read(dialog.FileName);
-            mepVer = mep.Version;
-            game = mepVer == MEPVersion.Y5 ? Game.Y5 : Game.Y0;
-
-            ClearEverything();
-            SetBEPMode();
-
-            foreach (MepEffectOE mepOe in mep.Effects.Cast<MepEffectOE>())
-            {
-                Node result = ConvertMepNodeToBep(mepOe);
-                TreeViewItemNode resultNode = null;
-
-                if (result != null)
-                {
-                    result.BEPDat.Bone = mepOe.BoneName;
-                    resultNode = new TreeViewItemNode(result);
-                    nodesTree.Nodes.Add(resultNode);
-                }
-            }
-
-            if (MessageBox.Show("Convert particle files?", "Conversion", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                FolderBrowserDialog pibDir = new FolderBrowserDialog();
-
-                if (pibDir.ShowDialog() != DialogResult.OK)
-                    return;
-
-                string pibSearchDir = pibDir.SelectedPath;
-
-                FolderBrowserDialog pibOutputDir = new FolderBrowserDialog();
-
-                if (pibOutputDir.ShowDialog() != DialogResult.OK)
-                    return;
-
-                string pibOutputPath = pibOutputDir.SelectedPath;
-
-
-                OEParticle[] mepNodes = mep.Effects.Cast<MepEffectOE>().Where(x => x.Effect.ElementKind == 2).Select(x => x.Effect).Cast<OEParticle>().ToArray();
-
-                uint puidStartID = uint.Parse(Microsoft.VisualBasic.Interaction.InputBox("Enter the starting ID the converted pibs will have",
-                "Adjust PUID ID",
-                "",
-                0,
-                0));
-
-                uint[] pibIds = mepNodes.Select(x => x.ParticleID).GroupBy(x => x).Select(y => y.First()).ToArray();
-                string[] pibFiles = Directory.GetFiles(pibSearchDir, "*.pib", SearchOption.AllDirectories);
-
-                Dictionary<uint, uint> newPibIDs = new Dictionary<uint, uint>();
-
-                List<string> foundPibPaths = new List<string>();
-                List<BasePib> mepPibs = new List<BasePib>();
-
-                foreach (string str in pibFiles)
-                {
-                    if (pibIds.Length == pibFiles.Length)
-                        break;
-
-                    try
-                    {
-                        BasePib pib = PIB.Read(str);
-
-                        if (pibIds.Contains(pib.ParticleID))
-                        {
-                            foundPibPaths.Add(str);
-                            mepPibs.Add(pib);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                }
-
-                foreach (BasePib pib in mepPibs)
-                {
-                    BasePib converted = PIB.Convert(pib, GetVersionForGame(selectedDEGame));
-
-                    if (converted == null)
-                        continue;
-
-                    uint oldID = converted.ParticleID;
-                    uint newID = puidStartID;
-                    puidStartID++;
-
-                    converted.ParticleID = newID;
-                    newPibIDs[oldID] = newID;
-
-                    PIB.Write(converted, Path.Combine(pibOutputPath, converted.Name + ".pib"));
-                }
-
-                foreach (DEElementParticle ptc in GetAllNodesTreeView().Where(x => x.HActNode is DEElementParticle).Select(x => x.HActNode).Cast<DEElementParticle>())
-                {
-                    if (newPibIDs.ContainsKey(ptc.ParticleID))
-                        ptc.ParticleID = newPibIDs[ptc.ParticleID];
-                }
-            }
-
+            MepToBepConverter.Procedure();
         }
 
 
@@ -3981,306 +3818,12 @@ namespace CMNEdit
 
         private void segmentAuthToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Form1.Instance.ResourceCutInfos == null)
-                return;
-
-            if (Form1.Instance.ResourceCutInfos.Length <= 1)
-            {
-                MessageBox.Show("Your HAct does not have more than one resource cut");
-                return;
-            }
-
-            FolderBrowserDialog browser = new FolderBrowserDialog();
-
-            if (browser.ShowDialog() != DialogResult.OK)
-                return;
-
-            string outputPath = browser.SelectedPath;
-
-            if (!Directory.Exists(outputPath))
-                Directory.CreateDirectory(outputPath);
-
-
-
-            float currentStart = 0;
-            float lastCut = -1;
-
-            for (int i = 0; i < ResourceCutInfos.Length; i++)
-            {
-                string resPrefix = i.ToString("D3");
-                string folderDir = Path.Combine(outputPath, resPrefix + "_segment");
-
-                if (!Directory.Exists(folderDir))
-                    Directory.CreateDirectory(folderDir);
-
-                float end = ResourceCutInfos[i];
-                float length = end - currentStart;
-
-                //create segmented CMN
-                BaseCMN segmented = null;
-
-                if (FileContext.IsOE)
-                    segmented = new OECMN();
-                else
-                    segmented = new CMN();
-
-                string resFile = null;
-
-
-                if (!string.IsNullOrEmpty(FileContext.FilePath))
-                {
-                    string hactDir = new FileInfo(FileContext.FilePath).Directory.Parent.FullName;
-                    string resDir = Path.Combine(hactDir, resPrefix);
-
-                    if (Directory.Exists(resDir))
-                    {
-                        resFile = Path.Combine(resDir, "res.bin");
-
-                        if (File.Exists(resFile))
-                        {
-                            RES res = RES.Read(resFile, false);
-
-#warning TODO: Adjust res
-                            foreach (var resource in res.Resources)
-                            {
-                                //These tend to have the full length of the hact. Wont touch
-                                if (resource.Type != ResourceType.CustomModel && resource.Type != ResourceType.Character)
-                                {
-                                    resource.StartFrame -= currentStart;
-                                    resource.EndFrame -= currentStart;
-                                }
-
-                            }
-
-                            RES.Write(res, Path.Combine(folderDir, "res.bin"), CMN.IsDEGame(curGame));
-                            // File.Copy(resFile, Path.Combine(folderDir, "res.bin"));
-                        }
-
-                        string[] files = Directory.GetFiles(resDir);
-
-                        foreach (string str in files)
-                        {
-                            if (!str.EndsWith(".bin"))
-                                File.Copy(str, Path.Combine(folderDir, Path.GetFileName(str)), true);
-                        }
-                    }
-
-                }
-
-                //create segmented CMN
-                segmented.Version = Version;
-                segmented.SetFlags(uint.Parse(flagsBox.Text));
-                segmented.HActEnd = length;
-                segmented.SetChainCameraIn(Utils.InvariantParse(cameraInBox.Text));
-                segmented.SetChainCameraOut(Utils.InvariantParse(cameraOutBox.Text));
-                segmented.ResourceCutInfo = new float[] { length };
-                segmented.SetNodeDrawNum(NodeDrawNum);
-
-
-                //filter cut info
-                List<float> cutInfoSegment = new List<float>();
-
-                foreach (float cutInfo in CutInfos)
-                {
-                    if (cutInfo >= currentStart && cutInfo <= end)
-                        cutInfoSegment.Add(Utils.ConvertRange(cutInfo, currentStart, end, 0, length));
-                }
-
-                segmented.CutInfo = cutInfoSegment.ToArray();
-
-                if (i > 0)
-                    lastCut = currentStart;
-
-                //filter nodes
-                TreeViewItemNode result = (TreeViewItemNode)Sorting.FilterNodesByRange(Form1.Instance.nodesTree, lastCut, currentStart, end);
-                segmented.Root = result.HActNode;
-
-                if (i != ResourceCutInfos.Length - 1)
-                    currentStart = end;
-
-                OECMN.Write(segmented as OECMN, Path.Combine(folderDir, "cmn.bin"));
-            }
+            AuthAssembler.SegmentProcedure();
         }
 
         private void reassembleAuthToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog browser = new FolderBrowserDialog();
-
-            if (browser.ShowDialog() != DialogResult.OK)
-                return;
-
-            string inputPath = browser.SelectedPath;
-            string outputPath = Path.Combine(browser.SelectedPath, "..", new DirectoryInfo(browser.SelectedPath).Name + "_reassembled");
-            string outputCmnDir = Path.Combine(outputPath, "cmn");
-            string outputCmnPath = Path.Combine(outputCmnDir, "cmn.bin");
-
-            if (!Directory.Exists(outputPath))
-                Directory.CreateDirectory(outputPath);
-
-            if (!Directory.Exists(outputCmnDir))
-                Directory.CreateDirectory(outputCmnDir);
-
-            var game = (Game)targetGameCombo.SelectedIndex;
-
-            BaseCMN cmn = null;
-            int curSegment = 0;
-
-            float oldEnd = 0;
-
-            List<float> resourceCuts = new List<float>();
-            List<float> cutInfos = new List<float>();
-
-
-            List<NodeElement> multiPartNodes = new List<NodeElement>();
-
-
-            while (true)
-            {
-                string segmentPath = Path.Combine(inputPath, curSegment.ToString("D3") + "_segment");
-
-                if (!Directory.Exists(segmentPath))
-                    break;
-
-                string cmnFile = Path.Combine(segmentPath, "cmn.bin");
-                string resFile = Path.Combine(segmentPath, "res.bin");
-
-                if (!File.Exists(cmnFile))
-                    break;
-
-                BaseCMN segment = BaseCMN.ReadGeneric(cmnFile, game);
-                RES segmentedRes = null;
-
-                if (File.Exists(resFile))
-                    segmentedRes = RES.Read(resFile, CMN.IsDEGame(game)); ;
-
-                //we will add on this segment to get the full thing
-                if (cmn == null)
-                {
-                    resourceCuts = new List<float>(segment.ResourceCutInfo);
-                    cutInfos = new List<float>(segment.CutInfo);
-                    cmn = segment;
-                }
-                else
-                {
-                    foreach (float cutinfo in segment.CutInfo)
-                    {
-                        cutInfos.Add(cutinfo + cmn.HActEnd);
-                    }
-
-                    resourceCuts.Add(segment.ResourceCutInfo[0] + cmn.HActEnd);
-
-                    oldEnd = cmn.HActEnd;
-                    cmn.HActEnd += segment.HActEnd;
-
-                    foreach (NodeElement element in segment.AllElements)
-                    {
-                        NodeElement originalNode = (NodeElement)cmn.FindNodeByGUID(element.Guid);
-
-                        if (originalNode != null)
-                        {
-                            originalNode.End += element.Start;
-                            originalNode.End += element.End;
-                        }
-                        else
-                        {
-                            Node originalParent = cmn.FindNodeByGUID(element.Parent.Guid);
-
-                            //huhhh
-                            if (originalParent != null)
-                            {
-                                originalParent.Children.Add(element);
-
-                                element.Start += oldEnd;
-                                element.End += oldEnd;
-                            }
-                        }
-                    }
-
-                    //jank but i dont fucking care
-                    foreach (Node node in segment.GetNodes())
-                    {
-                        if (!(node is NodeMotionBase))
-                            continue;
-
-                        NodeMotionBase segmentedNode = (NodeMotionBase)node;
-                        NodeMotionBase originalNode = (NodeMotionBase)cmn.FindNodeByGUID(node.Guid);
-
-                        if (originalNode != null)
-                        {
-                            originalNode.End.Frame += segmentedNode.End.Frame;
-                        }
-                        else
-                        {
-                            Node originalParent = cmn.FindNodeByGUID(node.Parent.Guid);
-
-                            //huhhh
-                            if (originalParent != null)
-                            {
-                                originalParent.Children.Add(node);
-
-                                segmentedNode.Start.Frame += oldEnd;
-                                segmentedNode.End.Frame += oldEnd;
-                            }
-                        }
-                    }
-
-                }
-
-
-                if (segmentedRes != null)
-                {
-                    foreach (Resource res in segmentedRes.Resources)
-                    {
-                        if (res.Type == ResourceType.CharacterMotion
-                            || res.Type == ResourceType.PathMotion
-                            || res.Type == ResourceType.CameraMotion || res.Type == ResourceType.AssetMotion)
-                        {
-                            res.StartFrame = oldEnd;
-                            res.EndFrame = cmn.HActEnd;
-                        }
-                    }
-
-                    string resDir = Path.Combine(new DirectoryInfo(outputCmnDir).Parent.FullName, curSegment.ToString("D3"));
-
-                    if (!Directory.Exists(resDir))
-                        Directory.CreateDirectory(resDir);
-
-                    RES.Write(segmentedRes, Path.Combine(resDir, "res.bin"), CMN.IsDEGame(game));
-
-                    string[] files = Directory.GetFiles(segmentPath);
-
-                    foreach (string str in files)
-                    {
-                        if (!str.EndsWith(".bin"))
-                            File.Copy(str, Path.Combine(resDir, Path.GetFileName(str)), true);
-                    }
-                }
-
-                curSegment++;
-            }
-
-            //go back to 000 and correct any character/model lengths who typically are present for full hact duration..
-            string res0Path = Path.Combine(outputPath, "000", "res.bin");
-
-            if (File.Exists(res0Path))
-            {
-                RES res = RES.Read(res0Path, false);
-
-                foreach (var resource in res.Resources)
-                {
-                    if (resource.Type == ResourceType.Character || resource.Type == ResourceType.CustomModel || resource.Type == ResourceType.Model)
-                    {
-                        resource.EndFrame = cmn.HActEnd;
-                    }
-                }
-
-                RES.Write(res, res0Path, false);
-            }
-
-            cmn.CutInfo = cutInfos.Distinct().ToArray();
-            cmn.ResourceCutInfo = resourceCuts.ToArray();
-
-            BaseCMN.WriteGeneric(outputCmnPath, cmn);
+            AuthAssembler.ReassembleProcedure();
         }
 
         private void correctSoundIDsToolStripMenuItem_Click(object sender, EventArgs e)

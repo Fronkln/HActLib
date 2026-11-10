@@ -1722,14 +1722,11 @@
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem test2ToolStripMenuItem;
         private System.Windows.Forms.Panel hactFlagsHolder;
-        private System.Windows.Forms.TextBox flagsBox;
         private System.Windows.Forms.TextBox typeBox;
         private System.Windows.Forms.Label hactTypeLabel;
         private System.Windows.Forms.ToolStripMenuItem reorderBasedOnTimingToolStripMenuItem;
         private System.Windows.Forms.CheckBox framesInNameBox;
         private System.Windows.Forms.Panel cameraInPanel;
-        private System.Windows.Forms.TextBox cameraInBox;
-        private System.Windows.Forms.TextBox cameraOutBox;
         private System.Windows.Forms.ToolStripMenuItem authToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem segmentAuthToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reassembleAuthToolStripMenuItem;
@@ -1760,5 +1757,8 @@
         public System.Windows.Forms.TableLayoutPanel varPanel;
         public System.Windows.Forms.TabControl hactTabs;
         public System.Windows.Forms.TableLayoutPanel csvVarPanel;
+        public System.Windows.Forms.TextBox flagsBox;
+        public System.Windows.Forms.TextBox cameraInBox;
+        public System.Windows.Forms.TextBox cameraOutBox;
     }
 }
