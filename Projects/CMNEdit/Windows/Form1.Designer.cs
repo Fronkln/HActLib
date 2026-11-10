@@ -1636,7 +1636,7 @@
         private System.Windows.Forms.Button applyResButton;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox resourceNameTextbox;
-        private Be.Windows.Forms.HexBox unkBytesBox;
+        public Be.Windows.Forms.HexBox unkBytesBox;
         private System.Windows.Forms.Label targetGameLbl;
         private System.Windows.Forms.ComboBox resourceTypeBox;
         private System.Windows.Forms.Label label1;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HActLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,16 @@ namespace CMNEdit
                 Process(node);
 
             return nodes.ToArray();
+        }
+
+        public override void Save(string filePath)
+        {
+            base.Save(filePath);
+
+            BEP bep = new BEP();
+            bep.Game = Form1.curGame;
+            bep.Nodes.AddRange(GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode));
+            BEP.Write(bep, FileContext.FilePath, Form1.curGame);
         }
     }
 }

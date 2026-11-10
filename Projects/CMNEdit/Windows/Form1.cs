@@ -20,7 +20,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -1506,15 +1505,6 @@ namespace CMNEdit
 
         }
 
-        public BEP GenerateBep()
-        {
-            BEP bep = new BEP();
-            bep.Game = curGame;
-            bep.Nodes.AddRange(FileContext.ActiveFormatEditor.GetAllNodes().Cast<TreeViewItemNode>().Select(x => x.HActNode));
-
-            return bep;
-        }
-
         public string GetLocalizedCMN()
         {
             string lang = langOverrideBox.Text;
@@ -1533,39 +1523,6 @@ namespace CMNEdit
                 return "res.bin";
             else
                 return $"res_{lang}.bin";
-        }
-
-        private ObjectBase GenerateTEVHierarchy()
-        {
-            void ChildLoop(TreeNode node)
-            {
-                if (node as TreeNodeSet1 == null)
-                    return;
-
-                TreeNodeSet1 set1Node = node as TreeNodeSet1;
-                set1Node.Set.Children.Clear();
-
-                foreach (TreeNode treeChild in node.Nodes.Cast<TreeNode>())
-                {
-                    if (treeChild is TreeNodeSet1)
-                    {
-                        TreeNodeSet1 set1Child = (treeChild as TreeNodeSet1);
-
-                        set1Node.Set.Children.Add(set1Child.Set);
-                        set1Child.Set.Parent = set1Node.Set;
-                    }
-                    else if (treeChild is TreeNodeSet2)
-                        set1Node.Set.Children.Add((treeChild as TreeNodeSet2).Set);
-                    else if (treeChild is TreeNodeEffect)
-                        set1Node.Set.Children.Add((treeChild as TreeNodeEffect).Effect);
-
-                    ChildLoop(treeChild);
-                }
-            }
-
-            ChildLoop(nodesTree.Nodes[0]);
-
-            return (nodesTree.Nodes[0] as TreeNodeSet1).Set;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1590,7 +1547,7 @@ namespace CMNEdit
                 FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
             }
             else if (FileContext.IsBep)
-                BEP.Write(GenerateBep(), FileContext.FilePath, curGame);
+                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
             else if (FileContext.IsMep)
             {
                 curGame = (Game)targetGameCombo.SelectedIndex;
@@ -1599,20 +1556,7 @@ namespace CMNEdit
             }
             else if (FileContext.IsTev)
             {
-                FileContext.Tev.Root = GenerateTEVHierarchy();
-                TEV.Write(FileContext.Tev, FileContext.FilePath);
-
-                string csvPath = null;
-
-                if (FileContext.Csv != null)
-                {
-                    if (curGame == Game.Y3)
-                        csvPath = INISettings.Y3CsvPath;
-                    else if (curGame == Game.Y4)
-                        csvPath = INISettings.Y4CsvPath;
-
-                    CSV.Write(FileContext.Csv, csvPath);
-                }
+                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
             }
             else if (FileContext.IsPS2Prop)
             {
@@ -3049,174 +2993,13 @@ namespace CMNEdit
         public void ProcessSelectedNodeYAct()
         {
             TreeNode node = nodesTree.SelectedNode;
-
-            Be.Windows.Forms.DynamicByteProvider provider = null;
-
-            if (node is TreeNodeYActY2Animation)
-            {
-                var y2Anim = node as TreeNodeYActY2Animation;
-                PropertyEditorBuilder.CreateHeader($"Animation ({y2Anim.Animation.Format})");
-                PropertyEditorBuilder.CreateInput("Start", y2Anim.Animation.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                PropertyEditorBuilder.CreateInput("End", y2Anim.Animation.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { y2Anim.Animation.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-
-                PropertyEditorBuilder.CreateButton("Export", delegate
-                {
-                    string format = y2Anim.Animation.Format.ToString().ToLowerInvariant();
-
-                    SaveFileDialog dialog = new SaveFileDialog();
-                    dialog.Filter = $"PS2 Animation File (*.{format})|*.{format}";
-                    dialog.FileName = $"{y2Anim.Parent.Text}.{format}";
-                    dialog.InitialDirectory = AppRegistry.GetFileExtractOpenPath();
-
-                    if (dialog.ShowDialog() == DialogResult.OK)
-                    {
-                        AppRegistry.Root.SetValue("LastHActAssetExportDir", Path.GetDirectoryName(dialog.FileName));
-                        File.WriteAllBytes(dialog.FileName, y2Anim.Animation.File.Buffer);
-                    }
-                });
-            }
-
-            if (node is TreeNodeYActCameraMotion)
-            {
-                PropertyEditorBuilder.CreateHeader("Camera Animation");
-                PropertyEditorBuilder.CreateButton("Import", delegate
-                {
-                    OpenFileDialog dialog = new OpenFileDialog();
-                    dialog.Filter = "PS2 Object/Camera Animation (*.mtbw)|*.mtbw";
-
-                    if (dialog.ShowDialog() == DialogResult.OK)
-                    {
-                        var animNode = (node as TreeNodeYActCameraMotion);
-                        animNode.File.Buffer = File.ReadAllBytes(dialog.FileName);
-
-                        if (animNode.OrigCamera != null)
-                            animNode.OrigCamera.MTBWFile = animNode.File.Buffer;
-                    }
-                });
-                PropertyEditorBuilder.CreateButton("Export", delegate
-                {
-                    SaveFileDialog dialog = new SaveFileDialog();
-                    dialog.Filter = "PS2 Camera Animation (*.mtbw)|*.mtbw";
-                    dialog.FileName = "camera.mtbw";
-                    dialog.InitialDirectory = AppRegistry.GetFileExtractOpenPath();
-
-                    if (dialog.ShowDialog() == DialogResult.OK)
-                    {
-                        AppRegistry.Root.SetValue("LastHActAssetExportDir", Path.GetDirectoryName(dialog.FileName));
-                        File.WriteAllBytes(dialog.FileName, (node as TreeNodeYActCameraMotion).File.Buffer);
-                    }
-                });
-            }
-            else if (node is TreeNodeYActCharacterMotion)
-            {
-                PropertyEditorBuilder.CreateHeader("Character Animation");
-                PropertyEditorBuilder.CreateButton("Import", delegate
-                {
-                    OpenFileDialog dialog = new OpenFileDialog();
-                    dialog.Filter = "Character Animation|*.omt;*.dat";
-
-                    if (dialog.ShowDialog() == DialogResult.OK)
-                    {
-                        (node as TreeNodeYActCharacterMotion).File.Buffer = File.ReadAllBytes(dialog.FileName);
-                    }
-                });
-                PropertyEditorBuilder.CreateButton("Export", delegate
-                {
-                    SaveFileDialog dialog = new SaveFileDialog();
-                    dialog.Filter = "PS2 Animation (*.omt)|*.omt";
-                    dialog.FileName = node.Parent.Text + ".omt";
-                    dialog.InitialDirectory = AppRegistry.GetFileExtractOpenPath();
-
-                    if (dialog.ShowDialog() == DialogResult.OK)
-                    {
-                        AppRegistry.Root.SetValue("LastHActAssetExportDir", Path.GetDirectoryName(dialog.FileName));
-                        File.WriteAllBytes(dialog.FileName, (node as TreeNodeYActCharacterMotion).File.Buffer);
-                    }
-                });
-            }
-            else if (node is TreeNodeYActEffect)
-            {
-                var effectNode = node as TreeNodeYActEffect;
-                PropertyEditorBuilder.CreateHeader("YAct Effect");
-
-                if (!string.IsNullOrEmpty(effectNode.Effect.Name))
-                    PropertyEditorBuilder.CreateInput("Name", effectNode.Effect.Name.ToString(), delegate (string val) { effectNode.Effect.Name = val; });
-
-                PropertyEditorBuilder.CreateInput("Start", effectNode.Effect.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                PropertyEditorBuilder.CreateInput("End", effectNode.Effect.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { effectNode.Effect.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                PropertyEditorBuilder.CreateInput("Bone ID", effectNode.Effect.BoneID.ToString(), delegate (string val) { effectNode.Effect.BoneID = int.Parse(val); }, NumberBox.NumberMode.Int);
-
-
-                switch ((YActEffectType)effectNode.Effect.Type)
-                {
-                    case YActEffectType.Particle:
-                        var ptcEffect = effectNode.Effect as YActEffectParticle;
-                        PropertyEditorBuilder.CreateHeader("Particle");
-                        PropertyEditorBuilder.CreateInput("Particle ID", ptcEffect.Particle.ToString(), delegate (string val) { ptcEffect.Particle = int.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Int);
-                        break;
-                    case YActEffectType.Sound:
-                        var soundEffect = effectNode.Effect as YActEffectSound;
-                        PropertyEditorBuilder.CreateHeader("Sound");
-                        PropertyEditorBuilder.CreateInput("Cuesheet ID", soundEffect.CuesheetID.ToString(), delegate (string val) { soundEffect.CuesheetID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
-                        PropertyEditorBuilder.CreateInput("Sound ID", soundEffect.SoundID.ToString(), delegate (string val) { soundEffect.SoundID = ushort.Parse(val); effectNode.Refresh(); }, NumberBox.NumberMode.Ushort);
-                        break;
-                }
-
-
-                provider = new Be.Windows.Forms.DynamicByteProvider(effectNode.Effect.UnknownData);
-            }
-
-            PropertyEditorBuilder.CreateHeader("");
-            unkBytesBox.ByteProvider = provider;
-            varPanel.ResumeLayout();
+            DrawYAct.Draw(node);
         }
 
         public void ProcessSelectedNodePS2Prop()
         {
             TreeNode node = nodesTree.SelectedNode;
-
-            Be.Windows.Forms.DynamicByteProvider provider = null;
-
-            if (node is TreeNodePS2PropertyData1)
-            {
-                var dat1Node = node as TreeNodePS2PropertyData1;
-                PropertyEditorBuilder.CreateHeader("Property (Data1)");
-                PropertyEditorBuilder.CreateInput("Type", dat1Node.Data1.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
-                PropertyEditorBuilder.CreateInput("Start", dat1Node.Data1.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                PropertyEditorBuilder.CreateInput("End", dat1Node.Data1.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat1Node.Data1.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-
-                if (dat1Node.Data1.UnknownData != null)
-                {
-                    provider = new Be.Windows.Forms.DynamicByteProvider(dat1Node.Data1.UnknownData);
-                    provider.Changed += delegate
-                    {
-                        if (provider.Bytes.Count == dat1Node.Data1.UnknownData.Length)
-                            dat1Node.Data1.UnknownData = provider.Bytes.ToArray();
-                    };
-                }
-            }
-            else if (node is TreeNodePS2PropertyData2)
-            {
-                var dat2Node = node as TreeNodePS2PropertyData2;
-                PropertyEditorBuilder.CreateHeader("Property (Data2)");
-                PropertyEditorBuilder.CreateInput("Type?", dat2Node.Data2.Type.ToString(), delegate (string val) { }, NumberBox.NumberMode.Int, true);
-                PropertyEditorBuilder.CreateInput("Start", dat2Node.Data2.Start.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.Start = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-                PropertyEditorBuilder.CreateInput("End", dat2Node.Data2.End.ToString(CultureInfo.InvariantCulture), delegate (string val) { dat2Node.Data2.End = Utils.InvariantParse(val); }, NumberBox.NumberMode.Float);
-
-                if (dat2Node.Data2.UnknownData != null)
-                {
-                    provider = new Be.Windows.Forms.DynamicByteProvider(dat2Node.Data2.UnknownData);
-                    provider.Changed += delegate
-                    {
-                        if (provider.Bytes.Count == dat2Node.Data2.UnknownData.Length)
-                            dat2Node.Data2.UnknownData = provider.Bytes.ToArray();
-                    };
-                }
-            }
-
-            PropertyEditorBuilder.CreateHeader("");
-            unkBytesBox.ByteProvider = provider;
-            varPanel.ResumeLayout();
+            DrawPS2Prop.Draw(node);
         }
 
         private void targetGameCombo_SelectedIndexChanged(object sender, EventArgs e)
