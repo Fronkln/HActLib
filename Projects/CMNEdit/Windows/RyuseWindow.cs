@@ -89,13 +89,13 @@ namespace CMNEdit.Windows
 
             bool is58Game = prefixGame == Game.LJ || prefixGame == Game.LADIW || prefixGame == Game.LAD7Gaiden;
 
-            if (Form1.IsBep || Form1.IsMep)
+            if (FileContext.IsBep || FileContext.IsMep)
                 nodes = Form1.Instance.GetAllNodes();
             else
             {
                 BaseCMN genHact = null;
 
-                if (Form1.IsOE)
+                if (FileContext.IsOE)
                     genHact = Form1.Instance.GenerateOEHAct();
                 else
                     genHact = Form1.Instance.GenerateHAct();
@@ -148,7 +148,7 @@ namespace CMNEdit.Windows
 
             Node[] outputNodes;
 
-            if (!Form1.IsOE)
+            if (!FileContext.IsOE)
             {
                 RyuseModule.ConversionInformation inf = RyuseModule.ConvertNodes(nodes, Form1.curGame, prefixGame);
                 outputNodes = inf.OutputNodes;
@@ -167,7 +167,7 @@ namespace CMNEdit.Windows
 
             Form1.Instance.ClearNodes();
 
-            if (!Form1.IsBep)
+            if (!FileContext.IsBep)
             {
                 Form1.Instance.nodesTree.Nodes.Add(new TreeViewItemNode(outputNodes[0]));
             }

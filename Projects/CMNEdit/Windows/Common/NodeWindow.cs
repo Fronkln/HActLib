@@ -13,7 +13,7 @@ namespace CMNEdit
         {
             PropertyEditorBuilder.CreateHeader("Basic Information");
 
-            bool bep = Form1.IsBep;
+            bool bep = FileContext.IsBep;
 
             if (bep)
             {

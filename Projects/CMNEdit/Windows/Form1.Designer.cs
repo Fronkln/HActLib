@@ -787,6 +787,7 @@
             // nodesTree
             // 
             nodesTree.AllowDrop = true;
+            nodesTree.CheckedNodes = (System.Collections.Hashtable)resources.GetObject("nodesTree.CheckedNodes");
             nodesTree.ImageIndex = 0;
             nodesTree.ImageList = nodeIcons;
             nodesTree.ImeMode = System.Windows.Forms.ImeMode.On;

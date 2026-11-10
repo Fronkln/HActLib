@@ -20,6 +20,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -31,16 +32,6 @@ namespace CMNEdit
     {
         public static Form1 Instance;
         public static string FilePath;
-
-        public static bool IsBep;
-        public static bool IsMep;
-        public static bool IsHact;
-        public static bool IsTev;
-        public static bool IsOE;
-        public static bool IsYAct;
-        public static bool IsPS2Prop;
-        public static bool IsOOEAuth;
-        public static bool IsMsg;
 
         private static MEP Mep;
 
@@ -192,9 +183,7 @@ namespace CMNEdit
 
             ResumeLayout(true);
 
-            IsHact = false;
-            IsOE = false;
-            IsBep = false;
+            FileContext.Reset();
 
             ResPath = "";
 
@@ -277,15 +266,7 @@ namespace CMNEdit
             if (buf == null)
                 return;
 
-            IsBep = false;
-            IsMep = false;
-            IsHact = false;
-            IsTev = false;
-            IsOE = false;
-            IsYAct = false;
-            IsPS2Prop = false;
-            IsOOEAuth = false;
-            IsMsg = false;
+            FileContext.Reset();
 
             hactTabs.TabPages.Remove(csvTab);
             addNodeTab.DropDownItems.Remove(nodeAddTabDE);
@@ -306,7 +287,7 @@ namespace CMNEdit
                 hactDurationPanel.Visible = true;
 
                 Auth = authFile;
-                IsOOEAuth = true;
+                FileContext.IsOOEAuth = true;
 
                 CutInfos = Auth.CameraCuts;
                 hactTabs.TabPages.Add(cutPage);
@@ -375,7 +356,7 @@ namespace CMNEdit
                 hactFlagsHolder.Visible = true;
                 flagsLabel.Text = "Cuesheet ID";
 
-                IsTev = true;
+                FileContext.IsTev = true;
 
                 Tev = TEV.Read(buf);
                 Csv = CSV.Read(csvPath);
@@ -422,7 +403,7 @@ namespace CMNEdit
 
                 hactStartBox.Visible = true;
                 hactEndBox.Visible = true;
-                IsHact = true;
+                FileContext.IsHact = true;
 
                 hactFlagsHolder.Visible = true;
 
@@ -458,7 +439,7 @@ namespace CMNEdit
                     HAct = OECMN.Read(buf, (Game)targetGameCombo.SelectedIndex == Game.FOTNS);
                     curVer = GameVersion.Y0_K1;
                     curGame = (Game)targetGameCombo.SelectedIndex;
-                    IsOE = true;
+                    FileContext.IsOE = true;
 
                     cameraInPanel.Visible = true;
                 }
@@ -514,14 +495,8 @@ namespace CMNEdit
 
             curGame = (Game)targetGameCombo.SelectedIndex;
 
-            IsBep = false;
-            IsMep = false;
-            IsHact = false;
-            IsTev = false;
-            IsOE = false;
-            IsPS2Prop = false;
-            IsYAct = true;
-            IsMsg = false;
+            FileContext.Reset();
+            FileContext.IsYAct = true;
 
             hactTabs.TabPages.Remove(csvTab);
             hactTabs.TabPages.Remove(resPage);
@@ -607,13 +582,8 @@ namespace CMNEdit
 
         private void ProcessPS2Prop(OMTProperty prop)
         {
-            IsBep = false;
-            IsMep = false;
-            IsHact = false;
-            IsTev = false;
-            IsOE = false;
-            IsPS2Prop = true;
-            IsYAct = false;
+            FileContext.Reset();
+            FileContext.IsPS2Prop = true;
 
             hactTabs.TabPages.Remove(csvTab);
             hactTabs.TabPages.Remove(resPage);
@@ -640,14 +610,8 @@ namespace CMNEdit
         {
             MsgOOE = msg;
 
-            IsBep = false;
-            IsMep = false;
-            IsHact = false;
-            IsTev = false;
-            IsOE = false;
-            IsPS2Prop = false;
-            IsYAct = false;
-            IsMsg = true;
+            FileContext.Reset();
+            FileContext.IsMsg = true;
             Msg = null;
 
             ClearEverything();
@@ -689,14 +653,8 @@ namespace CMNEdit
             Msg = msg;
             MsgOOE = null;
 
-            IsBep = false;
-            IsMep = false;
-            IsHact = false;
-            IsTev = false;
-            IsOE = false;
-            IsPS2Prop = false;
-            IsYAct = false;
-            IsMsg = true;
+            FileContext.Reset();
+            FileContext.IsMsg = true;
 
             ClearEverything();
 
@@ -747,7 +705,7 @@ namespace CMNEdit
             if (nodesTree.Nodes.Count == 0)
                 return;
 
-            if (!IsBep)
+            if (!FileContext.IsBep)
             {
                 Node root = (nodesTree.Nodes[0] as TreeViewItemNode).HActNode;
 
@@ -810,25 +768,25 @@ namespace CMNEdit
             System.Diagnostics.Debug.Print(varPanel.RowStyles.Count.ToString());
 
 
-            if (IsPS2Prop)
+            if (FileContext.IsPS2Prop)
             {
                 ProcessSelectedNodePS2Prop();
                 return;
             }
 
-            if (IsYAct)
+            if (FileContext.IsYAct)
             {
                 ProcessSelectedNodeYAct();
                 return;
             }
 
-            if (IsTev || IsOOEAuth)
+            if (FileContext.IsTev || FileContext.IsOOEAuth)
             {
                 ProcessSelectedNodeTEV();
                 return;
             }
 
-            if (IsMsg)
+            if (FileContext.IsMsg)
             {
                 ProcessSelectedNodeMSG();
                 return;
@@ -856,7 +814,7 @@ namespace CMNEdit
 
             Node node;
 
-            if (!IsMep)
+            if (!FileContext.IsMep)
                 node = EditingNode.HActNode;
             else
             {
@@ -877,7 +835,7 @@ namespace CMNEdit
             NodeWindow.Draw(this, node);
 
 
-            if (IsMep)
+            if (FileContext.IsMep)
             {
                 var mepEffectOE = ((treeNode as TreeViewItemMepNode).Node as MepEffectOE);
 
@@ -1413,7 +1371,7 @@ namespace CMNEdit
 
             pastingNode = SortNodesByVisualOrder(pastingNode, nodesTree);
 
-            if (IsOOEAuth)
+            if (FileContext.IsOOEAuth)
             {
                 foreach (var node in pastingNode)
                 {
@@ -1429,7 +1387,7 @@ namespace CMNEdit
                 return;
             }
 
-            if (IsMsg)
+            if (FileContext.IsMsg)
             {
                 foreach (var node in pastingNode)
                 {
@@ -1441,7 +1399,7 @@ namespace CMNEdit
                 }
             }
 
-            if (IsPS2Prop)
+            if (FileContext.IsPS2Prop)
             {
                 foreach (var node in pastingNode)
                 {
@@ -1451,7 +1409,7 @@ namespace CMNEdit
                 return;
             }
 
-            if (IsYAct)
+            if (FileContext.IsYAct)
             {
                 foreach (System.Windows.Forms.TreeNode node in pastingNode)
                 {
@@ -1460,7 +1418,7 @@ namespace CMNEdit
                 }
             }
 
-            if (!IsMep)
+            if (!FileContext.IsMep)
             {
                 void PasteNode(TreeViewItemNode node)
                 {
@@ -1469,7 +1427,7 @@ namespace CMNEdit
 
                     bool bepConditionPaste = hactNode.HActNode.Category == AuthNodeCategory.FolderCondition;
 
-                    if (!IsBep || bepConditionPaste)
+                    if (!FileContext.IsBep || bepConditionPaste)
                     {
                         if (hactNode != null && parentNode != hactNode)
                             parentNode = hactNode;
@@ -1493,7 +1451,7 @@ namespace CMNEdit
                     }
                 }
 
-                if (IsTev)
+                if (FileContext.IsTev)
                 {
                     TreeNodeSet1 obj = nodesTree.SelectedNode as TreeNodeSet1;
 
@@ -1536,7 +1494,7 @@ namespace CMNEdit
             }
             else
             {
-                if (IsMep)
+                if (FileContext.IsMep)
                 {
                     foreach (TreeNode node in pastingNode)
                     {
@@ -1774,11 +1732,11 @@ namespace CMNEdit
         {
             Yarhl.IO.DataStream stream = null;
 
-            if (IsBep || IsMep)
+            if (FileContext.IsBep || FileContext.IsMep)
                 if (string.IsNullOrEmpty(FilePath))
                 {
                     SaveFileDialog dialog = new SaveFileDialog();
-                    dialog.DefaultExt = (IsBep ? ".bep" : ".mep");
+                    dialog.DefaultExt = (FileContext.IsBep ? ".bep" : ".mep");
                     dialog.ShowDialog();
                     FilePath = dialog.FileName;
                 }
@@ -1787,13 +1745,14 @@ namespace CMNEdit
             curGame = (Game)targetGameCombo.SelectedIndex;
 
             //Write hact
-            if (IsHact)
+            if (FileContext.IsHact)
             {
                 if (!hactInf.IsPar)
                 {
-                    BaseCMN cmn = (IsOE ? GenerateOEHAct() : GenerateHAct());
+                    BaseCMN cmn = (FileContext.IsOE ? GenerateOEHAct() : GenerateHAct());
                     GenerateBaseInfo(cmn);
-                    if (IsOE)
+                    
+                    if (FileContext.IsOE)
                         OECMN.Write(cmn as OECMN, FilePath);
                     else
                         CMN.Write(cmn as CMN, FilePath);
@@ -1811,15 +1770,15 @@ namespace CMNEdit
                     }
                 }
             }
-            else if (IsBep)
+            else if (FileContext.IsBep)
                 BEP.Write(GenerateBep(), FilePath, curGame);
-            else if (IsMep)
+            else if (FileContext.IsMep)
             {
                 curGame = (Game)targetGameCombo.SelectedIndex;
                 ConvertCurrentMep();
                 MEP.Write(Mep, FilePath);
             }
-            else if (IsTev)
+            else if (FileContext.IsTev)
             {
                 Tev.Root = GenerateTEVHierarchy();
                 TEV.Write(Tev, FilePath);
@@ -1836,7 +1795,7 @@ namespace CMNEdit
                     CSV.Write(Csv, csvPath);
                 }
             }
-            else if (IsPS2Prop)
+            else if (FileContext.IsPS2Prop)
             {
                 OMTProperty propFile = new OMTProperty();
 
@@ -1848,14 +1807,14 @@ namespace CMNEdit
 
                 OMTProperty.Write(propFile, FilePath);
             }
-            else if (IsYAct)
+            else if (FileContext.IsYAct)
             {
                 var treeNodes = GetAllTreeNodes();
                 YActEffect[] effects = GetAllTreeNodes().Where(x => x is TreeNodeYActEffect).Cast<TreeNodeYActEffect>().Select(x => x.Effect).ToArray();
                 yact.Effects = effects.ToList();
                 YActY1.Write(FilePath, yact);
             }
-            else if (IsOOEAuth)
+            else if (FileContext.IsOOEAuth)
             {
                 var nodesHierarchy = GenerateOOEAuthHierarchy();
                 Auth.Nodes = nodesHierarchy;
@@ -1898,7 +1857,7 @@ namespace CMNEdit
                     AuthResOOE.Write(newRes, ResPath);
                 }
             }
-            else if (IsMsg)
+            else if (FileContext.IsMsg)
             {
 
                 if (Msg != null)
@@ -2048,7 +2007,7 @@ namespace CMNEdit
                 return new Node[0];
 
 
-            if (!IsMep)
+            if (!FileContext.IsMep)
             {
                 List<TreeNode> nodes = new List<TreeNode>();
 
@@ -2060,7 +2019,7 @@ namespace CMNEdit
                         Process(child);
                 }
 
-                if (!IsBep)
+                if (!FileContext.IsBep)
                     Process(nodesTree.Nodes[0]);
                 else
                 {
@@ -2128,7 +2087,7 @@ namespace CMNEdit
         public TreeNode[] GetAllTreeNodes()
         {
 
-            if (!IsMep)
+            if (!FileContext.IsMep)
             {
                 List<TreeNode> nodes = new List<TreeNode>();
 
@@ -2140,7 +2099,7 @@ namespace CMNEdit
                         Process(child);
                 }
 
-                if (!IsBep && !IsYAct)
+                if (!FileContext.IsBep && !FileContext.IsYAct)
                     Process(nodesTree.Nodes[0]);
                 else
                 {
@@ -2379,15 +2338,15 @@ namespace CMNEdit
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!IsBep && !IsHact && !IsOE)
+            if (!FileContext.IsBep && !FileContext.IsHact && !FileContext.IsOE)
                 return;
 
             SaveFileDialog dialog = new SaveFileDialog();
 
-            if (IsHact)
+            if (FileContext.IsHact)
                 dialog.FileName = "cmn.bin";
 
-            if (IsBep)
+            if (FileContext.IsBep)
                 dialog.FileName = FilePath;
 
             DialogResult res = dialog.ShowDialog();
@@ -2400,20 +2359,20 @@ namespace CMNEdit
             CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
 
             //TODO: GENERATE HACT
-            if (IsHact)
+            if (FileContext.IsHact)
             {
-                BaseCMN cmn = (IsOE ? GenerateOEHAct() : GenerateHAct());
+                BaseCMN cmn = (FileContext.IsOE ? GenerateOEHAct() : GenerateHAct());
                 GenerateBaseInfo(cmn);
-                if (IsOE)
+                if (FileContext.IsOE)
                     OECMN.Write(cmn as OECMN, dialog.FileName);
                 else
                     CMN.Write(cmn as CMN, dialog.FileName);
             }
             else
             {
-                if (IsBep)
+                if (FileContext.IsBep)
                     BEP.Write(GenerateBep(), dialog.FileName, curVer);
-                else if (IsMep)
+                else if (FileContext.IsMep)
                 {
                     ConvertCurrentMep();
                     MEP.Write(Mep, dialog.FileName);
@@ -2499,11 +2458,8 @@ namespace CMNEdit
             EditingResource = null;
             m_rightClickedNode = null;
 
-            IsHact = false;
-            IsOE = true;
-            IsMep = true;
-            IsBep = false;
-            IsTev = false;
+            FileContext.Reset();
+            FileContext.IsMep = true;
 
             hactTabs.TabPages[0].Text = "MEP";
             hactTabs.TabPages.Remove(resPage);
@@ -2549,10 +2505,8 @@ namespace CMNEdit
 
         private void SetBEPMode()
         {
-            IsHact = false;
-            IsOE = false;
-            IsMep = false;
-            IsBep = true;
+            FileContext.Reset();
+            FileContext.IsBep = true;
 
             hactTabs.TabPages[0].Text = "BEP";
             hactTabs.TabPages.Remove(resPage);
@@ -2584,7 +2538,7 @@ namespace CMNEdit
 
             TreeNode nodeNew = new TreeViewItemNode(elem);
 
-            if (!IsBep)
+            if (!FileContext.IsBep)
             {
                 if (node != null)
                     parentNode = node;
@@ -2620,7 +2574,7 @@ namespace CMNEdit
 
             TreeNode nodeNew = new TreeViewItemNode(elem);
 
-            if (!IsBep)
+            if (!FileContext.IsBep)
             {
                 if (node != null)
                     parentNode = node;
@@ -2838,7 +2792,7 @@ namespace CMNEdit
         }
         private void convertMEPWithPibsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!IsMep)
+            if (!FileContext.IsMep)
                 return;
 
             MessageBox.Show("(SLOW) Convert the current open mep file to the selected OE game including pibs. Input the paths carefully.");
@@ -3109,7 +3063,7 @@ namespace CMNEdit
                 elem.End = elem.End * fact;
             }
 
-            if (!IsBep)
+            if (!FileContext.IsBep)
             {
                 hactStartBox.Text = (Utils.InvariantParse(hactStartBox.Text) * fact).ToString();
                 hactEndBox.Text = (Utils.InvariantParse(hactEndBox.Text) * fact).ToString();
@@ -3206,7 +3160,7 @@ namespace CMNEdit
 
         private void frameProgressionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!IsHact)
+            if (!FileContext.IsHact)
                 return;
 
             FrameProgressionWindow curveForm = new FrameProgressionWindow();
@@ -3239,7 +3193,7 @@ namespace CMNEdit
 
             List<string> options = new List<string>();
 
-            if (!IsOE)
+            if (!FileContext.IsOE)
             {
                 Game[] deGames = CMN.GetDEGames();
 
@@ -3274,13 +3228,13 @@ namespace CMNEdit
 
             GameVersion targetVer = CMN.GetVersionForGame(prefixGame);
 
-            if (IsBep || IsMep)
+            if (FileContext.IsBep || FileContext.IsMep)
                 nodes = GetAllNodes();
             else
             {
                 BaseCMN genHact = null;
 
-                if (IsOE)
+                if (FileContext.IsOE)
                     genHact = GenerateOEHAct();
                 else
                     genHact = GenerateHAct();
@@ -3312,7 +3266,7 @@ namespace CMNEdit
 
             Node[] outputNodes;
 
-            if (!IsOE)
+            if (!FileContext.IsOE)
             {
                 RyuseModule.ConversionInformation inf = RyuseModule.ConvertNodes(nodes, Form1.curGame, prefixGame);
                 outputNodes = inf.OutputNodes;
@@ -3331,7 +3285,7 @@ namespace CMNEdit
 
             ClearNodes();
 
-            if (!IsBep)
+            if (!FileContext.IsBep)
             {
                 nodesTree.Nodes.Add(new TreeViewItemNode(outputNodes[0]));
             }
@@ -4088,7 +4042,7 @@ namespace CMNEdit
                 //create segmented CMN
                 BaseCMN segmented = null;
 
-                if (IsOE)
+                if (FileContext.IsOE)
                     segmented = new OECMN();
                 else
                     segmented = new CMN();
@@ -4360,7 +4314,7 @@ namespace CMNEdit
 
             List<string> options = new List<string>();
 
-            if (!IsOE)
+            if (!FileContext.IsOE)
             {
                 Game[] deGames = CMN.GetDEGames();
 

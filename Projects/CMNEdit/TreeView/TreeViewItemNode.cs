@@ -44,7 +44,7 @@ namespace CMNEdit
         {
             string name = HActNode.Name;
 
-            if (Form1.TranslateNames || Form1.IsBep || Form1.IsMep)
+            if (Form1.TranslateNames || FileContext.IsBep || FileContext.IsMep)
             {
                 name = TranslateName(HActNode);
             }
@@ -78,7 +78,7 @@ namespace CMNEdit
 
             ContextMenuStrip = Form1.Instance.nodeContext;
 
-            bool isOE = Form1.IsOE;
+            bool isOE = FileContext.IsOE;
 
             SetIcon();
           
@@ -97,7 +97,7 @@ namespace CMNEdit
 
         public static int SetIcon(AuthNodeCategory cat, uint elementID)
         {
-            bool isOE = Form1.IsOE;
+            bool isOE = FileContext.IsOE;
 
             switch (cat)
             {
@@ -227,7 +227,7 @@ namespace CMNEdit
         {
             string TranslateElement()
             {
-                bool isOE = Form1.IsOE;
+                bool isOE = FileContext.IsOE;
                 string nodeName = Reflection.GetElementNameByID((node as NodeElement).ElementKind, Form1.curGame);
 
                 if (node is NodeElementUser)
@@ -308,7 +308,7 @@ namespace CMNEdit
                 case AuthNodeCategory.ModelMotion:
                     return "Model Animation";
                 case AuthNodeCategory.FolderCondition:
-                    if (!Form1.IsOE)
+                    if (!FileContext.IsOE)
                         return $"Condition ({(node as DENodeConditionFolder).Condition})";
                     else
                         return "Condition Folder";
@@ -323,7 +323,7 @@ namespace CMNEdit
         {
             string name = HActLib.Internal.Reflection.GetElementNameByID((HActNode as NodeElement).ElementKind, Form1.curGame);
 
-            if (!Form1.IsOE)
+            if (!FileContext.IsOE)
             {
                 switch (name)
                 {
