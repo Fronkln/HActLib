@@ -33,5 +33,18 @@ namespace CMNEdit
 
         public static GameVersion curVer;
         public static Game curGame = Game.YLAD; //only used for DE
+
+        public static void Reset()
+        {
+            IsBep = false;
+            IsMep = false;
+            IsHact = false;
+            IsTev = false;
+            IsOE = false;
+            IsPS2Prop = false;
+            IsYAct = false;
+            IsMsg = false;
+        }
+
     }
 }
