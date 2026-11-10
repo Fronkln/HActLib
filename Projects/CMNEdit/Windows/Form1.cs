@@ -599,9 +599,8 @@ namespace CMNEdit
 
         private void ProcessMSGOOE(MsgOOE msg)
         {
-            FileContext.MsgOOE = msg;
-
             FileContext.Reset();
+            FileContext.MsgOOE = msg;
             FileContext.IsMsg = true;
             FileContext.Msg = null;
 
@@ -641,10 +640,10 @@ namespace CMNEdit
 
         private void ProcessMSG(Msg msg)
         {
+            FileContext.Reset();
+
             FileContext.Msg = msg;
             FileContext.MsgOOE = null;
-
-            FileContext.Reset();
             FileContext.IsMsg = true;
 
             ClearEverything();
