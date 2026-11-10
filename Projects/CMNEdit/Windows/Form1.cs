@@ -56,7 +56,7 @@ namespace CMNEdit
         public AuthPage[] AuthPagesDE;
         public byte[] AuthPagesDEUnk;
 
-        private static BaseYAct yact;
+        public static BaseYAct yact;
 
         private static object[] EditingResourceCurrentLinkedNodes = null;
 
@@ -341,6 +341,7 @@ namespace CMNEdit
                 hactFlagsHolder.Visible = true;
                 flagsLabel.Text = "Cuesheet ID";
 
+                FileContext.ActiveFormatEditor = new TEVFormatEditor();
                 FileContext.IsTev = true;
 
                 FileContext.Tev = TEV.Read(buf);
@@ -482,6 +483,7 @@ namespace CMNEdit
             curGame = (Game)targetGameCombo.SelectedIndex;
 
             FileContext.Reset();
+            FileContext.ActiveFormatEditor = new YActFormatEditor();
             FileContext.IsYAct = true;
 
             hactTabs.TabPages.Remove(csvTab);
@@ -569,6 +571,7 @@ namespace CMNEdit
         private void ProcessPS2Prop(OMTProperty prop)
         {
             FileContext.Reset();
+            FileContext.ActiveFormatEditor = new PS2PropFormatEditor();
             FileContext.IsPS2Prop = true;
 
             hactTabs.TabPages.Remove(csvTab);
@@ -595,6 +598,7 @@ namespace CMNEdit
         private void ProcessMSGOOE(MsgOOE msg)
         {
             FileContext.Reset();
+            FileContext.ActiveFormatEditor = new MsgFormatEditor();
             FileContext.MsgOOE = msg;
             FileContext.IsMsg = true;
             FileContext.Msg = null;
@@ -636,6 +640,8 @@ namespace CMNEdit
         private void ProcessMSG(Msg msg)
         {
             FileContext.Reset();
+
+            FileContext.ActiveFormatEditor = new MsgFormatEditor();
 
             FileContext.Msg = msg;
             FileContext.MsgOOE = null;
@@ -1540,118 +1546,8 @@ namespace CMNEdit
 
             CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
             curGame = (Game)targetGameCombo.SelectedIndex;
-
-            //Write hact
-            if (FileContext.IsHact)
-            {
-                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
-            }
-            else if (FileContext.IsBep)
-                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
-            else if (FileContext.IsMep)
-            {
-                curGame = (Game)targetGameCombo.SelectedIndex;
-                ConvertCurrentMep();
-                MEP.Write(FileContext.Mep, FileContext.FilePath);
-            }
-            else if (FileContext.IsTev)
-            {
-                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
-            }
-            else if (FileContext.IsPS2Prop)
-            {
-                OMTProperty propFile = new OMTProperty();
-
-                List<OMTMoveProperty> dat1s = nodesTree.Nodes.Cast<TreeNode>().Where(x => x is TreeNodePS2PropertyData1).Cast<TreeNodePS2PropertyData1>().Select(x => x.Data1).ToList();
-                List<OMTEffectProperty> dat2s = nodesTree.Nodes.Cast<TreeNode>().Where(x => x is TreeNodePS2PropertyData2).Cast<TreeNodePS2PropertyData2>().Select(x => x.Data2).ToList();
-
-                propFile.MoveProperties = dat1s;
-                propFile.Effects = dat2s;
-
-                OMTProperty.Write(propFile, FileContext.FilePath);
-            }
-            else if (FileContext.IsYAct)
-            {
-                var treeNodes = GetAllTreeNodes();
-                YActEffect[] effects = GetAllTreeNodes().Where(x => x is TreeNodeYActEffect).Cast<TreeNodeYActEffect>().Select(x => x.Effect).ToArray();
-                yact.Effects = effects.ToList();
-                YActY1.Write(FileContext.FilePath, yact);
-            }
-            else if (FileContext.IsOOEAuth)
-            {
-                FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
-            }
-            else if (FileContext.IsMsg)
-            {
-
-                if (FileContext.Msg != null)
-                {
-                    List<TreeNodeMsgGroup> groups = nodesTree.Nodes[0].Nodes.Cast<TreeNodeMsgGroup>().ToList();
-                    List<TreeNodeMsgCoordinate> coords = nodesTree.Nodes[1].Nodes.Cast<TreeNodeMsgCoordinate>().ToList();
-
-                    foreach (var gNode in groups)
-                    {
-                        gNode.Group.Events.Clear();
-
-                        List<TreeNodeMsgEvent> events = gNode.Nodes.Cast<TreeNodeMsgEvent>().ToList();
-
-                        foreach (var eNode in events)
-                        {
-                            eNode.Event.Properties.Clear();
-                            List<TreeNodeMsgProperty> properties = eNode.Nodes.Cast<TreeNodeMsgProperty>().ToList();
-
-                            foreach (var prop in properties)
-                                eNode.Event.Properties.Add(prop.Property);
-
-                            gNode.Group.Events.Add(eNode.Event);
-                        }
-                    }
-
-                    FileContext.Msg.Groups = groups.Select(x => x.Group).ToList();
-                    FileContext.Msg.Positions = coords.Select(x => x.Position).ToList();
-                    Msg.Write(FileContext.Msg, FileContext.FilePath);
-                }
-                else
-                {
-                    List<TreeNodeMsgGroupOOE> groups = nodesTree.Nodes[0].Nodes.Cast<TreeNodeMsgGroupOOE>().ToList();
-                    List<TreeNodeMsgCoordinate> coords = nodesTree.Nodes[1].Nodes.Cast<TreeNodeMsgCoordinate>().ToList();
-
-                    foreach (var gNode in groups)
-                    {
-                        gNode.Group.Subgroups.Clear();
-
-                        List<TreeNodeMsgSubGroupOOE> subGroups = gNode.Nodes.Cast<TreeNodeMsgSubGroupOOE>().ToList();
-
-                        foreach (var sNode in subGroups)
-                        {
-                            sNode.SubGroup.Events.Clear();
-
-                            List<TreeNodeMsgEventOOE> events = sNode.Nodes.Cast<TreeNodeMsgEventOOE>().ToList();
-
-                            foreach (var eNode in events)
-                            {
-                                eNode.Event.Properties.Clear();
-
-                                List<TreeNodeMsgPropertyOOE> properties = eNode.Nodes.Cast<TreeNodeMsgPropertyOOE>().ToList();
-
-                                foreach (var prop in properties)
-                                    eNode.Event.Properties.Add(prop.Property);
-                            }
-
-                            foreach (var _event in events)
-                                sNode.SubGroup.Events.Add(_event.Event);
-
-                            gNode.Group.Subgroups.Add(sNode.SubGroup);
-                        }
-                    }
-
-                    FileContext.MsgOOE.Groups = groups.Select(x => x.Group).ToList();
-                    FileContext.MsgOOE.Coordinates = coords.Select(x => x.Position).ToList();
-
-                    MsgOOE.Write(FileContext.MsgOOE, FileContext.FilePath);
-                }
-            }
-
+            
+            FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
         }
 
 
@@ -2013,6 +1909,7 @@ namespace CMNEdit
             m_rightClickedNode = null;
 
             FileContext.Reset();
+            FileContext.ActiveFormatEditor = new MEPFormatEditor();
             FileContext.IsMep = true;
 
             hactTabs.TabPages[0].Text = "MEP";
