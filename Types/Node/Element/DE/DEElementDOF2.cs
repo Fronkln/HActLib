@@ -7,6 +7,7 @@ using Yarhl.IO;
 
 namespace HActLib
 {
+    [ElementID(Game.YK2, 0x141)] // k2r only
     [ElementID(Game.JE, 0x172)]
     [ElementID(Game.YLAD, 0x170)]
     [ElementID(Game.LJ, 0x170)]

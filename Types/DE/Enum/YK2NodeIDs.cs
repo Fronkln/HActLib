@@ -318,6 +318,11 @@ namespace HActLib
         e_auth_element_footstep_dont_play_chara = 0x13E,
         e_auth_element_uid_after_replace = 0x13F,
         e_auth_element_connect_camera_special = 0x140,
+        e_auth_element_post_effect_dof2 = 0x141, // k2r onwards + below
+        e_auth_element_post_effect_glare2 = 0x142,
+        e_auth_element_post_effect_motion_blur2 = 0x143,
+        e_auth_element_staffroll = 0x144,
+        e_auth_element_asset_draw_depth = 0x145,
     };
 
 }
