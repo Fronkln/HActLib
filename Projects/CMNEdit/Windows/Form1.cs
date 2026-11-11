@@ -2667,8 +2667,6 @@ namespace CMNEdit
 
             FileContext.ActiveFormatEditor.Import(FileContext.FilePath);
             AppRegistry.Root.SetValue("LastFileDir", folderDir);
-
-            ProcessYAct(yact);
         }
 
         private void openPropertyToolStripMenuItem_Click(object sender, EventArgs e)
