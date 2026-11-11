@@ -41,7 +41,7 @@
             targetGameLbl = new System.Windows.Forms.Label();
             appTools = new System.Windows.Forms.ToolStrip();
             toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            openCtrlOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            openHActFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openHActCMNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openYActToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openBEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -314,19 +314,19 @@
             // toolStripDropDownButton1
             // 
             toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { openCtrlOToolStripMenuItem, openHActCMNToolStripMenuItem, openYActToolStripMenuItem, openBEPToolStripMenuItem, openMSGToolStripMenuItem, saveToolStripMenuItem, saveAsToolStripMenuItem });
+            toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { openHActFolderMenuItem, openHActCMNToolStripMenuItem, openYActToolStripMenuItem, openBEPToolStripMenuItem, openMSGToolStripMenuItem, saveToolStripMenuItem, saveAsToolStripMenuItem });
             toolStripDropDownButton1.Image = (System.Drawing.Image)resources.GetObject("toolStripDropDownButton1.Image");
             toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             toolStripDropDownButton1.Size = new System.Drawing.Size(46, 24);
             toolStripDropDownButton1.Text = "File";
             // 
-            // openCtrlOToolStripMenuItem
+            // openHActFolderMenuItem
             // 
-            openCtrlOToolStripMenuItem.Name = "openCtrlOToolStripMenuItem";
-            openCtrlOToolStripMenuItem.Size = new System.Drawing.Size(282, 26);
-            openCtrlOToolStripMenuItem.Text = "Open HAct Folder";
-            openCtrlOToolStripMenuItem.Click += openCtrlOToolStripMenuItem_Click;
+            openHActFolderMenuItem.Name = "openHActFolderMenuItem";
+            openHActFolderMenuItem.Size = new System.Drawing.Size(282, 26);
+            openHActFolderMenuItem.Text = "Open HAct Folder";
+            openHActFolderMenuItem.Click += openHActFolderToolStripMenuItem_Click;
             // 
             // openHActCMNToolStripMenuItem
             // 
@@ -1579,6 +1579,7 @@
             MaximizeBox = false;
             Name = "Form1";
             Text = "AuthEdit by Jhrino";
+            Load += Form1_Load;
             appTools.ResumeLayout(false);
             appTools.PerformLayout();
             nodeContext.ResumeLayout(false);
@@ -1619,7 +1620,7 @@
 
         private System.Windows.Forms.ToolStrip appTools;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-        private System.Windows.Forms.ToolStripMenuItem openCtrlOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openHActFolderMenuItem;
         public System.Windows.Forms.ContextMenuStrip nodeContext;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
@@ -1645,7 +1646,6 @@
         private System.Windows.Forms.ImageList nodeIcons;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openBEPToolStripMenuItem;
-        private System.Windows.Forms.Panel hactDurationPanel;
         private System.Windows.Forms.ToolStripSplitButton nodeTooltip;
         private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem elementToolStripMenuItem;
@@ -1683,7 +1683,7 @@
         private System.Windows.Forms.ToolStripMenuItem authPagesDEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transitStunToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disableFrameInfoToolStripMenuItem;
-        private System.Windows.Forms.TabPage csvTab;
+        public System.Windows.Forms.TabPage csvTab;
         private System.Windows.Forms.TreeView csvTree;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
@@ -1703,7 +1703,7 @@
         private System.Windows.Forms.ToolStripMenuItem heatGaugeHActEventToolStripMenuItem;
         public MWControlSuite.MWTreeView nodesTree;
         public System.Windows.Forms.ComboBox targetGameCombo;
-        private System.Windows.Forms.TextBox langOverrideBox;
+        public System.Windows.Forms.TextBox langOverrideBox;
         private System.Windows.Forms.Label langOverrideLbl;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox resEndBox;
@@ -1719,11 +1719,8 @@
         private System.Windows.Forms.Panel resTimingsPanel;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem test2ToolStripMenuItem;
-        private System.Windows.Forms.Panel hactFlagsHolder;
-        private System.Windows.Forms.Label hactTypeLabel;
         private System.Windows.Forms.ToolStripMenuItem reorderBasedOnTimingToolStripMenuItem;
         private System.Windows.Forms.CheckBox framesInNameBox;
-        private System.Windows.Forms.Panel cameraInPanel;
         private System.Windows.Forms.ToolStripMenuItem authToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem segmentAuthToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reassembleAuthToolStripMenuItem;
@@ -1760,5 +1757,9 @@
         public System.Windows.Forms.TextBox hactStartBox;
         public System.Windows.Forms.TextBox hactEndBox;
         public System.Windows.Forms.TextBox typeBox;
+        public System.Windows.Forms.Panel hactFlagsHolder;
+        public System.Windows.Forms.Panel hactDurationPanel;
+        public System.Windows.Forms.Panel cameraInPanel;
+        public System.Windows.Forms.Label hactTypeLabel;
     }
 }

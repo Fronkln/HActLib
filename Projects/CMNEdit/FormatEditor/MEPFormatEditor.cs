@@ -22,7 +22,7 @@ namespace CMNEdit
             MEP.Write(FileContext.Mep, filePath);
         }
 
-        private void ConvertCurrentMep()
+        public void ConvertCurrentMep()
         {
             var curGame = (Game)Form1.Instance.targetGameCombo.SelectedIndex;
             MepEffect[] mepNodes = Form1.Instance.nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffect>().ToArray();

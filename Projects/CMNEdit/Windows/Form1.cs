@@ -61,13 +61,13 @@ namespace CMNEdit
         private static object[] EditingResourceCurrentLinkedNodes = null;
 
         //toggled depending on file
-        private TabPage resPage;
-        private TabPage cutPage;
-        private TabPage csvPage;
+        public TabPage resPage;
+        public TabPage cutPage;
+        public TabPage csvPage;
 
-        private ToolStripDropDownItem addNodeTab;
-        private ToolStripItem nodeAddTabDE;
-        private ToolStripItem nodeAddTabOOE;
+        public ToolStripDropDownItem addNodeTab;
+        public ToolStripItem nodeAddTabDE;
+        public ToolStripItem nodeAddTabOOE;
 
         private ToolStripDropDownItem advancedTab;
         private ToolStripItem advancedFrameProgressionButton;
@@ -81,7 +81,7 @@ namespace CMNEdit
         //0 = nodes, 1 res blablabla
         private int currentTab = 0;
 
-        private static string folderDir = "";
+        public static string folderDir = "";
         public static HActDir hactInf;
         public string ResPath = "";
 
@@ -193,7 +193,7 @@ namespace CMNEdit
             flagsLabel.Text = "Flags";
         }
 
-        private void openCtrlOToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openHActFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             DialogResult res = dialog.ShowDialog();
@@ -385,87 +385,8 @@ namespace CMNEdit
             }
             else
             {
-                hactTabs.TabPages[0].Text = "CMN";
-
-                hactStartBox.Visible = true;
-                hactEndBox.Visible = true;
-                FileContext.IsHact = true;
                 FileContext.ActiveFormatEditor = new HActFormatEditor();
-
-                hactFlagsHolder.Visible = true;
-
-                //OE/DE HAct
-                uint ver = BitConverter.ToUInt32(buf, 0);
-                bool isDE = ver >= 18 && ver < 25;
-
-                RES Res = null;
-
-                HActDir[] res = hactInf.GetResources();
-
-                if (!hactTabs.TabPages.Contains(resPage))
-                    hactTabs.TabPages.Add(resPage);
-
-                if (res.Length > 0)
-                    OnImportResFile(res[0].FindResourceFile().Path); ;
-
-                BaseCMN HAct = null;
-
-                if (isDE)
-                {
-                    curGame = (Game)targetGameCombo.SelectedIndex;
-                    curVer = CMN.GetVersionForGame(curGame);
-                    HAct = CMN.Read(buf, curGame);
-
-                    hactTypeLabel.Visible = true;
-                    typeBox.Visible = true;
-
-                    OnOpenDEFormat();
-                }
-                else
-                {
-                    HAct = OECMN.Read(buf, (Game)targetGameCombo.SelectedIndex == Game.FOTNS);
-                    curVer = GameVersion.Y0_K1;
-                    curGame = (Game)targetGameCombo.SelectedIndex;
-                    FileContext.IsOE = true;
-
-                    cameraInPanel.Visible = true;
-                }
-
-                Version = HAct.Version;
-                DisableFrameInfos = HAct.DisableFrameInfo.ToArray();
-                ResourceCutInfos = HAct.ResourceCutInfo;
-                CutInfos = HAct.CutInfo.ToList();
-                cameraInBox.Text = HAct.GetChainCameraIn().ToString(CultureInfo.InvariantCulture);
-                cameraOutBox.Text = HAct.GetChainCameraOut().ToString(CultureInfo.InvariantCulture);
-                flagsBox.Text = HAct.GetFlags().ToString();
-                NodeDrawNum = HAct.GetNodeDrawNum();
-
-                if (isDE)
-                {
-                    CMN hactDE = (HAct as CMN);
-                    typeBox.Text = hactDE.Header.Type.ToString();
-                    SkipPointTickDE = hactDE.Header.SkipPointTick;
-                    SoundInfoDE = hactDE.SoundInfo;
-                    AuthPagesDE = hactDE.AuthPages.ToArray();
-                    AuthPagesDEUnk = hactDE.AuthPageUnk;
-
-
-                    addNodeTab.DropDownItems.Add(nodeAddTabDE);
-                }
-                else
-                    SoundInfoOE = (HAct as OECMN).SoundInfo;
-
-                nodesTree.Nodes.Add(new TreeViewItemNode(HAct.Root));
-                hactDurationPanel.Visible = true;
-                hactStartBox.Text = HAct.HActStart.ToString();
-                hactEndBox.Text = HAct.HActEnd.ToString();
-
-                if (!hactTabs.TabPages.Contains(cutPage))
-                    hactTabs.TabPages.Add(cutPage);
-
-                if (Res != null)
-                    foreach (Resource resource in Res.Resources)
-                        resTree.Nodes.Add(new TreeViewItemResource(resource));
+                FileContext.ActiveFormatEditor.Import(FileContext.FilePath);
             }
 
             saveToolStripMenuItem.Enabled = !hactInf.IsPar;
@@ -473,100 +394,6 @@ namespace CMNEdit
             OnOpenHAct();
             DrawCutInfo();
         }
-
-        private void ProcessYAct(BaseYAct yact)
-        {
-            AppRegistry.Root.SetValue("LastFileDir", folderDir);
-
-            ClearEverything();
-
-            curGame = (Game)targetGameCombo.SelectedIndex;
-
-            FileContext.Reset();
-            FileContext.ActiveFormatEditor = new YActFormatEditor();
-            FileContext.IsYAct = true;
-
-            hactTabs.TabPages.Remove(csvTab);
-            hactTabs.TabPages.Remove(resPage);
-            hactTabs.TabPages.Remove(cutPage);
-
-            hactTabs.TabPages[0].Text = "YAct";
-
-            HashSet<YActEffect> parentedEffects = new HashSet<YActEffect>();
-
-            if (yact is YActY2)
-            {
-                for (int i = 0; i < yact.Characters.Count; i++)
-                {
-                    YActY2Character yactChara = yact.Characters[i] as YActY2Character;
-                    TreeNodeYActCharacter charaNode = new TreeNodeYActCharacter(yactChara);
-
-                    foreach (var anim in yactChara.AnimationData)
-                    {
-                        charaNode.Nodes.Add(new TreeNodeYActY2Animation(anim));
-                    }
-
-                    for (int k = yactChara.UnknownY2[0]; k < yactChara.UnknownY2[0] + yactChara.UnknownY2[1]; k++)
-                    {
-                        YActEffect yactEffect = yact.Effects[k];
-                        parentedEffects.Add(yactEffect);
-                        TreeNodeYActEffect yactNode = new TreeNodeYActEffect(yactEffect);
-
-                        charaNode.Nodes.Add(yactNode);
-                    }
-
-                    nodesTree.Nodes.Add(charaNode);
-                }
-
-                for (int i = 0; i < yact.Cameras.Count; i++)
-                {
-                    YActY2Camera yactCam = yact.Cameras[i] as YActY2Camera;
-                    TreeNodeYActCamera camNode = new TreeNodeYActCamera(yactCam);
-
-                    foreach (var anim in yactCam.AnimationData)
-                    {
-                        camNode.Nodes.Add(new TreeNodeYActY2Animation(anim));
-                    }
-
-                    nodesTree.Nodes.Add(camNode);
-                }
-            }
-            else
-            {
-                int cur = 0;
-
-                for (int i = 0; i < yact.Characters.Count; i++)
-                {
-                    TreeNodeYActCharacter chara = new TreeNodeYActCharacter(yact.Characters[i]);
-                    chara.Nodes.Add(new TreeNodeYActCharacterMotion(yact.CharacterAnimations[i]));
-
-                    nodesTree.Nodes.Add(chara);
-                }
-
-                for (int i = 0; i < yact.Cameras.Count; i++)
-                {
-                    TreeNodeYActCamera cam = new TreeNodeYActCamera(yact.Cameras[i]);
-                    var camNode = new TreeNodeYActCameraMotion(new YActFile() { Buffer = cam.Camera.MTBWFile });
-                    camNode.OrigCamera = yact.Cameras[i];
-                    cam.Nodes.Add(camNode);
-                    nodesTree.Nodes.Add(cam);
-                }
-            }
-
-            for (int i = 0; i < yact.Effects.Count; i++)
-            {
-                YActEffect yactEffect = yact.Effects[i];
-
-                if (parentedEffects.Contains(yactEffect))
-                    continue;
-
-                TreeNodeYActEffect yactNode = new TreeNodeYActEffect(yactEffect);
-                nodesTree.Nodes.Add(yactNode);
-            }
-
-            hactDurationPanel.Visible = false;
-        }
-
 
         private void ProcessPS2Prop(OMTProperty prop)
         {
@@ -577,7 +404,6 @@ namespace CMNEdit
             hactTabs.TabPages.Remove(csvTab);
             hactTabs.TabPages.Remove(resPage);
             hactTabs.TabPages.Remove(cutPage);
-
 
             hactTabs.TabPages[0].Text = "Property";
 
@@ -1546,56 +1372,9 @@ namespace CMNEdit
 
             CMN.LastHActDEGame = (Game)targetGameCombo.SelectedIndex;
             curGame = (Game)targetGameCombo.SelectedIndex;
-            
+
             FileContext.ActiveFormatEditor.Save(FileContext.FilePath);
         }
-
-
-        private void ConvertCurrentMep()
-        {
-            curGame = (Game)targetGameCombo.SelectedIndex;
-            MepEffect[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffect>().ToArray();
-
-            if (FileContext.Mep.Version >= MEPVersion.Y5)
-            {
-
-                if (FileContext.Mep.Version == MEPVersion.Y5)
-                {
-                    if (curGame >= Game.Y0)
-                    {
-                        foreach (MepEffectOE oe in mepNodes)
-                        {
-                            oe.OE_ConvertToY0();
-                            oe.Effect.OE_ConvertToY0();
-                        }
-
-                    }
-                }
-                else
-                {
-                    if (curGame == Game.Y5)
-                        foreach (MepEffectOE oe in mepNodes)
-                        {
-                            oe.OE_ConvertToY5();
-                            oe.Effect.OE_ConvertToY5();
-                        }
-                }
-            }
-
-            FileContext.Mep.Effects = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).ToList();
-
-            if (curGame >= Game.Y0)
-                FileContext.Mep.Version = MEPVersion.Y0;
-            else if (curGame == Game.Y5)
-                FileContext.Mep.Version = MEPVersion.Y5;
-            else if (curGame <= Game.Y4)
-                FileContext.Mep.Version = MEPVersion.Y3;
-            else
-                FileContext.Mep.Version = MEPVersion.Y0;
-        }
-
-
-        //ELEMENT WINDOW DRAWING
 
         public void DrawElementWindow(NodeElement element)
         {
@@ -1875,13 +1654,13 @@ namespace CMNEdit
         }
 
 
-        private void OnOpenDEFormat()
+        public void OnOpenDEFormat()
         {
             addNodeTab.DropDownItems.Add(nodeAddTabDE);
             advancedTab.DropDownItems.Add(authPagesButton);
             convertTab.DropDownItems.Add(convertBetweenGamesButton);
         }
-        private void OnOpenHAct()
+        public void OnOpenHAct()
         {
             advancedTab.DropDownItems.Add(advancedFrameProgressionButton);
             advancedTab.DropDownItems.Add(disableFrameInfoButton);
@@ -2244,105 +2023,13 @@ namespace CMNEdit
         }
         private void convertMEPWithPibsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!FileContext.IsMep)
-                return;
-
-            MessageBox.Show("(SLOW) Convert the current open mep file to the selected OE game including pibs. Input the paths carefully.");
-
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Directory where the mep's pibs are",
-           "MEP Pib Path",
-           "",
-           0,
-           0);
-
-            if (string.IsNullOrEmpty(input))
-                return;
-
-            string output = Microsoft.VisualBasic.Interaction.InputBox("Directory to output to",
-           "MEP Export Path",
-           "",
-           0,
-           0);
-
-            ConvertCurrentMep();
-
-            OEParticle[] mepNodes = nodesTree.Nodes.Cast<TreeViewItemMepNode>().Select(x => x.Node).Cast<MepEffectOE>().Where(x => x.Effect.ElementKind == 2).Select(x => x.Effect).Cast<OEParticle>().ToArray();
-
-            uint[] pibIds = mepNodes.Select(x => x.ParticleID).ToArray();
-            string[] pibFiles = Directory.GetFiles(input, "*.pib", SearchOption.AllDirectories);
-
-
-            List<string> foundPibPaths = new List<string>();
-            List<BasePib> mepPibs = new List<BasePib>();
-
-            foreach (string str in pibFiles)
-            {
-                if (pibIds.Length == pibFiles.Length)
-                    break;
-
-                try
-                {
-                    BasePib pib = PIB.Read(str);
-
-                    if (pibIds.Contains(pib.ParticleID))
-                    {
-                        foundPibPaths.Add(str);
-                        mepPibs.Add(pib);
-                    }
-                }
-                catch
-                {
-
-                }
-            }
-
-            PibVersion targetVer = PibVersion.Y5;
-
-            switch (curGame)
-            {
-                case Game.Ishin:
-                    targetVer = PibVersion.Ishin;
-                    break;
-                case Game.Y5:
-                    targetVer = PibVersion.Y5;
-                    break;
-                case Game.Y0:
-                    targetVer = PibVersion.Y0;
-                    break;
-                case Game.YK1:
-                    targetVer = PibVersion.Y0;
-                    break;
-            }
-
-            for (int i = 0; i < mepPibs.Count; i++)
-            {
-                BasePib converted = PIB.Convert(mepPibs[i], targetVer);
-
-                foreach (BasePibEmitter emitter in converted.Emitters)
-                {
-                    string dir = new FileInfo(foundPibPaths[i]).Directory.FullName;
-
-                    foreach (string tex in emitter.Textures)
-                    {
-                        string texPath = Path.Combine(dir, tex);
-
-                        if (File.Exists(texPath))
-                            File.Copy(texPath, Path.Combine(output, tex), true);
-                    }
-                }
-
-                PIB.Write(converted, Path.Combine(output, converted.Name + ".pib"));
-            }
-
-
-            MEP.Write(FileContext.Mep, Path.Combine(output, Path.GetFileName(FileContext.FilePath)));
+            MepConverter.Procedure();
         }
 
         private void convertMEPToBEPToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MepToBepConverter.Procedure();
         }
-
 
         private void adjustTimingToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2978,7 +2665,8 @@ namespace CMNEdit
             folderDir = Path.GetDirectoryName(dialog.FileName);
             FileContext.FilePath = dialog.FileName;
 
-            yact = BaseYAct.Read(FileContext.FilePath);
+            FileContext.ActiveFormatEditor.Import(FileContext.FilePath);
+            AppRegistry.Root.SetValue("LastFileDir", folderDir);
 
             ProcessYAct(yact);
         }
@@ -3050,7 +2738,7 @@ namespace CMNEdit
             OnImportResFile(dialog.FileName);
         }
 
-        private void OnImportResFile(string fileName)
+        public void OnImportResFile(string fileName)
         {
             resTree.Nodes.Clear();
 
@@ -3310,6 +2998,11 @@ namespace CMNEdit
                     }
                 }
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
