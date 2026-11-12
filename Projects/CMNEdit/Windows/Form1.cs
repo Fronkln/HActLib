@@ -204,6 +204,7 @@ namespace CMNEdit
             HActDir inf = new HActDir();
             inf.Open(dialog.SelectedPath, langOverrideBox.Text);
 
+            FileContext.FilePath = dialog.SelectedPath;
             hactInf = inf;
             folderDir = dialog.SelectedPath;
 
@@ -258,8 +259,6 @@ namespace CMNEdit
             byte[] magicBuf = new byte[4];
             Array.Copy(buf, magicBuf, 4);
             string magic = Encoding.UTF8.GetString(magicBuf);
-
-            FileContext.FilePath = hactInf.FindFile("hact_tev.bin").Path;
 
             //OOE auth
             if (magic == "AUTH")
